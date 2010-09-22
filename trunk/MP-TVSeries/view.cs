@@ -64,11 +64,11 @@ namespace WindowPlugins.GUITVSeries
 
         public List<DBSeries> getSeriesItems(int stepIndex, string[] currentStepSelection)
         {
-            MPTVSeriesLog.Write("View: GetSeriesItems: Begin", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("View: Get Series Items", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
             if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            MPTVSeriesLog.Write("View: GetSeriesItems: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("View: Get Series Items: Executing SQL", MPTVSeriesLog.LogLevel.Debug);
             return DBSeries.Get(conditions);
         }
 
@@ -84,27 +84,27 @@ namespace WindowPlugins.GUITVSeries
         
         public List<DBSeason> getSeasonItems(int stepIndex, string[] currentStepSelection)
         {
-            MPTVSeriesLog.Write("View: GetSeason: Begin", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("View: Get Seasons", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
             if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            MPTVSeriesLog.Write("View: GetSeason: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
-            //return DBSeason.Get(default(int), DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles), true, false, conditions);
+            MPTVSeriesLog.Write("View: Get Seasons: Executing SQL", MPTVSeriesLog.LogLevel.Debug);            
             return DBSeason.Get(conditions);
         }
 
         public List<DBEpisode> getEpisodeItems(int stepIndex, string[] currentStepSelection)
         {
-            MPTVSeriesLog.Write("View: GetEps: Begin", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("View: Get Episodes", MPTVSeriesLog.LogLevel.Debug);
             SQLCondition conditions = null;
             if (stepIndex >= m_steps.Count) return null; // wrong index specified!!
             addHierarchyConditions(ref stepIndex, ref currentStepSelection, ref conditions);
-            
-            MPTVSeriesLog.Write("View: GetEps: BeginSQL", MPTVSeriesLog.LogLevel.Debug);
-            List<DBEpisode> eps = DBEpisode.Get(conditions);
+
+            MPTVSeriesLog.Write("View: Get Episodes: Executing SQL", MPTVSeriesLog.LogLevel.Debug);
+            List<DBEpisode> eps = DBEpisode.Get(conditions);            
 
             // WARNING: this naturally only works if the ordering is by season/episodeOrder
             // inline the special episodes to there relevant positions (Season == 0 by airsbefore_episode)
+            MPTVSeriesLog.Write("View: Sorting Episodes", MPTVSeriesLog.LogLevel.Debug);
             if (m_steps[stepIndex].inLineSpecials && currentStepSelection[currentStepSelection.Length - 1] != "0")
             {
                 if (m_steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
