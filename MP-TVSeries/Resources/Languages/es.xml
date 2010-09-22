@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- MP-TV-Series translation file -->
+<!-- MP-TVSeries translation file -->
 <!-- Spanish (es) -->
-<!-- Last Updated: 16th Mar 2010 -->
+<!-- Last Updated: 22nd Sep 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
 	<string Field="Series" Original="Series">Serie</string>
@@ -243,10 +243,30 @@
 	<string Field="EpisodeFilenameEmpty">Nombre de episodio vacío en la base de datos</string>
 	<string Field="UnableToDeleteSubtitleFile">No se pudo borrar el archivo de subtítulo: {0}</string>
 	<string Field="PathNotAvailable">Ruta no disponible: {0}</string>
-	<string Field="UnableToDeleteSubtitles">No fue posible borrar subtítulos</string>
+	<string Field="UnableToDeleteSubtitles">No fue posible borrar los subtítulos</string>
 	<string Field="ErrorClear">Error</string>
 	<string Field="UnableToRetrieveSubtitles">No fue posible obtener subtítulos</string>
 	<string Field="NoSubtitlesFoundOrRetrieved">No se obtuvieron o encontraron subtítulos</string>
 	<string Field="UnableToDelete">No se pudo borrar</string>
 	<string Field="UnableToDeleteFile">No se pudo borrar el archivo: {0}</string>
+	<string Field="PlaySomething">Reproducir...</string>
+	<string Field="PlayError">Error de reproducción</string>
+	<string Field="RandomEpisode">episodio aleatorio</string>
+	<string Field="FirstUnwatchedEpisode">primer episodio no visto</string>
+	<string Field="RandomUnwatchedEpisode">aleatoriamente un episodo no visto</string>
+	<string Field="LatestEpisode">último episodio</string>
+	<string Field="UnableToFindAny">No se encontró ningún {0}</string>
+	<string Field="UnableToFindAnyEpisode">No se encontró ningún episodio</string>
+	<string Field="SortBy">Ordenar por</string>
+	<string Field="DVDOrder">Orden de DVD</string>
+	<string Field="AiredOrder">Orden de Emisión</string>
+	<string Field="AbsoluteOrder">Orden Absoluto</string>
+	<string Field="Title">Título</string>
+	<string Field="ChangeOnlineMatchOrder">Cambiar el método de correspondencia Online</string>
+	<string Field="InsertDiskMessageLine1">El medio del episodio que ha seleccionado</string>
+	<string Field="InsertDiskMessageLine2">no está disponible en estos momentos</string>
+	<string Field="InsertDiskMessageLine3">Por favor, inserte o conecte el medio</string>
+	<string Field="InsertDiskMessageLine4">etiquetado: {0}</string>
+	<string Field="ShowHiddenItems">Mostrar elementos ocultos</string>
+	<string Field="UnHide">Mostrar</string>
 </strings>
