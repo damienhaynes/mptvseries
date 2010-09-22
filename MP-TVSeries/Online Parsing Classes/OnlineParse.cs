@@ -2131,10 +2131,7 @@ namespace WindowPlugins.GUITVSeries
                         localEpisode[key] = onlineEpisode[key];
                         break;
                 }
-            }
-            MPTVSeriesLog.Write("ccid l: " + localEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
-            MPTVSeriesLog.Write("ccid o: " + onlineEpisode[DBOnlineEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
-            MPTVSeriesLog.Write("ccid on: " + localEpisode.onlineEpisode[DBOnlineEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
+            } 
             localEpisode[DBOnlineEpisode.cOnlineDataImported] = 1;
             MPTVSeriesLog.Write("\"" + localEpisode.ToString() + "\" identified", MPTVSeriesLog.LogLevel.Debug);
             localEpisode.Commit();            

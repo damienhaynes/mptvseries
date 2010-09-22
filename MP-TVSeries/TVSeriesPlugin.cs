@@ -1831,6 +1831,7 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowDownloadMenu(DBEpisode selectedEpisode)
         {
+            MPTVSeriesLog.Write("Showing Download Menu", MPTVSeriesLog.LogLevel.Debug);
             IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
             if (dlg == null) return;
 
@@ -1964,10 +1965,11 @@ namespace WindowPlugins.GUITVSeries
 						m_stepSelection = new string[] { this.m_Facade.SelectedListItem.Label };
 						m_stepSelections.Add(m_stepSelection);
 						m_stepSelectionPretty.Add(this.m_Facade.SelectedListItem.Label);
-						MPTVSeriesLog.Write("Selected: ", this.m_Facade.SelectedListItem.Label, MPTVSeriesLog.LogLevel.Debug);
+						MPTVSeriesLog.Write("Group Clicked: ", this.m_Facade.SelectedListItem.Label, MPTVSeriesLog.LogLevel.Debug);
 						LoadFacade();
 						this.m_Facade.Focus = true;
 						break;
+
 					case Listlevel.Series:
 						this.m_SelectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
 						if (m_SelectedSeries == null) return;
@@ -1977,11 +1979,11 @@ namespace WindowPlugins.GUITVSeries
 						m_stepSelection = new string[] { m_SelectedSeries[DBSeries.cID].ToString() };
 						m_stepSelections.Add(m_stepSelection);
 						m_stepSelectionPretty.Add(this.m_SelectedSeries.ToString());
-						MPTVSeriesLog.Write("Selected: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Debug);
-						MPTVSeriesLog.Write("Fanart: Series selected", MPTVSeriesLog.LogLevel.Debug);
+						MPTVSeriesLog.Write("Series Clicked: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Debug);						
 						this.LoadFacade();
 						this.m_Facade.Focus = true;
 						break;
+
 					case Listlevel.Season:
 						this.m_SelectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
 						if (m_SelectedSeason == null) return;
@@ -1991,16 +1993,16 @@ namespace WindowPlugins.GUITVSeries
 						m_stepSelection = new string[] { m_SelectedSeason[DBSeason.cSeriesID].ToString(), m_SelectedSeason[DBSeason.cIndex].ToString() };
 						m_stepSelections.Add(m_stepSelection);
 						m_stepSelectionPretty.Add(m_SelectedSeason[DBSeason.cIndex] == 0 ? Translation.specials : Translation.Season + " " + m_SelectedSeason[DBSeason.cIndex]);
-						MPTVSeriesLog.Write("Selected: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Debug);
-						this.LoadFacade();
-						MPTVSeriesLog.Write("Fanart: Season selected", MPTVSeriesLog.LogLevel.Debug);
+						MPTVSeriesLog.Write("Season Clicked: ", m_stepSelection[0] + " - " + m_stepSelection[1], MPTVSeriesLog.LogLevel.Debug);
+						this.LoadFacade();						
 						this.m_Facade.Focus = true;
 						break;
+
 					case Listlevel.Episode:
 						m_SelectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
 						if (m_SelectedEpisode == null) return;
-						MPTVSeriesLog.Write("Selected: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
-
+						MPTVSeriesLog.Write("Episode Clicked: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
+                        
                         CommonPlayEpisodeAction(true);
 						break;
 				}
@@ -2280,7 +2282,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
-                MPTVSeriesLog.Write("bg_ProgressChanged for: " + arg.Type.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                //MPTVSeriesLog.Write("bg_ProgressChanged for: " + arg.Type.ToString(), MPTVSeriesLog.LogLevel.Debug);
 
                 if (bg.CancellationPending)
                 {
@@ -2470,7 +2472,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (e.Cancelled)
             {
-                MPTVSeriesLog.Write("in facadedone - detected cancel - performing delayed userclick");
+                MPTVSeriesLog.Write("Background Load Facade detected cancel - performing delayed userclick");
                 SkipSeasonCode = SkipSeasonCodes.none;
                 skipSeasonIfOne_DirectionDown = true;
                 LoadFacade(); // we only cancel if the user clicked something while we were still loading
@@ -2478,7 +2480,7 @@ namespace WindowPlugins.GUITVSeries
                 // even if the user selects somethign else while we wait for cancellation due to it being a different listlevel)                                
                 return;
             }
-            MPTVSeriesLog.Write("in facadedone",MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("Background Load Facade Complete",MPTVSeriesLog.LogLevel.Debug);
            
             if (m_Facade == null)
                 return;
@@ -2534,11 +2536,9 @@ namespace WindowPlugins.GUITVSeries
         private void bgLoadFacade(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             //facadeLoaded = false; // reset
-            PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Start();
-            //using (WaitCursor c = new WaitCursor()) // should we show a waitcursor?
+            PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Start();            
             bgLoadFacade();
-            PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Stop();
-            MPTVSeriesLog.Write("bgLoadFacade done", MPTVSeriesLog.LogLevel.Debug);
+            PerfWatcher.GetNamedWatch("FacadeLoading BG Thread").Stop();            
             if (bg.CancellationPending)
                 e.Cancel = true;
 
@@ -2546,7 +2546,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void bgLoadFacade()
         {
-            MPTVSeriesLog.Write("Begin LoadFacade", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("Begin Loading of Facade", MPTVSeriesLog.LogLevel.Debug);
             try
             {
                 GUIListItem item = null;
@@ -4420,8 +4420,7 @@ namespace WindowPlugins.GUITVSeries
                     if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = true;
                     if (dummyIsEpisodes != null) dummyIsEpisodes.UpdateVisibility();
                     break;
-            }
-            MPTVSeriesLog.Write("new listlevel: " + listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);                        
+            }            
         }
         
         void resetListLevelDummies()

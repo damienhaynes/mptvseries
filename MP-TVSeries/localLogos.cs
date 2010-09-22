@@ -220,7 +220,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (entriesValidForInfo[i].Contains(level) || (level == Level.Group && isRelevant(entries[i], level))) // precalculated relevances (can't do for groups though)
                         {
-                            MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
+                            //MPTVSeriesLog.Write("Logo-Rule is relevant....testing: ", entries[i], MPTVSeriesLog.LogLevel.Debug);
                             List<string> conditions = splitConditions[i];
                             // resolve dnyamic image and check if logo img exists
                             List<string> filenames = Helper.filterExistingFiles(getDynamicFileName(conditions[0], level));
@@ -344,7 +344,7 @@ namespace WindowPlugins.GUITVSeries
             bool cancel = false;
             for (int i = 0, j=0; i < 3; i++, j=i<<2)
             {                
-                MPTVSeriesLog.Write("Testing Loop:", i, MPTVSeriesLog.LogLevel.Debug);
+                //MPTVSeriesLog.Write("Testing Loop:", i, MPTVSeriesLog.LogLevel.Debug);
                 string what = conditions[j + 1];
                 string compare = conditions[j + 3];
                 if (!getFieldValues(what, out what, level)) return false;
@@ -354,19 +354,19 @@ namespace WindowPlugins.GUITVSeries
                                  conditions[j + 2],
                                  compare, out cancel, provider);
 
-                MPTVSeriesLog.Write("Test Result: ", results[i].ToString(), MPTVSeriesLog.LogLevel.Debug);
+                //MPTVSeriesLog.Write("Test Result: ", results[i].ToString(), MPTVSeriesLog.LogLevel.Debug);
                 if (cancel) return true; // the first empty condition (what + value = empty) means no other conds can follow, we exit
 
                 if (i < 2)
                 {
                     if (!results[i] && conditions[j + 4] == "AND") // result is false and next link is and -> everything is wrong
                     {
-                        MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = AND and current result was FALSE", MPTVSeriesLog.LogLevel.Debug);
+                        //MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = AND and current result was FALSE", MPTVSeriesLog.LogLevel.Debug);
                         return false;
                     }
                     if (results[i] && conditions[j + 4] == "OR") // everything has to be true
                     {
-                        MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = OR and current result was TRUE", MPTVSeriesLog.LogLevel.Debug);
+                        //MPTVSeriesLog.Write("No addition Test Loop needed, reason: next link = OR and current result was TRUE", MPTVSeriesLog.LogLevel.Debug);
                         return true;
                     }
                     // otherwise we have to keep checking
