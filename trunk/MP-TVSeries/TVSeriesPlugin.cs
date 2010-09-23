@@ -2953,7 +2953,7 @@ namespace WindowPlugins.GUITVSeries
                                     item.IsPlayed = false;
 
                                     // Set IsRemote property to true, if the episode is not local on disk                                    
-                                    if (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)
+                                    if (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] == 0)
                                     {
                                         item.IsRemote = true;
                                     }
@@ -5644,7 +5644,7 @@ namespace WindowPlugins.GUITVSeries
             if (episodeList == null || episodeList.Count == 0) return result;
 
             foreach (DBEpisode episode in episodeList) {
-                if (filterUnavailable && (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] != 1)) {
+                if (filterUnavailable && (episode[DBEpisode.cFilename].ToString().Length == 0 || episode[DBEpisode.cIsAvailable] == 0)) {
                     continue;
                 }
 
