@@ -735,7 +735,7 @@ namespace WindowPlugins.GUITVSeries
             if (localScan) {
                 // mark all files in the db as not processed (to figure out which ones we'll have to remove after the import)
                 DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2);                
-                DBEpisode.GlobalSet(DBEpisode.cIsAvailable, 0);
+                DBEpisode.GlobalSet(DBEpisode.cIsAvailable, 2); // dont set to 0 so we dont filter out eps in view during localscan
 
                 // also clear all season & series for local files
                 DBSeries.GlobalSet(DBOnlineSeries.cHasLocalFilesTemp, false);
