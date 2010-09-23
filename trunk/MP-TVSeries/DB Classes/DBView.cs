@@ -67,6 +67,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cTranslateTokenMultiAudio = "MultiAudio";
         public const String cTranslateTokenRemovableMedia = "RemovableMedia";
         public const String cTranslateTokenLocalMedia = "LocalMedia";
+        public const String cTranslateTokenAvailableMedia = "AvailableMedia";
         public const String cTranslateTokenAdultSeries = "AdultSeries";
         public const String cTranslateTokenKidsSeries = "KidsSeries";
 
