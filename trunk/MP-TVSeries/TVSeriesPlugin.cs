@@ -1754,6 +1754,7 @@ namespace WindowPlugins.GUITVSeries
             descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
+            descriptor.m_sbtnSkipLabel = String.Empty;
 
             bool bReady = false;
             while (!bReady)
@@ -5003,18 +5004,25 @@ namespace WindowPlugins.GUITVSeries
 
                 GUIListItem pItem = null;
 
-                if (descriptor.m_sbtnIgnoreLabel.Length > 0)
+                if (descriptor.m_sbtnSkipLabel.Length > 0)
                 {
-                    pItem = new GUIListItem(Translation.skip_Never_ask_again);
+                    pItem = new GUIListItem(Translation.CFS_Skip);
                     dlg.Add(pItem);
                     pItem.ItemId = 0;
+
+                }
+                if (descriptor.m_sbtnIgnoreLabel.Length > 0)
+                {
+                    pItem = new GUIListItem(Translation.CFS_Skip_Never_Ask_Again);
+                    dlg.Add(pItem);
+                    pItem.ItemId = 1;
                 }
 
                 if (descriptor.m_List.Count == 0)
                 {
-                    pItem = new GUIListItem(Translation.no_results_found);
+                    pItem = new GUIListItem(Translation.CFS_No_Results_Found);
                     dlg.Add(pItem);
-                    pItem.ItemId = 1;
+                    pItem.ItemId = 2;
                 }
                 else
                 {
@@ -5035,7 +5043,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    if (dlg.SelectedId == 0)
+                    if (dlg.SelectedId == 1)
                     {
                         return ReturnCode.Ignore;
                     }
@@ -5045,7 +5053,8 @@ namespace WindowPlugins.GUITVSeries
                         m_selected = new CItem(descriptor.m_sItemToMatch, String.Empty, DlgSelected.m_Tag);
                         return ReturnCode.OK;
                     }
-                    else return ReturnCode.Cancel;
+                    else 
+                        return ReturnCode.Cancel;
                 }
             }
             catch (Exception ex)

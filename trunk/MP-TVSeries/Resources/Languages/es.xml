@@ -34,8 +34,8 @@
 	<string Field="Confirm" Original="Confirm">Confirmar</string>
 	<string Field="Completed" Original="Completed">Completado</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">No se encontraron subtítulos</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Omitir / No volver a preguntar</string>
-	<string Field="no_results_found" Original="no results found!">¡No se han encontrado resultados!</string>
+	<string Field="CFS_Skip_Never_Ask_Again" Original="skip / Never ask again">Omitir / No volver a preguntar</string>
+	<string Field="CFS_No_Results_Found" Original="no results found!">¡No se han encontrado resultados!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Oculto para no adelantar información *</string>
 	<string Field="Yes" Original="Yes">Sí</string>
 	<string Field="No" Original="No">No</string>

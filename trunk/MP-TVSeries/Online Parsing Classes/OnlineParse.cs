@@ -1866,16 +1866,7 @@ namespace WindowPlugins.GUITVSeries
                 // query online db for possible matches
                 GetSeries GetSeriesParser = new GetSeries(nameToSearch);
 
-                // try to find an exact match in our results, if found, return
-                //if (DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1) {
-                //    foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) {
-                //        if (!bNoExactMatch && !String.IsNullOrEmpty(onlineSeries[DBOnlineSeries.cPrettyName]) &&
-                //           (onlineSeries[DBOnlineSeries.cPrettyName].ToString().Trim().Equals(nameToSearch.Trim().ToLower(), StringComparison.InvariantCultureIgnoreCase))) {
-                //            MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, onlineSeries.ToString(), onlineSeries[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
-                //            return onlineSeries;
-                //        }
-                //    }
-                //}
+                // try to find an exact match in our results, if found, return               
                 if (GetSeriesParser.PerfectMatch != null && !bNoExactMatch)
                 {
                     MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, GetSeriesParser.PerfectMatch.ToString(), GetSeriesParser.PerfectMatch[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
@@ -1906,20 +1897,13 @@ namespace WindowPlugins.GUITVSeries
                         onlineSeries.Value));
                 }
 
-                if (Choices.Count == 0) {
-                    Choices.Add(new CItem("No Match Found, Enter Manual Search...", String.Empty, null));
-                } else
-                    if (!Settings.isConfig)
-                        Choices.Add(new CItem("Manual Search...", String.Empty, null));
+                if (Choices.Count == 0) 
+                    Choices.Add(new CItem(Translation.CFS_No_Match_Manual_Search, String.Empty, null));
 
-                ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-                descriptor.m_sTitle = "Unable to find matching series";
-                descriptor.m_sItemToMatchLabel = "Local series:";
+                ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();                
+                descriptor.m_sItemToMatchLabel = Translation.CFS_Local_Series;
                 descriptor.m_sItemToMatch = nameToSearch;
-                descriptor.m_sListLabel = "Choose the correct series from this list:";
                 descriptor.m_List = Choices;
-                descriptor.m_sbtnCancelLabel = "&Skip";
-                descriptor.m_sbtnIgnoreLabel = "Skip &Always";
 
                 bool bKeepTrying = true;
                 while (bKeepTrying) {
@@ -1931,7 +1915,7 @@ namespace WindowPlugins.GUITVSeries
                             return null;
 
                         case ReturnCode.Ignore:
-                            MPTVSeriesLog.Write("User chose to Ignore \"" + nameToSearch + "\" in the future");
+                            MPTVSeriesLog.Write("User chose to Ignore \"" + nameToSearch + "\" in the future, setting Hidden=True and ScanIgnore=True");
                             nameToSearch = null;
                             DBSeries series = new DBSeries(seriesName);
                             series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
@@ -2006,6 +1990,8 @@ namespace WindowPlugins.GUITVSeries
                         descriptor.m_List = Choices;
                         descriptor.m_useRadioToSelect = true;
                         descriptor.m_allowAlter = false;
+                        descriptor.m_sbtnSkipLabel = String.Empty;
+                        descriptor.m_sbtnIgnoreLabel = String.Empty;
 
                         CItem selectedOrdering = null;
                         ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);

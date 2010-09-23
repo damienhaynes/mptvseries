@@ -3393,6 +3393,7 @@ namespace WindowPlugins.GUITVSeries
             descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
+            descriptor.m_sbtnSkipLabel = String.Empty;
 
             ReturnCode returnCode = ChooseFromSelection(descriptor, out selected);
 

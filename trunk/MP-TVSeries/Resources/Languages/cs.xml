@@ -35,8 +35,8 @@
 	<string Field="Confirm" Original="Confirm">Potvrdit</string>
 	<string Field="Completed" Original="Completed">Dokončeno</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">Žádné titulky nenalezeny</string>
-	<string Field="skip_Never_ask_again" Original="Skip / Never ask again">Přeskočit / Již se nedotazovat</string>
-	<string Field="no_results_found" Original="No results found!">Žádné výsledky nenalezeny!</string>
+	<string Field="CFS_Skip_Never_Ask_Again" Original="Skip / Never ask again">Přeskočit / Již se nedotazovat</string>
+	<string Field="CFS_No_Results_Found" Original="No results found!">Žádné výsledky nenalezeny!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Skryto kvůli prozrazení *</string>
 	<string Field="Yes" Original="Yes">Ano</string>
 	<string Field="No" Original="No">Ne</string>
