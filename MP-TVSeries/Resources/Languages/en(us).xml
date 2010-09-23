@@ -290,4 +290,6 @@
   <string Field="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">No Match Found, Manual Search...</string>
   <string Field="CFS_Local_Series" Original="Local Series:">Local Series:</string>
 
+  <string Field="AvailableMedia" Original="Available Media">Available Media</string>
+  
 </strings>

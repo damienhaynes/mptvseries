@@ -279,6 +279,17 @@ namespace WindowPlugins.GUITVSeries.Configuration {
             //    templates.Add(template);
             //}
 
+            // Available Media Only
+            if (!viewNames.Contains(DBView.cTranslateTokenAvailableMedia))
+            {
+                ViewTemplate template = new ViewTemplate();
+                template.name = DBView.cTranslateTokenAvailableMedia;
+                template.prettyname = Translation.AvailableMedia;
+                template.description = "Filters out Episodes that are currently not available e.g. Network Share Offline, USB Hard Drive not connected.";
+                template.configuration = @"series<;><Episode.IsAvailable>;!=;0<;><;><nextStep>season<;><;><Season.seasonIndex>;asc<;><nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
+                templates.Add(template);
+            }
+
             // Subtitles Episodes
             if (!viewNames.Contains(DBView.cTranslateTokenSubtitles)) {
                 ViewTemplate template = new ViewTemplate();
