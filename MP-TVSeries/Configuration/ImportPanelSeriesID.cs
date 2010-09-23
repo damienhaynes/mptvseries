@@ -261,7 +261,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             });
             #endregion
 
-            displayedActions.Add(UserInputResults.SeriesAction.Approve, "Approved");
+            displayedActions.Add(UserInputResults.SeriesAction.Approve, "Approve");
             displayedActions.Add(UserInputResults.SeriesAction.Skip, "Skip");
             displayedActions.Add(UserInputResults.SeriesAction.IgnoreAlways, "Always Ignore");
 
