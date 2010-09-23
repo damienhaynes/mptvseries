@@ -77,6 +77,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
             descriptor.m_sListLabel = Translation.CFS_List_Search_Site;
             descriptor.m_List = Choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
+            descriptor.m_sbtnSkipLabel = String.Empty;
 
             Feedback.CItem Selected = null;
             if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)
@@ -196,6 +197,7 @@ namespace WindowPlugins.GUITVSeries.Torrent
                 descriptor.m_sListLabel = Translation.CFS_Found_Torrents;
                 descriptor.m_List = Choices;
                 descriptor.m_sbtnIgnoreLabel = String.Empty;
+                descriptor.m_sbtnSkipLabel = String.Empty;
 
                 Feedback.CItem Selected = null;
                 if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK)

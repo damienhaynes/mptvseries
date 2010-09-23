@@ -34,8 +34,8 @@
   <string Field="Confirm" Original="Confirm">Bevestigen</string>
   <string Field="Completed" Original="Completed">Voltooid</string>
   <string Field="No_subtitles_found" Original="No subtitles found">Geen ondertiteling gevonden</string>
-  <string Field="skip_Never_ask_again" Original="Skip / Never ask again">Overslaan / Niet meer vragen</string>
-  <string Field="no_results_found" Original="No results found!">Geen resultaten gevonden!</string>
+  <string Field="CFS_Skip_Never_Ask_Again" Original="Skip / Never ask again">Overslaan / Niet meer vragen</string>
+  <string Field="CFS_No_Results_Found" Original="No results found!">Geen resultaten gevonden!</string>
   <string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Verborgen omwille van spoilers *</string>
   <string Field="Yes" Original="Yes">Ja</string>
   <string Field="No" Original="No">Nee</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 18th Sept 2010 -->
+<!-- Last Updated: 23rd Sept 2010 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Series</string>
@@ -34,8 +34,7 @@
   <string Field="Confirm" Original="Confirm">Confirm</string>
   <string Field="Completed" Original="Completed">Completed</string>
   <string Field="No_subtitles_found" Original="No subtitles found">No subtitles found</string>
-  <string Field="skip_Never_ask_again" Original="Skip / Never ask again">Skip / Never ask again</string>
-  <string Field="no_results_found" Original="No results found!">No results found!</string>
+  <string Field="CFS_No_Results_Found" Original="No Results Found!">No Results Found!</string>
   <string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Hidden to prevent spoilers *</string>
   <string Field="Yes" Original="Yes">Yes</string>
   <string Field="No" Original="No">No</string>
@@ -99,6 +98,7 @@
   <string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Choose correct season</string>
   <string Field="CFS_Local_Season_Index" Original="Local Season index:">Local Season index:</string>
   <string Field="CFS_Available_Seasons" Original="Available Seasons list:">Available Seasons list:</string>
+  <string Field="CFS_Skip_Never_Ask_Again" Original="Skip / Never Ask Again">Skip / Never Ask Again</string>
   <string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Subtitle File Replace</string>
   <string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Old subtitle File present: overwrite?</string>
   <string Field="RecentlyAdded" Original="Recently Added">Recently Added</string>
@@ -285,5 +285,9 @@
   
   <string Field="ShowHiddenItems" Original="Show Hidden Items">Show Hidden Items</string>
   <string Field="UnHide" Original="UnHide">UnHide</string>
+
+  <string Field="CFS_Skip" Original="Skip">Skip</string>
+  <string Field="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">No Match Found, Manual Search...</string>
+  <string Field="CFS_Local_Series" Original="Local Series:">Local Series:</string>
 
 </strings>

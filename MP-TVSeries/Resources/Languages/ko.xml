@@ -34,8 +34,8 @@
     <string Field="Confirm" Original="Confirm">확인</string>
     <string Field="Completed" Original="Completed">완료</string>
     <string Field="No_subtitles_found" Original="No subtitles found">작막을 찾지 못했습니다</string>
-    <string Field="skip_Never_ask_again" Original="Skip / Never ask again">넘김 / 다시 물어보지 않음</string>
-    <string Field="no_results_found" Original="No results found!">결과가 없습니다!</string>
+    <string Field="CFS_Skip_Never_Ask_Again" Original="Skip / Never ask again">넘김 / 다시 물어보지 않음</string>
+    <string Field="CFS_No_Results_Found" Original="No results found!">결과가 없습니다!</string>
     <string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * 스포일을 막기위해 숨김 *</string>
     <string Field="Yes" Original="Yes">예</string>
     <string Field="No" Original="No">아니오</string>

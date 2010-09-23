@@ -58,6 +58,7 @@ namespace WindowPlugins.GUITVSeries.Feedback
         // buttons: no label => no button shown
         public String m_sbtnOKLabel = Translation.OK;
         public String m_sbtnOKLabelAlternate = Translation.CFS_Search_Again;
+        public String m_sbtnSkipLabel = Translation.CFS_Skip;
         public String m_sbtnCancelLabel = Translation.Cancel;
         public String m_sbtnIgnoreLabel = Translation.Ignore;
 

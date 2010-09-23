@@ -34,8 +34,8 @@
 	<string Field="Confirm" Original="Confirm">Confirmar</string>
 	<string Field="Completed" Original="Completed">Concluído</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">Legendas não encontradas</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Saltar / Não perguntar novamente</string>
-	<string Field="no_results_found" Original="no results found!">Nenhum resultado encontrado!</string>
+	<string Field="CFS_Skip_Never_Ask_Again" Original="skip / Never ask again">Saltar / Não perguntar novamente</string>
+	<string Field="CFS_No_Results_Found" Original="no results found!">Nenhum resultado encontrado!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Escondido até ver o episódio *</string>
 	<string Field="Yes" Original="Yes">Sim</string>
 	<string Field="No" Original="No">Não</string>

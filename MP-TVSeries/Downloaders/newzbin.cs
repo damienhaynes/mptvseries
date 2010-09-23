@@ -325,6 +325,7 @@ namespace WindowPlugins.GUITVSeries.Newzbin
                 descriptor.m_sListLabel = "Found reports:";
                 descriptor.m_List = Choices;
                 descriptor.m_sbtnIgnoreLabel = String.Empty;
+                descriptor.m_sbtnSkipLabel = String.Empty;
 
                 Feedback.CItem Selected = null;
                 if (m_feedback.ChooseFromSelection(descriptor, out Selected) == Feedback.ReturnCode.OK && Selected != null)

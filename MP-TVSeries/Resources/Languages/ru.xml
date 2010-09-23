@@ -35,8 +35,8 @@
 	<string Field="Confirm" Original="Confirm">Подтверждение</string>
 	<string Field="Completed" Original="Completed">Завершено</string>
 	<string Field="No_subtitles_found" Original="No subtitles found">Субтитры не найдены</string>
-	<string Field="skip_Never_ask_again" Original="skip / Never ask again">Пропустить / Больше не спрашивать</string>
-	<string Field="no_results_found" Original="no results found!">ничего не найдено!</string>
+	<string Field="CFS_Skip_Never_Ask_Again" Original="skip / Never ask again">Пропустить / Больше не спрашивать</string>
+	<string Field="CFS_No_Results_Found" Original="no results found!">ничего не найдено!</string>
 	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Скрыто, чтобы не  показывать спойлеры *</string>
 	<string Field="Yes" Original="Yes">Да</string>
 	<string Field="No" Original="No">Нет</string>

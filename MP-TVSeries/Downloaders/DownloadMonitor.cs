@@ -352,6 +352,7 @@ namespace WindowPlugins.GUITVSeries.Download
                             descriptor.m_sListLabel = "Matching file to episode:";
                             descriptor.m_List = Choices;
                             descriptor.m_sbtnIgnoreLabel = String.Empty;
+                            descriptor.m_sbtnSkipLabel = String.Empty;
 
                             bool bReady = false;
                             while (!bReady)

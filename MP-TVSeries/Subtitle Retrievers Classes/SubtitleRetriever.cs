@@ -213,6 +213,7 @@ namespace WindowPlugins.GUITVSeries.Subtitles
             descriptor.m_sListLabel = Translation.CFS_Available_Episode_List;
             descriptor.m_List = choices;
             descriptor.m_sbtnIgnoreLabel = String.Empty;
+            descriptor.m_sbtnSkipLabel = String.Empty;
 
             CItem selected;
 

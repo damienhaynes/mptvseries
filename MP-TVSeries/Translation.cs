@@ -81,8 +81,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Completed = "Completed";
         public static string No_subtitles_found = "No subtitles found";
         public static string Subtitles_download_complete = "Subtitles Download Complete";
-        public static string skip_Never_ask_again = "Skip / Never ask again";
-        public static string no_results_found = "No results found!";
+                
         public static string _Hidden_to_prevent_spoilers_ = " * Hidden to prevent spoilers *";
         public static string Yes = "Yes";
         public static string No = "No";
@@ -254,6 +253,10 @@ namespace WindowPlugins.GUITVSeries
         public static string CFS_Choose_Correct_Season = "Choose correct season";
         public static string CFS_Local_Season_Index = "Local Season index:";
         public static string CFS_Available_Seasons = "Available Seasons list:";
+        public static string CFS_Skip = "Skip";
+        public static string CFS_Skip_Never_Ask_Again = "Skip / Never Ask Again";
+        public static string CFS_No_Match_Manual_Search = "No Match Found, Manual Search...";
+        public static string CFS_No_Results_Found = "No Results Found!";
         
         // ChooseYesNoDescriptor
         public static string CYN_Subtitle_File_Replace = "Subtitle File Replace";
