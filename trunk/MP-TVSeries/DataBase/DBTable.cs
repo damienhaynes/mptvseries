@@ -614,5 +614,18 @@ namespace WindowPlugins.GUITVSeries
             return fieldvalue.Split(splits, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>
+        /// Check if column exists in Database table
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static bool ColumnExists(string table, string field)
+        {
+            string sql = "select * from sqlite_master where type='table' and tbl_name='" + table + "' and sql like '%" + field + "%'";
+            SQLiteResultSet results = DBTVSeries.Execute(sql);
+            return results.Rows.Count > 0;
+        }
+
     };
 }

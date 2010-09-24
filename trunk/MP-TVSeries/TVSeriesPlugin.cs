@@ -4698,16 +4698,15 @@ namespace WindowPlugins.GUITVSeries
                 else
                     if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit) requiresSplit = true;
 
+                string field = groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", "");
                 string tableName = "online_series";
-                string tableField = tableName + "." + groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", "");
+                string tableField = tableName + "." + field;                
                 string userEditField = tableField + DBTable.cUserEditPostFix;
                 string value = requiresSplit ? "like " + "'%" + selectedItem + "%'" : "= " + "'" + selectedItem + "'";
+                string sql = string.Empty;
 
                 // check if the useredit column exists
-                string sql = "select " + userEditField + " from " + tableName;
-                SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);                
-
-                if (results.Rows.Count > 0)
+                if (DBTable.ColumnExists(tableName, field + DBTable.cUserEditPostFix))
                 {
                     sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
                              "then " + tableField + " else " + userEditField + " " +

@@ -231,15 +231,14 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
             }
 
+            string fieldName = step.groupedBy.rawFieldname;
             string tableName = step.groupedBy.table.m_tableName;
             string tableField = step.groupedBy.tableField;
             string userEditField = tableField + DBTable.cUserEditPostFix;
+            string sql = string.Empty;
 
             // check if the useredit column exists
-            string sql = "select " + userEditField + " from " + tableName;
-            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);            
-
-            if (results.Rows.Count > 0)
+            if (DBTable.ColumnExists(tableName, fieldName + DBTable.cUserEditPostFix))
             {
                 sql = "select distinct(" +
                              "case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
@@ -256,7 +255,7 @@ namespace WindowPlugins.GUITVSeries
                              step.conds.orderString;
 
             }
-            results = DBTVSeries.Execute(sql);
+            SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);
             MPTVSeriesLog.Write("View: GetGroupItems: SQL complete", MPTVSeriesLog.LogLevel.Debug);
             if (results.Rows.Count > 0)
             {                
@@ -325,16 +324,15 @@ namespace WindowPlugins.GUITVSeries
                         else
                             if (m_steps[stepIndex - 1].groupedBy.attempSplit) requiresSplit = true;
 
+                        string fieldName = m_steps[stepIndex - 1].groupedBy.rawFieldname;
                         string tableName = m_steps[stepIndex - 1].groupedBy.table.m_tableName;
-                        string tableField = tableName + "." + m_steps[stepIndex - 1].groupedBy.rawFieldname;
+                        string tableField = tableName + "." + fieldName;
                         string userEditField = tableField + DBTable.cUserEditPostFix;                        
                         string value = requiresSplit ? "like " + "'%" + selectedItem + "%'" : "= " + "'" + selectedItem + "'";
+                        string sql = string.Empty;
 
-                        // check if the useredit column exists
-                        string sql = "select " + userEditField + " from " + tableName;
-                        SQLite.NET.SQLiteResultSet results = DBTVSeries.Execute(sql);                        
-
-                        if (results.Rows.Count > 0)
+                        // check if the useredit column exists                       
+                        if (DBTable.ColumnExists(tableName, fieldName + DBTable.cUserEditPostFix))
                         {
                             sql = "(case when (" + userEditField + " is null or " + userEditField + " = " + "'" + "'" + ") " +
                                      "then " + tableField + " else " + userEditField + " " +
