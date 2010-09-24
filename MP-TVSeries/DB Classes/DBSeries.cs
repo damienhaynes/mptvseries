@@ -833,6 +833,11 @@ namespace WindowPlugins.GUITVSeries
 
             // Hide Series
             this[DBSeries.cHidden] = hide;
+            // Set Scan Ignore
+            if (DBOption.GetOptions(DBOption.cSetHiddenSeriesAsScanIgnore))
+            {
+                this[cScanIgnore] = hide;
+            }
             this.Commit();
         }
 
