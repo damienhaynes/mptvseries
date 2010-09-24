@@ -217,6 +217,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cImportDelay = "ImportDelay";        
         public const String cDelayImportPathMonitoringValue = "DelayImportPathMonitoringValue";
 
+        public const String cSetHiddenSeriesAsScanIgnore = "SetHiddenSeriesAsScanIgnore";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -581,6 +583,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cDelayImportPathMonitoringValue) == null)
                     SetOptions(cDelayImportPathMonitoringValue, 20);
+
+                if (GetOptions(cSetHiddenSeriesAsScanIgnore) == null)
+                    SetOptions(cSetHiddenSeriesAsScanIgnore, true);
 
             }
             catch (Exception ex)
