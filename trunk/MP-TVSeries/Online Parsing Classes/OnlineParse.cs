@@ -940,6 +940,7 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( != 0)
             condition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries) {
                 MPTVSeriesLog.Write(bigLogMessage("Retrieving Metadata for new Series"));
@@ -1238,6 +1239,7 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition condition = new SQLCondition();
             // all series that have an onlineID ( > 0)
             condition.Add(new DBOnlineSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             if (bUpdateNewSeries) {
                 if (!DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork))
@@ -1520,8 +1522,13 @@ namespace WindowPlugins.GUITVSeries
 
         public void UpdateUserRatings(BackgroundWorker tUserRatings)
         {
-            MPTVSeriesLog.Write(bigLogMessage("Updating User Ratings"), MPTVSeriesLog.LogLevel.Normal);            
-            List<DBSeries> seriesList = DBSeries.Get(new SQLCondition());
+            MPTVSeriesLog.Write(bigLogMessage("Updating User Ratings"), MPTVSeriesLog.LogLevel.Normal);
+            
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
 
             tUserRatings.DoWork += new DoWorkEventHandler(asyncUserRatings);
             tUserRatings.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncUserRatingsCompleted);
@@ -1640,9 +1647,12 @@ namespace WindowPlugins.GUITVSeries
 
                 GetUserFavourites userFavourites = new GetUserFavourites(sAccountID);
 
-                SQLCondition conditions = new SQLCondition();
-                List<DBSeries> seriesList = DBSeries.Get(conditions);
-                
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+                condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+                condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+                List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
+
                 foreach (DBSeries series in seriesList) {
                     // Update Progress
                     m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
@@ -1761,8 +1771,11 @@ namespace WindowPlugins.GUITVSeries
 
             tEpisodeCounts.WorkerReportsProgress = true;
 
-            SQLCondition condEmpty = new SQLCondition();
-            List<DBSeries> series = DBSeries.Get(condEmpty);
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            List<DBSeries> series = DBSeries.Get(condition, false, false);            
 
             if (series.Count > 0)
             {
