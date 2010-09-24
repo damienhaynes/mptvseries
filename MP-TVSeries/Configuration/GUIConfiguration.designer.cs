@@ -356,6 +356,8 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.ignoreOnScanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
@@ -448,6 +450,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.contextMenuStrip_DetailsTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hideToolStripMenuItem,
+            this.ignoreOnScanToolStripMenuItem,
+            this.toolStripSeparator4,
             this.deleteToolStripMenuItem,
             this.updateToolStripMenuItem,
             this.reScanMediaInfoToolStripMenuItem,
@@ -461,7 +465,7 @@ namespace WindowPlugins.GUITVSeries
             this.ResetUserSelToolStripMenuItem,
             this.toolStripSeparator3});
             this.contextMenuStrip_DetailsTree.Name = "contextMenuStrip_DetailsTree";
-            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 242);
+            this.contextMenuStrip_DetailsTree.Size = new System.Drawing.Size(185, 292);
             this.contextMenuStrip_DetailsTree.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_DetailsTree_Opening);
             this.contextMenuStrip_DetailsTree.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip_DetailsTree_ItemClicked);
             // 
@@ -3994,6 +3998,19 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 26);
             this.listBox_Log.TabIndex = 5;
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(181, 6);
+            // 
+            // ignoreOnScanToolStripMenuItem
+            // 
+            this.ignoreOnScanToolStripMenuItem.CheckOnClick = true;
+            this.ignoreOnScanToolStripMenuItem.Name = "ignoreOnScanToolStripMenuItem";
+            this.ignoreOnScanToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.ignoreOnScanToolStripMenuItem.Tag = "scanignore";
+            this.ignoreOnScanToolStripMenuItem.Text = "Ignore on Scan";
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4373,5 +4390,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.NumericUpDown numericUpDownImportDelay;
         private System.Windows.Forms.Label lblImportDelayCaption;
         private System.Windows.Forms.Label lblImportDelaySecs;
+        private System.Windows.Forms.ToolStripMenuItem ignoreOnScanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }
