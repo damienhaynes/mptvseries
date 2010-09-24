@@ -2011,7 +2011,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
-                                case DBSeries.cDuplicateLocalName:                                
+                                case DBSeries.cDuplicateLocalName:
                                     // hide these fields, they are handled internally
                                     break;
                                 
@@ -2035,7 +2035,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cOriginalName:
                                 case DBOnlineSeries.cHasNewEpisodes:
                                 case DBOnlineSeries.cEpisodeSortOrder:
-                                case DBSeries.cHidden:                   
+                                case DBSeries.cHidden:
+                                case DBSeries.cScanIgnore:
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
                                      break;
@@ -2397,6 +2398,21 @@ namespace WindowPlugins.GUITVSeries
         private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
+        }
+
+        private void ScanIgnore(TreeNode nodeScanIgnore)
+        {
+
+            if (nodeScanIgnore != null)
+            {
+                if (nodeScanIgnore.Name == DBSeries.cTableName)
+                {
+                    DBSeries series = (DBSeries)nodeScanIgnore.Tag;
+                    series[DBSeries.cScanIgnore] = !series[DBSeries.cScanIgnore];
+                    series.Commit();                    
+                }
+
+            }
         }
 
         private void HideNode(TreeNode nodeHidden)
@@ -3087,6 +3103,10 @@ namespace WindowPlugins.GUITVSeries
                     HideNode(clickedNode);
                     break;
 
+                case "scanignore":
+                    ScanIgnore(clickedNode);
+                    break;
+
                 case "delete":
                     DeleteNode(clickedNode);
                     break;
@@ -3432,6 +3452,11 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeries.cTableName:
                     DBSeries series = (DBSeries)node.Tag;
                     bHidden = series[DBSeries.cHidden];
+                    
+                    contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = true;
+                    ToolStripMenuItem ignoreOnScanMenuItem = (ToolStripMenuItem)contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"];
+                    ignoreOnScanMenuItem.Checked = series[DBSeries.cScanIgnore];
+
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
@@ -3474,6 +3499,7 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeason.cTableName:
                     DBSeason season = (DBSeason)node.Tag;
                     bHidden = season[DBSeason.cHidden];
+                    contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
@@ -3485,6 +3511,7 @@ namespace WindowPlugins.GUITVSeries
                 case DBEpisode.cTableName:
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
+                    contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = false;
                     contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = SubtitleDownloaderEnabledAndHasSites();
                     contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
                     contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
