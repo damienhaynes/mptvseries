@@ -109,6 +109,13 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap find {
+            get {
+                object obj = ResourceManager.GetObject("find", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap folder_explore {
             get {
                 object obj = ResourceManager.GetObject("folder_explore", resourceCulture);

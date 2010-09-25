@@ -359,31 +359,16 @@ namespace WindowPlugins.GUITVSeries.Configuration
             FillGrid(updatedPRs.ToList());
         }
 
-        string filterDefault = "Filter by..";
-        //bool clearedByClick = false;
+        string filterDefault = "Filter by..";        
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
-            Filter();
-            /*
-            if (textBoxFilter.Text == string.Empty)
-            {
-                if (!clearedByClick)
-                {
-                    resetFilter();
-                }
-                else clearedByClick = false;
-            }
-            else if (textBoxFilter.Text != filterDefault)
-                Filter(this.textBoxFilter.Text);
-            */
-
+            //Filter();
         }
 
         private void textBoxFilter_Click(object sender, EventArgs e)
         {
             if (textBoxFilter.Text == filterDefault)
-            {
-                //clearedByClick = true;
+            {                
                 textBoxFilter.Text = string.Empty;
             }
         }
@@ -593,19 +578,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void checkFilterMan_CheckedChanged(object sender, EventArgs e)
         {
             Filter();
-            /*
-            if (checkFilterMan.Checked)
-            {
-                // we identify manually added as having the same fullfilename as matchfilename
-                // should probably be identified differently
-                Filter(row =>
-                    {
-                        parseResult pr = row.Tag as parseResult;
-                        return pr != null && pr.match_filename == pr.full_filename;
-                    });
-            }
-            else RefreshGrid();
-            */
         }
 
         void dataGridViewReview_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -620,6 +592,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             if (dataGridViewReview.CurrentCell.ColumnIndex == 0 && dataGridViewReview.IsCurrentCellDirty)
                 dataGridViewReview.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
+
+        private void buttonFilter_Click(object sender, EventArgs e)
+        {
+            Filter();
         }
 
     }

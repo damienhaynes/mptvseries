@@ -48,6 +48,7 @@
             this.labelStep = new System.Windows.Forms.Label();
             this.labelImportWizardTitle = new System.Windows.Forms.Label();
             this.lnkAddFiles = new System.Windows.Forms.LinkLabel();
+            this.buttonFilter = new System.Windows.Forms.Button();
             this.pictureBoxWork = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReview)).BeginInit();
             this.groupBoxAddCol.SuspendLayout();
@@ -169,7 +170,7 @@
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFilter.Location = new System.Drawing.Point(559, 48);
             this.textBoxFilter.Name = "textBoxFilter";
-            this.textBoxFilter.Size = new System.Drawing.Size(179, 20);
+            this.textBoxFilter.Size = new System.Drawing.Size(153, 20);
             this.textBoxFilter.TabIndex = 7;
             this.textBoxFilter.Text = "Filter by..";
             this.textBoxFilter.Click += new System.EventHandler(this.textBoxFilter_Click);
@@ -251,6 +252,18 @@
             this.lnkAddFiles.Visible = false;
             this.lnkAddFiles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAddFiles_LinkClicked);
             // 
+            // buttonFilter
+            // 
+            this.buttonFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonFilter.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.find;
+            this.buttonFilter.Location = new System.Drawing.Point(715, 46);
+            this.buttonFilter.Name = "buttonFilter";
+            this.buttonFilter.Size = new System.Drawing.Size(23, 22);
+            this.buttonFilter.TabIndex = 17;
+            this.buttonFilter.Text = "button1";
+            this.buttonFilter.UseVisualStyleBackColor = true;
+            this.buttonFilter.Click += new System.EventHandler(this.buttonFilter_Click);
+            // 
             // pictureBoxWork
             // 
             this.pictureBoxWork.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -268,15 +281,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.pictureBoxWork);
+            this.Controls.Add(this.buttonFilter);
             this.Controls.Add(this.labelImportWizardTitle);
             this.Controls.Add(this.groupBoxAddCol);
             this.Controls.Add(this.labelStep);
             this.Controls.Add(this.labelWaitParse);
             this.Controls.Add(this.checkFilterMan);
-            this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.dataGridViewReview);
-            this.Controls.Add(this.lnkAdd);
+            this.Controls.Add(this.textBoxFilter);
             this.Controls.Add(this.lblCount);
+            this.Controls.Add(this.lnkAdd);
             this.Controls.Add(this.lnkAddFiles);
             this.MinimumSize = new System.Drawing.Size(758, 385);
             this.Name = "ImportPanelParsing";
@@ -309,5 +323,6 @@
         private System.Windows.Forms.ComboBox comboBoxAddColumn;
         private System.Windows.Forms.LinkLabel lnkAddFiles;
         private System.Windows.Forms.PictureBox pictureBoxWork;
+        private System.Windows.Forms.Button buttonFilter;
     }
 }
