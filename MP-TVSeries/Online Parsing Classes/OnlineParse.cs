@@ -631,7 +631,7 @@ namespace WindowPlugins.GUITVSeries
                 // clear the file if we know for certain it doesnt exist anymore
                 // if removable drive or network path is offline then we dont remove
                 string importPath = LocalParse.getImportPath(pair.m_sFull_FileName);
-                if (string.IsNullOrEmpty(importPath) || (Directory.Exists(importPath) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName)))) //  && !LocalParse.needToKeepReference(pair.m_sFull_FileName)
+                if (string.IsNullOrEmpty(importPath) || (Directory.Exists(importPath) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName))))
                 {
                     DBEpisode.Clear(condition);
                     m_bDataUpdated = true;
@@ -752,12 +752,11 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 //ParseLocal(UserModifiedParsedResults == null ? Filelister.GetFiles(listFolders) : null, UserModifiedParsedResults);
-                ParseLocal(Filelister.GetFiles(listFolders), UserModifiedParsedResults);              
+                ParseLocal(Filelister.GetFiles(listFolders), UserModifiedParsedResults);
 
                 // now, remove all episodes still processed = 0, the weren't find in the scan
                 SQLCondition condition = new SQLCondition();
                 condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                //condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
 
                 // remove references to files that we know for certain dont exist anymore
                 // if import path is not available then could be offline
@@ -782,17 +781,13 @@ namespace WindowPlugins.GUITVSeries
 
                 // clear local database references for files that dont exist anymore
                 foreach (DBEpisode localepisode in localepisodes)
-                {
-                    //if (!LocalParse.needToKeepReference(localepisode[DBEpisode.cFilename]))
-                    //{
-                        DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));
-                    //}
+                {                    
+                    DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));                 
                 }
 
                 // mark all remaining episodes in database as not available                
                 condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);
-                //condition.Add(new DBEpisode(), DBEpisode.cIsOnRemovable, false, SQLConditionType.Equal);
+                condition.Add(new DBEpisode(), DBEpisode.cImportProcessed, 2, SQLConditionType.Equal);                
                 DBEpisode.GlobalSet(DBEpisode.cIsAvailable, false, condition);
 
                 // and copy the HasLocalFileTemp value into the real one
@@ -1548,14 +1543,14 @@ namespace WindowPlugins.GUITVSeries
 
             if (!String.IsNullOrEmpty(sAccountID))
             {
-                List<DBOnlineSeries> seriesList = (List<DBOnlineSeries>)e.Argument;
+                List<DBSeries> seriesList = (List<DBSeries>)e.Argument;
 
                 int nIndex = 0;
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
                     bool MarkWatched = DBOption.GetOptions(DBOption.cMarkRatedEpisodeAsWatched);
                     
-                    foreach (DBOnlineSeries series in seriesList)
+                    foreach (DBSeries series in seriesList)
                     {
                         MPTVSeriesLog.Write("Retrieving user ratings for series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]), MPTVSeriesLog.LogLevel.Debug);
                         GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
@@ -1611,7 +1606,7 @@ namespace WindowPlugins.GUITVSeries
                 else //update Series only, not Episodes -- workaround for not being able to pull up all series/episode ratings at once from theTVDB.com; saves time.
                 {
                     GetUserRatings userRatings = new GetUserRatings(null, sAccountID);
-                    foreach (DBOnlineSeries series in seriesList)
+                    foreach (DBSeries series in seriesList)
                     {
                         // Update Progress
                         m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));

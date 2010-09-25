@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
-        public const int cDBVersion = 6;
+        public const int cDBVersion = 7;
 
         #region Local DB Fields
         public const String cFilename = "EpisodeFilename";
@@ -200,6 +200,34 @@ namespace WindowPlugins.GUITVSeries
                     case 5:
                         DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailUrl, (DBValue)"init", new SQLCondition());
                         DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", new SQLCondition());
+                        nUpgradeDBVersion++;
+                        break;
+                    
+                    case 6:
+                        // Ensure that Volume Label is not empty
+                        SQLCondition conditions = new SQLCondition();
+                        conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+                        List<DBEpisode> episodes = DBEpisode.Get(conditions);
+                        
+                        // For some reason I couldnt get all eps missing a volume label when I explictly added condition
+                        // use this method instead to get them by removing all eps that already have a volume label
+                        episodes.RemoveAll(ep => ep[cVolumeLabel].ToString().Trim() != string.Empty);
+
+                        foreach (DBEpisode episode in episodes)
+                        {
+                            string filename = episode[cFilename].ToString();
+                            if (!string.IsNullOrEmpty(filename))
+                            {
+                                string volumeLabel = DeviceManager.GetVolumeLabel(filename);
+                                if (string.IsNullOrEmpty(volumeLabel))
+                                {
+                                    // Get Import Folder as volume label
+                                    volumeLabel = LocalParse.getImportPath(episode[cFilename]);
+                                }
+                                episode[cVolumeLabel] = volumeLabel;
+                                episode.Commit();
+                            }
+                        }
                         nUpgradeDBVersion++;
                         break;
 
