@@ -1784,7 +1784,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                                 
                                 case DBEpisode.cVolumeLabel:
-                                    if (String.IsNullOrEmpty(episode[key]))                                        
+                                    if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
 

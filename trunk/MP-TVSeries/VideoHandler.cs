@@ -138,25 +138,13 @@ namespace WindowPlugins.GUITVSeries
                 }
                 #endregion
 
-                #region Removable Media Handling
-                //bool isOnRemovable = false;
-                //if (episode[DBEpisode.cIsOnRemovable]) isOnRemovable = true;
-                //else if (episode[DBEpisode.cIsOnRemovable] == string.Empty) // was imported before support for this
-                //{
-                //    isOnRemovable = LocalParse.isOnRemovable(episode[DBEpisode.cFilename]);
-                //    episode[DBEpisode.cIsOnRemovable] = isOnRemovable;
-                //    if (isOnRemovable) episode[DBEpisode.cVolumeLabel] = DeviceManager.GetVolumeLabel(episode[DBEpisode.cFilename]);
-                //    episode.Commit();
-                //}                                
-
-                //if (isOnRemovable && !System.IO.File.Exists(episode[DBEpisode.cFilename]))
+                #region Removable Media Handling                
                 if (!File.Exists(m_currentEpisode[DBEpisode.cFilename]))
                 {
-                    string importPath = LocalParse.getImportPath(m_currentEpisode[DBEpisode.cFilename]);
                     string episodeVolumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
 
                     if (string.IsNullOrEmpty(episodeVolumeLabel))
-                        episodeVolumeLabel = importPath;
+                        episodeVolumeLabel = LocalParse.getImportPath(m_currentEpisode[DBEpisode.cFilename]);
 
                     // ask the user to input cd/dvd, usb disk or confirm network drive is connected
                     GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
