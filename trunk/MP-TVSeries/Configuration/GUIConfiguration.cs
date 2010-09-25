@@ -395,8 +395,11 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            comboOnlineLang_DropDown(comboOnlineLang, new EventArgs());
-            
+
+            // Get Online Languages and fill language combobox
+            // do this in background thread so doesn't lockup during load
+            LoadOnlineLanguages();
+
             LoadViews();
 			// Select First Item in list
 			if (_availViews.Items.Count > 0)
@@ -438,6 +441,43 @@ namespace WindowPlugins.GUITVSeries
             int endsY = DrawSubtitleDownloaderCheckBoxes(checkBoxesY);
             DrawSubtitleLanguageCheckBoxes(endsY);
         }
+
+        #region Online Languages
+        private void LoadOnlineLanguages()
+        {
+            BackgroundWorker onlineLangDownloader = new BackgroundWorker();
+            onlineLangDownloader.DoWork += new DoWorkEventHandler(GetOnlineLanaguages);
+            onlineLangDownloader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetOnlineLanaguages_Completed);
+            onlineLangDownloader.RunWorkerAsync();
+        }
+
+        private void GetOnlineLanaguages_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // we successfully got langages and can allow user to select
+            if (onlineLanguages.Count != 0)
+            {
+                MPTVSeriesLog.Write("Successfully retrieved {0} languages from online languages from online", onlineLanguages.Count);
+                comboOnlineLang.Enabled = true;
+            }
+        }
+
+        private void GetOnlineLanaguages(object sender, DoWorkEventArgs e)
+        {            
+            MPTVSeriesLog.Write("Retrieving a list of languages from online");
+            
+            comboOnlineLang.Enabled = false;
+
+            // get the online languages from the interface            
+            onlineLanguages.AddRange(new GetLanguages().languages);
+            string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
+            foreach (Language lang in onlineLanguages)
+            {
+                comboOnlineLang.Items.Add(lang.language);
+                if (lang.id.ToString() == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+            }
+        }
+        #endregion
 
         private void LoadViews()
         {
@@ -4394,22 +4434,7 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cSeries_UseSortName, checkBox_Series_UseSortName.Checked);
             LoadTree();
         }
-
-        private void comboOnlineLang_DropDown(object sender, EventArgs e)
-        {
-            if (onlineLanguages.Count != 0) return;
-            // get the online languages from the interface
-            MPTVSeriesLog.Write("Retrieving a list of languages from online");
-            onlineLanguages.AddRange(new GetLanguages().languages);
-            string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
-            foreach (Language lang in onlineLanguages)
-            {
-                comboOnlineLang.Items.Add(lang.language);
-                if (lang.id.ToString() == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
-                if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
-            }
-        }
-
+       
         private void lnkResetView_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBView.ClearAll();
