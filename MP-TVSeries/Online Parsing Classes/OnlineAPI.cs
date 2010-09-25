@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Net;
 using System.IO;
+using System.Web;
 using MediaPortal.GUI.Library;
 using MediaPortal.Dialogs;
 using ICSharpCode.SharpZipLib.Zip;
@@ -86,8 +87,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static public XmlNode GetSeries(String sSeriesName)
     {
-      return Generic(string.Format(apiURIs.GetSeries,
-                                     sSeriesName.Replace(' ', '+')), true, false, Format.NoExtension);
+        return Generic(string.Format(apiURIs.GetSeries, HttpUtility.UrlEncode(sSeriesName)), true, false, Format.NoExtension);
     }
 
     static public XmlNode GetUserRatings(String sSeriesID, String sAccountID)
