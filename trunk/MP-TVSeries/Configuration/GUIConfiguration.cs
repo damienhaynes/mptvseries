@@ -456,7 +456,7 @@ namespace WindowPlugins.GUITVSeries
             // we successfully got langages and can allow user to select
             if (onlineLanguages.Count != 0)
             {
-                MPTVSeriesLog.Write("Successfully retrieved {0} languages from online languages from online", onlineLanguages.Count);
+                MPTVSeriesLog.Write("Successfully retrieved {0} languages from online", onlineLanguages.Count);
                 comboOnlineLang.Enabled = true;
             }
         }
