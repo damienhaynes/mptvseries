@@ -3627,12 +3627,12 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilerThumbnail;
 
-            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
-            {
+            //if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+            //{
                 pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
                 dlg.Add(pItem);
                 pItem.ItemId = (int)eContextItems.optionsAskToRate;
-            }
+            //}
 
             if (FanartBackground != null)
             {
