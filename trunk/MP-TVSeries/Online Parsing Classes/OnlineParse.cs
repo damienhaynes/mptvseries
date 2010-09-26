@@ -1219,9 +1219,9 @@ namespace WindowPlugins.GUITVSeries
 							eps.Add(episodesInDB[j]);
 					}
                     
-					DBSeries series = Helper.getCorrespondingSeries(seriesID);
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, series.ToString() + " [" + eps.Count + " episodes]", i+1, episodesInDB.Count, series, null));
+					DBSeries series = Helper.getCorrespondingSeries(seriesID);                    
 					if (series != null) {
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, series.ToString() + " [" + eps.Count + " episodes]", i + 1, episodesInDB.Count, series, null));
 						matchOnlineToLocalEpisodes(series, eps, new GetEpisodes(seriesID.ToString()));
 					}					
                 }
