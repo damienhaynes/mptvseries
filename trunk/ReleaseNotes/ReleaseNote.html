@@ -59,6 +59,44 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
+	<div class="main_title">TVSeries v2.6.2 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.6.1:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 426: Added Find\Filter button to Parsing Wizard to execute filtering when ready rather than immediate filtering when typing.</p></li>
+			<li><p>Issue 490: Retrieve online languages on a separate background thread when loading configuration so UI does not lockup.</p></li>
+			<li><p>Issue N/A: Encode series name before doing lookup on API.</p></li>
+			<li><p>Issue 494: Fixed 'User Rating Prompt' not being able to be disabled from GUI if no account id has been defined.</p></li>
+			<li><p>Issue 493: Fixed case where files on mapped share that were added to database before 2.6.1 were not being removed when files no longer exist during local scan.</p></li>
+			<li><p>Issue 333: Ability to UnHide episodes, seasons and series from GUI. Will use 'selectedColor' of skin list control property to identify hidden episodes. New Options menu item in GUI 'Show Hidden Items' will allow you to toggle hidden episodes from view, this property is shared with the one currently used in Configuration.</p></li>
+			<li><p>Issue 214: In-line sorting of specials were still being shown in episode views when Season 0/Specials season was set to Hidden (This was because the individual episodes were not hidden as well). Setting a season to hidden/unhidden will now recursively set the property for each episode as well now. Users with current specials hidden and episodes not hidden will have to do a toggle manually to fix that up.</p></li>
+			<li><p>Issue N/A: Added 'Ignore on Scan' option to context menu in the configuration details tab, removed from property grid. 'Ignore on Scan', stops updates on a particular series.</p></li>
+			<li><p>Issue N/A: When setting series as Hidden, also set 'Ignore on Scan' on. When Un-Hiding series set 'Ignore on Scan' off.</p></li>
+			<li><p>Issue 478: Episode Count for Season is not updated in season list facade when there is hidden episodes from view. Count will be based on what is seen like with 'Show Local Files' setting.</p></li>
+			<li><p>Issue 492: Fixed online refresh actions being executed on series that have 'Ignore on Scan' property set.</p></li>
+			<li><p>Issue 456: Fixed error appearing in log when browsing group views and no USEREDIT column exists in database.</p></li>
+			<li><p>Issue 489: Added new view 'Available Media' which filters out any local episodes that are not available e.g. files on a disconnected network share or usb disk not plugged in.</p></li>
+			<li><p>Issue 485: Fixed facade colour turning to remote colour when doing a local scan.</p></li>
+			<li><p>Issue 488: Added 'Skip' to the Manual Series Lookup dialog. You could only press ESC or BACK previously which may not be obvious to user, having both entries 'Skip' and 'Skip / Never Ask Again' is much clearer.</p></li>
+			<li><p>Issue N/A: Renamed 'Approved' to 'Approve' in series match dialog. Fixed small alignment issue in configuration->import tab.</p></li>
+			<li><p>Issue 486: Updated Spanish Translation (thx joarreba!)</p></li>
+			<li><p>Issue 483: Fixed manual import not being executed immediately when initial import is still delayed.</p></li>
+			<li><p>Issue N/A: Some cleanup of the Debug logging.</p></li>
+			<li><p>Issue N/A: Fix for last online scan log message being incorrectly reported.</p></li>
+			<li><p>Issue N/A: Fixed retrieval of UserRatings being done on invalid series in database i.e. ID < 0.</p></li>
+			<li><p>Issue 481: Automatically add required Parsing fields in Step 1 of Import Wizard 'Series Name', 'Season ID' and 'Episode ID'. Removed the Add Columns link when nothing supported to add plus minor UI changes.</p></li>			
+			<li><p>Issue N/A: Added small delay (20 secs) before starting first File Scan when 'Scan remote shares is enabled', this will help for both CPU usage on start-up (which directly affects other plugin background tasks and also enough time for NICs to have initialised...this can help avoid a unnecessary Add Run).</p></li>
+			<li><p>Issue 460: Really fixed SubCentral not being available to enable/disable from configuration if launched from Installer. Forgot to wrap the subcentral path in quotes before parsed to PluginConfigLoader.</p></li>
+			<li><p>Issue 477: Fixed 'Insert Disk Message' not spanning multiple lines in Dialog.</p></li>
+			<li><p>Issue 476: Fix unhandled exception when exiting back from Series Panel in Import Wizard if there was unfinished edits.</p></li>
+			<li><p>Issue 475: Fixed rows in Step 1 of Import Wizard getting duplicated when adding a manual parse column.</p></li>
+			<li><p>Issue N/A: Updated SubtitleDownloader.dll library to v2.2.0.</p></li>
+		</ul>	
+	</div>
+	
 	<div class="main_title">TVSeries v2.6.1 Maintenance Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log since v2.6.0:</div>
