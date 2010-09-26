@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A983AA7A-DE3C-4587-9416-22373A35B721}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WindowPlugins.GUITVSeries</RootNamespace>
+    <AssemblyName>MP-TVSeries</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Core, Version=1.1.0.16045, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Databases, Version=1.1.0.16047, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Databases.dll</HintPath>
+    </Reference>
+    <Reference Include="Dialogs, Version=1.1.0.16051, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Dialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="SubCentral, Version=0.9.1.106, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\SubCentral.dll</HintPath>
+    </Reference>
+    <Reference Include="SubtitleDownloader, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\SubtitleDownloader.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Utils, Version=2.2.7.16040, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowPlugins, Version=1.1.0.16062, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\WindowPlugins.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="cache.cs" />
+    <Compile Include="Configuration\DeleteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\DeleteDialog.Designer.cs">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PlaylistSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\PlaylistSettings.Designer.cs">
+      <DependentUpon>PlaylistSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ViewTemplates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ViewTemplates.Designer.cs">
+      <DependentUpon>ViewTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PinCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\PinCode.Designer.cs">
+      <DependentUpon>PinCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
+    <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
+    <Compile Include="DB Classes\DBIgnoreDownloadedFiles.cs" />
+    <Compile Include="SkinSettings.cs" />
+    <Compile Include="Configuration\About.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\About.designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ChooseFromSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ChooseFromSelection.designer.cs">
+      <DependentUpon>ChooseFromSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ExpressionBuilder.cs">
+    </Compile>
+    <Compile Include="Configuration\ExpressionBuilder.designer.cs">
+      <DependentUpon>ExpressionBuilder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\FormattingConfiguration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\FormattingConfiguration.Designer.cs">
+      <DependentUpon>FormattingConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\GUIConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\GUIConfiguration.designer.cs">
+      <DependentUpon>GUIConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\loadingDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\loadingDisplay.designer.cs">
+      <DependentUpon>loadingDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\LocationBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\LocationBrowser.Designer.cs">
+      <DependentUpon>LocationBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\logoConfigurator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\logoConfigurator.designer.cs">
+      <DependentUpon>logoConfigurator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\logoTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\logoTemplate.Designer.cs">
+      <DependentUpon>logoTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\DBOptionCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\AddImportPathPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\AddImportPathPopup.designer.cs">
+      <DependentUpon>AddImportPathPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ViewsConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ViewsConfiguration.Designer.cs">
+      <DependentUpon>ViewsConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\SeriesSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\SeriesSelect.Designer.cs">
+      <DependentUpon>SeriesSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB Classes\DBFanart.cs" />
+    <Compile Include="DB Classes\DBFormatting.cs" />
+    <Compile Include="DB Classes\DBNewzbin.cs" />
+    <Compile Include="DB Classes\DBReplacements.cs" />
+    <Compile Include="DB Classes\DBTorrent.cs" />
+    <Compile Include="DB Classes\DBUserSelections.cs" />
+    <Compile Include="DB Classes\DBView.cs" />
+    <Compile Include="Downloaders\DownloadMonitor.cs" />
+    <Compile Include="Downloaders\IDownloaders.cs" />
+    <Compile Include="Downloaders\newzbin.cs" />
+    <Compile Include="Fanart.cs" />
+    <Compile Include="FanartChooser.cs" />
+    <Compile Include="feedback.cs" />
+    <Compile Include="FieldGetter.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="imageAllocator.cs" />
+    <Compile Include="Local Parsing Classes\LocalParse.cs" />
+    <Compile Include="Local Parsing Classes\Watcher.cs" />
+    <Compile Include="localLogos.cs" />
+    <Compile Include="LogWriter.cs" />
+    <Compile Include="DB Classes\DBEpisode.cs" />
+    <Compile Include="DB Classes\DBExpressions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DB Classes\DBOnlineMirrors.cs" />
+    <Compile Include="DB Classes\DBOptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DB Classes\DBPathes.cs" />
+    <Compile Include="DB Classes\DBSeason.cs" />
+    <Compile Include="DB Classes\DBSeries.cs" />
+    <Compile Include="Local Parsing Classes\Filelister.cs" />
+    <Compile Include="Local Parsing Classes\ParserFilename.cs" />
+    <Compile Include="MathParser.cs" />
+    <Compile Include="MediaInfoDLL.cs" />
+    <Compile Include="Online Parsing Classes\APIKey.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>APIKey.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Online Parsing Classes\GetBanner.cs" />
+    <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
+    <Compile Include="Online Parsing Classes\GetLanguages.cs" />
+    <Compile Include="Online Parsing Classes\GetSeries.cs" />
+    <Compile Include="Online Parsing Classes\GetUpdates.cs" />
+    <Compile Include="Online Parsing Classes\GetUserFavourites.cs" />
+    <Compile Include="Online Parsing Classes\GetUserRatings.cs" />
+    <Compile Include="Online Parsing Classes\OnlineAPI.cs" />
+    <Compile Include="Online Parsing Classes\OnlineParse.cs" />
+    <Compile Include="Online Parsing Classes\UpdateSeries.cs" />
+    <Compile Include="PerfWatch.cs" />
+    <Compile Include="Playlist Classes\GUITVSeriesPlaylist.cs" />
+    <Compile Include="Playlist Classes\IPlayListIO.cs" />
+    <Compile Include="Playlist Classes\PlayList.cs" />
+    <Compile Include="Playlist Classes\PlayListFactory.cs" />
+    <Compile Include="Playlist Classes\PlayListIO.cs" />
+    <Compile Include="Playlist Classes\PlayListItem.cs" />
+    <Compile Include="Playlist Classes\PlayListPlayer.cs" />
+    <Compile Include="Playlist Classes\PlayListType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="settings.cs" />
+    <Compile Include="Downloaders\Torrent.cs" />
+    <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
+    <Compile Include="Translation.cs" />
+    <Compile Include="TVSeriesPlugin.cs" />
+    <Compile Include="VideoHandler.cs" />
+    <Compile Include="view.cs" />
+    <Compile Include="GUIUserRating.cs" />
+    <Compile Include="GUIPinCode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ChooseFromSelection.resx">
+      <DependentUpon>ChooseFromSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\DeleteDialog.resx">
+      <DependentUpon>DeleteDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ExpressionBuilder.resx">
+      <DependentUpon>ExpressionBuilder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\FormattingConfiguration.resx">
+      <DependentUpon>FormattingConfiguration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\GUIConfiguration.resx">
+      <DependentUpon>GUIConfiguration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelEpID.resx">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelParsing.resx">
+      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelSeriesID.resx">
+      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportWizard.resx">
+      <DependentUpon>ImportWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ImportPanelProgress.resx">
+      <DependentUpon>ImportPanelProgress.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\loadingDisplay.resx">
+      <DependentUpon>loadingDisplay.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\LocationBrowser.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LocationBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\logoConfigurator.resx">
+      <DependentUpon>logoConfigurator.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\logoTemplate.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>logoTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PinCode.resx">
+      <DependentUpon>PinCode.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ProgressLabel.resx">
+      <DependentUpon>ProgressLabel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
+      <DependentUpon>AddImportPathPopup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
+      <DependentUpon>ViewsConfiguration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ViewTemplates.resx">
+      <DependentUpon>ViewTemplates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\SeriesSelect.resx">
+      <DependentUpon>SeriesSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
+      <DependentUpon>PlaylistSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>APIKey.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\arrow_up.png" />
+    <None Include="Resources\Images\arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\arrow_down_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\arrow_up_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\busy.gif" />
+    <None Include="Resources\Images\big_spinner.gif" />
+    <Content Include="Resources\Images\control_play_blue.png" />
+    <None Include="Resources\Images\find.png" />
+    <Content Include="Resources\Images\folder_explore.png" />
+    <None Include="Resources\Images\importaccept.png" />
+    <None Include="Resources\Images\importpending.png" />
+    <None Include="Resources\Images\importupdating.png" />
+    <None Include="Resources\Images\importignored.png" />
+    <Content Include="Resources\Images\television_add.png" />
+    <Content Include="Resources\Images\television_add_unlisted.png" />
+    <Content Include="Resources\Images\textfield_rename.png" />
+    <None Include="Resources\Images\tick.png" />
+    <Content Include="Resources\Languages\cs.xml" />
+    <Content Include="Resources\Languages\da.xml" />
+    <Content Include="Resources\Languages\de.xml" />
+    <Content Include="Resources\Languages\el.xml" />
+    <Content Include="Resources\Languages\en%28us%29.xml" />
+    <Content Include="Resources\Languages\es.xml" />
+    <Content Include="Resources\Languages\fr.xml" />
+    <Content Include="Resources\Languages\he.xml" />
+    <Content Include="Resources\Languages\it.xml" />
+    <Content Include="Resources\Languages\ko.xml" />
+    <Content Include="Resources\Languages\nl.xml" />
+    <Content Include="Resources\Languages\no%28nb%29.xml" />
+    <Content Include="Resources\Languages\no.xml" />
+    <Content Include="Resources\Languages\pl.xml" />
+    <Content Include="Resources\Languages\pt-BR.xml" />
+    <Content Include="Resources\Languages\pt_pt.xml" />
+    <Content Include="Resources\Languages\ru.xml" />
+    <Content Include="Resources\Languages\ru_utf8.xml" />
+    <Content Include="Resources\Languages\sv.xml" />
+    <None Include="Resources\Images\tv_series_logo_noreflection.png" />
+    <Compile Include="Configuration\ImportPanelEpID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelEpID.Designer.cs">
+      <DependentUpon>ImportPanelEpID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelParsing.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelParsing.Designer.cs">
+      <DependentUpon>ImportPanelParsing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelSeriesID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelSeriesID.Designer.cs">
+      <DependentUpon>ImportPanelSeriesID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportWizard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportWizard.Designer.cs">
+      <DependentUpon>ImportWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelProgress.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ImportPanelProgress.Designer.cs">
+      <DependentUpon>ImportPanelProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\ProgressLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProgressLabel.Designer.cs">
+      <DependentUpon>ProgressLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataBase\DBField.cs" />
+    <Compile Include="DataBase\DBTable.cs" />
+    <Compile Include="DataBase\DBTVSeries.cs" />
+    <Compile Include="DataBase\DBValue.cs" />
+    <Compile Include="DataBase\SQLCondition.cs" />
+    <Compile Include="DataBase\SQLWhat.cs" />
+    <Compile Include="DB Classes\DBOnlineEpisode.cs" />
+    <Compile Include="DB Classes\DBOnlineSeries.cs" />
+    <Compile Include="Local Parsing Classes\DeviceManager.cs" />
+    <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
+    <Compile Include="Online Parsing Classes\UserInputResult.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <None Include="Properties\VersionInfo.cs.tmpl" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>-->
+  <PropertyGroup>
+    <PostBuildEvent>if exist $(ProjectDir)PostBuild.bat call $(ProjectDir)PostBuild.bat $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
+    <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
+  </PropertyGroup>
+</Project>
