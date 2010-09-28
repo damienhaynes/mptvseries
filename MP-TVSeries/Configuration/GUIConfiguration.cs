@@ -65,9 +65,7 @@ namespace WindowPlugins.GUITVSeries
         private DBSeries m_SeriesReference = new DBSeries(true);
         private DBSeason m_SeasonReference = new DBSeason();
         private DBEpisode m_EpisodeReference = new DBEpisode(true);
-
-        private DBTorrentSearch m_currentTorrentSearch = null;
-        private DBNewzbin m_currentNewsSearch = null;
+       
         List<logicalView> availViews = new List<logicalView>();
         logicalView selectedView = null;
         loadingDisplay load = null;
@@ -107,8 +105,7 @@ namespace WindowPlugins.GUITVSeries
                 System.Drawing.Size s = new Size(width, height);
                 this.Size = s;
             }
-            this.Resize += new EventHandler(ConfigurationForm_Resize);
-            Download.Monitor.Start(this);
+            this.Resize += new EventHandler(ConfigurationForm_Resize);            
 
             load = new loadingDisplay();
             InitSettingsTreeAndPanes();
@@ -227,8 +224,7 @@ namespace WindowPlugins.GUITVSeries
                 dbOptChkBoxScanFullscreenVideo.Enabled = false;
             }
 
-            checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);
-            textBox_NewsDownloadPath.Text = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
+            checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);            
             this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
             this.chkUseRegionalDateFormatString.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
             txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
@@ -343,40 +339,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitExtraTreeAndPanes()
         {
-            TreeNode nodeRoot = null;
-            TreeNode nodeChild = null;
-            m_paneListExtra.Add(panel_subtitleroot);
-
-            nodeRoot = new TreeNode(panel_subtitleroot.Tag.ToString());
-            nodeRoot.Name = panel_subtitleroot.Name;
-            treeView_Extra.Nodes.Add(nodeRoot);
-            m_paneListExtra.Add(panel_torrentroot);
-            m_paneListExtra.Add(panel_torrentsearch);
-
-            nodeRoot = new TreeNode(panel_torrentroot.Tag.ToString());
-            nodeRoot.Name = panel_torrentroot.Name;
-            treeView_Extra.Nodes.Add(nodeRoot);
-            nodeChild = new TreeNode(panel_torrentsearch.Tag.ToString());
-            nodeChild.Name = panel_torrentsearch.Name;
-            nodeRoot.Nodes.Add(nodeChild);
-
-            m_paneListExtra.Add(panel_newsroot);
-            m_paneListExtra.Add(panel_newssearch);
-
-            nodeRoot = new TreeNode(panel_newsroot.Tag.ToString());
-            nodeRoot.Name = panel_newsroot.Name;
-            treeView_Extra.Nodes.Add(nodeRoot);
-            nodeChild = new TreeNode(panel_newssearch.Tag.ToString());
-            nodeChild.Name = panel_newssearch.Name;
-            nodeRoot.Nodes.Add(nodeChild);
-            foreach (Control pane in m_paneListExtra)
-            {
-                pane.Dock = DockStyle.Fill;
-                pane.Visible = false;
-            }
-
-            LoadTorrentSearches();
-
             if (!SkinSettings.ImportLogos) {
                 lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
             }
@@ -412,9 +374,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
             this.cbNewEpisodeThumbIndicator.SelectedIndex = (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
-            
-			LoadNewsSearches();
-
+            			
             subtitleDownloader_enabled.Checked = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
             subtitleDownloader_enabled_CheckedChanged(this, new EventArgs());
             checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
@@ -491,53 +451,7 @@ namespace WindowPlugins.GUITVSeries
             //    chkOnlineFavourites.Checked = true;
         }
 
-        private void LoadTorrentSearches()
-        {
-            textBox_uTorrentPath.Text = DBOption.GetOptions(DBOption.cUTorrentPath);
-
-            List<DBTorrentSearch> torrentSearchList = DBTorrentSearch.Get();
-            foreach (DBTorrentSearch item in torrentSearchList)
-            {
-                comboBox_TorrentPreset.Items.Add(item);
-                if (item[DBTorrentSearch.cID] == DBOption.GetOptions(DBOption.cTorrentSearch))
-                    m_currentTorrentSearch = item;
-            }
-            if (m_currentTorrentSearch != null)
-                comboBox_TorrentPreset.SelectedItem = m_currentTorrentSearch;
-        }
-
-        private void LoadNewsSearches()
-        {
-            textBox_newsleecher.Text = DBOption.GetOptions(DBOption.cNewsLeecherPath);
-            try
-            {
-                List<DBNewzbin> newsSearches = DBNewzbin.Get();
-                if (newsSearches.Count == 0)
-                    return;
-
-                m_currentNewsSearch = newsSearches[0];
-
-                textBox_NewsSearchUrl.Text = m_currentNewsSearch[DBNewzbin.cSearchUrl];
-                textBox_NewzbinLogin.Text = m_currentNewsSearch[DBNewzbin.cLogin];
-                textbox_NewzbinPassword.Text = m_currentNewsSearch[DBNewzbin.cPassword];
-                textBox_NewsSearchReportRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReport];
-                textBox_NewsSearchNameRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexName];
-                textBox_NewsSearchIDRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexID];
-                textBox_NewsSearchSizeRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexSize];
-                textBox_NewsSearchPostDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexPostDate];
-                textBox_NewsSearchReportDateRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexReportDate];
-                textBox_NewsSearchFormatRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexFormat];
-                textBox_NewsSearchGroupRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexGroup];
-                textBox_NewsSearchLanguageRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexLanguage];
-                textBox_NewsSearchIsolateArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexIsolateArticleName];
-                textBox_NewsSearchParseArticleRegex.Text = m_currentNewsSearch[DBNewzbin.cSearchRegexParseArticleName];
-            }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write("Error: unable to retrieve NewsSearch settings from database: " + ex.Message);
-            }
-
-        }
+      
 
         private void LoadImportPathes()
         {
@@ -3171,79 +3085,13 @@ namespace WindowPlugins.GUITVSeries
                     GetSubtitles(clickedNode);
                     break;
 
-                case "torrent":
-                    TorrentFile(clickedNode);
-                    break;
-
-                case "newzbin":
-                    NewzFile(clickedNode);
-                    break;
-
                 case "resetUserSelections":
                     ResetUserSelectionsToolStripMenuItem(clickedNode);
                     break;
 
             }
         }
-
-        public void TorrentFile(TreeNode node)
-        {
-            if (node == null)
-                return;
-
-            switch (node.Name)
-            {
-                case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)node.Tag;
-                    break;
-
-                case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
-                    break;
-
-                case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)node.Tag;
-                    Torrent.Load Load = new Torrent.Load(this);
-                    Load.LoadCompleted += new WindowPlugins.GUITVSeries.Torrent.Load.LoadCompletedHandler(TorrentLoad_LoadCompleted);
-                    Load.Search(episode);
-                    break;
-            }
-        }
-
-        public void NewzFile(TreeNode node)
-        {
-            if (node == null)
-                return;
-
-            switch (node.Name)
-            {
-                case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)node.Tag;
-                    break;
-
-                case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
-                    break;
-
-                case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)node.Tag;
-                    Newzbin.Load Load = new Newzbin.Load(this);
-                    Load.LoadCompleted += new WindowPlugins.GUITVSeries.Newzbin.Load.LoadCompletedHandler(NewzbinLoad_LoadCompleted);
-                    Load.Search(episode);
-                    break;
-            }
-        }
-
-        void TorrentLoad_LoadCompleted(bool bOK)
-        {
-
-        }
-
-        void NewzbinLoad_LoadCompleted(bool bOK, String msgOut)
-        {
-
-        }
-
+      
         private delegate ReturnCode ChooseFromSelectionDelegate(ChooseFromSelectionDescriptor descriptor);
         private Feedback.CItem m_selected;
 
@@ -3615,123 +3463,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (e.Button == MouseButtons.Right)
                 contextMenuStrip_DetailsTree.Tag = e.Node;
-        }
-
-        # region Torrent
-        private void textBox_uTorrentPath_TextChanged(object sender, EventArgs e)
-        {
-            String sPath = textBox_uTorrentPath.Text;
-            if (System.IO.File.Exists(sPath))
-                textBox_uTorrentPath.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            else
-                textBox_uTorrentPath.BackColor = System.Drawing.Color.Tomato;
-            DBOption.SetOptions(DBOption.cUTorrentPath, sPath);
-        }
-
-        private void button_uTorrentBrowse_Click(object sender, EventArgs e)
-        {
-            openFileDialog.FileName = DBOption.GetOptions(DBOption.cUTorrentPath);
-            openFileDialog.Filter = "Executable files (*.exe)|";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                DBOption.SetOptions(DBOption.cUTorrentPath, openFileDialog.FileName);
-                textBox_uTorrentPath.Text = openFileDialog.FileName;
-            }
-        }
-
-        private void comboBox_TorrentPreset_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            m_currentTorrentSearch = comboBox_TorrentPreset.SelectedItem as DBTorrentSearch;
-            if (m_currentTorrentSearch != null)
-            {
-                textBox_TorrentSearchUrl.Text = m_currentTorrentSearch[DBTorrentSearch.cSearchUrl];
-                textBox_TorrentSearchRegex.Text = m_currentTorrentSearch[DBTorrentSearch.cSearchRegex];
-                textBox_TorrentDetailsUrl.Text = m_currentTorrentSearch[DBTorrentSearch.cDetailsUrl];
-                textBox_TorrentDetailsRegex.Text = m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex];
-                DBOption.SetOptions(DBOption.cTorrentSearch, m_currentTorrentSearch[DBTorrentSearch.cID]);
-            }
-            else
-            {
-                textBox_TorrentSearchUrl.Text = String.Empty;
-                textBox_TorrentSearchRegex.Text = String.Empty;
-                textBox_TorrentDetailsUrl.Text = String.Empty;
-                textBox_TorrentDetailsRegex.Text = String.Empty;
-            }
-        }
-
-        private void comboBox_TorrentPreset_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.Enter:
-                    {
-                        // check if this string exists in the list
-                        object selObj = null;
-                        foreach (object obj in comboBox_TorrentPreset.Items)
-                            if (obj.ToString() == comboBox_TorrentPreset.Text)
-                            {
-                                selObj = obj;
-                                break;
-                            }
-
-                        if (selObj == null)
-                        {
-                            // create a new item
-                            DBTorrentSearch newSearch = new DBTorrentSearch(comboBox_TorrentPreset.Text);
-                            newSearch.Commit();
-                            comboBox_TorrentPreset.Items.Add(newSearch);
-                        }
-
-                        // select item
-                        comboBox_TorrentPreset.SelectedItem = selObj;
-                    }
-                    break;
-
-                case Keys.Delete:
-                    // delete the selection
-                    if (comboBox_TorrentPreset.DroppedDown)
-                    {
-                        // delete the selected item
-                        if (MessageBox.Show("Really delete " + comboBox_TorrentPreset.SelectedItem + " ?", "Confirm") == DialogResult.OK)
-                        {
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBTorrentSearch(), DBTorrentSearch.cID, comboBox_TorrentPreset.SelectedItem.ToString(), SQLConditionType.Equal);
-                            DBTorrentSearch.Clear(condition);
-                            comboBox_TorrentPreset.Items.Remove(comboBox_TorrentPreset.SelectedItem);
-
-                            if (comboBox_TorrentPreset.Items.Count > 0)
-                                comboBox_TorrentPreset.SelectedIndex = 0;
-                        }
-                    }
-                    break;
-            }
-
-        }
-
-        private void textBox_TorrentUrl_TextChanged(object sender, EventArgs e)
-        {
-            m_currentTorrentSearch[DBTorrentSearch.cSearchUrl] = textBox_TorrentSearchUrl.Text;
-            m_currentTorrentSearch.Commit();
-        }
-
-        private void textBox_TorrentRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentTorrentSearch[DBTorrentSearch.cSearchRegex] = textBox_TorrentSearchRegex.Text;
-            m_currentTorrentSearch.Commit();
-        }
-
-        private void textBox_TorrentDetailsUrl_TextChanged(object sender, EventArgs e)
-        {
-            m_currentTorrentSearch[DBTorrentSearch.cDetailsUrl] = textBox_TorrentDetailsUrl.Text;
-            m_currentTorrentSearch.Commit();
-        }
-
-        private void textBox_TorrentDetailsRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentTorrentSearch[DBTorrentSearch.cDetailsRegex] = textBox_TorrentDetailsRegex.Text;
-            m_currentTorrentSearch.Commit();
-        }
-        # endregion
+        }       
 
         private void checkBox_RandBanner_CheckedChanged(object sender, EventArgs e)
         {
@@ -3794,21 +3526,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBEpisode ep in episodes)
                 ep.ReadMediaInfo();
             e.Result = episodes.Count;
-        }
-
-        private void treeView_Extra_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            foreach (Panel pane in m_paneListExtra)
-            {
-                if (pane.Name == e.Node.Name)
-                {
-                    pane.Visible = true;
-                }
-                else
-                    pane.Visible = false;
-            }
-
-        }
+        }    
 
         private void button_dbbrowse_Click(object sender, EventArgs e)
         {
@@ -3820,121 +3538,7 @@ namespace WindowPlugins.GUITVSeries
                 textBox_dblocation.Text = openFileDialog.FileName;
             }
         }
-        # region Newsbin
-        private void textBox_NewsSearchUrl_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchUrl] = textBox_NewsSearchUrl.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexReport] = textBox_NewsSearchReportRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewzbinLogin_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cLogin] = textBox_NewzbinLogin.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textbox_NewzbinPassword_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cPassword] = textbox_NewzbinPassword.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchIDRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexID] = textBox_NewsSearchIDRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchNameRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexName] = textBox_NewsSearchNameRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchSizeRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexSize] = textBox_NewsSearchSizeRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchPostDateRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexPostDate] = textBox_NewsSearchPostDateRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchReportDateRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexReportDate] = textBox_NewsSearchReportDateRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchFormatRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexFormat] = textBox_NewsSearchFormatRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchGroupRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexGroup] = textBox_NewsSearchGroupRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchLanguageRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexLanguage] = textBox_NewsSearchLanguageRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchIsolateArticleRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexIsolateArticleName] = textBox_NewsSearchIsolateArticleRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void textBox_NewsSearchParseArticleRegex_TextChanged(object sender, EventArgs e)
-        {
-            m_currentNewsSearch[DBNewzbin.cSearchRegexParseArticleName] = textBox_NewsSearchParseArticleRegex.Text;
-            m_currentNewsSearch.Commit();
-        }
-
-        private void button_newsleecherbrowse_Click(object sender, EventArgs e)
-        {
-            openFileDialog.FileName = DBOption.GetOptions(DBOption.cNewsLeecherPath);
-            openFileDialog.Filter = "Executable files (*.exe)|";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                DBOption.SetOptions(DBOption.cNewsLeecherPath, openFileDialog.FileName);
-                textBox_newsleecher.Text = openFileDialog.FileName;
-            }
-        }
-
-        private void textBox_NewsDownloadPath_TextChanged(object sender, EventArgs e)
-        {
-            String sPath = textBox_NewsDownloadPath.Text;
-            DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, sPath);
-
-        }
-
-        private void button_NewsDownloadPathBrowse_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.SelectedPath = DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath);
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                DBOption.SetOptions(DBOption.cNewsLeecherDownloadPath, folderBrowserDialog.SelectedPath);
-                textBox_NewsDownloadPath.Text = folderBrowserDialog.SelectedPath;
-            }
-        }
-        # endregion      
-
+       
         private void addLogo_Click(object sender, EventArgs e)
         {
             logoConfigurator.validDelegate del = delegate(ref RichTextBox txtBox) { FieldValidate(ref txtBox); };
