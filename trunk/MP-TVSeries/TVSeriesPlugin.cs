@@ -37,9 +37,6 @@ using WindowPlugins.GUITVSeries;
 using System.Threading;
 using System.Collections.Generic;
 using WindowPlugins.GUITVSeries.Feedback;
-using Download = WindowPlugins.GUITVSeries.Download;
-using Torrent = WindowPlugins.GUITVSeries.Torrent;
-using Newzbin = WindowPlugins.GUITVSeries.Newzbin;
 using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
@@ -466,8 +463,6 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             #region Misc
-            Download.Monitor.Start(this);
-            
             m_VideoHandler = new VideoHandler();                        
             m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
 
@@ -1254,28 +1249,6 @@ namespace WindowPlugins.GUITVSeries
 							}
 						}
 						break;
-
-					case (int)eContextItems.downloadviaTorrent: {
-							if (selectedEpisode != null) {
-								Torrent.Load torrentLoad = new Torrent.Load(this);
-								torrentWorking = true;
-								torrentLoad.LoadCompleted += new Torrent.Load.LoadCompletedHandler(Load_TorrentLoadCompleted);
-								if (torrentLoad.Search(selectedEpisode))
-									setProcessAnimationStatus(true);
-							}
-						}
-						break;
-
-					case (int)eContextItems.downloadviaNewz: {
-							if (selectedEpisode != null) {
-								Newzbin.Load load = new WindowPlugins.GUITVSeries.Newzbin.Load(this);
-								load.LoadCompleted += new WindowPlugins.GUITVSeries.Newzbin.Load.LoadCompletedHandler(load_LoadNewzBinCompleted);
-
-								if (load.Search(selectedEpisode))
-									setProcessAnimationStatus(true);
-							}
-						}
-						break;
 					#endregion
 
 					#region Favourites
@@ -1402,13 +1375,7 @@ namespace WindowPlugins.GUITVSeries
                         ShowEpisodeSortByMenu(selectedSeries, true);
                         break;
                     #endregion
-
-                    #region Ignore Downloaded Files
-                    case (int)eContextItems.actionResetIgnoredDownloadedFiles:
-                        DBIgnoredDownloadedFiles.ClearAll();
-                        break;
-                    #endregion
-
+                   
                     #region Lock Views
                     case (int)eContextItems.actionLockViews:
                         logicalView.IsLocked = true;
@@ -1600,7 +1567,7 @@ namespace WindowPlugins.GUITVSeries
                         goto default;
                     }
                     MPTVSeriesLog.Write("Selected Episode OnAction Play: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
-                    CommonPlayEpisodeAction(false);
+                    CommonPlayEpisodeAction();
 
                     break;
 
@@ -1804,95 +1771,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }
-
-        protected void ShowDownloadMenu(DBEpisode selectedEpisode)
-        {
-            MPTVSeriesLog.Write("Showing Download Menu", MPTVSeriesLog.LogLevel.Debug);
-            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-            if (dlg == null) return;
-
-            int nSelection = -1;
-            bool bExitMenu = false;
-            do
-            {
-                dlg.Reset();
-                GUIListItem pItem = null;
-
-                bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
-                bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
-
-                #region Selected Menu Item Actions (Sub-Menus)
-
-                if (newsEnable && !torrentsEnable)
-                {
-                    nSelection = (int)eContextItems.downloadviaNewz;
-                    bExitMenu = true;
-                }
-                else if (!newsEnable && torrentsEnable)
-                {
-                    nSelection = (int)eContextItems.downloadviaTorrent;
-                    bExitMenu = true;
-                }
-                else if (newsEnable && torrentsEnable)
-                {
-                    dlg.SetHeading(Translation.Download);
-
-                    pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
-                    dlg.Add(pItem);
-                    pItem.ItemId = (int)eContextItems.downloadviaNewz;
-
-                    pItem = new GUIListItem(Translation.Load_via_Torrent);
-                    dlg.Add(pItem);
-                    pItem.ItemId = (int)eContextItems.downloadviaTorrent;
-
-                    dlg.DoModal(GUIWindowManager.ActiveWindow);
-                    nSelection = dlg.SelectedId;
-                    if (nSelection != -1)
-                        bExitMenu = true;
-                }
-                else
-                    bExitMenu = true;
-
-                #endregion
-            }
-            while (!bExitMenu);
-
-            if (nSelection == -1) return;
-
-            #region Selected Menu Item Actions
-            switch (nSelection)
-            {
-                #region Downloaders
-                case (int)eContextItems.downloadviaTorrent:
-                    {
-                        if (selectedEpisode != null)
-                        {
-                            Torrent.Load torrentLoad = new Torrent.Load(this);
-                            torrentWorking = true;
-                            torrentLoad.LoadCompleted += new Torrent.Load.LoadCompletedHandler(Load_TorrentLoadCompleted);
-                            if (torrentLoad.Search(selectedEpisode))
-                                setProcessAnimationStatus(true);
-                        }
-                    }
-                    break;
-
-                case (int)eContextItems.downloadviaNewz:
-                    {
-                        if (selectedEpisode != null)
-                        {
-                            Newzbin.Load load = new WindowPlugins.GUITVSeries.Newzbin.Load(this);
-                            load.LoadCompleted += new WindowPlugins.GUITVSeries.Newzbin.Load.LoadCompletedHandler(load_LoadNewzBinCompleted);
-
-                            if (load.Search(selectedEpisode))
-                                setProcessAnimationStatus(true);
-                        }
-                    }
-                    break;
-                #endregion
-            }
-            #endregion
-        }
+        }       
 
 		protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
 			if (control == this.viewMenuButton) {
@@ -1983,7 +1862,7 @@ namespace WindowPlugins.GUITVSeries
 						if (m_SelectedEpisode == null) return;
 						MPTVSeriesLog.Write("Episode Clicked: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
                         
-                        CommonPlayEpisodeAction(true);
+                        CommonPlayEpisodeAction();
 						break;
 				}
 			}
@@ -5217,10 +5096,7 @@ namespace WindowPlugins.GUITVSeries
             else {
                 MPTVSeriesLog.Write("Selected Random Episode: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
 
-                // removed the if statement here to mimic functionality when an episode is selected
-                // via the regular UI, since watched flag is now set after viewing (is this right?)
-                //m_VideoHandler.ResumeOrPlay(selectedEpisode);
-                CommonPlayEpisodeAction(false);
+                CommonPlayEpisodeAction();
             }
         }
 
@@ -5546,10 +5422,9 @@ namespace WindowPlugins.GUITVSeries
 		}
 		#endregion
 
-        private void CommonPlayEpisodeAction(bool useDownloaders) {
-            if (useDownloaders && m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
-                // we don't have this file - yet. If downloaders are available, show the download pages
-                ShowDownloadMenu(m_SelectedEpisode);
+        private void CommonPlayEpisodeAction() {
+            if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
+                return;
             }
             else if (!m_SelectedEpisode[DBEpisode.cAvailableSubtitles] && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && SubtitleDownloaderEnabledAndHasSites()) {
                 ShowSubtitleMenu(m_SelectedEpisode, true);

@@ -137,7 +137,7 @@
     </Compile>
     <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
-    <Compile Include="DB Classes\DBIgnoreDownloadedFiles.cs" />
+    <Compile Include="DB Classes\DBUserSelections.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -215,14 +215,8 @@
     </Compile>
     <Compile Include="DB Classes\DBFanart.cs" />
     <Compile Include="DB Classes\DBFormatting.cs" />
-    <Compile Include="DB Classes\DBNewzbin.cs" />
     <Compile Include="DB Classes\DBReplacements.cs" />
-    <Compile Include="DB Classes\DBTorrent.cs" />
-    <Compile Include="DB Classes\DBUserSelections.cs" />
     <Compile Include="DB Classes\DBView.cs" />
-    <Compile Include="Downloaders\DownloadMonitor.cs" />
-    <Compile Include="Downloaders\IDownloaders.cs" />
-    <Compile Include="Downloaders\newzbin.cs" />
     <Compile Include="Fanart.cs" />
     <Compile Include="FanartChooser.cs" />
     <Compile Include="feedback.cs" />
@@ -279,7 +273,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
-    <Compile Include="Downloaders\Torrent.cs" />
     <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
