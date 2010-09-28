@@ -996,6 +996,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cCurrentPosterFileName:
                                 case DBOnlineSeries.cMyRating:
                                 case DBOnlineSeries.cViewTags:
+                                case DBOnlineSeries.cHasNewEpisodes: //gets cleared and updated at end of scan
                                     break;
                                 case DBOnlineSeries.cEpisodeOrders:
                                     if (bUpdateNewSeries)
