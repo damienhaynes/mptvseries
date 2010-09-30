@@ -40,7 +40,7 @@ using WindowPlugins.GUITVSeries;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class VideoHandler
+    public class VideoHandler
     {
         #region Vars
         static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
@@ -48,7 +48,9 @@ namespace WindowPlugins.GUITVSeries
         DBEpisode m_previousEpisode;
         System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
         public delegate void rateRequest(DBEpisode episode);
+        public delegate void EpisodeWatchedDelegate(DBEpisode episode);
         public event rateRequest RateRequestOccured;
+        public static event EpisodeWatchedDelegate EpisodeWatched;
         private bool m_bIsExternalPlayer = false;
         private bool m_bIsExternalDVDPlayer = false;
         private bool m_bIsImageFile = false;
@@ -138,7 +140,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 #endregion
 
-                #region Removable Media Handling                
+                #region Removable Media Handling
                 if (!File.Exists(m_currentEpisode[DBEpisode.cFilename]))
                 {
                     string episodeVolumeLabel = m_currentEpisode[DBEpisode.cVolumeLabel].ToString();
@@ -417,6 +419,7 @@ namespace WindowPlugins.GUITVSeries
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
                         m_currentEpisode[DBEpisode.cStopTime] = 0;
+                        m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         m_currentEpisode.Commit();
                         PlaybackOperationEnded(true);
                     }
@@ -447,6 +450,7 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     m_currentEpisode[DBEpisode.cStopTime] = 0;
+                    m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     m_currentEpisode.Commit();
                     PlaybackOperationEnded(true);
 
@@ -474,6 +478,7 @@ namespace WindowPlugins.GUITVSeries
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100) 
                     {
                         m_previousEpisode[DBEpisode.cStopTime] = 0;
+                        m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         m_previousEpisode.Commit();
                         MPTVSeriesLog.Write("This episode counts as watched");
                         MarkEpisodeAsWatched(m_previousEpisode);
@@ -554,14 +559,20 @@ namespace WindowPlugins.GUITVSeries
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
                 MPTVSeriesLog.Write("This episode counts as watched");
-                if(countAsWatched) MarkEpisodeAsWatched(m_currentEpisode);
+                if (countAsWatched)
+                {
+                    if (EpisodeWatched != null) EpisodeWatched(m_currentEpisode);
+                    MarkEpisodeAsWatched(m_currentEpisode);
+                }
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
                 if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))
                 {
                     MPTVSeriesLog.Write("Episode not rated yet");
                     if(RateRequestOccured != null)
                         RateRequestOccured.Invoke(m_currentEpisode);
-                } else MPTVSeriesLog.Write("Episode has already been rated or option not set");
+                } 
+                else 
+                    MPTVSeriesLog.Write("Episode has already been rated or option not set");
             }
             SetGUIProperties(true); // clear GUI Properties
 

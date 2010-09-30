@@ -88,6 +88,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cVideoFormatProfile = "VideoFormatProfile";
         
         public const String cStopTime = "StopTime";
+        public const String cDateWatched = "DateWatched";
 
         public const String cFileSizeBytes = "FileSizeB";
         public const String cFileSize = "FileSize";
