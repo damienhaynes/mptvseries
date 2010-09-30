@@ -108,6 +108,9 @@ namespace WindowPlugins.GUITVSeries
             this.Resize += new EventHandler(ConfigurationForm_Resize);            
 
             load = new loadingDisplay();
+
+            OnlineParsing.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
+            
             InitSettingsTreeAndPanes();
             InitExtraTreeAndPanes();
             
@@ -1503,17 +1506,17 @@ namespace WindowPlugins.GUITVSeries
                 m_parser = new OnlineParsing(this);
 
                 // and give it to the wizard
-                ParsingWizardHost.Init(m_parser);
+                ParsingWizardHost.Init();
 
                 // now show generic progress details (remove seriesIDPage)
                 ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);                                
                 ParsingWizardHost.ShowDetailsPanel(ParsingWizardProgress);
-                ParsingWizardProgress.Init(m_parser);
+                ParsingWizardProgress.Init();
 
                 ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
                 ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
 
-                ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);
+                ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);          
 
                 // only now do we set up the parser itself and fire it off
                 ImportWizardParseParams.m_userInputResult = inputResults;
@@ -1525,8 +1528,7 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardEpIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedEditingEpisodes);
 
                 // finally fire it off
-                m_timingStart = DateTime.Now;
-                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
+                m_timingStart = DateTime.Now;                
                 m_parser.Start(ImportWizardParseParams);
             }
             else if (requestAction == UserFinishedRequestedAction.Prev)
@@ -1562,8 +1564,8 @@ namespace WindowPlugins.GUITVSeries
         {
             switch (requestAction)
             {
-                case UserFinishedRequestedAction.Cancel:
-                    m_parser.Cancel();
+                case UserFinishedRequestedAction.Cancel:                   
+                    ParsingWizardProgress.DeInit();
                     break;
 
                 case UserFinishedRequestedAction.Next:
@@ -1588,6 +1590,7 @@ namespace WindowPlugins.GUITVSeries
         private void ImportWizard_OnFinished(object sender, EventArgs e)
         {
             // user clicked finished (can only do this after import wizard is complete)
+            ParsingWizardProgress.DeInit();
             this.tabPage_Import.Controls.Remove(ParsingWizardHost);
         }
         #endregion
@@ -1606,8 +1609,7 @@ namespace WindowPlugins.GUITVSeries
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
 
-                m_parser = new OnlineParsing(this);
-                m_parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(OnlineParsing_OnCompleted);
+                m_parser = new OnlineParsing(this);                
                 m_parser.Start(parsingParams);
             }
         }
@@ -1619,8 +1621,15 @@ namespace WindowPlugins.GUITVSeries
             m_parser = null;
             ImportWizardParseParams = null;
             DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
-
             LoadTree();
+
+            if (ParsingWizardHost != null && tabPage_Import.Contains(ParsingWizardHost))
+            {                
+                ParsingWizardHost.SetButtonVisibility(ImportWizard.WizardButton.Finish, true);
+                ParsingWizardHost.SetButtonVisibility(ImportWizard.WizardButton.Cancel, false);
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
+                ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
+            }
         }        
 
         #region Series Details Tab Handling

@@ -24,6 +24,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             Cancel,
             Next,
             Prev,
+            Finish
         }
 
         public delegate void WizardNavigateDelegate(UserFinishedRequestedAction RequestedAction);
@@ -42,15 +43,15 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.owner = owner;                       
         }
 
-        internal void Init(OnlineParsing parser)
+        internal void Init()
         {
-            parser.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(b =>
-            {
-                this.buttonFinish.Visible = true;                
-                this.buttonCancel.Visible = false;
-                this.buttonNext.Enabled = false;
-                this.buttonPrev.Enabled = false;
-            });            
+            //OnlineParsing.OnlineParsingCompleted += new OnlineParsing.OnlineParsingCompletedHandler(b =>
+            //{
+            //    this.buttonFinish.Visible = true;
+            //    this.buttonCancel.Visible = false;
+            //    this.buttonNext.Enabled = false;
+            //    this.buttonPrev.Enabled = false;
+            //});            
         }
 
         #region Wizard Navigation
@@ -152,6 +153,28 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
                 case WizardButton.Prev:
                     this.buttonPrev.Enabled = state;
+                    break;
+            }
+        }
+
+        public void SetButtonVisibility(WizardButton button, bool state)
+        {
+            switch (button)
+            {
+                case WizardButton.Finish:
+                    this.buttonFinish.Visible = state;
+                    break;
+
+                case WizardButton.Cancel:
+                    this.buttonCancel.Visible = state;
+                    break;
+
+                case WizardButton.Next:
+                    this.buttonNext.Visible = state;
+                    break;
+
+                case WizardButton.Prev:
+                    this.buttonPrev.Visible = state;
                     break;
             }
         }

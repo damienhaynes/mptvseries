@@ -88,7 +88,7 @@ namespace WindowPlugins.GUITVSeries
         }
     }
 
-    class CParsingParameters
+    public class CParsingParameters
     {
         private static List<ParsingAction> FirstLocalScanActions = new List<ParsingAction> { 
             ParsingAction.LocalScan, 
@@ -181,7 +181,7 @@ namespace WindowPlugins.GUITVSeries
 
     };
 
-    class OnlineParsing
+    public class OnlineParsing
     {
         public bool onlineUpdateNeeded = false;
         public bool wasOnlineUpdate = false;
@@ -206,8 +206,8 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
         /// </summary>
-        public event OnlineParsingProgressHandler OnlineParsingProgress;
-        public event OnlineParsingCompletedHandler OnlineParsingCompleted;
+        public static event OnlineParsingProgressHandler OnlineParsingProgress;
+        public static event OnlineParsingCompletedHandler OnlineParsingCompleted;
 
         public OnlineParsing(IFeedback feedback)
         {
@@ -231,7 +231,7 @@ namespace WindowPlugins.GUITVSeries
             else {
                 if (OnlineParsingCompleted != null) // only if any subscribers exist
                 {
-                    this.OnlineParsingCompleted.Invoke(m_bDataUpdated);
+                    OnlineParsingCompleted.Invoke(m_bDataUpdated);
                 }
             }           
         }
