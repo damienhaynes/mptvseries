@@ -1721,6 +1721,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cOriginalComposite:
                                 case DBEpisode.cOriginalComposite2:
                                 case DBEpisode.cStopTime:
+                                case DBEpisode.cDateWatched:
                                 case DBEpisode.cExtension:
                                 case DBEpisode.cIsOnRemovable:
                                 case DBOnlineEpisode.cHidden:
@@ -1741,7 +1742,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
                                 case DBOnlineEpisode.cAbsoluteNumber:
-                                case DBEpisode.cIsAvailable:
+                                case DBEpisode.cIsAvailable:                                
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
