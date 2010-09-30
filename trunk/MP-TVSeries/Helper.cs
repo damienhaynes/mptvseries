@@ -217,34 +217,51 @@ namespace WindowPlugins.GUITVSeries
         #region Get Corresponding Series/Season Methods
         public static DBSeries getCorrespondingSeries(int id)
         {
-            DBSeries cached = cache.getSeries(id);
-            if (cached != null) return cached;
-            SQLCondition cond = new SQLCondition();
-            cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
-            List<DBSeries> tmpSeries = DBSeries.Get(cond);
-            foreach (DBSeries series in tmpSeries) // should only be one!
-                if (series[DBSeries.cID] == id)
+            try
+            {
+                DBSeries cached = cache.getSeries(id);
+                if (cached != null) return cached;
+                SQLCondition cond = new SQLCondition();
+                cond.Add(new DBSeries(), DBSeries.cID, id, SQLConditionType.Equal);
+                List<DBSeries> tmpSeries = DBSeries.Get(cond);
+                foreach (DBSeries series in tmpSeries) // should only be one!
                 {
-                    cache.addChangeSeries(series);
-                    return series;
+                    if (series[DBSeries.cID] == id)
+                    {
+                        cache.addChangeSeries(series);
+                        return series;
+                    }
                 }
-            return null;
+                return null;
+            }
+            catch (Exception)
+            {                
+                return null;
+            }
+            
         }
 
         public static DBSeason getCorrespondingSeason(int seriesID, int seasonIndex)
         {
-            DBSeason cached = cache.getSeason(seriesID, seasonIndex);
-            if (cached != null) return cached;
-            List<DBSeason> tmpSeasons = DBSeason.Get(seriesID);
-            foreach (DBSeason season in tmpSeasons)
+            try
             {
-                cache.addChangeSeason(season);
-                if (season[DBSeason.cIndex] == seasonIndex)
+                DBSeason cached = cache.getSeason(seriesID, seasonIndex);
+                if (cached != null) return cached;
+                List<DBSeason> tmpSeasons = DBSeason.Get(seriesID);
+                foreach (DBSeason season in tmpSeasons)
                 {
-                    return season;
+                    cache.addChangeSeason(season);
+                    if (season[DBSeason.cIndex] == seasonIndex)
+                    {
+                        return season;
+                    }
                 }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {                
+                return null;
+            }
         }
         #endregion
 

@@ -1423,6 +1423,11 @@ namespace WindowPlugins.GUITVSeries
             return sqlQuery;
         }
 
+        public static List<DBEpisode> GetAll()
+        {
+            return Get(new SQLCondition(), true);
+        }
+
         public static List<DBEpisode> Get(int nSeriesID)
         {
             return Get(nSeriesID, true);

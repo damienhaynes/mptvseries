@@ -33,9 +33,14 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.labelRetrievingEpisodeCounts.Label.Text = "Retrieving Episode Counts";
         }
 
-        internal void Init(OnlineParsing parser)
-        {            
-            parser.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(ReceiveUpdates);
+        internal void Init()
+        {
+            OnlineParsing.OnlineParsingProgress += new OnlineParsing.OnlineParsingProgressHandler(ReceiveUpdates);
+        }
+
+        internal void DeInit()
+        {
+            OnlineParsing.OnlineParsingProgress -= new OnlineParsing.OnlineParsingProgressHandler(ReceiveUpdates);
         }
 
         private void SetProgressLabel(ProgressLabel label, ParsingProgress progress)

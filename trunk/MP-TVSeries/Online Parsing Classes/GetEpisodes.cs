@@ -30,7 +30,7 @@ using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class GetEpisodes
+    public class GetEpisodes
     {
         private List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
 
