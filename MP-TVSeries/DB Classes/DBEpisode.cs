@@ -35,6 +35,12 @@ namespace WindowPlugins.GUITVSeries
 {
     //moved to DBOnineEpisodes.cs
     //public class DBOnlineEpisode : DBTable
+    public enum MostRecentType
+    {
+        Watched,
+        Added,
+        Created
+    }
 
     public class DBEpisode : DBTable, ICacheable<DBEpisode>
     {
@@ -464,18 +470,15 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cImportProcessed, new DBField(DBField.cTypeInt));
             base.AddColumn(cCompositeUpdated, new DBField(DBField.cTypeInt));
             base.AddColumn(cAvailableSubtitles, new DBField(DBField.cTypeString));
-
             base.AddColumn(cOriginalComposite2, new DBField(DBField.cTypeString));
             base.AddColumn(cCompositeID2, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeIndex2, new DBField(DBField.cTypeInt));
-
             base.AddColumn(cVideoWidth, new DBField(DBField.cTypeInt));
             base.AddColumn(cVideoHeight, new DBField(DBField.cTypeInt));
-
             base.AddColumn(cFileDateAdded, new DBField(DBField.cTypeString));
-            base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));
-            
+            base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));            
             base.AddColumn(cIsAvailable, new DBField(DBField.cTypeInt));
+            base.AddColumn(cDateWatched, new DBField(DBField.cTypeString));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
@@ -1423,7 +1426,59 @@ namespace WindowPlugins.GUITVSeries
             
             return sqlQuery;
         }
+        
+        #region Most Recent Helpers
+        
+        /// <summary>
+        /// returns the 3 most recent episodes based on criteria
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static List<DBEpisode> GetMostRecent(MostRecentType type)
+        {
+            return GetMostRecent(type, 30, 3);
+        }
 
+        /// <summary>
+        /// returns the most recent episodes based on criteria
+        /// </summary>
+        /// <param name="type">most recent type</param>
+        /// <param name="days">number of days to look back in database</param>
+        /// <param name="limit">number of results to return</param>
+        /// <returns></returns>
+        public static List<DBEpisode> GetMostRecent(MostRecentType type, int days, int limit)
+        {
+            // Create Time Span to lookup most recents
+            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            dt = dt.Subtract(new TimeSpan(days, 0, 0, 0, 0));
+            string date = dt.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
+
+            // Create Conditions for SQL Query
+            SQLCondition condition = new SQLCondition();
+            switch (type)
+            {
+                case MostRecentType.Created:
+                    condition.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
+                    condition.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLCondition.orderType.Descending);
+                    break;
+
+                case MostRecentType.Added:
+                    condition.Add(new DBEpisode(), DBEpisode.cFileDateAdded, date, SQLConditionType.GreaterEqualThan);
+                    condition.AddOrderItem(DBEpisode.Q(cFileDateAdded), SQLCondition.orderType.Descending);
+                    break;               
+
+                case MostRecentType.Watched:
+                    condition.Add(new DBEpisode(), DBEpisode.cDateWatched, date, SQLConditionType.GreaterEqualThan);
+                    condition.AddOrderItem(DBEpisode.Q(DBEpisode.cDateWatched), SQLCondition.orderType.Descending);
+                    break;
+            }
+            
+            // Only get from database what we need
+            condition.SetLimit(limit);
+
+            return Get(condition, false);
+        }        
+        #endregion
         public static List<DBEpisode> GetAll()
         {
             return Get(new SQLCondition(), true);
