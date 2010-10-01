@@ -70,6 +70,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cRating = "Rating";
         public const String cMyRating = "myRating";
+        public const String cRatingCount = "RatingCount";
 
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";

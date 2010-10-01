@@ -323,6 +323,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Runtime = "Runtime";
         public static string Rating = "Rating";
         public static string Rated = "Rated";
+        public static string Votes = "votes";
         public static string SeriesDetails = "Series Details";
         public static string SeriesStatus = "Series Status";
         public static string Starring = "Starring";

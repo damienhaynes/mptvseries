@@ -1701,6 +1701,21 @@ namespace WindowPlugins.GUITVSeries
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
 
+                                case DBOnlineEpisode.cRating:
+                                    if (!String.IsNullOrEmpty(episode[key]))
+                                    {
+                                        decimal val = 0;
+                                        decimal.TryParse(episode[key].ToString(), out val);
+                                        string score = val.ToString("#.#");
+                                        string votes = episode[DBOnlineEpisode.cRatingCount];
+                                        if (!String.IsNullOrEmpty(votes))
+                                        {
+                                            score = string.Format("{0} ({1} votes)", score, votes);
+                                        }
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, score, false);
+                                    }
+                                    break;
+
                                 case DBEpisode.cEpisodeName:
                                     AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), DBOnlineEpisode.cEpisodeName, episode[key]);
                                     break;
@@ -1742,7 +1757,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
                                 case DBOnlineEpisode.cAbsoluteNumber:
-                                case DBEpisode.cIsAvailable:                                
+                                case DBEpisode.cIsAvailable:
+                                case DBOnlineEpisode.cRatingCount:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -1758,7 +1774,7 @@ namespace WindowPlugins.GUITVSeries
                                     if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
                                     break;
-
+                                                               
                                 case DBEpisode.cAvailableSubtitles:
                                 case DBEpisode.cVideoWidth:
                                 case DBEpisode.cVideoHeight:
@@ -2001,6 +2017,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeSortOrder:
                                 case DBSeries.cHidden:
                                 case DBSeries.cScanIgnore:
+                                case DBOnlineSeries.cRatingCount:
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
                                      break;
@@ -2011,6 +2028,21 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                     // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    break;
+
+                                case DBOnlineSeries.cRating:
+                                    if (!String.IsNullOrEmpty(series[key]))
+                                    {
+                                        decimal val = 0;
+                                        decimal.TryParse(series[key].ToString(), out val);
+                                        string score = val.ToString("#.#");
+                                        string votes = series[DBOnlineSeries.cRatingCount];
+                                        if (!String.IsNullOrEmpty(votes))
+                                        {
+                                            score = string.Format("{0} ({1} votes)", score, votes);
+                                        }
+                                        AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, score, false);
+                                    }
                                     break;
 
                                 case DBOnlineSeries.cChosenEpisodeOrder:
