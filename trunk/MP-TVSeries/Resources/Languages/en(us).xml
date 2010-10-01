@@ -291,5 +291,7 @@
   <string Field="CFS_Local_Series" Original="Local Series:">Local Series:</string>
 
   <string Field="AvailableMedia" Original="Available Media">Available Media</string>
+
+  <string Field="Votes" Original="votes">votes</string>
   
 </strings>
