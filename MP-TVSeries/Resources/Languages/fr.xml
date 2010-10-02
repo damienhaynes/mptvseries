@@ -266,7 +266,7 @@
 	<string Field="PlayError" Original="Play error">Erreur de lecture</string>
 	<string Field="RandomEpisode" Original="random episode">Episode au hasard</string>
 	<string Field="FirstUnwatchedEpisode" Original="first unwatched episode">Premier épisode non vu</string>
-	<string Field="RandomUnwatchedEpisode" Original="random unwatched episode">Episode non vu au hasard</string>+<string Field="LatestEpisode" Original="latest episode">latest episode</string>
+	<string Field="RandomUnwatchedEpisode" Original="random unwatched episode">Episode non vu au hasard</string>	
 	<string Field="LatestEpisode" Original="latest episode">Dernier épisode</string>
 	<string Field="UnableToFindAny" Original="Unable to find any {0}">Impossible de trouver un {0}</string>
 	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Aucun épisode trouvé</string>
