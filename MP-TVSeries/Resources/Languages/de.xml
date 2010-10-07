@@ -108,10 +108,7 @@
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Zugangskennung ist nicht gesetzt</string>
 	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Gib die ID deines Onlinezugangs in der Konfiguration ein</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com ist zur Zeit nicht erreichbar</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Versuche es später erneut</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Keine Internetverbindung</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Prüfe die Verbindung und versuche es erneut</string>
+	
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Fanart in Serienansicht zeigen</string>
 	<string Field="ChangeLayout" Original="Change Layout">Layout ändern</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Online-Favoriten nutzen</string>
@@ -231,64 +228,63 @@
 	<string Field="Watched" Original="Watched">Gesehen</string>
 	<string Field="Writer" Original="Writer">Autor</string>
 	<string Field="Writers" Original="Writers">Autoren</string>
-	
-	
+		
 	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com momentan nicht verfügbar</string>
-  <string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Versuchen Sie es später erneut</string>
-  <string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Netzwerkverbindung nicht verfügbar</string>
-  <string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Netzwerkverbindung prüfen und erneut versuchen</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Versuchen Sie es später erneut</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Netzwerkverbindung nicht verfügbar</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Netzwerkverbindung prüfen und erneut versuchen</string>
 
-  <string Field="Playlist" Original="Playlist">Wiedergabeliste</string>
-  <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Letzte Online-Aktualisierung</string>
+	<string Field="Playlist" Original="Playlist">Wiedergabeliste</string>
+	<string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Letzte Online-Aktualisierung</string>
 
-  <string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Ignorierte Dateien zurücksetzen</string>
+	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Ignorierte Dateien zurücksetzen</string>
 
-  <string Field="GetSubtitlesFrom" Original="Get subtitles from?">Untertitel abrufen von?</string>
-  <string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Aktivierte Untertitel-Provider:</string>
-  <string Field="PlayNow" Original="Play Now">Jetzt abspielen</string>
-  <string Field="NoSubtitleDownload" Original="No Subtitle Download">Kein Untertitel-Download</string>
+	<string Field="GetSubtitlesFrom" Original="Get subtitles from?">Untertitel abrufen von?</string>
+	<string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Aktivierte Untertitel-Provider:</string>
+	<string Field="PlayNow" Original="Play Now">Jetzt abspielen</string>
+	<string Field="NoSubtitleDownload" Original="No Subtitle Download">Kein Untertitel-Download</string>
 
-  <string Field="DeleteSubtitles" Original="Delete Subtitles">Untertitel löschen</string>
-  <string Field="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Kein Episoden-Dateiname in Datenbank</string>
-  <string Field="UnableToDeleteSubtitleFile" Original="Unable to Delete Subtitle File: {0}">Untertitel-Datei kann nicht gelöscht werden: {0}</string>
-  <string Field="PathNotAvailable" Original="Path is not available: {0}">Pfad nicht verfügbar: {0}</string>
-  <string Field="UnableToDeleteSubtitles" Original="Unable to Delete Subtitles">Untertitel können nicht gelöscht werden</string>
-  <string Field="ErrorClear" Original="Error">Fehler</string>
-  <string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Untertitel können nicht geladen werden</string>
-  <string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">Keine Untertitel gefunden oder geladen</string>
+	<string Field="DeleteSubtitles" Original="Delete Subtitles">Untertitel löschen</string>
+	<string Field="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Kein Episoden-Dateiname in Datenbank</string>
+	<string Field="UnableToDeleteSubtitleFile" Original="Unable to Delete Subtitle File: {0}">Untertitel-Datei kann nicht gelöscht werden: {0}</string>
+	<string Field="PathNotAvailable" Original="Path is not available: {0}">Pfad nicht verfügbar: {0}</string>
+	<string Field="UnableToDeleteSubtitles" Original="Unable to Delete Subtitles">Untertitel können nicht gelöscht werden</string>
+	<string Field="ErrorClear" Original="Error">Fehler</string>
+	<string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Untertitel können nicht geladen werden</string>
+	<string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">Keine Untertitel gefunden oder geladen</string>
 
-  <string Field="UnableToDelete" Original="Unable to Delete">Kein Löschen möglich</string>
-  <string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Datei kann nicht gelöscht werden: {0}</string>
+	<string Field="UnableToDelete" Original="Unable to Delete">Kein Löschen möglich</string>
+	<string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Datei kann nicht gelöscht werden: {0}</string>
 
-  <string Field="PlaySomething" Original="Play...">Abspielen...</string>
-  <string Field="PlayError" Original="Play error">Fehler beim Abspielen</string>
-  <string Field="RandomEpisode" Original="random episode">Zufällige Episode</string>
-  <string Field="FirstUnwatchedEpisode" Original="first unwatched episode">Erste ungesehene Episode</string>
-  <string Field="RandomUnwatchedEpisode" Original="random unwatched episode">Zufällige ungesehene Episode</string>
-  <string Field="LatestEpisode" Original="latest episode">Neueste Episode</string>
-  <string Field="UnableToFindAny" Original="Unable to find any {0}">Es wurde nichts gefunden {0}</string>
-  <string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Es wurde keine Episode gefunden</string>
+	<string Field="PlaySomething" Original="Play...">Abspielen...</string>
+	<string Field="PlayError" Original="Play error">Fehler beim Abspielen</string>
+	<string Field="RandomEpisode" Original="random episode">Zufällige Episode</string>
+	<string Field="FirstUnwatchedEpisode" Original="first unwatched episode">Erste ungesehene Episode</string>
+	<string Field="RandomUnwatchedEpisode" Original="random unwatched episode">Zufällige ungesehene Episode</string>
+	<string Field="LatestEpisode" Original="latest episode">Neueste Episode</string>
+	<string Field="UnableToFindAny" Original="Unable to find any {0}">Es wurde nichts gefunden {0}</string>
+	<string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Es wurde keine Episode gefunden</string>
 
-  <string Field="SortBy" Original="Sort By">Sortieren nach</string>
-  <string Field="DVDOrder" Original="DVD Order">Reihenfolge DVD</string>
-  <string Field="AiredOrder" Original="Aired Order">Reihenfolge Ausstrahlung</string>
-  <string Field="AbsoluteOrder" Original="Absolute Order">Absolute Reihenfolge</string>
-  <string Field="Title" Original="Title">Titel</string>
-  <string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Methode zum Online-Abgleich ändern</string>
+	<string Field="SortBy" Original="Sort By">Sortieren nach</string>
+	<string Field="DVDOrder" Original="DVD Order">Reihenfolge DVD</string>
+	<string Field="AiredOrder" Original="Aired Order">Reihenfolge Ausstrahlung</string>
+	<string Field="AbsoluteOrder" Original="Absolute Order">Absolute Reihenfolge</string>
+	<string Field="Title" Original="Title">Titel</string>
+	<string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Methode zum Online-Abgleich ändern</string>
 
-  <string Field="InsertDiskMessageLine1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Episode</string>
-  <string Field="InsertDiskMessageLine2" Original="is currently not available.">ist momentan nicht verfügbar.</string>
-  <string Field="InsertDiskMessageLine3" Original="Please insert or connect media">Bitte Medium mit der folgenden Bezeichnung</string>
-  <string Field="InsertDiskMessageLine4" Original="labeled: {0}">einlegen oder verbinden: {0}</string>
-  
-  <string Field="ShowHiddenItems" Original="Show Hidden Items">Versteckte Elemente anzeigen</string>
-  <string Field="UnHide" Original="UnHide">Nicht verstecken</string>
+	<string Field="InsertDiskMessageLine1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Episode</string>
+	<string Field="InsertDiskMessageLine2" Original="is currently not available.">ist momentan nicht verfügbar.</string>
+	<string Field="InsertDiskMessageLine3" Original="Please insert or connect media">Bitte Medium mit der folgenden Bezeichnung</string>
+	<string Field="InsertDiskMessageLine4" Original="labeled: {0}">einlegen oder verbinden: {0}</string>
 
-  <string Field="CFS_Skip" Original="Skip">Überspringen</string>
-  <string Field="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">Keine Übereinstimmung gefunden, manuelle Suche...</string>
-  <string Field="CFS_Local_Series" Original="Local Series:">Lokale Serien:</string>
+	<string Field="ShowHiddenItems" Original="Show Hidden Items">Versteckte Elemente anzeigen</string>
+	<string Field="UnHide" Original="UnHide">Nicht verstecken</string>
 
-  <string Field="AvailableMedia" Original="Available Media">Verfügbare Medien</string>
+	<string Field="CFS_Skip" Original="Skip">Überspringen</string>
+	<string Field="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">Keine Übereinstimmung gefunden, manuelle Suche...</string>
+	<string Field="CFS_Local_Series" Original="Local Series:">Lokale Serien:</string>
 
-  <string Field="Votes" Original="votes">Abstimmungen</string>
+	<string Field="AvailableMedia" Original="Available Media">Verfügbare Medien</string>
+
+	<string Field="Votes" Original="votes">Abstimmungen</string>
 </strings>
