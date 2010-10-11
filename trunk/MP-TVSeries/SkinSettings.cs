@@ -134,8 +134,8 @@ namespace WindowPlugins.GUITVSeries {
             
             StreamReader r = new StreamReader(filename);
             content = r.ReadToEnd();
-                        
-            Regex reg = new Regex(@"#TVSeries\..+?(?=[\s<])");
+
+            Regex reg = new Regex(@"(#TVSeries\.\w+(?:\.\w+)*)");
             MatchCollection matches = reg.Matches(content);
             MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Debug);
 
