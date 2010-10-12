@@ -199,6 +199,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cOnPlaySeriesOrSeasonAction = "OnPlaySeriesOrSeasonAction";
 
         public const String cNewEpisodeThumbType = "NewEpisodeThumbType";
+        public const String cNewEpisodeRecentDays = "NewEpisodeRecentDays";
 
         public const String cLogLevel = "logLevel";
 
@@ -559,6 +560,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cNewEpisodeThumbType) == null)
                     SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
+
+                if (GetOptions(cNewEpisodeRecentDays) == null)
+                    SetOptions(cNewEpisodeRecentDays, 7);
 
                 if (GetOptions(cSubCentralEnabled) == null)
                     SetOptions(cSubCentralEnabled, true);

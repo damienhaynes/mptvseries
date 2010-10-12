@@ -152,6 +152,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_EnableSubCentral = new System.Windows.Forms.CheckBox();
             this.subtitleDownloader_enabled = new System.Windows.Forms.CheckBox();
             this.checkBox_SubDownloadOnPlay = new System.Windows.Forms.CheckBox();
+            this.nudRecentlyAddedDays = new System.Windows.Forms.NumericUpDown();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
@@ -239,6 +240,7 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblRecentAddedDays = new System.Windows.Forms.Label();
             this.cbNewEpisodeThumbIndicator = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.laOnPlaySeriesOrSeasonAction = new System.Windows.Forms.Label();
@@ -309,6 +311,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudRecentlyAddedDays)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownImportDelay)).BeginInit();
             this.splitMain_Log.Panel1.SuspendLayout();
             this.splitMain_Log.Panel2.SuspendLayout();
@@ -1282,6 +1285,26 @@ namespace WindowPlugins.GUITVSeries
                     "n\'t have any subtitles yet");
             this.checkBox_SubDownloadOnPlay.UseVisualStyleBackColor = true;
             this.checkBox_SubDownloadOnPlay.CheckedChanged += new System.EventHandler(this.checkBox_SubDownloadOnPlay_CheckedChanged);
+            // 
+            // nudRecentlyAddedDays
+            // 
+            this.nudRecentlyAddedDays.Location = new System.Drawing.Point(210, 395);
+            this.nudRecentlyAddedDays.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudRecentlyAddedDays.Name = "nudRecentlyAddedDays";
+            this.nudRecentlyAddedDays.Size = new System.Drawing.Size(43, 20);
+            this.nudRecentlyAddedDays.TabIndex = 42;
+            this.toolTip_Help.SetToolTip(this.nudRecentlyAddedDays, "Select the number of days to look back in database for new episodes when displayi" +
+                    "ng the *NEW* stamp on series thumbs.");
+            this.nudRecentlyAddedDays.Value = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.nudRecentlyAddedDays.ValueChanged += new System.EventHandler(this.nudRecentlyAddedDays_ValueChanged);
             // 
             // toolTip_InfoHelp
             // 
@@ -2544,6 +2567,8 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.lblRecentAddedDays);
+            this.groupBox1.Controls.Add(this.nudRecentlyAddedDays);
             this.groupBox1.Controls.Add(this.cbNewEpisodeThumbIndicator);
             this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Controls.Add(this.laOnPlaySeriesOrSeasonAction);
@@ -2592,6 +2617,15 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // lblRecentAddedDays
+            // 
+            this.lblRecentAddedDays.AutoSize = true;
+            this.lblRecentAddedDays.Location = new System.Drawing.Point(259, 398);
+            this.lblRecentAddedDays.Name = "lblRecentAddedDays";
+            this.lblRecentAddedDays.Size = new System.Drawing.Size(31, 13);
+            this.lblRecentAddedDays.TabIndex = 43;
+            this.lblRecentAddedDays.Text = "Days";
             // 
             // cbNewEpisodeThumbIndicator
             // 
@@ -3379,6 +3413,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudRecentlyAddedDays)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownImportDelay)).EndInit();
             this.splitMain_Log.Panel1.ResumeLayout(false);
             this.splitMain_Log.Panel2.ResumeLayout(false);
@@ -3680,5 +3715,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_EnableSubCentral;
         private System.Windows.Forms.CheckBox subtitleDownloader_enabled;
         private System.Windows.Forms.CheckBox checkBox_SubDownloadOnPlay;
+        private System.Windows.Forms.Label lblRecentAddedDays;
+        private System.Windows.Forms.NumericUpDown nudRecentlyAddedDays;
     }
 }
