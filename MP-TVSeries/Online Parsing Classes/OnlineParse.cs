@@ -631,8 +631,9 @@ namespace WindowPlugins.GUITVSeries
                 // clear the file if we know for certain it doesnt exist anymore
                 // if removable drive or network path is offline then we dont remove
                 string importPath = LocalParse.getImportPath(pair.m_sFull_FileName);
-                if (string.IsNullOrEmpty(importPath) || (Directory.Exists(importPath) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName))))
+                if (string.IsNullOrEmpty(importPath) || (Directory.Exists(importPath) && !File.Exists(pair.m_sFull_FileName) && string.Equals(DeviceManager.GetVolumeLabel(importPath), DeviceManager.GetVolumeLabel(pair.m_sFull_FileName))))
                 {
+                    MPTVSeriesLog.Write("Episode is marked for removal from database, file: {0}", pair.m_sFull_FileName);
                     DBEpisode.Clear(condition);
                     m_bDataUpdated = true;
                 }
@@ -781,7 +782,8 @@ namespace WindowPlugins.GUITVSeries
 
                 // clear local database references for files that dont exist anymore
                 foreach (DBEpisode localepisode in localepisodes)
-                {                    
+                {
+                    MPTVSeriesLog.Write("Episode is marked for removal from database, file: '{0}', volume label: '{1}'", localepisode[DBEpisode.cFilename], localepisode[DBEpisode.cVolumeLabel]);
                     DBEpisode.Clear(new SQLCondition(new DBEpisode(), DBEpisode.cFilename, localepisode[DBEpisode.cFilename], SQLConditionType.Equal));                 
                 }
 
