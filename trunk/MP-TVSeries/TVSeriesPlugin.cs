@@ -501,41 +501,10 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             #region Skin Settings / Load
-            // Import Skin Settings
-            string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
-            SkinSettings.Load(xmlSkinSettings);
-
-            #region Display Format Strings
-            m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
-            m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
-            m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cView_Series_Col3);
-            m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cView_Series_Title);
-            m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cView_Series_Subtitle);
-            m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cView_Series_Main);
-
-            m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cView_Season_Col1);
-            m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cView_Season_Col2);
-            m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cView_Season_Col3);
-            m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cView_Season_Title);
-            m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cView_Season_Subtitle);
-            m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cView_Season_Main);
-
-            m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cView_Episode_Col1);
-            m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cView_Episode_Col2);
-            m_sFormatEpisodeCol3 = DBOption.GetOptions(DBOption.cView_Episode_Col3);
-            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
-            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
-            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
-            #endregion
-
-            // Load all Skin Fields being used
-            string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
-            foreach (string skinFile in skinFiles)
-            {
-                MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
-                SkinSettings.GetSkinProperties(skinFile);
-            }
-            SkinSettings.LogSkinProperties();
+            InitSkinSettings();
+            
+            // listen to this event to detect skin changes in GUI
+            GUIWindowManager.OnDeActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnDeActivateWindow);
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
@@ -1870,7 +1839,21 @@ namespace WindowPlugins.GUITVSeries
 		}
         #endregion
 
-		void m_VideoHandler_RateRequestOccured(DBEpisode episode)
+        #region Event Handling
+        void GUIWindowManager_OnDeActivateWindow(int windowID)
+        {
+            // Settings/General window
+            if (windowID == (int)Window.WINDOW_SETTINGS_SKIN)
+            {
+                if (SkinSettings.CurrentSkin != SkinSettings.PreviousSkin)
+                {
+                    MPTVSeriesLog.Write("Skin Change detected in GUI, reloading skin settings");
+                    InitSkinSettings();
+                }
+            }
+        }
+
+        void m_VideoHandler_RateRequestOccured(DBEpisode episode)
         {
             ask2Rate = episode;
         }
@@ -1920,13 +1903,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
-
-        public static bool IsResumeFromStandby
-        {
-            get { return m_bResumeFromStandby; }
-            set { m_bResumeFromStandby = value; }
-        }
-
+       
         void NetworkAvailabilityChanged(object sender, System.Net.NetworkInformation.NetworkAvailabilityEventArgs e)
         {
             if (e.IsAvailable)
@@ -1941,13 +1918,7 @@ namespace WindowPlugins.GUITVSeries
                 IsNetworkAvailable = false;
             }
         }
-
-        public static bool IsNetworkAvailable
-        {
-            get { return m_bIsNetworkAvailable; }
-            set { m_bIsNetworkAvailable = value; }
-        }
-
+     
         private void watcherUpdater_WatcherProgress(int nProgress, List<WatcherItem> modifiedFilesList)
         { 
             List<PathPair> filesAdded = new List<PathPair>();
@@ -1987,9 +1958,10 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 		}
+        #endregion
 
-		#region Facade Loading
-		// this is expensive to do if changing mode......450 ms ???
+        #region Facade Loading
+        // this is expensive to do if changing mode......450 ms ???
         private void setFacadeMode(GUIFacadeControl.ViewMode mode)
         {
             if (this.m_Facade == null)
@@ -2995,10 +2967,8 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
-		#endregion
-
-		private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable, bool bDownloading)
-        {          
+        private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable, bool bDownloading)
+        {
             // Series & Season List Images
             string sListFilename = string.Empty;
             if (this.listLevel == Listlevel.Series)
@@ -3041,15 +3011,15 @@ namespace WindowPlugins.GUITVSeries
                 {
                     item.IconImage = sWatchedDLFilename;
                 }
-                else 
-                // Load watched flag image                                
-                if (!bAvailable)
-                {
-                    // Load alternative image
-                    item.IconImage = sWatchedNAFilename;
-                }
                 else
-                    item.IconImage = sWatchedFilename;
+                    // Load watched flag image                                
+                    if (!bAvailable)
+                    {
+                        // Load alternative image
+                        item.IconImage = sWatchedNAFilename;
+                    }
+                    else
+                        item.IconImage = sWatchedFilename;
             }
             else
             {
@@ -3059,16 +3029,17 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                     // Load un-watched flag image                
-                if (!bAvailable)
-                {
-                    // Load alternative image
-                    item.IconImage = sUnWatchedNAFilename;
-                }
-                else
-                    item.IconImage = sUnWatchedFilename;
+                    if (!bAvailable)
+                    {
+                        // Load alternative image
+                        item.IconImage = sUnWatchedNAFilename;
+                    }
+                    else
+                        item.IconImage = sUnWatchedFilename;
             }
             return true;
         }
+		#endregion
 
         string getGUIProperty(guiProperty name)
         {
@@ -3100,6 +3071,18 @@ namespace WindowPlugins.GUITVSeries
         public static void clearGUIProperty(string name)
         {
             setGUIProperty(name, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
+        }
+
+        public static bool IsResumeFromStandby
+        {
+            get { return m_bResumeFromStandby; }
+            set { m_bResumeFromStandby = value; }
+        }
+
+        public static bool IsNetworkAvailable
+        {
+            get { return m_bIsNetworkAvailable; }
+            set { m_bIsNetworkAvailable = value; }
         }
 
 		private void UpdateEpisodes(DBSeries series, DBSeason season, DBEpisode episode) {			
@@ -3994,22 +3977,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-		#region Download Event Handllers
-		void load_LoadNewzBinCompleted(bool bOK, String msgOut)
-        {
-            if (m_ImportAnimation != null)
-                m_ImportAnimation.Dispose();
-
-            if (!bOK)
-            {
-                GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                dlgOK.SetHeading(Translation.ErrorClear);
-                dlgOK.SetLine(2, msgOut);
-                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-            }
-            else
-                if (m_Facade != null) LoadFacade();
-        }
+		#region Download Event Handllers		
 
         void downloader_SubtitleRetrievalCompleted(DBEpisode episode, bool subtitleRetrieved, string errorMessage)
         {
@@ -4044,12 +4012,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void Load_TorrentLoadCompleted(bool bOK)
-        {
-            setProcessAnimationStatus(false);
-            torrentWorking = false;
-            if (m_Facade != null) LoadFacade();
-        }
 		#endregion
 
 		List<string> sviews = new List<string>();
@@ -4416,6 +4378,48 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
             setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
             setGUIProperty("FanArt.Colors.NeutralMidtone", string.Empty);
+        }
+
+        private void InitSkinSettings()
+        {
+            // Import Skin Settings
+            string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
+            SkinSettings.Load(xmlSkinSettings);
+
+            #region Display Format Strings
+            m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
+            m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
+            m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cView_Series_Col3);
+            m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cView_Series_Title);
+            m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cView_Series_Subtitle);
+            m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cView_Series_Main);
+
+            m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cView_Season_Col1);
+            m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cView_Season_Col2);
+            m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cView_Season_Col3);
+            m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cView_Season_Title);
+            m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cView_Season_Subtitle);
+            m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cView_Season_Main);
+
+            m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cView_Episode_Col1);
+            m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cView_Episode_Col2);
+            m_sFormatEpisodeCol3 = DBOption.GetOptions(DBOption.cView_Episode_Col3);
+            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
+            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
+            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+            #endregion
+
+            // Load all Skin Fields being used
+            string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
+            foreach (string skinFile in skinFiles)
+            {
+                MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
+                SkinSettings.GetSkinProperties(skinFile);
+            }
+            SkinSettings.LogSkinProperties();
+
+            // Remember last skin used incase we need to reload
+            SkinSettings.PreviousSkin = SkinSettings.CurrentSkin;
         }
 
         private void InitImporter()

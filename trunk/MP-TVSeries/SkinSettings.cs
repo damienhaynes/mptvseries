@@ -4,11 +4,15 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using MediaPortal.GUI.Library;
 
 namespace WindowPlugins.GUITVSeries {
     static class SkinSettings {
 
         #region Public Properties
+        public static string CurrentSkin { get { return GUIGraphicsContext.Skin; } }
+        public static string PreviousSkin { get; set; }
+
         public static bool ImportGraphics { get; set; }
         public static bool ImportFormatting { get; set; }
         public static bool ImportLogos { get; set; }
@@ -78,7 +82,9 @@ namespace WindowPlugins.GUITVSeries {
                 MPTVSeriesLog.Write(e.Message);
                 return;
             }
-            
+
+            SkinProperties.Clear();
+
             // Read and Import Skin Settings into database
             GetVersion(doc);
             GetSupportedLayouts(doc);
@@ -138,7 +144,7 @@ namespace WindowPlugins.GUITVSeries {
             Regex reg = new Regex(@"(#TVSeries\.\w+(?:\.\w+)*)");
             MatchCollection matches = reg.Matches(content);
             MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Debug);
-
+            
             for (int i = 0; i < matches.Count; i++) {
                 string pre = string.Empty;
                 string remove = string.Empty;
@@ -225,6 +231,8 @@ namespace WindowPlugins.GUITVSeries {
                 return;
 
             MPTVSeriesLog.Write("Loading Supported Layouts Skin Settings");
+
+            SupportedLayouts.Clear();
 
             #region Group Layouts
             innerNode = node.SelectSingleNode("group");
@@ -620,6 +628,9 @@ namespace WindowPlugins.GUITVSeries {
             XmlNode node = null;
             List<string> supportedValues = new List<string> { "episode", "season", "series", "custom" };
 
+            ImportVideoOSDImages = false;
+            VideoOSDImages.Clear();
+
             node = doc.DocumentElement.SelectSingleNode("/settings/videoosdimages");
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true") {
                 MPTVSeriesLog.Write("Loading images to be loaded in video OSD", MPTVSeriesLog.LogLevel.Normal);
@@ -643,6 +654,9 @@ namespace WindowPlugins.GUITVSeries {
         private static void GetVideoPlayImages(XmlDocument doc) {
             XmlNode node = null;
             node = doc.DocumentElement.SelectSingleNode("/settings/videoplayimages");
+
+            VideoPlayImages.Clear();          
+
             if (node != null && node.Attributes.GetNamedItem("import").Value.ToLower() == "true") {
                 XmlNodeList propertyList = node.SelectNodes("property");
 
