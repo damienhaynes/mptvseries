@@ -376,8 +376,16 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
             this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
+            
             this.cbNewEpisodeThumbIndicator.SelectedIndex = (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
-            			
+            this.nudRecentlyAddedDays.Value = DBOption.GetOptions(DBOption.cNewEpisodeRecentDays);
+			
+            if ((int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType) != 2)
+            {
+                this.nudRecentlyAddedDays.Enabled = false;
+                this.lblRecentAddedDays.Enabled = false;
+            }
+
             subtitleDownloader_enabled.Checked = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
             subtitleDownloader_enabled_CheckedChanged(this, new EventArgs());
             checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
@@ -4615,6 +4623,17 @@ namespace WindowPlugins.GUITVSeries
         private void cbNewEpisodeThumbIndicator_SelectedIndexChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cNewEpisodeThumbType, cbNewEpisodeThumbIndicator.SelectedIndex);
+
+            if (cbNewEpisodeThumbIndicator.SelectedIndex == 2)
+            {
+                nudRecentlyAddedDays.Enabled = true;
+                lblRecentAddedDays.Enabled = true;
+            }
+            else
+            {
+                nudRecentlyAddedDays.Enabled = false;
+                lblRecentAddedDays.Enabled = false;
+            }
         }
 
         private void checkBox_UseFullNameInSubDialog_CheckedChanged(object sender, EventArgs e) {
@@ -4629,6 +4648,11 @@ namespace WindowPlugins.GUITVSeries
         private void numericUpDownImportDelay_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cImportDelay, (int)numericUpDownImportDelay.Value);
+        }
+
+        private void nudRecentlyAddedDays_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cNewEpisodeRecentDays, (int)nudRecentlyAddedDays.Value);
         }
     }
     
