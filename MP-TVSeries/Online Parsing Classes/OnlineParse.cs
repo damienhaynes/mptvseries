@@ -2505,9 +2505,6 @@ namespace WindowPlugins.GUITVSeries
                     if (bNewFile)
                         episode[DBEpisode.cCompositeUpdated] = 0;
 
-                    // newly added should have watched to false
-                    episode[DBOnlineEpisode.cWatched] = false;
-
                     episode.Commit();
 
                     // reloads the episode, in order to get a proper link on the onlineEpisode, and set the PendingDownload to 0 
