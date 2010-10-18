@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!--	MP-TV-Series translation file -->
 <!--	Polish -->
-<!--	Last Updated: 8th Oct 2010 -->
+<!--	Last Updated: 18th Oct 2010 -->
 <!--	Note: English is the fallback for any strings not found in other languages -->
 <strings>
 	<string Field="Series" Original="Series">Serial</string>
@@ -106,11 +106,7 @@
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">Błąd TVDB</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">TVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Identyfikator Konta nie ustawiony</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Wpisz ID konta w Konfiguracji</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TVDB.com jest obecnie niedostępne</string>
-	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Spróbuj ponownie później</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Połączenie sieciowe jest niedostępne</string>
-	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Sprawdź połączenie i spróbuj ponownie</string>
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Wpisz ID konta w Konfiguracji</string>	
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Pokaż Fanart(y) w Widoku Odcinków</string>
 	<string Field="ChangeLayout" Original="Change Layout">Zmień Wygląd</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Użyj Ulubionych z Sieci</string>
