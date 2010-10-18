@@ -59,12 +59,32 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
+	<div class="main_title">TVSeries v2.6.4 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.6.3:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Issue 500: Fix SkinSettings not filtering out new (and future) mediaportal skin functions correctly when reading properties from skin. Thanks Rochess</p></li>
+			<li><p>Issue 505: Fixed SkinSettings not reloading after user changes skin from GUI. User previously needed to restart mediaportal to have them reloaded.</p></li>
+			<li><p>Issue 508: Added User configurable number of days when looking in database for new episodes used for "New" stamp generation on series posters/banners.</p></li>
+			<li><p>Issue 510: Fixed new episodes added to database were marked as UnWatched even though they were previously watched.</p></li>
+			<li><p>Issue N/A: Fixed episodes being cleared from database if share suddenly became available during the remove run.</p></li>
+			<li><p>Issue N/A: Fix error in mediaportal's error log about missing translation when invoking Rate/PinCode dialogs.</p></li>
+			<li><p>Issue N/A: Updated French translations, thanks ubela64.</p></li>
+			<li><p>Issue N/A: Updated German translations, thanks catavolt.</p></li>
+			<li><p>Issue N/A: Updated Polish translations, thanks amilewski.</p></li>
+			<li><p>Issue N/A: Updated Spanish translations, thanks riturrioz.</p></li>
+		</ul>
+	</div>
+	
 	<div class="main_title">TVSeries v2.6.3 Maintenance Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log since v2.6.2:</div>
 		<div class="tab_img"></div>
 	</div>
-	<div class="tab_content">	
+	<div class="tab_content">
 		<ul>
 			<li><p>Issue N/A: Fixed a null reference exception when doing an import, in some cases import would not complete.</p></li>
 			<li><p>Issue N/A: Online API now populates 'RatingCount' aka 'Votes' field, skinners can use this field to populate how many people have rated a series/episode.</p></li>
@@ -74,7 +94,7 @@ ul {
 			<li><p>Issue 496: Fixed an issue where sometimes the 'New' thumb stamp was cleared during online update.</p></li>
 			<li><p>Issue N/A: Added helper method to allow external plugins easy access to Recently Added and Recently Watched data. Two events can be subscribed to listen to OnPlaybackComplete and OnImportComplete.</p></li>
 			<li><p>Issue N/A: Removed News and Torrent support from plugin. This can be supported from external plugins. Also this section was not maintained.</li>
-		</ul>	
+		</ul>
 	</div>
 	
 	<div class="main_title">TVSeries v2.6.2 Maintenance Release</div>
