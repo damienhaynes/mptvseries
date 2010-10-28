@@ -105,6 +105,26 @@ namespace WindowPlugins.GUITVSeries
             DBTVSeries.Execute(sqlQuery);
         }
 
+        /// <summary>
+        /// Get a list of views in users database that skin can present for menu
+        /// Returns a list of keyvaluepairs, where 
+        /// Key: is the view name used in the buttons hyperlinkparameter property
+        /// Val: can be used as a default display name for the menu item
+        /// </summary>        
+        public static List<KeyValuePair<string, string>> GetSkinViews()
+        {
+            List<KeyValuePair<string, string>> viewList = new List<KeyValuePair<string, string>>();
+
+            foreach (DBView view in DBView.getAll(false))
+            {
+                string viewName = view[DBView.cTransToken];
+                string viewDisplayName = string.IsNullOrEmpty(Translation.Get(viewName)) ? viewName : Translation.Get(viewName);
+                KeyValuePair<string, string> skinview = new KeyValuePair<string, string>(viewName, viewDisplayName);
+                viewList.Add(skinview);
+            }
+            return viewList;
+        }
+
         public static DBView[] getAll(bool includeDisabled)
         {
             try
