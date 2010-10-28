@@ -230,7 +230,7 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bPluginLoaded = false;
         private bool m_bShowLastActiveModule = false;
         private int m_iLastActiveModule = 0;
-        
+        private bool LoadWithParameterSupported = false;
 		#endregion
 
 		#region Skin Variables
@@ -485,6 +485,12 @@ namespace WindowPlugins.GUITVSeries
             subsChecker.DoWork += new DoWorkEventHandler(GetSubtitleDownloaderNames);
             subsChecker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetSubtitleDownloaderNames_Completed);
             subsChecker.RunWorkerAsync();
+
+            // check if running version of mediaportal support loading with parameter           
+            if (typeof(GUIWindow).GetField("_loadParameter", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance) != null)
+            {
+                LoadWithParameterSupported = true;
+            }
             #endregion
 
             #region Initialize Importer
@@ -565,25 +571,44 @@ namespace WindowPlugins.GUITVSeries
 
 			bool viewSwitched = false;
 
+            string jumpToViewName = null;
+            if (LoadWithParameterSupported)
+            {
+                jumpToViewName = GetJumpToViewName();
+            }
+
             // Initialize View, also check if current view is locked after exiting and re-entering plugin
-			if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked)) {				
+            if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked) || !string.IsNullOrEmpty(jumpToViewName))
+            {				
 				// Get available Views
 				m_allViews = logicalView.getAll(false);
-				if (m_allViews.Count > 0) {
-					try {
-						viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+				if (m_allViews.Count > 0) 
+                {
+					try 
+                    {
+                        if (!string.IsNullOrEmpty(jumpToViewName))
+                        {                            
+                            viewSwitched = switchView(jumpToViewName);
+                        }
+                        else
+                        {
+                            viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+                        }
 					}
-					catch {
+					catch
+                    {
 						viewSwitched = false;
 						MPTVSeriesLog.Write("Error when switching view");
 					}
 				}
-				else {
+				else 
+                {
 					viewSwitched = false;
 					MPTVSeriesLog.Write("Error, cannot display items because no Views have been found!");
 				}
 			}
-			else {
+			else 
+            {
 				viewSwitched = true;
 				setViewLabels();
 			}            
@@ -4016,6 +4041,14 @@ namespace WindowPlugins.GUITVSeries
 
 		List<string> sviews = new List<string>();
 
+        /// <summary>
+        /// Gets View Name to Jump To, passed from hyperlink property of skin button control
+        /// </summary>        
+        private string GetJumpToViewName()
+        {
+            return _loadParameter;
+        }
+
         private void switchView(int offset) 
         {
 			// Switch to previous view
@@ -4030,6 +4063,45 @@ namespace WindowPlugins.GUITVSeries
 				viewName = Translation.All;
 
            return switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
+        }
+
+        private bool switchView(logicalView view)
+        {
+            // Handle if view has been removed
+            if (view == null) view = m_allViews[0];
+
+            // Check if View has Parental Control enabled
+            if (!CheckParentalControls(view))
+            {
+                // We can't show a dialog on top when there is no main window
+                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID))
+                {
+                    MPTVSeriesLog.Write("Unable to Show PinCode Dialog, MediaPortal not ready, returning to Home screen");
+                    m_bPluginLoaded = true;
+                    return false;
+                }
+
+                // Prompt to choose UnProtected View
+                return showViewSwitchDialog();
+            }
+
+            MPTVSeriesLog.Write("Switching view to " + view.Name);
+            m_CurrLView = view;
+
+            if (fanartSet) DisableFanart();
+
+            m_CurrViewStep = 0; // we always start out at step 0
+            m_stepSelection = null;
+            m_stepSelections = new List<string[]>();
+            m_stepSelections.Add(new string[] { null });
+            setNewListLevelOfCurrView(0);
+
+            // set the skin labels
+            m_stepSelectionPretty.Clear();
+            setViewLabels();
+
+            DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
+            return true;
         }
 
         void setCurPositionLabel()
@@ -4063,43 +4135,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("Error displaying view names....check your skin file");
             }
-        }
-
-        private bool switchView(logicalView view)
-        {
-            // Handle if view has been removed
-            if (view == null) view = m_allViews[0]; 
-            
-			// Check if View has Parental Control enabled
-			if (!CheckParentalControls(view)) {
-                // We can't show a dialog on top when there is no main window
-                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID)) {
-                    MPTVSeriesLog.Write("Unable to Show PinCode Dialog, MediaPortal not ready, returning to Home screen");
-                    m_bPluginLoaded = true;
-                    return false;
-                }
-
-				// Prompt to choose UnProtected View
-				return showViewSwitchDialog();				
-			}
-			
-            MPTVSeriesLog.Write("Switching view to " + view.Name);
-            m_CurrLView = view;
-
-            if (fanartSet) DisableFanart();
-
-            m_CurrViewStep = 0; // we always start out at step 0
-            m_stepSelection = null;
-            m_stepSelections = new List<string[]>();
-            m_stepSelections.Add(new string[] { null });
-            setNewListLevelOfCurrView(0);
-
-            // set the skin labels
-            m_stepSelectionPretty.Clear();
-            setViewLabels();
-
-            DBOption.SetOptions("lastView", view.Name); // to remember next time the plugin is entered
-            return true;
         }
 
 		private bool CheckParentalControls(logicalView view) {
