@@ -5096,8 +5096,16 @@ namespace WindowPlugins.GUITVSeries
 
                 keyboard.Reset();
                 keyboard.Text = descriptor.Text;
-                //keyboard._shiftTurnedOn = descriptor.ShiftEnabled;
-				keyboard.Password = descriptor.IsPassword;
+
+                GUIKeyboard keyb = null;
+                foreach (System.Windows.UIElement uiel in keyboard.controlList) {
+                    if (uiel is GUIKeyboard) keyb = (GUIKeyboard)uiel;
+                }
+
+                if (keyb != null) keyb._shiftTurnedOn = descriptor.ShiftEnabled;
+                //else keyboard._shiftTurnedOn = descriptor.ShiftEnabled;
+
+				keyboard.Password = descriptor.IsPassword;				
                 keyboard.DoModal(GUIWindowManager.ActiveWindow);
 
                 if (keyboard.IsConfirmed)
