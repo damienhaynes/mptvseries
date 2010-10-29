@@ -5097,12 +5097,14 @@ namespace WindowPlugins.GUITVSeries
                 keyboard.Reset();
                 keyboard.Text = descriptor.Text;
 
-                GUIKeyboard keyb = null;
-                foreach (System.Windows.UIElement uiel in keyboard.controlList) {
-                    if (uiel is GUIKeyboard) keyb = (GUIKeyboard)uiel;
-                }
+                //GUIKeyboard keyb = null;
+                //foreach (System.Windows.UIElement uiel in keyboard.controlList) {
+                //    if (uiel is GUIKeyboard) keyb = (GUIKeyboard)uiel;
+                //}
 
-                if (keyb != null) keyb._shiftTurnedOn = descriptor.ShiftEnabled;
+                //MePo 1.2
+                //if (keyb != null) keyb._shiftTurnedOn = descriptor.ShiftEnabled;
+                //MePo 1.1
                 //else keyboard._shiftTurnedOn = descriptor.ShiftEnabled;
 
 				keyboard.Password = descriptor.IsPassword;				
