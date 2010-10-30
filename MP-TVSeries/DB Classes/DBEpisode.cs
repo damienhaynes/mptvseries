@@ -1428,12 +1428,10 @@ namespace WindowPlugins.GUITVSeries
         }
         
         #region Most Recent Helpers
-        
+
         /// <summary>
         /// returns the 3 most recent episodes based on criteria
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// </summary>        
         public static List<DBEpisode> GetMostRecent(MostRecentType type)
         {
             return GetMostRecent(type, 30, 3);
@@ -1444,9 +1442,20 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <param name="type">most recent type</param>
         /// <param name="days">number of days to look back in database</param>
-        /// <param name="limit">number of results to return</param>
-        /// <returns></returns>
+        /// <param name="limit">number of results to return</param>        
         public static List<DBEpisode> GetMostRecent(MostRecentType type, int days, int limit)
+        {
+            return GetMostRecent(type, days, limit, false);
+        }
+
+        /// <summary>
+        /// returns the most recent episodes based on criteria
+        /// </summary>
+        /// <param name="type">most recent type</param>
+        /// <param name="days">number of days to look back in database</param>
+        /// <param name="limit">number of results to return</param>
+        /// <param name="unwatched">only get unwatched episodes (only used with recent added type)</param>
+        public static List<DBEpisode> GetMostRecent(MostRecentType type, int days, int limit, bool unwatchedOnly)
         {
             // Create Time Span to lookup most recents
             DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
@@ -1458,12 +1467,20 @@ namespace WindowPlugins.GUITVSeries
             switch (type)
             {
                 case MostRecentType.Created:
-                    condition.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
+                    condition.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);                    
+                    if (unwatchedOnly)
+                    {
+                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.NotEqual);
+                    }
                     condition.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLCondition.orderType.Descending);
                     break;
 
                 case MostRecentType.Added:
                     condition.Add(new DBEpisode(), DBEpisode.cFileDateAdded, date, SQLConditionType.GreaterEqualThan);
+                    if (unwatchedOnly)
+                    {
+                        condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.NotEqual);
+                    }
                     condition.AddOrderItem(DBEpisode.Q(cFileDateAdded), SQLCondition.orderType.Descending);
                     break;               
 
