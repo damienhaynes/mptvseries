@@ -233,7 +233,9 @@ namespace WindowPlugins.GUITVSeries
                             if (!_tempFanarts[i].isAvailableLocally || _tempFanarts[i].Disabled)
                                 _faInDB.Remove(_faInDB[i]);
                         }
-                        _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;
+                        // we may no longer have any fanarts in db to choose from as they could be disabled/deleted from disk
+                        if (_faInDB.Count > 0)
+                            _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;
 
                         if (String.IsNullOrEmpty(_randomPick))
                         {
