@@ -129,9 +129,11 @@ begin
 				abort;
 			endif;*/
 		else
-		 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
-							   "and run setup again.";
-			MessageBox(szUpgradeMessage,INFORMATION);
+			if (MODE != SILENTMODE) then
+			 	szUpgradeMessage = "Setup cannot perform an upgrade from: v" + szVersion + "\nPlease uninstall from the Add\\Remove programs " +
+								   "and run setup again.";
+				MessageBox(szUpgradeMessage,INFORMATION);
+			endif;
 			abort;							   
 		endif;
 	endif; 
@@ -427,11 +429,13 @@ begin
 
     // Added in InstallShield 15 - Show an appropriate error message if
     // -uninst is specified and the product is not installed.
-    if( REMOVEONLY ) then
-        Disable( DIALOGCACHE );
-		szMsg = SdLoadString( IDS_IFX_ERROR_PRODUCT_NOT_INSTALLED_UNINST );
-   		SdSubstituteProductInfo( szMsg );
-		MessageBox( szMsg, SEVERE );
+    if( REMOVEONLY ) then      
+    	if (MODE != SILENTMODE) then
+	        Disable( DIALOGCACHE );
+			szMsg = SdLoadString( IDS_IFX_ERROR_PRODUCT_NOT_INSTALLED_UNINST );
+	   		SdSubstituteProductInfo( szMsg );
+			MessageBox( szMsg, SEVERE );   
+		endif;
 		abort;
     endif;
     
@@ -443,9 +447,10 @@ begin
 Dlg_SdWelcome:
     szTitle = "";
     szMsg   = "";
-    nResult = SdWelcome(szTitle, szMsg);
-    if (nResult = BACK) goto Dlg_SdWelcome;
-	
+    if (MODE != SILENTMODE) then
+	    nResult = SdWelcome(szTitle, szMsg);
+	    if (nResult = BACK) goto Dlg_SdWelcome;
+	endif;
 	szTitle   = "";
 	svName    = "";
     svCompany = "";
@@ -457,21 +462,24 @@ Dlg_ReleaseNotes:
 Dlg_SdFeatureTree: 
     szTitle    = "";
     szMsg      = "";
-    if (nSetupType = TYPICAL) then
-		nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
-		if (nResult = BACK) goto Dlg_ReleaseNotes;  
-    endif;
-
+    if (MODE != SILENTMODE) then
+	    if (nSetupType = TYPICAL) then
+			nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
+			if (nResult = BACK) goto Dlg_ReleaseNotes;  
+	    endif;
+	endif;
 
 Dlg_SdStartCopy:
     szTitle = "";
-    szMsg   = "";      
-    nResult = SdStartCopy2( szTitle, szMsg );
-    	
-	if (nResult = BACK) then
-    	goto Dlg_SdFeatureTree;
-    endif;
-
+    szMsg   = "";
+    if (MODE != SILENTMODE) then      
+    	nResult = SdStartCopy2( szTitle, szMsg );    
+	    	
+		if (nResult = BACK) then
+	    	goto Dlg_SdFeatureTree;
+	    endif;
+	endif;
+	
     // Added in IS 2009 - Set appropriate StatusEx static text.
     SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_FIRSTUI ) );
     
@@ -509,7 +517,11 @@ Dlg_Start:
     if( !REMOVEONLY ) then
 		// In standard mode show maintenance dialog
 		Disable(BACKBUTTON);
-		nType = SdWelcomeMaint(szTitle, szMsg, MODIFY);
+		if (MODE != SILENTMODE) then
+			nType = SdWelcomeMaint(szTitle, szMsg, MODIFY);
+		else
+		    nType = MODIFY;
+		endif;
 		Enable(BACKBUTTON);
 	else
         // Hide the initial progress dialog as otherwise the user can
@@ -522,17 +534,19 @@ Dlg_Start:
 	
 	// Show Uninstall Confirmation Dialog
     if ( nType = REMOVEALL ) then
-		nResult = MessageBox( SdLoadString( IFX_MAINTUI_MSG ), MB_YESNO );
-		if (nResult != IDYES ) then
-            
-            if( REMOVEONLY ) then
-                // In REMOVEONLY mode, abort the setup.
-                abort;
-            else
-                // In non-REMOVEONLY mode, redisplay the previous dialog.
-			    goto Dlg_Start;
-            endif;
-
+    	if (MODE != SILENTMODE) then
+			nResult = MessageBox( SdLoadString( IFX_MAINTUI_MSG ), MB_YESNO );
+			if (nResult != IDYES ) then
+	            
+	            if( REMOVEONLY ) then
+	                // In REMOVEONLY mode, abort the setup.
+	                abort;
+	            else
+	                // In non-REMOVEONLY mode, redisplay the previous dialog.
+				    goto Dlg_Start;
+	            endif;
+	
+			endif;                         
 		endif;
 	endif;
 
@@ -542,28 +556,24 @@ Dlg_SdFeatureTree:
 	if (nType = MODIFY) then
 		szTitle = "";
 		szMsg = "";
-		nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
-		if (nResult = BACK) goto Dlg_Start;
+		if (MODE != SILENTMODE) then
+			nResult = SdFeatureTree(szTitle, szMsg, INSTALLDIR, "", 2);
+			if (nResult = BACK) goto Dlg_Start;
+		endif;
 	endif;
 
 	switch(nType)
-        case REMOVEALL: 
-        
+        case REMOVEALL:         
             ComponentRemoveAll();
-
             // Added in IS 2009 - Set appropriate StatusEx static text.
             SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_MAINTUI_REMOVEALL ) );
 
-        case REPAIR:
-        
+        case REPAIR:        
             ComponentReinstall();
-
             // Added in IS 2009 - Set appropriate StatusEx static text.
             SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_MAINTUI_REPAIR ) );
 
-
         case MODIFY:
-
             // Added in IS 2009 - Set appropriate StatusEx static text.
             SetStatusExStaticText( SdLoadString( IDS_IFX_STATUSEX_STATICTEXT_MAINTUI_MODIFY ) );
 
@@ -614,25 +624,29 @@ begin
     bOpt2   = TRUE;    
 
     if ( BATCH_INSTALL ) then
-    	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
+    	if (MODE != SILENTMODE) then
+    		SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
+    	endif;
     else
-    	szOpt1 = "&Launch Home Page in default Browser";
-    	szOpt2 = "Launch &MP-TV-Series Configuration";
-	    SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
-	    
-	    if bOpt1 then
-		    // Launch webpage
-			szSite = MPTVSERIES_HOMEPAGE_URL;
-			LaunchBrowser(szSite);	    
-	    endif;
-	    
-	    if bOpt2 then
-	    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);
-	    	LongPathToQuote(g_sSubCentralPluginFileName,TRUE);
-	    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
-	    	szParams = "/plugin=" + g_sTVSeriesPluginFileName + " ";
-	    	szParams = szParams + "/loadassembly=" + g_sSubCentralPluginFileName;
-	    	LaunchApp(szFileName, szParams);	    
+    	if (MODE != SILENTMODE) then
+	    	szOpt1 = "&Launch Home Page in default Browser";
+	    	szOpt2 = "Launch &MP-TV-Series Configuration";
+		    SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
+		    
+		    if bOpt1 then
+			    // Launch webpage
+				szSite = MPTVSERIES_HOMEPAGE_URL;
+				LaunchBrowser(szSite);	    
+		    endif;
+		    
+		    if bOpt2 then
+		    	LongPathToQuote(g_sTVSeriesPluginFileName,TRUE);
+		    	LongPathToQuote(g_sSubCentralPluginFileName,TRUE);
+		    	szFileName = g_sMediaPortalProgramDir^"PluginConfigLoader.exe";
+		    	szParams = "/plugin=" + g_sTVSeriesPluginFileName + " ";
+		    	szParams = szParams + "/loadassembly=" + g_sSubCentralPluginFileName;
+		    	LaunchApp(szFileName, szParams);	    
+		    endif;                      
 	    endif;
 	endif;
 end; 
@@ -678,21 +692,23 @@ begin
 
 	bOpt1   = FALSE;
     bOpt2   = FALSE;    
-
-    if ( BATCH_INSTALL ) then
-    	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
-    else
-    	if ( REMOVEALLMODE ) then
-    		szOpt1 = "Delete all Artwork, plugin will re-download on next import.";
-    		szOpt2 = "Delete database, all settings will be lost.";
-    	endif;
-        
-       	SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
-       	
-       	if (REMOVEALLMODE) then
-       		UninstallCleanup(bOpt1, bOpt2);
-       	endif;
-    endif;
+	
+	if (MODE != SILENTMODE) then
+	    if ( BATCH_INSTALL ) then
+	    	SdFinishReboot ( szTitle , szMsg1 , SYS_BOOTMACHINE , szMsg2 , 0 );
+	    else
+	    	if ( REMOVEALLMODE ) then
+	    		szOpt1 = "Delete all Artwork, plugin will re-download on next import.";
+	    		szOpt2 = "Delete database, all settings will be lost.";
+	    	endif;
+	        
+	       	SdFinish ( szTitle , szMsg1 , szMsg2 , szOpt1 , szOpt2 , bOpt1 , bOpt2 );
+	       	
+	       	if (REMOVEALLMODE) then
+	       		UninstallCleanup(bOpt1, bOpt2);
+	       	endif;
+	    endif;
+	endif;
 end;
 
 function VOID CheckMPVersion()
@@ -702,7 +718,9 @@ begin
     
     // Warn user of old version of MediaPortal
     if (GetFileVersion(svVersion2,"MEDIAPORTAL") < 0) then    	
-    	MessageBox(@MPNOTFOUND,SEVERE);
+    	if (MODE != SILENTMODE) then
+    		MessageBox(@MPNOTFOUND,SEVERE);
+    	endif;
     	abort;                 	    	
     endif;
     
@@ -714,16 +732,19 @@ begin
     // Check Minimum requirements are met
     svVersion1 = MEDIAPORTAL_MIN_VERSION;
     if VerCompare(svVersion1, svVersion2, VERSION) = 0 then
-    	MessageBox(@MPMINREQNOTMET,SEVERE);
+    	if (MODE != SILENTMODE) then
+    		MessageBox(@MPMINREQNOTMET,SEVERE);
+    	endif;
     	abort; 
     endif;
     
     // Check if warning should be prompted
-    svVersion1 = MEDIAPORTAL_MINNOWARN_VERSION;
-    if VerCompare(svVersion1, svVersion2, VERSION) = 0 then
-    	MessageBox(@MPOLDVERSION,WARNING);
+    if (MODE != SILENTMODE) then
+	    svVersion1 = MEDIAPORTAL_MINNOWARN_VERSION;
+	    if VerCompare(svVersion1, svVersion2, VERSION) = 0 then
+	    	MessageBox(@MPOLDVERSION,WARNING);
+	    endif;
     endif;
-    
 end; 
 
 function NUMBER	GetFileVersion(svVersionNumber,sType)
@@ -995,8 +1016,8 @@ begin
 		sDestinationFolder = g_sDatabaseDir ^ "TVSeries_Backup" ^ svDateTime;
 	endif;
 	
-	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );	
-	if nResult < 0 goto err;
+	nResult = XCopyFile ( sFileName, sDestinationFolder, COMP_NORMAL );		
+	if (nResult < 0 && MODE != SILENTMODE) goto err;
 	
 	Enable(LOGGING);
 	return;
@@ -1038,6 +1059,13 @@ function VOID CheckFilesInUse()
 	NUMBER nvType, nvValue, nvExitCode, nReturn;
 	LIST OpenFilesList;
 begin
+
+if (MODE = SILENTMODE) then
+	// take our chances, restart manager will kick in if 
+	// anything is in use..but since silent this will error out since no
+	// repsonse is recorded.
+	return;
+endif;
 
 FilesInUse:
 	bFileLocked = FALSE;
@@ -1130,6 +1158,18 @@ begin
    	
    	endwhile;
    	
+   	// just delete the files if silent mode
+   	if (MODE = SILENTMODE) then
+  		nResult = ListGetFirstString(listDuplicateFiles,svResult);
+		while (nResult != END_OF_LIST)
+   	
+   			DeleteFile(svResult);
+   			nResult = ListGetNextString(listDuplicateFiles,svResult);
+   	
+   		endwhile;
+   		return; 	
+   	endif;   
+   	
    	// Match Found, inform user there is going to be a problem
 	szMessage = "Setup has detected that there is multiple instances of the plugin installed:\n";
 	szMessage = szMessage + szFiles + "\n\n";
@@ -1203,7 +1243,11 @@ function number ShowReleaseNotesDlg()
 	NUMBER nCmdValue;
 	BOOL bDone;
 begin
-
+    
+    if (MODE = SILENTMODE) then
+    	return RES_PBUT_NEXT;
+    endif;
+    
 	szDialogName = "ReleaseNotes";
    	bDone = FALSE;
       	                         	                     
