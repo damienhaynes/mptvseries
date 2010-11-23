@@ -118,23 +118,23 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>270, 48</value>
+    <value>270, 20</value>
   </metadata>
   <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>937, 49</value>
+    <value>937, 21</value>
   </metadata>
   <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>610, 46</value>
+    <value>610, 18</value>
   </metadata>
   <metadata name="imageList1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>159, 56</value>
+    <value>159, 28</value>
   </metadata>
   <data name="imageList1.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABa
-        dAAAAk1TRnQBSQFMAgEBCwEAAdQBAgHUAQIBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        dAAAAk1TRnQBSQFMAgEBCwEAASwBAwEsAQMBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABSAMAAQEBAAEgBgABbDEAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMYASEDEQEXAwoBDgME
         AQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMAAQEXAAEBAxIBGAM2
         AVgDSgGLA1EBogNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNS
@@ -634,7 +634,7 @@
 </value>
   </data>
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>815, 46</value>
+    <value>815, 18</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -674,7 +674,7 @@ A Logo package must be installed to display logos succesfully in Media Portal</v
 It will be more complete than standard lookup but will also be more throught since it will check all of the subtitle paths you have defined.</value>
   </data>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
+    <value>17, 28</value>
   </metadata>
   <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
     <value>Enable this option to disable the overview for episodes that haven't been watched yet.
@@ -785,7 +785,7 @@ You can right click on this textbox to bring up a menu of available fields from 
 Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
   <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>406, 48</value>
+    <value>406, 20</value>
   </metadata>
   <data name="label70.Text" xml:space="preserve">
     <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
@@ -828,7 +828,7 @@ Be sure to enable 'run before matching' for this to work before it reaches the p
     <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>104</value>
+    <value>58</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
