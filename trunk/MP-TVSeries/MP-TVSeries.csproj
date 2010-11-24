@@ -83,14 +83,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubCentral, Version=0.9.1.106, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\SubCentral.dll</HintPath>
-    </Reference>
-    <Reference Include="SubtitleDownloader, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\SubtitleDownloader.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -143,7 +135,6 @@
     </Compile>
     <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
-    <Compile Include="DB Classes\DBUserSelections.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -279,7 +270,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
-    <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
