@@ -65,8 +65,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cImport_DontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
         public const String cImport_OnlineUpdateScanLastTime = "UpdateScanLastTime";
 
-        public const String cPlay_SubtitleDownloadOnPlay = "SubtitleDownloadOnPlay";
-
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
         public const String cView_Episode_HideUnwatchedSummary = "View_Episode_HideUnwatchedSummary";
@@ -179,11 +177,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cParentalControlPinCode = "ParentalControlPinCode";
 		public const String cKeyboardStyle = "KeyboardStyle";
 		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
-
-        public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
-        public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
-        public const String cSubtitleDownloadersEnabled = "SubtitleDownloadersEnabled";
-
+        
         public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
 
         public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
@@ -295,25 +289,13 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cImport_DontClearMissingLocalFiles) == null)
                     SetOptions(cImport_DontClearMissingLocalFiles, 0);
-
-                if (GetOptions(cPlay_SubtitleDownloadOnPlay) == null)
-                    SetOptions(cPlay_SubtitleDownloadOnPlay, false);
-
+                
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
 
                 if (GetOptions(cViewAutoHeight) == null)
                     SetOptions(cViewAutoHeight, true);
-
-                if (GetOptions(cSubtitleDownloaderEnabled) == null)
-                    SetOptions(cSubtitleDownloaderEnabled, false);
-
-                if (GetOptions(cSubtitleDownloaderLanguages) == null)
-                    SetOptions(cSubtitleDownloaderLanguages, "");
-
-                if (GetOptions(cSubtitleDownloadersEnabled) == null)
-                    SetOptions(cSubtitleDownloadersEnabled, "");
-
+                
                 if (GetOptions(cView_Series_ListFormat) == null)
                     SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default
                 else

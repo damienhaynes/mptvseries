@@ -331,10 +331,8 @@
 		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td>en_us_.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MP_TVSeries.dll</td><td>{7D4D83BE-8C0C-4805-8E4D-BC3659C8D6C8}</td><td>WINDOWS1</td><td>8</td><td/><td>mp_tvseries.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>SubtitleDownloader.dll</td><td>{7762A85D-F052-4648-AF87-3A3F1FC9EBE8}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>subtitledownloader.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Updates</td><td>{EFECBB61-F929-4FE5-AE99-58D023A2035C}</td><td>WEB</td><td>8</td><td/><td>updates.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Wiki</td><td>{B6C9EB8C-2048-45DA-801E-A45FB97B1837}</td><td>WEB</td><td>8</td><td/><td>wiki.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>_z.dll</td><td>{50FB2E7A-ABE6-4433-A2FB-F064D4925450}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>_z.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3Media</td><td>{CC2C416E-AD41-4A37-AECC-F5EFCDC1FB39}</td><td>MEDIA</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideMedia</td><td>{7A68FBFD-F363-4E93-91A6-7438C8A024A3}</td><td>MEDIA1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td>tvseries.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1326,8 +1324,6 @@
 		<row><td>Main</td><td>PluginConfigLoader</td></row>
 		<row><td>Main</td><td>Updates</td></row>
 		<row><td>Main</td><td>Wiki</td></row>
-		<row><td>SubTitleDowloader</td><td>SubtitleDownloader.dll</td></row>
-		<row><td>SubTitleDowloader</td><td>_z.dll</td></row>
 	</table>
 
 	<table name="File">
@@ -1342,7 +1338,6 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>_z.dll</td><td>_z.dll</td><td>7z.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\7z.dll</td><td>1</td><td/></row>
 		<row><td>common.window.tvseries.xml</td><td>skinBlue3XML</td><td>COMMON~1.XML|common.window.TVseries.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\common.window.TVseries.xml</td><td>17</td><td/></row>
 		<row><td>cs.xml</td><td>Languages</td><td>cs.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\cs.xml</td><td>1</td><td/></row>
 		<row><td>da.xml</td><td>Languages</td><td>da.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\da.xml</td><td>1</td><td/></row>
@@ -1368,7 +1363,6 @@
 		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>1</td><td/></row>
 		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>1</td><td/></row>
 		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>1</td><td/></row>
-		<row><td>subtitledownloader.dll</td><td>SubtitleDownloader.dll</td><td>SUBTIT~1.DLL|SubtitleDownloader.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\SubtitleDownloader.dll</td><td>1</td><td/></row>
 		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Dummy.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Dummy.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
@@ -1652,10 +1646,8 @@
 		<row><td>Languages</td><td/><td/><td>_43676FB1_360E_4DBF_969B_179B371EB92A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MP_TVSeries.dll</td><td/><td/><td>_3D521D74_D0A4_40AB_8993_D9147023752A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PluginConfigLoader</td><td/><td/><td>_5B0A85B6_7138_45C5_A964_0E08743C61D3_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>SubtitleDownloader.dll</td><td/><td/><td>_EA13FE16_030C_4022_AE5C_FAA0992269E0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Updates</td><td/><td/><td>_906420BA_C1A6_4D16_A4EE_0749D1E8796D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Wiki</td><td/><td/><td>_FA268EEB_795E_49F2_A65E_3688CE9B9ADC_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>_z.dll</td><td/><td/><td>_DFEAB152_6492_4430_8613_254C080FD337_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3Media</td><td/><td/><td>_D51CB0E0_168F_474F_B433_1699779B7DCF_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3WideMedia</td><td/><td/><td>_9731C4B7_32CE_4ECA_945D_A300288D0959_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3WideXML</td><td/><td/><td>_69B87E1A_652B_44E9_8735_18332E35DB31_FILTER</td><td/><td/><td/><td/></row>
@@ -1997,7 +1989,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.6.6</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.7.0</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -4125,9 +4117,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{976BAF39-1CC7-4573-BB0F-CAA8CE55A98A}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.6.6</td><td/></row>
-		<row><td>ProductVersion</td><td>2.6.6.1275</td><td/></row>
+		<row><td>ProductCode</td><td>{4D5C2857-E745-4B27-8652-ECA13684E7E5}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 2.7.0</td><td/></row>
+		<row><td>ProductVersion</td><td>2.7.0.1282</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>

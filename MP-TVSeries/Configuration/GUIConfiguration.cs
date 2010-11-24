@@ -42,8 +42,6 @@ using WindowPlugins.GUITVSeries;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
-using SubtitleDownloader.Core;
-using WindowPlugins.GUITVSeries.Subtitles;
 using MediaPortal.GUI.Library;
 
 #if DEBUG
@@ -74,11 +72,6 @@ namespace WindowPlugins.GUITVSeries
 
         private Control m_localControlForInvoke;
         private static ConfigurationForm instance = null;
-
-        private bool subtitleDownloaderWorking = false;
-
-        private List<CheckBox> subtitleDownloader_LanguageCheckBoxes = new List<CheckBox>();
-        private List<CheckBox> subtitleDownloader_DownloaderCheckBoxes = new List<CheckBox>();
 
         public static ConfigurationForm GetInstance()
         {
@@ -386,31 +379,6 @@ namespace WindowPlugins.GUITVSeries
                 this.lblRecentAddedDays.Enabled = false;
             }
 
-            subtitleDownloader_enabled.Checked = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
-            subtitleDownloader_enabled_CheckedChanged(this, new EventArgs());
-            checkBox_SubDownloadOnPlay.Checked = DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay);
-            checkBox_UseFullNameInSubDialog.Checked = DBOption.GetOptions(DBOption.cUseFullNameInSubDialog);
-
-            checkBox_EnableSubCentral.Checked = DBOption.GetOptions(DBOption.cSubCentralEnabled);
-            checkBoxEnableSubCentral_CheckedChanged(this, new EventArgs());
-            checkBox_EnableSubCentralForEpisodes.Checked = DBOption.GetOptions(DBOption.cSubCentralEnabledForEpisodes);
-
-            int checkBoxesY = 145;
-            if (!Helper.IsSubCentralAvailableAndEnabled)
-            {
-                checkBox_EnableSubCentral.Checked = false;
-                checkBox_EnableSubCentralForEpisodes.Checked = false;
-                checkBox_EnableSubCentral.Visible = false;
-                checkBox_EnableSubCentralForEpisodes.Visible = false;
-
-                subtitleDownloader_enabled.Top = 7;
-                checkBox_SubDownloadOnPlay.Top = 30;
-                checkBox_UseFullNameInSubDialog.Top = 53;
-                checkBoxesY = 99;
-            }
-
-            int endsY = DrawSubtitleDownloaderCheckBoxes(checkBoxesY);
-            DrawSubtitleLanguageCheckBoxes(endsY);
         }
 
         #region Online Languages
@@ -457,12 +425,7 @@ namespace WindowPlugins.GUITVSeries
             _availViews.Items.Clear();
             foreach (logicalView view in availViews)
                 _availViews.Items.Add(view.Name);
-
-            //if (DBOption.GetOptions(DBOption.cOnlineFavourites))
-            //    chkOnlineFavourites.Checked = true;
         }
-
-      
 
         private void LoadImportPathes()
         {
@@ -472,18 +435,6 @@ namespace WindowPlugins.GUITVSeries
                 columnEnabled.Name = "enabled";
                 columnEnabled.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 dataGridView_ImportPathes.Columns.Add(columnEnabled);
-
-                //DataGridViewCheckBoxColumn columnRemovable = new DataGridViewCheckBoxColumn();
-                //columnRemovable.Name = "removable";
-                //columnRemovable.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-                //columnRemovable.ToolTipText = @"Enable this option to treat this path as removable e.g. CD\DVD-ROM, USB Drive.";
-                //dataGridView_ImportPathes.Columns.Add(columnRemovable);
-
-                //DataGridViewCheckBoxColumn columnKeepReference = new DataGridViewCheckBoxColumn();
-                //columnKeepReference.Name = "keep_references";
-                //columnKeepReference.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-                //columnKeepReference.ToolTipText = "Enable this option to keep reference to files in database that are not available for this import path.";
-                //dataGridView_ImportPathes.Columns.Add(columnKeepReference);
 
                 DataGridViewButtonColumn columnPath = new DataGridViewButtonColumn();
                 columnPath.Name = DBImportPath.cPath;
@@ -501,19 +452,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBImportPath importPath in importPathes)
                 {
                     DataGridViewRow row = dataGridView_ImportPathes.Rows[importPath[DBImportPath.cIndex]];
-                    row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];
-                    //row.Cells[DBImportPath.cRemovable].Value = (Boolean)importPath[DBImportPath.cRemovable];
-
-                    //if (row.Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
-                    //{
-                    //    row.Cells[DBImportPath.cKeepReference].Value = false;
-                    //    row.Cells[DBImportPath.cKeepReference].ReadOnly = true;
-                    //}
-                    //else
-                    //{
-                    //    row.Cells[DBImportPath.cKeepReference].Value = (Boolean)importPath[DBImportPath.cKeepReference];
-                    //    row.Cells[DBImportPath.cKeepReference].ReadOnly = false;
-                    //}
+                    row.Cells[DBImportPath.cEnabled].Value = (Boolean)importPath[DBImportPath.cEnabled];                   
                     row.Cells[DBImportPath.cPath].Value = (String)importPath[DBImportPath.cPath];
                 }
             }
@@ -779,127 +718,10 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
-
-        private int DrawSubtitleDownloaderCheckBoxes(int startY)
-        {
-            int counter = 1;
-            int downloaderCheckboxY = startY;
-            int downloaderCheckboxX = 10;
-
-            List<String> downloaders = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
-            downloaders.Sort();
-
-            foreach (var downloader in downloaders)
-            {
-                var downloaderCheckbox = new System.Windows.Forms.CheckBox();
-                downloaderCheckbox.AutoSize = true;
-                downloaderCheckbox.Location = new System.Drawing.Point(downloaderCheckboxX, downloaderCheckboxY);
-                downloaderCheckbox.Name = "subtitleDownloader_" + downloader;
-                downloaderCheckbox.Text = downloader;
-                downloaderCheckbox.UseVisualStyleBackColor = true;
-                downloaderCheckbox.Tag = downloader;
-
-                string checkedDownloaders =
-                    DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
-
-                if (checkedDownloaders.Contains((String)downloaderCheckbox.Tag))
-                {
-                    downloaderCheckbox.Checked = true;
-                }
-
-                downloaderCheckbox.CheckedChanged += downloaderCheckBox_CheckedChanged;
-
-                this.subtitleDownloader_DownloaderCheckBoxes.Add(downloaderCheckbox);
-                this.panel_subtitleroot.Controls.Add(downloaderCheckbox);
-                downloaderCheckboxX += 125;
-
-                if (counter % 4 == 0)
-                {
-                    downloaderCheckboxY += 23;
-                    downloaderCheckboxX = 10;
-                }
-                counter++;
-            }
-
-            return downloaderCheckboxY;
-        }
-
-        private void DrawSubtitleLanguageCheckBoxes(int startY)
-        {
-            // Draw subtitle language checkboxes dynamically for SubtitleDownloader settings
-
-            int counter = 1;
-            int languageCheckboxY = startY + 46;
-            int languageCheckboxX = 10;
-
-            List<String> languages = Languages.GetLanguageNames();
-            languages.Sort();
-
-            foreach (var languageName in languages)
-            {
-                var languageCheckbox = new System.Windows.Forms.CheckBox();
-                languageCheckbox.AutoSize = true;
-                languageCheckbox.Location = new System.Drawing.Point(languageCheckboxX, languageCheckboxY);
-                languageCheckbox.Name = "subtitleDownloader_" + languageName;
-                languageCheckbox.Text = languageName;
-                languageCheckbox.UseVisualStyleBackColor = true;
-                languageCheckbox.Tag = Languages.GetLanguageCode(languageName);
-
-                string checkedLanguages = 
-                    DBOption.GetOptions(DBOption.cSubtitleDownloaderLanguages);
-
-                if (checkedLanguages.Contains((String) languageCheckbox.Tag))
-                {
-                    languageCheckbox.Checked = true;
-                }
-
-                languageCheckbox.CheckedChanged += languageCheckBox_CheckedChanged;
-
-                this.subtitleDownloader_LanguageCheckBoxes.Add(languageCheckbox);
-                this.panel_subtitleroot.Controls.Add(languageCheckbox);
-                languageCheckboxX += 125;
-
-                if (counter % 4 == 0)
-                {
-                    languageCheckboxY += 23;
-                    languageCheckboxX = 10;
-                }
-                counter++;
-            }
-        }
-
-        private void languageCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            string selectedLanguages = "";
-
-            foreach (var languageCheckbox in subtitleDownloader_LanguageCheckBoxes)
-            {
-                if (languageCheckbox.Checked)
-                {
-                    selectedLanguages += "|" + languageCheckbox.Tag;
-                }
-            }
-            DBOption.SetOptions(DBOption.cSubtitleDownloaderLanguages, selectedLanguages);
-        }
-
-        private void downloaderCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            string selectedDownloaders = "";
-
-            foreach (var downloaderCheckbox in subtitleDownloader_DownloaderCheckBoxes)
-            {
-                if (downloaderCheckbox.Checked)
-                {
-                    selectedDownloaders += "|" + downloaderCheckbox.Tag;
-                }
-            }
-            DBOption.SetOptions(DBOption.cSubtitleDownloadersEnabled, selectedDownloaders);
-        }
-
         #endregion
-        
+
         #region Import Path Handling
-        
+
         private void dataGridView_ImportPathes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             DBImportPath importPath = new DBImportPath();
@@ -3131,14 +2953,6 @@ namespace WindowPlugins.GUITVSeries
                     ToggleWatchedNode(clickedNode, 0);
                     break;
 
-                case "subtitle":
-                    GetSubtitles(clickedNode);
-                    break;
-
-                case "resetUserSelections":
-                    ResetUserSelectionsToolStripMenuItem(clickedNode);
-                    break;
-
             }
         }
       
@@ -3259,122 +3073,6 @@ namespace WindowPlugins.GUITVSeries
             return ReturnCode.Ignore;
         }
 
-        private void ResetUserSelectionsToolStripMenuItem(TreeNode node)
-        {
-            if (node == null)
-                return;
-
-            switch (node.Name)
-            {
-                case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)node.Tag;
-                    DBUserSelection.Clear(series);
-                    break;
-
-                case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
-                    DBUserSelection.Clear(season);
-                    break;
-
-                case DBEpisode.cTableName:
-                    break;
-            }
-        }
-
-        private void GetSubtitles(TreeNode node)
-        {
-            if (node == null)
-                return;
-
-            switch (node.Name)
-            {
-                case DBSeries.cTableName:
-                    DBSeries series = (DBSeries)node.Tag;
-                    break;
-
-                case DBSeason.cTableName:
-                    DBSeason season = (DBSeason)node.Tag;
-                    break;
-
-                case DBEpisode.cTableName:
-                    DBEpisode episode = (DBEpisode)node.Tag;
-                    ShowSubtitleMenu(episode);
-                    break;
-            }
-        }
-
-        protected List<CItem> GetEnabledSubtitleDownloaderProviders()
-        {
-            List<CItem> providers = new List<CItem>();
-            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
-
-            List<string> availableSubtitleDownloaderNames = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
-
-            if (availableSubtitleDownloaderNames != null)
-            {
-                foreach (var name in availableSubtitleDownloaderNames)
-                {
-                    if (enabledDownloaders.Contains(name))
-                    {
-                        providers.Add(new CItem(name, name, name));
-                    }
-                }
-            }
-            return providers;
-        }
-
-        protected bool SubtitleDownloaderEnabledAndHasSites()
-        {
-            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
-            if (isSubtitleDownloaderEnabled)
-            {
-                List<CItem> providers = GetEnabledSubtitleDownloaderProviders();
-                if (providers.Count > 0)
-                    return true;
-            }
-            return false;
-        }
-
-        protected void ShowSubtitleMenu(DBEpisode episode)
-        {
-            List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
-
-            if (Choices.Count == 0)
-                return;
-
-            CItem selected = null;
-
-            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = Translation.GetSubtitlesFrom;
-            descriptor.m_sItemToMatchLabel = "";
-            descriptor.m_sItemToMatch = "";
-            descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
-            descriptor.m_List = Choices;
-            descriptor.m_sbtnIgnoreLabel = String.Empty;
-            descriptor.m_sbtnSkipLabel = String.Empty;
-
-            ReturnCode returnCode = ChooseFromSelection(descriptor, out selected);
-
-            if (selected != null && returnCode.Equals(ReturnCode.OK))
-            {
-                ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
-                SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
-
-                if (!subtitleDownloaderWorking)
-                {
-                    retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-                    subtitleDownloaderWorking = true;
-                    retriever.GetSubs(episode);
-                }
-            }
-        }
-
-        void downloader_SubtitleRetrievalCompleted(DBEpisode episode, bool subtitleRetrieved, string errorMessage)
-        {
-            if (episode != null) episode.ReadMediaInfo();
-            subtitleDownloaderWorking = false;
-        }
-
         ToolStripMenuItem subMenuItem = null;
         ContextMenuStrip subMenu = null;
         private void contextMenuStrip_DetailsTree_Opening(object sender, CancelEventArgs e)
@@ -3394,10 +3092,6 @@ namespace WindowPlugins.GUITVSeries
                     contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = true;
                     ToolStripMenuItem ignoreOnScanMenuItem = (ToolStripMenuItem)contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"];
                     ignoreOnScanMenuItem.Checked = series[DBSeries.cScanIgnore];
-
-                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
 
 					// Create AddToView ContextMenu Item and Submenu
                     // No need to create a Remove Item as we can use the checked state
@@ -3437,10 +3131,7 @@ namespace WindowPlugins.GUITVSeries
                 case DBSeason.cTableName:
                     DBSeason season = (DBSeason)node.Tag;
                     bHidden = season[DBSeason.cHidden];
-                    contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = false;
+                    contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = false;                  
                     
                     if (contextMenuStrip_DetailsTree.Items.ContainsKey("addSeriesToView"))
                         contextMenuStrip_DetailsTree.Items["addSeriesToView"].Enabled = false;
@@ -3450,23 +3141,13 @@ namespace WindowPlugins.GUITVSeries
                     DBEpisode episode = (DBEpisode)node.Tag;
                     bHidden = episode[DBOnlineEpisode.cHidden];
                     contextMenuStrip_DetailsTree.Items["ignoreOnScanToolStripMenuItem"].Enabled = false;
-                    contextMenuStrip_DetailsTree.Items["getSubtitlesToolStripMenuItem"].Enabled = SubtitleDownloaderEnabledAndHasSites();
-                    contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Enabled = true;
-                    contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Enabled = true;
                     
                     if (contextMenuStrip_DetailsTree.Items.ContainsKey("addSeriesToView"))
                         contextMenuStrip_DetailsTree.Items["addSeriesToView"].Enabled = false;
                     
                         break;
             }
-            // Hide Downloaders not frequently used by users
-            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cUTorrentDownloadPath))) {
-                contextMenuStrip_DetailsTree.Items["torrentThToolStripMenuItem"].Visible = false;
-            }
-            if (String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cNewsLeecherDownloadPath))) {
-                contextMenuStrip_DetailsTree.Items["newzbinThisToolStripMenuItem"].Visible = false;
-            }
-
+            
             if (bHidden)
                 contextMenuStrip_DetailsTree.Items["hideToolStripMenuItem"].Text = "UnHide";
             else
@@ -4574,39 +4255,7 @@ namespace WindowPlugins.GUITVSeries
         private void nudScanRemoteShareFrequency_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cImport_ScanRemoteShareLapse, (int)nudScanRemoteShareFrequency.Value);
-        }
-
-        private void checkBox_SubDownloadOnPlay_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cPlay_SubtitleDownloadOnPlay, checkBox_SubDownloadOnPlay.Checked);
-        }
-
-        private void subtitleDownloader_enabled_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubtitleDownloaderEnabled, subtitleDownloader_enabled.Checked);
-
-            checkBox_SubDownloadOnPlay.Enabled = subtitleDownloader_enabled.Checked;
-            checkBox_UseFullNameInSubDialog.Enabled = subtitleDownloader_enabled.Checked;
-
-            if (this.subtitleDownloader_DownloaderCheckBoxes != null) {
-                foreach (CheckBox checkBox in this.subtitleDownloader_DownloaderCheckBoxes) {
-                    checkBox.Enabled = subtitleDownloader_enabled.Checked;
-                }
-            }
-
-            if (this.subtitleDownloader_LanguageCheckBoxes != null) {
-                foreach (CheckBox checkBox in this.subtitleDownloader_LanguageCheckBoxes) {
-                    checkBox.Enabled = subtitleDownloader_enabled.Checked;
-                }
-            }
-        }
-
-        private void checkBoxEnableSubCentral_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cSubCentralEnabled, checkBox_EnableSubCentral.Checked);
-
-            checkBox_EnableSubCentralForEpisodes.Enabled = checkBox_EnableSubCentral.Checked;
-        }
+        }        
 
         // Set focus on selected item when using Mouse Right Click
         private void treeView_Library_MouseDown(object sender, MouseEventArgs e) {
@@ -4635,16 +4284,7 @@ namespace WindowPlugins.GUITVSeries
                 lblRecentAddedDays.Enabled = false;
             }
         }
-
-        private void checkBox_UseFullNameInSubDialog_CheckedChanged(object sender, EventArgs e) {
-            DBOption.SetOptions(DBOption.cUseFullNameInSubDialog, checkBox_UseFullNameInSubDialog.Checked);
-        }
-
-        private void checkBox_EnableSubCentralForEpisodes_CheckedChanged(object sender, EventArgs e) {
-
-            DBOption.SetOptions(DBOption.cSubCentralEnabledForEpisodes, checkBox_EnableSubCentralForEpisodes.Checked);
-        }
-
+     
         private void numericUpDownImportDelay_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cImportDelay, (int)numericUpDownImportDelay.Value);

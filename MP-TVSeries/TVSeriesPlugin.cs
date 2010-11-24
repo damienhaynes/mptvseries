@@ -40,8 +40,6 @@ using WindowPlugins.GUITVSeries.Feedback;
 using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
-using WindowPlugins.GUITVSeries.Subtitles;
-using SubtitleDownloader.Core;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -173,10 +171,7 @@ namespace WindowPlugins.GUITVSeries
         private string[] m_stepSelection = null;
         private List<string> m_stepSelectionPretty = new List<string>();
         private bool skipSeasonIfOne_DirectionDown = true;
-        private string[] m_back_up_select_this = null;
-        private bool subtitleDownloaderWorking = false;
-        private List<string> availableSubtitleDownloaderNames = null;
-        private bool torrentWorking = false;        
+        private string[] m_back_up_select_this = null;        
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
@@ -479,13 +474,7 @@ namespace WindowPlugins.GUITVSeries
                 m_bShowLastActiveModule = xmlreader.GetValueAsBool("general", "showlastactivemodule", false);
                 m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
             }
-            
-            // subtitle downloader background tasks
-            BackgroundWorker subsChecker = new BackgroundWorker();
-            subsChecker.DoWork += new DoWorkEventHandler(GetSubtitleDownloaderNames);
-            subsChecker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetSubtitleDownloaderNames_Completed);
-            subsChecker.RunWorkerAsync();
-
+                        
             // check if running version of mediaportal support loading with parameter           
             if (typeof(GUIWindow).GetField("_loadParameter", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance) != null)
             {
@@ -721,10 +710,6 @@ namespace WindowPlugins.GUITVSeries
 					dlg.Reset();
 					GUIListItem pItem = null;
 
-                    bool subtitleDownloaderEnabled = SubtitleDownloaderEnabledAndHasSites() || (DBOption.GetOptions(DBOption.cSubCentralEnabled) && Helper.IsSubCentralAvailableAndEnabled);
-					bool newsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cNewsLeecherPath));
-					bool torrentsEnable = System.IO.File.Exists(DBOption.GetOptions(DBOption.cUTorrentPath));
-
 					if (!emptyList) {
 						switch (this.listLevel) {
 							case Listlevel.Episode:
@@ -860,56 +845,11 @@ namespace WindowPlugins.GUITVSeries
 					pItem = new GUIListItem(Translation.Options + " ...");
 					dlg.Add(pItem);
 					pItem.ItemId = (int)eContextMenus.options;
-					#endregion
-
-                    #region Download menu - keep at the bottom for fast access (menu + up => there)
-                    if (!emptyList) {
-                        if (subtitleDownloaderEnabled || newsEnable || torrentsEnable)
-                        {
-                            if (listLevel != Listlevel.Group)
-                            {
-                                if (this.listLevel == Listlevel.Episode)
-                                {
-                                    pItem = new GUIListItem(Translation.Download + " ...");
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextMenus.download;
-                                }
-                            }
-                        }
-                    }
-                    #endregion
+					#endregion                    
 
                     dlg.DoModal(GUIWindowManager.ActiveWindow);
 					#region Selected Menu Item Actions (Sub-Menus)
 					switch (dlg.SelectedId) {
-						case (int)eContextMenus.download: {
-								dlg.Reset();
-								dlg.SetHeading(Translation.Download);
-
-								if (subtitleDownloaderEnabled) {
-									pItem = new GUIListItem(Translation.Retrieve_Subtitle);
-									dlg.Add(pItem);
-									pItem.ItemId = (int)eContextItems.downloadSubtitle;
-								}
-
-								if (newsEnable) {
-									pItem = new GUIListItem(Translation.Load_via_NewsLeecher);
-									dlg.Add(pItem);
-									pItem.ItemId = (int)eContextItems.downloadviaNewz;
-								}
-
-								if (torrentsEnable) {
-									pItem = new GUIListItem(Translation.Load_via_Torrent);
-									dlg.Add(pItem);
-									pItem.ItemId = (int)eContextItems.downloadviaTorrent;
-								}
-
-								dlg.DoModal(GUIWindowManager.ActiveWindow);
-								if (dlg.SelectedId != -1)
-									bExitMenu = true;
-							}
-							break;
-
 						case (int)eContextMenus.action: {
 								dlg.Reset();
 								dlg.SetHeading(Translation.Actions);
@@ -993,13 +933,6 @@ namespace WindowPlugins.GUITVSeries
                                     pItem = new GUIListItem(Translation.ParentalControlLocked);
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionLockViews;
-                                }
-
-                                if (newsEnable || torrentsEnable) // is this used by subtitles?
-                                {
-                                    pItem = new GUIListItem(Translation.ResetIgnoredDownloadedFiles);
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.actionResetIgnoredDownloadedFiles;
                                 }
 
 								dlg.DoModal(GUIWindowManager.ActiveWindow);
@@ -1233,17 +1166,7 @@ namespace WindowPlugins.GUITVSeries
                             m_scanTimer.Change(1000, 1000);
 						}
 						break;
-					#endregion
-
-					#region Downloaders
-					case (int)eContextItems.downloadSubtitle: {
-							if (selectedEpisode != null) {
-								DBEpisode episode = (DBEpisode)currentitem.TVTag;
-                                ShowSubtitleMenu(episode);
-							}
-						}
-						break;
-					#endregion
+					#endregion					
 
 					#region Favourites
 					/*case (int)eContextItems.actionToggleFavorite: {
@@ -1312,22 +1235,6 @@ namespace WindowPlugins.GUITVSeries
 								foreach (DBEpisode ep in DBEpisode.Get((int)m_SelectedSeries[DBSeries.cID], false))
 									ep.ReadMediaInfo();
 								break;
-						}
-						break;
-					#endregion
-
-					#region User Selections
-					case (int)eContextItems.resetUserSelections:
-
-						if (listLevel != Listlevel.Group) {
-							if (selectedSeries != null)
-								DBUserSelection.Clear(selectedSeries);
-
-							if (selectedEpisode != null)
-								DBUserSelection.Clear(selectedEpisode);
-
-							if (selectedSeason != null)
-								DBUserSelection.Clear(selectedSeason);
 						}
 						break;
 					#endregion
@@ -1607,165 +1514,6 @@ namespace WindowPlugins.GUITVSeries
 					return base.OnMessage(message);
 			}
 		}
-
-        private void GetSubtitleDownloaderNames_Completed(object sender, RunWorkerCompletedEventArgs e)
-        {            
-            if (availableSubtitleDownloaderNames != null)
-            {
-                MPTVSeriesLog.Write(string.Format("Completed getting list of Subtitle Downloader Sites, {0} sites available", availableSubtitleDownloaderNames.Count));
-                MPTVSeriesLog.Write("Subtitle sites available:", MPTVSeriesLog.LogLevel.Debug);
-                foreach (var name in availableSubtitleDownloaderNames)
-                {
-                    MPTVSeriesLog.Write(name, MPTVSeriesLog.LogLevel.Debug);   
-                }            
-            }
-        }
-
-        private void GetSubtitleDownloaderNames(object sender, DoWorkEventArgs e)
-        {            
-            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
-            if (isSubtitleDownloaderEnabled)
-            {
-                MPTVSeriesLog.Write("Retrieving List of Subtitle Downloader Sites");
-                availableSubtitleDownloaderNames = SubtitleDownloaderFactory.GetSubtitleDownloaderNames();
-            }
-        }
-
-        protected List<CItem> GetEnabledSubtitleDownloaderProviders()
-        {
-            List<CItem> providers = new List<CItem>();
-            string enabledDownloaders = DBOption.GetOptions(DBOption.cSubtitleDownloadersEnabled);
-            
-            if (availableSubtitleDownloaderNames != null)
-            {
-                foreach (var name in availableSubtitleDownloaderNames)
-                {
-                    if (enabledDownloaders.Contains(name))
-                    {
-                        providers.Add(new CItem(name, name, name));
-                    }
-                }
-            }
-            return providers;
-        }
-
-        protected bool SubtitleDownloaderEnabledAndHasSites()
-        {
-            bool isSubtitleDownloaderEnabled = DBOption.GetOptions(DBOption.cSubtitleDownloaderEnabled);
-            if (isSubtitleDownloaderEnabled)
-            {
-                List<CItem> providers = GetEnabledSubtitleDownloaderProviders();
-                if (providers.Count > 0)
-                    return true;                
-            }
-            return false;
-        }
-
-        protected void ShowSubtitleMenu(DBEpisode episode)
-        {
-            ShowSubtitleMenu(episode, false);
-        }
-
-        protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
-        {
-            if (Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled) && !fromPlay)
-            {
-                /*
-                DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                string episodeTitle = episode[DBEpisode.cEpisodeName];
-                string seasonIdx = episode[DBEpisode.cSeasonIndex];
-                string episodeIdx = episode[DBEpisode.cEpisodeIndex];
-                string seriesTitle = series[DBOnlineSeries.cOriginalName];
-                string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
-                string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
-                string episodeFileName = episode[DBEpisode.cFilename];
-
-                List<string> episodeDetails = new List<string> { "TVSeries", "", seriesTitle, "", seasonIdx, episodeIdx, thumb, fanart, episodeFileName };
-
-                GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 84623, 9811, 0, 0, 0, episodeDetails);
-                GUIGraphicsContext.SendMessage(msg);
-                //GUIWindowManager.Process();
-                */
-                GUIWindowManager.ActivateWindow(84623);
-                return;
-            }
-
-            if (!SubtitleDownloaderEnabledAndHasSites()) return;
-
-            List<CItem> Choices = GetEnabledSubtitleDownloaderProviders();
-
-            if (Choices.Count == 0)
-            {
-                if (fromPlay)
-                    m_VideoHandler.ResumeOrPlay(episode);
-                return;
-            }
-
-            if (fromPlay && Choices.Count > 0)
-            {
-                Choices.Insert(0, new CItem(Translation.PlayNow, Translation.NoSubtitleDownload, (object)"playNow"));
-            }
-
-            CItem selected = null;
-
-            ChooseFromSelectionDescriptor descriptor = new ChooseFromSelectionDescriptor();
-            descriptor.m_sTitle = Translation.GetSubtitlesFrom;
-            descriptor.m_sItemToMatchLabel = "";
-            descriptor.m_sItemToMatch = "";
-            descriptor.m_sListLabel = Translation.EnabledSubtitleSites;
-            descriptor.m_List = Choices;
-            descriptor.m_sbtnIgnoreLabel = String.Empty;
-            descriptor.m_sbtnSkipLabel = String.Empty;
-
-            bool bReady = false;
-            while (!bReady)
-            {
-                ReturnCode resultFeedback = ChooseFromSelection(descriptor, out selected);
-                switch (resultFeedback)
-                {
-                    case ReturnCode.NotReady:
-                        {
-                            // we'll wait until the plugin is loaded - we don't want to show up unrequested popups outside the tvseries pages
-                            Thread.Sleep(5000);
-                        }
-                        break;
-
-                    case ReturnCode.OK:
-                        {
-                            bReady = true;
-                        }
-                        break;
-
-                    default:
-                        {
-                            // exit too if cancelled
-                            bReady = true;
-                        }
-                        break;
-                }
-            }
-
-            if (selected != null)
-            {
-                if (selected.m_Tag == (object)"playNow")
-                {
-                    m_VideoHandler.ResumeOrPlay(episode);
-                }
-                else 
-                {
-                    ISubtitleDownloader downloader = SubtitleDownloaderFactory.GetSubtitleDownloader(selected.m_Tag.ToString());
-                    SubtitleRetriever retriever = new SubtitleRetriever(this, downloader);
-
-                    if (!subtitleDownloaderWorking)
-                    {
-                        setProcessAnimationStatus(true);
-                        retriever.SubtitleRetrievalCompleted += downloader_SubtitleRetrievalCompleted;
-                        subtitleDownloaderWorking = true;
-                        retriever.GetSubs(episode);
-                    }
-                }
-            }
-        }       
 
 		protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
 			if (control == this.viewMenuButton) {
@@ -4002,44 +3750,8 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-		#region Download Event Handllers		
-
-        void downloader_SubtitleRetrievalCompleted(DBEpisode episode, bool subtitleRetrieved, string errorMessage)
-        {
-            setProcessAnimationStatus(false);
-            subtitleDownloaderWorking = false;
-            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-
-            if (subtitleRetrieved)
-            {
-                if (episode != null)
-                {
-                    // refresh mediainfo to display subtitle logo
-                    episode.ReadMediaInfo();
-                }
-                LoadFacade();
-                //dlgOK.SetHeading(Translation.Completed);
-                //dlgOK.SetLine(1, Translation.Subtitles_download_complete);
-                //dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-            }
-            else if (errorMessage != null)
-            {
-                GUIDialogText errorDialog = (GUIDialogText)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_TEXT);
-                errorDialog.SetHeading(Translation.UnableToRetrieveSubtitles);
-                errorDialog.SetText(errorMessage);
-                errorDialog.DoModal(GUIWindowManager.ActiveWindow);
-            }
-            else
-            {
-                dlgOK.SetHeading(Translation.Completed);
-                dlgOK.SetLine(1, Translation.NoSubtitlesFoundOrRetrieved);
-                dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-            }
-        }
-
-		#endregion
-
-		List<string> sviews = new List<string>();
+        #region Database Views
+        List<string> sviews = new List<string>();
 
         /// <summary>
         /// Gets View Name to Jump To, passed from hyperlink property of skin button control
@@ -4273,7 +3985,9 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = false;
             if (dummyIsGroups != null) dummyIsGroups.Visible = false;
         }
+        #endregion
 
+        #region Fanart Handling
         bool fanartSet = false;
         Fanart currSeriesFanart = null;
 
@@ -4414,6 +4128,7 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
             setGUIProperty("FanArt.Colors.NeutralMidtone", string.Empty);
         }
+        #endregion
 
         private void InitSkinSettings()
         {
@@ -4523,9 +4238,8 @@ namespace WindowPlugins.GUITVSeries
                         m_parserUpdaterWorking = true;
                         m_parserUpdater.Start(m_parserUpdaterQueue[0]);
                         m_parserUpdaterQueue.RemoveAt(0);
-                    }
-                    
-                    else if (!torrentWorking && !subtitleDownloaderWorking)
+                    }                    
+                    else
                         setProcessAnimationStatus(false);
                 }
             }
@@ -5475,9 +5189,6 @@ namespace WindowPlugins.GUITVSeries
             if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
                 return;
             }
-            else if (!m_SelectedEpisode[DBEpisode.cAvailableSubtitles] && DBOption.GetOptions(DBOption.cPlay_SubtitleDownloadOnPlay) && SubtitleDownloaderEnabledAndHasSites()) {
-                ShowSubtitleMenu(m_SelectedEpisode, true);
-            }
             else
                 m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
         }
@@ -5486,14 +5197,6 @@ namespace WindowPlugins.GUITVSeries
             DBEpisode result = null;
 
             if (episodeList == null || episodeList.Count == 0) return result;
-
-            // lame grouping by series / season / episode - doh, results are already sorted that way!
-            //episodeList.Sort(new Comparison<DBEpisode>((x, y) => {
-            //    return 4 * string.Compare(x[DBOnlineEpisode.cSeriesID].ToString(), y[DBOnlineEpisode.cSeriesID].ToString()) +
-            //           2 * string.Compare(x[DBOnlineEpisode.cSeasonIndex].ToString(), y[DBOnlineEpisode.cSeasonIndex].ToString()) +
-            //           1 * string.Compare(x[DBOnlineEpisode.cEpisodeIndex].ToString(), y[DBOnlineEpisode.cEpisodeIndex].ToString())
-            //           ;
-            //}));
 
             List<DBEpisode> episodeListNew = new List<DBEpisode>();
 
@@ -5536,8 +5239,7 @@ namespace WindowPlugins.GUITVSeries
                     DBSeries seriesY = Helper.getCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
                     string seriesXSortName = seriesX != null ? seriesX[DBOnlineSeries.cSortName].ToString() : string.Empty;
                     string seriesYSortName = seriesY != null ? seriesY[DBOnlineSeries.cSortName].ToString() : string.Empty;
-                    return 2 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +
-                        //2 * string.Compare(x[DBEpisode.cFileDateAdded].ToString(), y[DBEpisode.cFileDateAdded].ToString()) +
+                    return 2 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +                        
                            1 * string.Compare(seriesXSortName, seriesYSortName)
                            ;
                 }));

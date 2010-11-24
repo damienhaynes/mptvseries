@@ -118,23 +118,23 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>270, 20</value>
+    <value>268, 9</value>
   </metadata>
   <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>937, 21</value>
+    <value>938, 12</value>
   </metadata>
   <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>610, 18</value>
+    <value>608, 13</value>
   </metadata>
   <metadata name="imageList1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>159, 28</value>
+    <value>158, 6</value>
   </metadata>
   <data name="imageList1.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABa
-        dAAAAk1TRnQBSQFMAgEBCwEAASwBAwEsAQMBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        dAAAAk1TRnQBSQFMAgEBCwEAATQBAwE0AQMBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABSAMAAQEBAAEgBgABbDEAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMYASEDEQEXAwoBDgME
         AQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMAAQEXAAEBAxIBGAM2
         AVgDSgGLA1EBogNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNS
@@ -634,9 +634,55 @@
 </value>
   </data>
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>815, 18</value>
+    <value>817, 8</value>
   </metadata>
+  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>16, 6</value>
+  </metadata>
+  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>404, 12</value>
+  </metadata>
+  <data name="label70.Text" xml:space="preserve">
+    <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
+Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
+successfully match up with episodes in the online database.
+
+If an expression can not evaluate these items, the next expression in the list is used.
+</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
+        HOAHtRzkgD9AbI/LEbRwgDrQsg9IDgA54hUQy2FzBLUdwA+05Cqa5SAHgPAZIOZEdwS1HbAOh+UwR8yn
+        pQPqCFgOc0QOsiOoFQLe0MQGswQf/ROo1gbmCGo4QAVLoiPkEFCilAY5glIH8OBJdIQccRKol41SB6Cn
+        KVBU4LNYl5aJEGT2qANGQ2A0BEZDYMBDAFTSzcSDweU/1WpDWveaCDZKRx0wGgK0DgEAOw5jgPZ9V4gA
+        AAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
+        cGKQA1HAqANGQ2A0BEZDYMiHAA+wWLtKoPTDVTKeBOpjo0YIqAAN+kCiI14B1YPrBWo4AGQOqA74Q6Qj
+        fgLV2cAqBGo5AGReHZEOyEGujajpAJC56wg4Yj6ta0N+PInyDFCOk9YOAJmvjiVRghKdHLrl1EyE6Gb7
+        IUUFKHHaY7Oclg4Amd0IdUQ+Lstp7QCQ+Wn4LKfYAYSyEDXkCZZU1LAEnxmjDhgNAQCx+mOArbVEmgAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="label69.Text" xml:space="preserve">
+    <value>String Replacements can be used to remove common string patterns that may confuse the plugins parsing engine. 
+It can also be helpful in replacing strange episode names that may not get automatically matched e.g:
+replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
+
+Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
+  </data>
+  <data name="label68.Text" xml:space="preserve">
+    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
+  </data>
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -663,19 +709,6 @@ can be started within plugin.</value>
     <value>Enable this option to use the TV Series found online when only one exact match was found.
 In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
   </data>
-  <data name="addLogo.ToolTip" xml:space="preserve">
-    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
-what video and audio codecs the epsiode is encoded in etc...
-
-A Logo package must be installed to display logos succesfully in Media Portal</value>
-  </data>
-  <data name="checkBox_EnableSubCentralForEpisodes.ToolTip" xml:space="preserve">
-    <value>Enable this option to use SubCentral plugin for querying if episode has subtitles.
-It will be more complete than standard lookup but will also be more throught since it will check all of the subtitle paths you have defined.</value>
-  </data>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 28</value>
-  </metadata>
   <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
     <value>Enable this option to disable the overview for episodes that haven't been watched yet.
 This option is recommended if you want to prevent spoilers before watching an episodes.
@@ -693,6 +726,12 @@ This setting can also be changed from within Media Portal in the plugins context
 Disable to show all seasons and episodes for series.
 
 This setting can also be changed from within Media Portal</value>
+  </data>
+  <data name="addLogo.ToolTip" xml:space="preserve">
+    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
+what video and audio codecs the epsiode is encoded in etc...
+
+A Logo package must be installed to display logos succesfully in Media Portal</value>
   </data>
   <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
     <value>Enter in the field(s) to be displayed in the main information pane of the season view.
@@ -784,51 +823,8 @@ You can right click on this textbox to bring up a menu of available fields from 
 
 Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>406, 20</value>
-  </metadata>
-  <data name="label70.Text" xml:space="preserve">
-    <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
-Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
-successfully match up with episodes in the online database.
-
-If an expression can not evaluate these items, the next expression in the list is used.
-</value>
-  </data>
-  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
-        HOAHtRzkgD9AbI/LEbRwgDrQsg9IDgA54hUQy2FzBLUdwA+05Cqa5SAHgPAZIOZEdwS1HbAOh+UwR8yn
-        pQPqCFgOc0QOsiOoFQLe0MQGswQf/ROo1gbmCGo4QAVLoiPkEFCilAY5glIH8OBJdIQccRKol41SB6Cn
-        KVBU4LNYl5aJEGT2qANGQ2A0BEZDYMBDAFTSzcSDweU/1WpDWveaCDZKRx0wGgK0DgEAOw5jgPZ9V4gA
-        AAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
-        cGKQA1HAqANGQ2A0BEZDYMiHAA+wWLtKoPTDVTKeBOpjo0YIqAAN+kCiI14B1YPrBWo4AGQOqA74Q6Qj
-        fgLV2cAqBGo5AGReHZEOyEGujajpAJC56wg4Yj6ta0N+PInyDFCOk9YOAJmvjiVRghKdHLrl1EyE6Gb7
-        IUUFKHHaY7Oclg4Amd0IdUQ+Lstp7QCQ+Wn4LKfYAYSyEDXkCZZU1LAEnxmjDhgNAQCx+mOArbVEmgAA
-        AABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="label69.Text" xml:space="preserve">
-    <value>String Replacements can be used to remove common string patterns that may confuse the plugins parsing engine. 
-It can also be helpful in replacing strange episode names that may not get automatically matched e.g:
-replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
-
-Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
-  </data>
-  <data name="label68.Text" xml:space="preserve">
-    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
-  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>58</value>
+    <value>39</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
