@@ -540,7 +540,7 @@ namespace WindowPlugins.GUITVSeries
 
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", pluginName);
 
-            ImageAllocator.SetFontName(m_Facade.AlbumListView == null ? m_Facade.ListView.FontName : m_Facade.AlbumListView.FontName);
+            ImageAllocator.SetFontName(m_Facade.AlbumListLayout == null ? m_Facade.ListLayout.FontName : m_Facade.AlbumListLayout.FontName);
 
             #region Clear GUI Properties
             // Clear GUI Properties when first entering the plugin
@@ -1156,7 +1156,7 @@ namespace WindowPlugins.GUITVSeries
 							selectedSeries.Commit();
 
 							// No need to re-load the facade for non-graphical layouts
-							if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+							if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
 								seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(selectedSeries);
 							else
 								LoadFacade();
@@ -1173,7 +1173,7 @@ namespace WindowPlugins.GUITVSeries
 							selectedSeries.Commit();
 
 							// No need to re-load the facade for non-graphical layouts
-							if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+							if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
 								seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(selectedSeries);
 							else
 								LoadFacade();
@@ -1191,7 +1191,7 @@ namespace WindowPlugins.GUITVSeries
 							m_bUpdateBanner = true;
 
 							// No need to re-load the facade for non-graphical layouts
-							if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+							if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
 								seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(selectedSeason);
 							else
 								LoadFacade();
@@ -1987,21 +1987,21 @@ namespace WindowPlugins.GUITVSeries
 
         #region Facade Loading
         // this is expensive to do if changing mode......450 ms ???
-        private void setFacadeMode(GUIFacadeControl.ViewMode mode)
+        private void setFacadeMode(GUIFacadeControl.Layout mode)
         {
             if (this.m_Facade == null)
                 return;
 
-            if (mode == GUIFacadeControl.ViewMode.List)
+            if (mode == GUIFacadeControl.Layout.List)
             {
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Start();
-                this.m_Facade.View = mode;                
+                this.m_Facade.CurrentLayout = mode;                
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to List").Stop();
             }
             else
             {
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Start();
-                if (mode == GUIFacadeControl.ViewMode.AlbumView)
+                if (mode == GUIFacadeControl.Layout.AlbumView)
                 {
                     switch (this.listLevel)
                     {
@@ -2009,23 +2009,23 @@ namespace WindowPlugins.GUITVSeries
                             if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to FilmStrip", MPTVSeriesLog.LogLevel.Debug);
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                                this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
                             }
                             if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to WideThumbs", MPTVSeriesLog.LogLevel.Debug);
-                                this.m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                                this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.LargeIcons;
                             }
                             break;
                         case (Listlevel.Season):
                             // There is no point having BigIcons for SeasonView, as it would need to re-use the WideBanner sizes
                             // Having multiple facades would get around this issue
                             MPTVSeriesLog.Write("FacadeMode: Switching to Filmstrip", MPTVSeriesLog.LogLevel.Debug);
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                            this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
                             break;
                         case (Listlevel.Group):
                             MPTVSeriesLog.Write("FacadeMode: Switching to Small Thumbs", MPTVSeriesLog.LogLevel.Debug);
-                            this.m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
+                            this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.SmallIcons;
                             break;
                     }
                 }
@@ -2067,20 +2067,20 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 if (m_nInitialIconXOffset == 0)
-                    m_nInitialIconXOffset = m_Facade.AlbumListView.IconOffsetX;
+                    m_nInitialIconXOffset = m_Facade.AlbumListLayout.IconOffsetX;
                 if (m_nInitialIconYOffset == 0)
-                    m_nInitialIconYOffset = m_Facade.AlbumListView.IconOffsetY;
+                    m_nInitialIconYOffset = m_Facade.AlbumListLayout.IconOffsetY;
                 if (m_nInitialItemHeight == 0)
-                    m_nInitialItemHeight = m_Facade.AlbumListView.ItemHeight;
+                    m_nInitialItemHeight = m_Facade.AlbumListLayout.ItemHeight;
 
-                this.m_Facade.ListView.Clear();
-                this.m_Facade.AlbumListView.Clear();
+                this.m_Facade.ListLayout.Clear();
+                this.m_Facade.AlbumListLayout.Clear();
                 
-                if (this.m_Facade.ThumbnailView != null)
-                    this.m_Facade.ThumbnailView.Clear();
+                if (this.m_Facade.ThumbnailLayout != null)
+                    this.m_Facade.ThumbnailLayout.Clear();
 
-                if (this.m_Facade.FilmstripView != null)
-                    this.m_Facade.FilmstripView.Clear();
+                if (this.m_Facade.FilmstripLayout != null)
+                    this.m_Facade.FilmstripLayout.Clear();
 
                 if (m_Facade != null) m_Facade.Focus = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
@@ -2146,7 +2146,7 @@ namespace WindowPlugins.GUITVSeries
                             if (m_Facade != null && gli != null)
                             {
                                 // Messages are not recieved in OnMessage for Filmstrip, instead subscribe to OnItemSelected
-                                if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                                if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
                                     gli.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
 
                                 bFacadeEmpty = false;
@@ -2197,16 +2197,16 @@ namespace WindowPlugins.GUITVSeries
                                 this.m_Facade.SelectedListItemIndex = arg.IndexArgument;
 
                                  // if we are in the filmstrip view also send a message
-                                /*if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                                /*if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
                                 {
-                                    GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripView.GetID, arg.IndexArgument, 0, null);
+                                    GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripLayout.GetID, arg.IndexArgument, 0, null);
                                     GUIGraphicsContext.SendMessage(msg);
                                     MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.",MPTVSeriesLog.LogLevel.Debug);
                                 }*/
 
                                 // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip View
                                 // Navigate to selected using OnAction instead 
-                                if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
+                                if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
                                 {
                                     if (this.listLevel == Listlevel.Series)
                                     {
@@ -2281,7 +2281,7 @@ namespace WindowPlugins.GUITVSeries
                         SkipSeasonCode = SkipSeasonCodes.SkipSeasonUp;
                         break;
                     case BackGroundLoadingArgumentType.SetFacadeMode:
-                        GUIFacadeControl.ViewMode viewMode = (GUIFacadeControl.ViewMode)arg.Argument;
+                        GUIFacadeControl.Layout viewMode = (GUIFacadeControl.Layout)arg.Argument;
                         setFacadeMode(viewMode);
                         break;
                 }
@@ -2334,7 +2334,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_CurrViewStep == 0)
                 {
-                    setFacadeMode(GUIFacadeControl.ViewMode.List);
+                    setFacadeMode(GUIFacadeControl.Layout.List);
                     GUIListItem item = new GUIListItem(Translation.No_items);
                     item.IsRemote = true;
                     this.m_Facade.Add(item);
@@ -2408,7 +2408,7 @@ namespace WindowPlugins.GUITVSeries
                             // these are groups of certain categories, eg. Genres
 
                             bool graphical = DBOption.GetOptions(DBOption.cGraphicalGroupView);
-                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, graphical ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List);
+                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, graphical ? GUIFacadeControl.Layout.AlbumView : GUIFacadeControl.Layout.List);
                             // view handling
                             List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
 
@@ -2488,12 +2488,12 @@ namespace WindowPlugins.GUITVSeries
                             if (!sSeriesDisplayMode.Contains("List"))
                             {
                                 // graphical
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.AlbumView);
+                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.Layout.AlbumView);
                             }
                             else
                             {
                                 // text as usual
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
+                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.Layout.List);
                             }
 
                             if (bg.CancellationPending) return;
@@ -2627,7 +2627,7 @@ namespace WindowPlugins.GUITVSeries
 								MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
 
                             bool graphicalFacade = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
-                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, (graphicalFacade ? GUIFacadeControl.ViewMode.AlbumView : GUIFacadeControl.ViewMode.List));
+                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, (graphicalFacade ? GUIFacadeControl.Layout.AlbumView : GUIFacadeControl.Layout.List));
 
                             foreach (DBSeason season in seasons)
                             {
@@ -2768,7 +2768,7 @@ namespace WindowPlugins.GUITVSeries
                     case Listlevel.Episode:
                         {
                             bool bFindNext = false;
-                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.ViewMode.List);
+                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, GUIFacadeControl.Layout.List);
                             
 							// Get a list of Episodes to display for current view							
 							List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);							
@@ -4561,8 +4561,8 @@ namespace WindowPlugins.GUITVSeries
 		// triggered when a selection change was made on the facade
 		private void onFacadeItemSelected(GUIListItem item, GUIControl parent) {
 			// if this is not a message from the facade, exit
-			if (parent != m_Facade && parent != m_Facade.FilmstripView &&
-				parent != m_Facade.ThumbnailView && parent != m_Facade.ListView)
+			if (parent != m_Facade && parent != m_Facade.FilmstripLayout &&
+				parent != m_Facade.ThumbnailLayout && parent != m_Facade.ListLayout)
 				return;
 
 			switch (this.listLevel) {

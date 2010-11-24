@@ -188,7 +188,7 @@ namespace WindowPlugins.GUITVSeries
             base.OnPageLoad();
             if (m_Facade != null)
             {
-                m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;
+                m_Facade.CurrentLayout = (GUIFacadeControl.Layout)CurrentView;
             }
 
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", GUILocalizeStrings.Get(136));
@@ -262,61 +262,61 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case View.List:
                             CurrentView = View.PlayList;
-                            if (!AllowView(CurrentView) || m_Facade.PlayListView == null)
+                            if (!AllowView(CurrentView) || m_Facade.PlayListLayout == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.View = GUIFacadeControl.ViewMode.Playlist;
+                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.Playlist;
                             }
                             break;
 
                         case View.PlayList:
                             CurrentView = View.Icons;
-                            if (!AllowView(CurrentView) || m_Facade.ThumbnailView == null)
+                            if (!AllowView(CurrentView) || m_Facade.ThumbnailLayout == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
+                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.SmallIcons;
                             }
                             break;
 
                         case View.Icons:
                             CurrentView = View.LargeIcons;
-                            if (!AllowView(CurrentView) || m_Facade.ThumbnailView == null)
+                            if (!AllowView(CurrentView) || m_Facade.ThumbnailLayout == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.LargeIcons;
                             }
                             break;
 
                         case View.LargeIcons:
                             CurrentView = View.FilmStrip;
-                            if (!AllowView(CurrentView) || m_Facade.FilmstripView == null)
+                            if (!AllowView(CurrentView) || m_Facade.FilmstripLayout == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
                             }
                             break;
 
                         case View.FilmStrip:
                             CurrentView = View.List;
-                            if (!AllowView(CurrentView) || m_Facade.ListView == null)
+                            if (!AllowView(CurrentView) || m_Facade.ListLayout == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.View = GUIFacadeControl.ViewMode.List;
+                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.List;
                             }
                             break;
                     }
@@ -662,9 +662,9 @@ namespace WindowPlugins.GUITVSeries
         private void onFacadeItemSelected(GUIListItem item, GUIControl parent)
         {
             // if this is not a message from the facade, exit
-            if (parent != m_Facade && parent != m_Facade.FilmstripView &&
-                parent != m_Facade.ThumbnailView && parent != m_Facade.ListView && 
-                parent != m_Facade.PlayListView)
+            if (parent != m_Facade && parent != m_Facade.FilmstripLayout &&
+                parent != m_Facade.ThumbnailLayout && parent != m_Facade.ListLayout && 
+                parent != m_Facade.PlayListLayout)
                 return;
             
             if (item == null || item.TVTag == null)
@@ -781,19 +781,19 @@ namespace WindowPlugins.GUITVSeries
             switch (CurrentView)
             {
                 case View.List:
-                    m_Facade.View = GUIFacadeControl.ViewMode.List;
+                    m_Facade.CurrentLayout = GUIFacadeControl.Layout.List;
                     break;
                 case View.Icons:
-                    m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
+                    m_Facade.CurrentLayout = GUIFacadeControl.Layout.SmallIcons;
                     break;
                 case View.LargeIcons:
-                    m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
+                    m_Facade.CurrentLayout = GUIFacadeControl.Layout.LargeIcons;
                     break;
                 case View.FilmStrip:
-                    m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
+                    m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
                     break;
                 case View.PlayList:
-                    m_Facade.View = GUIFacadeControl.ViewMode.Playlist;
+                    m_Facade.CurrentLayout = GUIFacadeControl.Layout.Playlist;
                     break;
             }
         }
@@ -1020,8 +1020,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (playlistPlayer.CurrentPlaylistType != PlayListType.PLAYLIST_TVSERIES
-                || m_Facade.View != GUIFacadeControl.ViewMode.Playlist
-                || m_Facade.PlayListView == null)
+                || m_Facade.CurrentLayout != GUIFacadeControl.Layout.Playlist
+                || m_Facade.PlayListLayout == null)
             {
                 return;
             }
@@ -1051,8 +1051,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (playlistPlayer.CurrentPlaylistType != PlayListType.PLAYLIST_TVSERIES
-                || m_Facade.View != GUIFacadeControl.ViewMode.Playlist
-                || m_Facade.PlayListView == null)
+                || m_Facade.CurrentLayout != GUIFacadeControl.Layout.Playlist
+                || m_Facade.PlayListLayout == null)
             {
                 return;
             }
@@ -1085,8 +1085,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             if (playlistPlayer.CurrentPlaylistType != PlayListType.PLAYLIST_TVSERIES
-                || m_Facade.View != GUIFacadeControl.ViewMode.Playlist
-                || m_Facade.PlayListView == null)
+                || m_Facade.CurrentLayout != GUIFacadeControl.Layout.Playlist
+                || m_Facade.PlayListLayout == null)
             {
                 return;
             }
@@ -1107,7 +1107,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                m_Facade.PlayListView.SelectedListItemIndex = iItem;
+                m_Facade.PlayListLayout.SelectedListItemIndex = iItem;
             }
 
             UpdateButtonStates();
