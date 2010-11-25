@@ -308,13 +308,9 @@ namespace WindowPlugins.GUITVSeries
 			cycleSeriesBanner,
 			cycleSeriesPoster,
 			cycleSeasonPoster,
-			forceSeriesQuery,
-			downloadSubtitle,
-			downloadviaTorrent,
-			downloadviaNewz,
+			forceSeriesQuery,			
 			actionMarkAllWatched,
-			actionMarkAllUnwatched,
-			actionToggleFavorite,
+			actionMarkAllUnwatched,			
 			actionHide,
 			actionDelete,
 			actionUpdate,
@@ -334,8 +330,7 @@ namespace WindowPlugins.GUITVSeries
 			optionsFanartRandom,
 			optionsSeriesFanart,
 			optionsUseOnlineFavourites,
-			actionRecheckMI,
-			resetUserSelections,
+			actionRecheckMI,			
 			showFanartChooser,
 			addToPlaylist,
 			viewAddToNewView
@@ -887,10 +882,6 @@ namespace WindowPlugins.GUITVSeries
 									pItem = new GUIListItem(Translation.updateMI);
 									dlg.Add(pItem);
 									pItem.ItemId = (int)eContextItems.actionRecheckMI;
-
-									pItem = new GUIListItem(Translation.ResetUserSelections);
-									dlg.Add(pItem);
-									pItem.ItemId = (int)eContextItems.resetUserSelections;
 								}
 
                                 // Online to Local Episode Matching order
