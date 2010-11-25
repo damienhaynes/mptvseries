@@ -41,13 +41,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBSeriesLastLocalID = "DBSeriesLasLocalID";
         public const String cDBSeasonVersion = "DBSeasonVersion";
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
-        public const String cDBExpressionsVersion = "DBExpressionsVersion";
-        public const String cDBNewzbinVersion = "DBNewzbinVersion";
-        public const String cDBTorrentVersion = "dbTorrentVersion";
+        public const String cDBExpressionsVersion = "DBExpressionsVersion";        
         public const String cDBViewsVersion = "DBViewsVersion";
-        public const String cDBReplacementsVersion = "DBReplacementsVersion";
-        public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
-        public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
+        public const String cDBReplacementsVersion = "DBReplacementsVersion";                
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
@@ -95,16 +91,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Title = "View_Episode_Title";
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
-
-        public const String cUTorrentPath = "uTorrentPath";
-        public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
-        public const String cTorrentSearch = "TorrentSearch_Current";
-
-        public const String cNewsLeecherPath = "NewsLeecherPath";
-        public const String cNewsLeecherDownloadPath = "NewsLeecherDownloadPath";
-
-        public const String cDownloadMonitor_RenameFiles = "DownloadMonitor_RenameFiles";
-
+        
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
@@ -197,12 +184,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cNewEpisodeRecentDays = "NewEpisodeRecentDays";
 
         public const String cLogLevel = "logLevel";
-
-        public const String cSubCentralEnabled = "SubCentralEnabled";
-
-        public const String cSubCentralEnabledForEpisodes = "SubCentralEnabledForEpisodes";
-
-        public const String cUseFullNameInSubDialog = "UseFullNameInSubDialog";
 
         public const String cConfigSizeHeight = "configSizeHeight";
         public const String cConfigSizeWidth = "configSizeWidth";
@@ -377,23 +358,11 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
-                if (GetOptions(cTorrentSearch) == null)
-                    SetOptions(cTorrentSearch, String.Empty);
-
-                if (GetOptions(cUTorrentPath) == null)
-                    SetOptions(cUTorrentPath, String.Empty);
-
-                if (GetOptions(cNewsLeecherPath) == null)
-                    SetOptions(cNewsLeecherPath, String.Empty);
-
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
 
                 if (GetOptions(cWatchedAfter) == null)
                     SetOptions(cWatchedAfter, 95); //-- 95% by default
-
-                if (GetOptions(cDownloadMonitor_RenameFiles) == null)
-                    SetOptions(cDownloadMonitor_RenameFiles, 0); //do not rename by default
 
                 // this is the default main mirrors
                 if (GetOptions(DBOption.cMainMirror) == null || GetOptions(DBOption.cMainMirror) == "http://thetvdb.com/interfaces")
@@ -551,15 +520,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cNewEpisodeRecentDays) == null)
                     SetOptions(cNewEpisodeRecentDays, 7);
-
-                if (GetOptions(cSubCentralEnabled) == null)
-                    SetOptions(cSubCentralEnabled, true);
-
-                if (GetOptions(cSubCentralEnabledForEpisodes) == null)
-                    SetOptions(cSubCentralEnabledForEpisodes, true);
-
-                if (GetOptions(cUseFullNameInSubDialog) == null)
-                    SetOptions(cUseFullNameInSubDialog, false);
 
                 if (GetOptions(cPlaylistUnwatchedOnly) == null)
                     SetOptions(cPlaylistUnwatchedOnly, false);
