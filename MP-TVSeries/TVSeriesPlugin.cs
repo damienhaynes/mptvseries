@@ -2758,10 +2758,6 @@ namespace WindowPlugins.GUITVSeries
             string sWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedNA.png";
             string sUnWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedNA.png";
 
-            // being downloaded (not yet local, but coming!)
-            string sWatchedDLFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedDL.png";
-            string sUnWatchedDLFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedDL.png";
-
             // return if images dont exists
             if (!(System.IO.File.Exists(sWatchedFilename) &&
                   System.IO.File.Exists(sUnWatchedFilename) &&
@@ -2770,36 +2766,26 @@ namespace WindowPlugins.GUITVSeries
                 return false;
 
             if (bWatched)
-            {
-                if (bDownloading)
+            {               
+                // Load watched flag image                                
+                if (!bAvailable)
                 {
-                    item.IconImage = sWatchedDLFilename;
+                    // Load alternative image
+                    item.IconImage = sWatchedNAFilename;
                 }
                 else
-                    // Load watched flag image                                
-                    if (!bAvailable)
-                    {
-                        // Load alternative image
-                        item.IconImage = sWatchedNAFilename;
-                    }
-                    else
-                        item.IconImage = sWatchedFilename;
+                    item.IconImage = sWatchedFilename;
             }
             else
-            {
-                if (bDownloading)
+            {             
+                // Load un-watched flag image                
+                if (!bAvailable)
                 {
-                    item.IconImage = sUnWatchedDLFilename;
+                    // Load alternative image
+                    item.IconImage = sUnWatchedNAFilename;
                 }
                 else
-                    // Load un-watched flag image                
-                    if (!bAvailable)
-                    {
-                        // Load alternative image
-                        item.IconImage = sUnWatchedNAFilename;
-                    }
-                    else
-                        item.IconImage = sUnWatchedFilename;
+                    item.IconImage = sUnWatchedFilename;
             }
             return true;
         }
