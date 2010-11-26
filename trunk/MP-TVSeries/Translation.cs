@@ -227,8 +227,7 @@ namespace WindowPlugins.GUITVSeries
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";
-        public static string CFS_Search_Again = "Search again";        
-        public static string CFS_Subtitle_Episode = "Episode:";
+        public static string CFS_Search_Again = "Search again";                
         public static string CFS_Choose_Correct_Series = "Choose Correct Series";
         public static string CFS_Local_Series  = "Local Series";
         public static string CFS_Available_Series = "Available Series";        
