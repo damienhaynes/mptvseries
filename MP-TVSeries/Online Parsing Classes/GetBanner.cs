@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using System.Globalization;
 using System.Xml;
 using System.Net;
 using System.IO;
@@ -157,7 +158,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
                 {
-                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText);
+                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo);
                     seriesWideBanners.Rating = Math.Round(rating, 1, MidpointRounding.AwayFromZero);
                 }
 
@@ -198,7 +199,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
                 {
-                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText);
+                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo);
                     seriesPoster.Rating = Math.Round(rating, 1, MidpointRounding.AwayFromZero);
                 }
 
@@ -240,7 +241,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
                 {
-                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText);
+                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo);
                     seasonPoster.Rating = Math.Round(rating, 1, MidpointRounding.AwayFromZero);
                 }
 
