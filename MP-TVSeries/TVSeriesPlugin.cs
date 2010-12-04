@@ -3407,8 +3407,7 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId == (int)eContextItems.viewAddToNewView) {
                 GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
 				Keyboard.Text = string.Empty;
-                Keyboard.ShiftEnabled = true;
-				Keyboard.KeyboardStyle = (GetStringFromUserDescriptor.KeyboardStyles)(int)DBOption.GetOptions(DBOption.cKeyboardStyle);
+                Keyboard.ShiftEnabled = true;				
                 bool viewExists = true;
 
                 while (viewExists) {
@@ -3876,9 +3875,7 @@ namespace WindowPlugins.GUITVSeries
 					while (pinInCorrect) {
 						GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
 						Keyboard.Text = string.Empty;
-						Keyboard.IsPassword = true;
-						// Force Keyboard Style to SMS Style as we dont want people to see what code is entered
-						Keyboard.KeyboardStyle = GetStringFromUserDescriptor.KeyboardStyles.SMS;
+						Keyboard.IsPassword = true;						
 						string enteredPinCode = string.Empty;
 						string pinMasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
 						if (pinMasterCode.Length == 0) break;
@@ -4774,30 +4771,14 @@ namespace WindowPlugins.GUITVSeries
         {
             try
             {
-                m_sUserInput = String.Empty;
-				VirtualKeyboard keyboard;
-				if (descriptor.KeyboardStyle == GetStringFromUserDescriptor.KeyboardStyles.SMS) {
-					keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_SMS_KEYBOARD);
-				}
-				else {
-					keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_KEYBOARD);
-				}
+                m_sUserInput = String.Empty;				
+			    VirtualKeyboard keyboard = (VirtualKeyboard)GUIWindowManager.GetWindow((int)Window.WINDOW_VIRTUAL_KEYBOARD);				
                 if (null == keyboard)
                     return ReturnCode.Cancel;
 
                 keyboard.Reset();
                 keyboard.Text = descriptor.Text;
-
-                //GUIKeyboard keyb = null;
-                //foreach (System.Windows.UIElement uiel in keyboard.controlList) {
-                //    if (uiel is GUIKeyboard) keyb = (GUIKeyboard)uiel;
-                //}
-
-                //MePo 1.2
-                //if (keyb != null) keyb._shiftTurnedOn = descriptor.ShiftEnabled;
-                //MePo 1.1
-                //else keyboard._shiftTurnedOn = descriptor.ShiftEnabled;
-
+                keyboard.ShiftTurnedOn = descriptor.ShiftEnabled;               
 				keyboard.Password = descriptor.IsPassword;				
                 keyboard.DoModal(GUIWindowManager.ActiveWindow);
 
