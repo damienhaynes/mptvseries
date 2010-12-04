@@ -161,8 +161,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
         public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
         public const String cRandomFanartInterval = "RandomFanartInterval";
-        public const String cParentalControlPinCode = "ParentalControlPinCode";
-		public const String cKeyboardStyle = "KeyboardStyle";
+        public const String cParentalControlPinCode = "ParentalControlPinCode";		
 		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
         
         public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
@@ -469,9 +468,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cParentalControlPinCode) == null)
                     SetOptions(cParentalControlPinCode, string.Empty);
-
-				if (GetOptions(cKeyboardStyle) == null)
-					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
 
 				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
 					SetOptions(cMarkRatedEpisodeAsWatched, 0);

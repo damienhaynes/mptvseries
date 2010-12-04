@@ -1902,22 +1902,29 @@ namespace WindowPlugins.GUITVSeries
                             DBOnlineSeries selectedSeries = Selected.m_Tag as DBOnlineSeries;
 
                             // Show the Virtual Keyboard to manual enter in name to search                            
-                            if (selectedSeries == null && !Settings.isConfig) {
+                            if (selectedSeries == null && !Settings.isConfig)
+                            {
                                 GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
-								Keyboard.KeyboardStyle = (GetStringFromUserDescriptor.KeyboardStyles)(int)DBOption.GetOptions(DBOption.cKeyboardStyle);
-								Keyboard.Text = nameToSearch;
+                                Keyboard.Text = nameToSearch;
 
-								if (feedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK) {
+                                if (feedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK)
+                                {
                                     // Search again using manually entered name
                                     bKeepTrying = false;
-                                } else {
+                                }
+                                else
+                                {
                                     MPTVSeriesLog.Write("User cancelled Series Selection");
                                     return null;
                                 }
-                            } else if (nameToSearch != Selected.m_sName || selectedSeries == null) {
+                            }
+                            else if (nameToSearch != Selected.m_sName || selectedSeries == null)
+                            {
                                 nameToSearch = Selected.m_sName;
                                 bKeepTrying = false;
-                            } else {
+                            }
+                            else
+                            {
                                 MPTVSeriesLog.Write(string.Format("\"{0}\" was manually matched to \"{1}\" (SeriesID: {2})", nameToSearch, selectedSeries.ToString(), selectedSeries[DBOnlineSeries.cID]));
                                 return selectedSeries;
                             }

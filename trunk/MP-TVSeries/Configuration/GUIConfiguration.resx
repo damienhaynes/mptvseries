@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABa
-        dAAAAk1TRnQBSQFMAgEBCwEAATQBAwE0AQMBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        dAAAAk1TRnQBSQFMAgEBCwEAATwBAwE8AQMBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABSAMAAQEBAAEgBgABbDEAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMYASEDEQEXAwoBDgME
         AQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMAAQEXAAEBAxIBGAM2
         AVgDSgGLA1EBogNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNSAaMDUgGjA1IBowNS
@@ -636,9 +636,150 @@
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>817, 8</value>
   </metadata>
+  <data name="addLogo.ToolTip" xml:space="preserve">
+    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
+what video and audio codecs the epsiode is encoded in etc...
+
+A Logo package must be installed to display logos succesfully in Media Portal</value>
+  </data>
+  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
+    <value>Enable this option to use the TV Series found online when only one exact match was found.
+In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
+  </data>
+  <data name="checkBox_ScanOnStartup.ToolTip" xml:space="preserve">
+    <value>When MP-TV Series loads on MediaPortal (re)start, enable/disable a
+local/online refresh of series.
+
+This is active when first starting MP or when resuming from standby. A manual scan
+can be started within plugin.</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
+        CvIBPVL3EQAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
+        CsnARFEMP4tFykt0fb+/zqmno3N/z7m49e3ec8853895nvMWxXEcUcqnF+36oLyk9tYz6xsImIPxG7QM
+        NfggoYBCGLVCI9AGxHCpe2gWKnVBWkA5Ok5DJ9C7MLYA+75G3aCEaAAd6HCYYGrNP9BmF+oJAXSb8K3J
+        F8oH0AK0KaDnJm1FISmqR+NLYXKB72FhMIPvR2geKnGNbdmXIk7mqjBniuockzaU233GuQDM47MBPOHd
+        kssoNIIlMXqu89SPL0V7AjCQ2p0m5nRwdzIB3KU3UFMggEdHM8SjpNMHqEJlLcR3QSCAC+TUZCCj2WiB
+        /lE1OmQM4Oo/AONi/tb/GlAG82MBGE0L6IfJlDM/zP2aMN/Hd0UogBPPfcEVtiUmh6tmR5hzkw6xXgso
+        RttJ6FaYcKXwHNqGXsT/VxNdlq8BcB8cCQP3DpDlO7QbE5GpAJVmpA8eyCf+c0MuQo3SXBuB7cPTdAXi
+        4cdRn0ETEA/GH1el7aRJkTuoLvzgzcU7Od+t/E0Esm8NCrx8uDQTHxnBNxzK2wROMetMAAAAAElFTkSu
+        QmCC
+</value>
+  </data>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>16, 6</value>
   </metadata>
+  <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database
+
+Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column three of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.AirsDay&gt; e.g. Sunday</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Episode.Summary&gt; e.g. Everyone on Earth is excited about a comet passing by.....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1: The Return</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Col3.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column three of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database
+
+Default: &lt;Episode.FirstAired&gt; e.g. 2004-07-11</value>
+  </data>
+  <data name="richTextBox_seasonFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Pretty_Name&gt; Season &lt;Season.SeasonIndex&gt; e.g. The 4400 Season 1</value>
+  </data>
+  <data name="richTextBox_seasonFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: Season &lt;Season.SeasonIndex&gt; e.g. Season 1</value>
+  </data>
+  <data name="richTextBox_seasonFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
+    <value>Enable this option to only display episodes in Media Portal that are found locally in import folders.
+Disable to show all seasons and episodes for series.
+
+This setting can also be changed from within Media Portal</value>
+  </data>
+  <data name="checkBox_Episode_HideUnwatchedThumbnail.ToolTip" xml:space="preserve">
+    <value>Enable this option to disable the thumbnail for episodes that haven't been watched yet.
+This option is recommended if you want to prevent spoilers before watching an episodes.
+
+This setting can also be changed from within Media Portal in the plugins context menu.</value>
+  </data>
+  <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
+    <value>Enable this option to disable the overview for episodes that haven't been watched yet.
+This option is recommended if you want to prevent spoilers before watching an episodes.
+
+This setting can also be changed from within Media Portal in the plugins context menu.</value>
+  </data>
   <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>404, 12</value>
   </metadata>
@@ -650,7 +791,6 @@ successfully match up with episodes in the online database.
 If an expression can not evaluate these items, the next expression in the list is used.
 </value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -682,146 +822,6 @@ Be sure to enable 'run before matching' for this to work before it reaches the p
   </data>
   <data name="label68.Text" xml:space="preserve">
     <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
-  </data>
-  <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
-        CsnARFEMP4tFykt0fb+/zqmno3N/z7m49e3ec8853895nvMWxXEcUcqnF+36oLyk9tYz6xsImIPxG7QM
-        NfggoYBCGLVCI9AGxHCpe2gWKnVBWkA5Ok5DJ9C7MLYA+75G3aCEaAAd6HCYYGrNP9BmF+oJAXSb8K3J
-        F8oH0AK0KaDnJm1FISmqR+NLYXKB72FhMIPvR2geKnGNbdmXIk7mqjBniuockzaU233GuQDM47MBPOHd
-        kssoNIIlMXqu89SPL0V7AjCQ2p0m5nRwdzIB3KU3UFMggEdHM8SjpNMHqEJlLcR3QSCAC+TUZCCj2WiB
-        /lE1OmQM4Oo/AONi/tb/GlAG82MBGE0L6IfJlDM/zP2aMN/Hd0UogBPPfcEVtiUmh6tmR5hzkw6xXgso
-        RttJ6FaYcKXwHNqGXsT/VxNdlq8BcB8cCQP3DpDlO7QbE5GpAJVmpA8eyCf+c0MuQo3SXBuB7cPTdAXi
-        4cdRn0ETEA/GH1el7aRJkTuoLvzgzcU7Od+t/E0Esm8NCrx8uDQTHxnBNxzK2wROMetMAAAAAElFTkSu
-        QmCC
-</value>
-  </data>
-  <data name="checkBox_ScanOnStartup.ToolTip" xml:space="preserve">
-    <value>When MP-TV Series loads on MediaPortal (re)start, enable/disable a
-local/online refresh of series.
-
-This is active when first starting MP or when resuming from standby. A manual scan
-can be started within plugin.</value>
-  </data>
-  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
-    <value>Enable this option to use the TV Series found online when only one exact match was found.
-In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
-  </data>
-  <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
-    <value>Enable this option to disable the overview for episodes that haven't been watched yet.
-This option is recommended if you want to prevent spoilers before watching an episodes.
-
-This setting can also be changed from within Media Portal in the plugins context menu.</value>
-  </data>
-  <data name="checkBox_Episode_HideUnwatchedThumbnail.ToolTip" xml:space="preserve">
-    <value>Enable this option to disable the thumbnail for episodes that haven't been watched yet.
-This option is recommended if you want to prevent spoilers before watching an episodes.
-
-This setting can also be changed from within Media Portal in the plugins context menu.</value>
-  </data>
-  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
-    <value>Enable this option to only display episodes in Media Portal that are found locally in import folders.
-Disable to show all seasons and episodes for series.
-
-This setting can also be changed from within Media Portal</value>
-  </data>
-  <data name="addLogo.ToolTip" xml:space="preserve">
-    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
-what video and audio codecs the epsiode is encoded in etc...
-
-A Logo package must be installed to display logos succesfully in Media Portal</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: Season &lt;Season.SeasonIndex&gt; e.g. Season 1</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Pretty_Name&gt; Season &lt;Season.SeasonIndex&gt; e.g. The 4400 Season 1</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Col3.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column three of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database
-
-Default: &lt;Episode.FirstAired&gt; e.g. 2004-07-11</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1: The Return</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Episode.Summary&gt; e.g. Everyone on Earth is excited about a comet passing by.....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column three of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.AirsDay&gt; e.g. Sunday</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database
-
-Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>39</value>
