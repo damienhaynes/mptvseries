@@ -308,7 +308,8 @@ namespace WindowPlugins.GUITVSeries
 			cycleSeriesBanner,
 			cycleSeriesPoster,
 			cycleSeasonPoster,
-			forceSeriesQuery,			
+			forceSeriesQuery,
+            downloadSubtitle,
 			actionMarkAllWatched,
 			actionMarkAllUnwatched,			
 			actionHide,
@@ -705,6 +706,8 @@ namespace WindowPlugins.GUITVSeries
 					dlg.Reset();
 					GUIListItem pItem = null;
 
+                    bool subtitleDownloadEnabled = DBOption.GetOptions(DBOption.cSubCentralEnabled) && Helper.IsSubCentralAvailableAndEnabled;
+
 					if (!emptyList) {
 						switch (this.listLevel) {
 							case Listlevel.Episode:
@@ -842,10 +845,35 @@ namespace WindowPlugins.GUITVSeries
 					pItem.ItemId = (int)eContextMenus.options;
 					#endregion                    
 
+                    #region Download menu - keep at the bottom for fast access (menu + up => there)
+                    if (!emptyList && subtitleDownloadEnabled && this.listLevel == Listlevel.Episode)
+                    {
+                        pItem = new GUIListItem(Translation.Download + " ...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextMenus.download;
+                    }
+                    #endregion
+
                     dlg.DoModal(GUIWindowManager.ActiveWindow);
 					#region Selected Menu Item Actions (Sub-Menus)
 					switch (dlg.SelectedId) {
-						case (int)eContextMenus.action: {
+						case (int)eContextMenus.download: {
+								dlg.Reset();
+								dlg.SetHeading(Translation.Download);
+
+								if (subtitleDownloadEnabled) {
+									pItem = new GUIListItem(Translation.Retrieve_Subtitle);
+									dlg.Add(pItem);
+									pItem.ItemId = (int)eContextItems.downloadSubtitle;
+								}
+
+								dlg.DoModal(GUIWindowManager.ActiveWindow);
+								if (dlg.SelectedId != -1)
+									bExitMenu = true;
+							}
+							break;
+
+                        case (int)eContextMenus.action: {
 								dlg.Reset();
 								dlg.SetHeading(Translation.Actions);
 								if (listLevel != Listlevel.Group) {
@@ -1159,7 +1187,19 @@ namespace WindowPlugins.GUITVSeries
 						break;
 					#endregion					
 
-					#region Favourites
+					#region Downloaders
+					case (int)eContextItems.downloadSubtitle:
+                        {
+							if (selectedEpisode != null)
+                            {
+								DBEpisode episode = (DBEpisode)currentitem.TVTag;
+                                ShowSubtitleMenu(episode);
+							}
+						}
+						break;
+					#endregion
+
+                    #region Favourites
 					/*case (int)eContextItems.actionToggleFavorite: {
 							// Toggle Favourites
 							m_SelectedSeries.toggleFavourite();
@@ -1170,7 +1210,7 @@ namespace WindowPlugins.GUITVSeries
 						}*/
 					#endregion
 
-					#region Actions
+                    #region Actions
 					
                     #region Hide
 					case (int)eContextItems.actionHide:                         
@@ -1506,7 +1546,21 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
-		protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
+        protected void ShowSubtitleMenu(DBEpisode episode)
+        {
+            ShowSubtitleMenu(episode, false);
+        }
+
+        protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
+        {
+            if (Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled) && !fromPlay)
+            {
+                GUIWindowManager.ActivateWindow(84623);
+                return;
+            }
+        }       
+
+        protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
 			if (control == this.viewMenuButton) {
 				showViewSwitchDialog();
 				viewMenuButton.Focus = false;				
@@ -5156,6 +5210,10 @@ namespace WindowPlugins.GUITVSeries
             if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
                 return;
             }
+            //TODO MS: uncomment when download on play is available
+            //else if (!m_SelectedEpisode[DBEpisode.cAvailableSubtitles] && DBOption.GetOptions(DBOption.cSubCentralSubtitleDownloadOnPlay) && SubCentralEnabled?) {
+            //    ShowSubtitleMenu(m_SelectedEpisode, true);
+            //}
             else
                 m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
         }

@@ -184,6 +184,10 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cLogLevel = "logLevel";
 
+        public const String cSubCentralEnabled = "SubCentral_Enabled";
+        public const String cSubCentralEnabledForEpisodes = "SubCentral_EnabledForEpisodes";
+        public const String cSubCentralSubtitleDownloadOnPlay = "SubCentral_SubtitleDownloadOnPlay";
+
         public const String cConfigSizeHeight = "configSizeHeight";
         public const String cConfigSizeWidth = "configSizeWidth";
 
@@ -516,6 +520,15 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cNewEpisodeRecentDays) == null)
                     SetOptions(cNewEpisodeRecentDays, 7);
+
+                if (GetOptions(cSubCentralEnabled) == null)
+                    SetOptions(cSubCentralEnabled, true);
+
+                if (GetOptions(cSubCentralEnabledForEpisodes) == null)
+                    SetOptions(cSubCentralEnabledForEpisodes, true);
+
+                if (GetOptions(cSubCentralSubtitleDownloadOnPlay) == null)
+                    SetOptions(cSubCentralSubtitleDownloadOnPlay, false);
 
                 if (GetOptions(cPlaylistUnwatchedOnly) == null)
                     SetOptions(cPlaylistUnwatchedOnly, false);
