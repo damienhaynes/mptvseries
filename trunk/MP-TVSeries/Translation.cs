@@ -47,7 +47,8 @@ namespace WindowPlugins.GUITVSeries
         public static string Seasons = "Seasons";
         public static string Episode = "Episode";
         public static string Episodes = "Episodes";
-        public static string Toggle_watched_flag = "Toggle Watched";       
+        public static string Toggle_watched_flag = "Toggle Watched";
+        public static string Retrieve_Subtitle = "Retrieve Subtitle";
         public static string Mark_all_as_watched = "Mark all as Watched";
         public static string Mark_all_as_unwatched = "Mark all as Unwatched";
         public static string Hide = "Hide";

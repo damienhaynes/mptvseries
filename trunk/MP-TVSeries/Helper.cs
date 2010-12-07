@@ -582,10 +582,18 @@ namespace WindowPlugins.GUITVSeries
 
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly a in assemblies)
-                if (a.GetName().Name == name && a.GetName().Version >= ver) {
-                    MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded.", name), MPTVSeriesLog.LogLevel.Debug);
-                    result = true;
-                    break;
+                try
+                {
+                    if (a.GetName().Name == name && a.GetName().Version >= ver)
+                    {
+                        MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded.", name), MPTVSeriesLog.LogLevel.Debug);
+                        result = true;
+                        break;
+                    }
+                }
+                catch
+                {
+                    MPTVSeriesLog.Write(string.Format("Assembly.GetName() call failed for '{0}'!\n", a.Location));
                 }
 
             if (!result) {

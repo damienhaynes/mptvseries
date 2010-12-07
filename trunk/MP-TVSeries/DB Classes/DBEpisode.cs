@@ -659,6 +659,11 @@ namespace WindowPlugins.GUITVSeries
                 if (textCount == -1) textCount = 0;
             }
 
+            if (DBOption.GetOptions(DBOption.cSubCentralEnabled) && DBOption.GetOptions(DBOption.cSubCentralEnabledForEpisodes) && Helper.IsSubCentralAvailableAndEnabled)
+            {
+                return checkHasSubtitlesFromSubCentral(useMediaInfo, textCount);
+            }
+
             fillSubTitleExtensions();
 
             if (textCount > 0)
@@ -687,7 +692,17 @@ namespace WindowPlugins.GUITVSeries
                 // most likley path not available
             }
             return false;
-        }       
+        }
+
+        private bool checkHasSubtitlesFromSubCentral(bool useMediaInfo, int textCount)
+        {
+            MPTVSeriesLog.Write(string.Format("Using SubCentral for checkHasSubtitles(), useMediaInfo = {0}, textCount = {1}", useMediaInfo.ToString(), textCount.ToString()), MPTVSeriesLog.LogLevel.Debug);
+            List<FileInfo> fiFiles = new List<FileInfo>();
+            fiFiles.Add(new FileInfo(this[DBEpisode.cFilename]));
+            bool result = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles(fiFiles, false, textCount, !useMediaInfo);
+            MPTVSeriesLog.Write(string.Format("SubCentral returned {0}", result.ToString()), MPTVSeriesLog.LogLevel.Debug);
+            return result;
+        }
 
         bool isWritable(FileInfo fileInfo)
         {
