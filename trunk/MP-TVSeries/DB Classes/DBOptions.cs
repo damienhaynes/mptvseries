@@ -123,8 +123,10 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cQualitySeriesBanners = "QualitySeriesBanners";
         public const String cQualitySeasonBanners = "QualitySeasonBanners";
+        public const String cQualitySeasonCoverflow = "QualitySeasonCoverflow";
         public const String cQualityEpisodeImages = "QualityEpisodeImages";
         public const String cQualitySeriesPosters = "QualityPosterImages";
+        public const String cQualitySeriesCoverflow = "QualitySeriesCoverflow";
 
         public const String cGetSeriesPosters = "getSeriesPosters";
         public const String cShowSeriesFanart = "showSeriesFanart";
@@ -390,8 +392,14 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cQualitySeriesPosters) == null)
                     SetOptions(cQualitySeriesPosters, 50);
 
+                if (GetOptions(cQualitySeriesCoverflow) == null)
+                    SetOptions(cQualitySeriesCoverflow, 50);
+
                 if (GetOptions(cQualitySeasonBanners) == null)
                     SetOptions(cQualitySeasonBanners, 75);
+
+                if (GetOptions(cQualitySeasonCoverflow) == null)
+                    SetOptions(cQualitySeasonCoverflow, 90);
 
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);

@@ -55,8 +55,10 @@ namespace WindowPlugins.GUITVSeries
         static List<String> s_OtherPersistentImageList = new List<string>();
         static List<String> s_OtherDiscardableImageList = new List<string>();
         static Size reqSeriesPosterSize = new Size(680 * DBOption.GetOptions(DBOption.cQualitySeriesPosters) / 100, 1000 * DBOption.GetOptions(DBOption.cQualitySeriesPosters) / 100);
+        static Size reqSeriesPosterCFSize = new Size(680 * DBOption.GetOptions(DBOption.cQualitySeriesCoverflow) / 100, 1000 * DBOption.GetOptions(DBOption.cQualitySeriesCoverflow) / 100);
         static Size reqSeriesBannerSize = new Size(758 * DBOption.GetOptions(DBOption.cQualitySeriesBanners) / 100, 140 * DBOption.GetOptions(DBOption.cQualitySeriesBanners) / 100);
-        static Size reqSeasonBannerSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100);        
+        static Size reqSeasonPosterSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100);
+        static Size reqSeasonPosterCFSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonCoverflow) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonCoverflow) / 100);
         static float reqEpisodeImagePercentage = (float)(DBOption.GetOptions(DBOption.cQualityEpisodeImages)) / 100f;
 
         static ImageAllocator()
@@ -215,19 +217,37 @@ namespace WindowPlugins.GUITVSeries
         }
 
         /// <summary>
-        /// Sets or gets the default Season banner size with which banners will be loaded into memory
+        /// Sets or gets the default Season banner size with which filmstrip posters will be loaded into memory
         /// </summary>
-        public static Size SetSeasonBannerSize { 
-            set { reqSeasonBannerSize = value; } 
-            get { return reqSeasonBannerSize; } 
+        public static Size SetSeasonPosterSize { 
+            set { reqSeasonPosterSize = value; } 
+            get { return reqSeasonPosterSize; } 
         }
 
         /// <summary>
-        /// Sets or gets the default Series poster size with which banners will be loaded into memory
+        /// Sets or gets the default Season poster size with which coverflow posters will be loaded into memory
+        /// </summary>
+        public static Size SetSeasonPosterCFSize
+        {
+            set { reqSeasonPosterCFSize = value; }
+            get { return reqSeasonPosterCFSize; }
+        }
+
+        /// <summary>
+        /// Sets or gets the default Series poster size with which Filmstrip posters will be loaded into memory
         /// </summary>
         public static Size SetSeriesPosterSize { 
             set { reqSeriesPosterSize = value; } 
             get { return reqSeriesPosterSize; } 
+        }
+
+        /// <summary>
+        /// Sets or gets the default Series poster size with which Coverflow posters will be loaded into memory
+        /// </summary>
+        public static Size SetSeriesPosterCFSize
+        {
+            set { SetSeriesPosterCFSize = value; }
+            get { return reqSeriesPosterCFSize; }
         }
 
         public static String GetSeriesBanner(DBSeries series) {
@@ -279,7 +299,7 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
-        public static String GetSeriesPoster(DBSeries series) {
+        public static String GetSeriesPoster(DBSeries series, bool isCoverflow) {
             string sFileName = series.Poster;;
             string sTextureName = string.Empty;
 
@@ -296,13 +316,15 @@ namespace WindowPlugins.GUITVSeries
                 ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
             }
 
+            Size size = isCoverflow ? reqSeriesPosterCFSize : reqSeriesPosterSize;
+
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) {
 
                 if (ShowNewImage)
                 {
                     //make banner with new tag
                     string ident = sFileName + "_new";
-                    sTextureName = buildMemoryImage(drawNewBanner(sFileName, ImageType.poster), ident, reqSeriesPosterSize, true);
+                    sTextureName = buildMemoryImage(drawNewBanner(sFileName, ImageType.poster), ident, size, true);
                 }
                 else
                 {
@@ -312,13 +334,13 @@ namespace WindowPlugins.GUITVSeries
                         sTextureName = sFileName;
                     }
                     else
-                        sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesPosterSize);
+                        sTextureName = buildMemoryImageFromFile(sFileName, size);
                 }
             }
             else {
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
-                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesPosterSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesPosterSize, true);
+                sTextureName = buildMemoryImage(drawSimpleBanner(size, series[DBOnlineSeries.cPrettyName]), ident, size, true);
             }
 
             if (sTextureName.Length > 0 && !s_SeriesImageList.Contains(sTextureName)) 
@@ -335,23 +357,25 @@ namespace WindowPlugins.GUITVSeries
             return series.Poster;
         }
 
-        public static String GetSeasonBanner(DBSeason season, bool createIfNotExist)
+        public static String GetSeasonBanner(DBSeason season, bool createIfNotExist, bool isCoverflow)
         {
+            Size size = isCoverflow ? reqSeasonPosterCFSize : reqSeasonPosterSize;
+
             String sFileName = season.Banner;
             String sTextureName;
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
             {
                 if (DBOption.GetOptions(DBOption.cAltImgLoading)) 
-                  sTextureName = sFileName; // bypass memoryimagebuilder
-                else 
-                  sTextureName = buildMemoryImageFromFile(sFileName, reqSeasonBannerSize);
+                    sTextureName = sFileName; // bypass memoryimagebuilder
+                else
+                    sTextureName = buildMemoryImageFromFile(sFileName, size);
             }
             else if (createIfNotExist)
             {
                 // no image, use text, create our own
                 string text = (season[DBSeason.cIndex] == 0) ? Translation.specials : Translation.Season + season[DBSeason.cIndex];
                 string ident = season[DBSeason.cSeriesID] + "S" + season[DBSeason.cIndex];
-                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeasonBannerSize, text), ident, reqSeasonBannerSize, true);
+                sTextureName = buildMemoryImage(drawSimpleBanner(size, text), ident, size, true);
             }
             else return string.Empty;
 

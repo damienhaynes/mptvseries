@@ -1804,6 +1804,11 @@ namespace WindowPlugins.GUITVSeries
                                 MPTVSeriesLog.Write("FacadeMode: Switching to FilmStrip", MPTVSeriesLog.LogLevel.Debug);
                                 this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
                             }
+                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Coverflow")
+                            {
+                              MPTVSeriesLog.Write("FacadeMode: Switching to Coverflow", MPTVSeriesLog.LogLevel.Debug);
+                              this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.CoverFlow;
+                            }
                             if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to WideThumbs", MPTVSeriesLog.LogLevel.Debug);
@@ -1813,8 +1818,16 @@ namespace WindowPlugins.GUITVSeries
                         case (Listlevel.Season):
                             // There is no point having BigIcons for SeasonView, as it would need to re-use the WideBanner sizes
                             // Having multiple facades would get around this issue
-                            MPTVSeriesLog.Write("FacadeMode: Switching to Filmstrip", MPTVSeriesLog.LogLevel.Debug);
-                            this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
+                            if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1")
+                            {
+                                MPTVSeriesLog.Write("FacadeMode: Switching to Filmstrip", MPTVSeriesLog.LogLevel.Debug);
+                                this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
+                            }
+                            else
+                            {
+                                MPTVSeriesLog.Write("FacadeMode: Switching to Coveflow", MPTVSeriesLog.LogLevel.Debug);
+                                this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.CoverFlow;
+                            }                            
                             break;
                         case (Listlevel.Group):
                             MPTVSeriesLog.Write("FacadeMode: Switching to Small Thumbs", MPTVSeriesLog.LogLevel.Debug);
@@ -1875,6 +1888,9 @@ namespace WindowPlugins.GUITVSeries
                 if (this.m_Facade.FilmstripLayout != null)
                     this.m_Facade.FilmstripLayout.Clear();
 
+                if (this.m_Facade.CoverFlowLayout != null)
+                    this.m_Facade.CoverFlowLayout.Clear();
+
                 if (m_Facade != null) m_Facade.Focus = true;
                 MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 setCurPositionLabel();
@@ -1882,7 +1898,7 @@ namespace WindowPlugins.GUITVSeries
                 switch (this.listLevel)
                 {
                     case Listlevel.Series:						
-						// Check if series fanart is enabled                       
+						            // Check if series fanart is enabled                       
                         if (!DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
                             DisableFanart();
                         }                        
@@ -1938,8 +1954,11 @@ namespace WindowPlugins.GUITVSeries
                             GUIListItem gli = arg.Argument as GUIListItem;
                             if (m_Facade != null && gli != null)
                             {
-                                // Messages are not recieved in OnMessage for Filmstrip, instead subscribe to OnItemSelected
+                                // Messages are not recieved in OnMessage for Filmstrip/Coverflow, instead subscribe to OnItemSelected
                                 if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
+                                    gli.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
+
+                                if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.CoverFlow)
                                     gli.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
 
                                 bFacadeEmpty = false;
@@ -1989,17 +2008,17 @@ namespace WindowPlugins.GUITVSeries
                                 this.m_Facade.Focus = true;
                                 this.m_Facade.SelectedListItemIndex = arg.IndexArgument;
 
-                                 // if we are in the filmstrip view also send a message
-                                /*if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
+                                 // if we are in the filmstrip/coverflow layout also send a message
+                                /*if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip || m_Facade.CurrentLayout == GUIFacadeControl.Layout.CoverFlow)
                                 {
                                     GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripLayout.GetID, arg.IndexArgument, 0, null);
                                     GUIGraphicsContext.SendMessage(msg);
-                                    MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.",MPTVSeriesLog.LogLevel.Debug);
+                                    MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip/Coverflow.",MPTVSeriesLog.LogLevel.Debug);
                                 }*/
 
-                                // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip View
+                                // Hack for 'set' SelectedListItemIndex not being implemented in Filmstrip/Coverflow Layout
                                 // Navigate to selected using OnAction instead 
-                                if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
+                                if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip || m_Facade.CurrentLayout == GUIFacadeControl.Layout.CoverFlow)
                                 {
                                     if (this.listLevel == Listlevel.Series)
                                     {
@@ -2426,7 +2445,7 @@ namespace WindowPlugins.GUITVSeries
                             if (!canBeSkipped)
 								MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
 
-                            bool graphicalFacade = DBOption.GetOptions(DBOption.cView_Season_ListFormat);
+                            bool graphicalFacade = DBOption.GetOptions(DBOption.cView_Season_ListFormat) != "0";
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, (graphicalFacade ? GUIFacadeControl.Layout.AlbumView : GUIFacadeControl.Layout.List));
 
                             foreach (DBSeason season in seasons)
@@ -2439,7 +2458,8 @@ namespace WindowPlugins.GUITVSeries
                                         if (graphicalFacade) 
                                         {
                                             item = new GUIListItem();
-                                            string filename = ImageAllocator.GetSeasonBanner(season, false);
+                                            bool isCoverFlow = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "2";
+                                            string filename = ImageAllocator.GetSeasonBanner(season, false, isCoverFlow );
 
                                             if (filename.Length == 0) {
                                                 // Load Series Poster instead
@@ -2448,7 +2468,7 @@ namespace WindowPlugins.GUITVSeries
                                                 }
                                                 else {
                                                     // Add Season Label to Poster Thumb
-                                                    filename = ImageAllocator.GetSeasonBanner(season, true);
+                                                    filename = ImageAllocator.GetSeasonBanner(season, true, isCoverFlow);
                                                 }
                                             }
                                             item.IconImage = item.IconImageBig = filename;
@@ -2467,7 +2487,7 @@ namespace WindowPlugins.GUITVSeries
                                                 if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                                 {
                                                     // if skins want to display the logo in the textual list, users need to set the option (expensive)
-                                                    item.IconImage = ImageAllocator.GetSeasonBanner(season, false);
+                                                    item.IconImage = ImageAllocator.GetSeasonBanner(season, false, false);
                                                 }
                                             }
                                         }
@@ -2749,9 +2769,11 @@ namespace WindowPlugins.GUITVSeries
                                     string img = string.Empty;
                                     KeyValuePair<int, DBSeries> stateSeries = (KeyValuePair<int, DBSeries>)state;
 
-                                    // Load Series Banners if WideBanners otherwise load Posters for Filmstrip
+                                    // Load Series Banners if WideBanners otherwise load Posters for Filmstrip/Coverflow
                                     if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
-                                        img = ImageAllocator.GetSeriesPoster(stateSeries.Value);
+                                        img = ImageAllocator.GetSeriesPoster(stateSeries.Value, false);
+                                    else if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Coverflow")
+                                        img = ImageAllocator.GetSeriesPoster(stateSeries.Value, true);
                                     else
                                         img = ImageAllocator.GetSeriesBanner(stateSeries.Value);                                    
                                     //ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Value[DBSeries.cID], img);
@@ -3158,8 +3180,10 @@ namespace WindowPlugins.GUITVSeries
 					return DBOption.GetOptions(DBOption.cView_Series_ListFormat);
 
 				case Listlevel.Season:
-					if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
+					if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1")
 						return "Filmstrip";
+                    else if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "2")
+                        return "Coverflow";
 					else
 						return "List";
 
@@ -3187,6 +3211,9 @@ namespace WindowPlugins.GUITVSeries
 			if (layout == Translation.LayoutWideBanners)
 				return "WideBanners";
 
+            if (layout == Translation.LayoutCoverflow)
+                return "Coverflow";
+
 			return layout;
 		}
 
@@ -3209,6 +3236,9 @@ namespace WindowPlugins.GUITVSeries
 				case "Filmstrip":
 					translatedLayout = Translation.LayoutFilmstrip;
 					break;
+                case "Coverflow":
+                  translatedLayout = Translation.LayoutCoverflow;
+                  break;
 				case "WideBanners":
 					translatedLayout = Translation.LayoutWideBanners;
 					break;
@@ -3233,8 +3263,10 @@ namespace WindowPlugins.GUITVSeries
 				case Listlevel.Season:
 					if (layout == "List")
 						DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
-					else
+					else if (layout == "Filmstrip")
 						DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                    else
+                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "2");
 					return;					
 
 				default:
@@ -3984,7 +4016,8 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsSeriesPosters != null) 
             {
                 dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip" 
-                                             || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters" );
+                                             || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
+                                             || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Coverflow" );
                 dummyIsSeriesPosters.UpdateVisibility();
             }
 
@@ -4313,7 +4346,8 @@ namespace WindowPlugins.GUITVSeries
 		private void onFacadeItemSelected(GUIListItem item, GUIControl parent) {
 			// if this is not a message from the facade, exit
 			if (parent != m_Facade && parent != m_Facade.FilmstripLayout &&
-				parent != m_Facade.ThumbnailLayout && parent != m_Facade.ListLayout)
+				parent != m_Facade.ThumbnailLayout && parent != m_Facade.ListLayout && 
+                parent != m_Facade.CoverFlowLayout)
 				return;
 
 			switch (this.listLevel) {
