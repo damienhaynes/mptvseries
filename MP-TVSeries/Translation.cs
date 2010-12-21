@@ -213,6 +213,7 @@ namespace WindowPlugins.GUITVSeries
         public static string LayoutListPosters = "List Posters";
         public static string LayoutListThumbs = "List Panels";
         public static string LayoutFilmstrip = "Filmstrip";
+        public static string LayoutCoverflow = "Coverflow";
 
         // Skin Controls
         public static string ButtonAutoPlay = "Auto Play";

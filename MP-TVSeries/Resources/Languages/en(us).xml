@@ -118,7 +118,7 @@
   <string Field="LayoutListBanners" Original="List Banners">List Banners</string>
   <string Field="LayoutListPosters" Original="List Posters">List Posters</string>
   <string Field="LayoutWideBanners" Original="Wide Banners">Wide Banners</string>
-  <string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>
+  <string Field="LayoutFilmstrip" Original="Filmstrip">Filmstrip</string>  
   <string Field="LayoutSmallIcons" Original="Small Icons">Small Icons</string>
   <string Field="ButtonAutoPlay" Original="Auto Play">Auto Play</string>
   <string Field="ButtonSwitchView" Original="Switch View">Switch View</string>
@@ -293,5 +293,7 @@
   <string Field="AvailableMedia" Original="Available Media">Available Media</string>
 
   <string Field="Votes" Original="votes">votes</string>
+  
+  <string Field="LayoutCoveflow" Original="Coveflow">Coveflow</string>
   
 </strings>
