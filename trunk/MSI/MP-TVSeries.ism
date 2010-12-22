@@ -1304,7 +1304,6 @@
 		<row><td>Blue3Wide</td><td>Skins</td><td>##ID_STRING11##</td><td>##ID_STRING14##</td><td>8</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td>##ID_STRING8##</td><td>##ID_STRING7##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
 		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>14</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>SubTitleDowloader</td><td/><td>##ID_STRING28##</td><td>##ID_STRING29##</td><td>8</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1364,6 +1363,7 @@
 		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>1</td><td/></row>
 		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>1</td><td/></row>
 		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.coverflow.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Coverflow.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Coverflow.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Dummy.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Dummy.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
 		<row><td>tvseries.episodelist.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.EpisodeList.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.EpisodeList.xml</td><td>1</td><td/></row>
@@ -1731,7 +1731,6 @@
 		<row><td>Blue3Wide</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Skins</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>SubTitleDowloader</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -2267,12 +2266,10 @@
 		<row><td>Complete</td><td>Blue3Wide</td></row>
 		<row><td>Complete</td><td>Main</td></row>
 		<row><td>Complete</td><td>Skins</td></row>
-		<row><td>Complete</td><td>SubTitleDowloader</td></row>
 		<row><td>Custom</td><td>Blue3</td></row>
 		<row><td>Custom</td><td>Blue3Wide</td></row>
 		<row><td>Custom</td><td>Main</td></row>
 		<row><td>Custom</td><td>Skins</td></row>
-		<row><td>Custom</td><td>SubTitleDowloader</td></row>
 	</table>
 
 	<table name="ISStorages">
@@ -3518,8 +3515,8 @@
 		<row><td>ID_STRING8</td><td>1033</td><td>Main</td><td>0</td><td/><td>463332909</td></row>
 		<row><td>ID_STRING9</td><td>1033</td><td>Skins</td><td>0</td><td/><td>463289649</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>1386000544</td></row>
-		<row><td>MPMINREQNOTMET</td><td>1033</td><td>It appears you are not running a version of MediaPortal that is supported by TVSeries, Please upgrade to MP 1.0.2 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>463289393</td></row>
-		<row><td>MPNOTFOUND</td><td>1033</td><td>MediaPortal could not be found or is not installed correctly, please Install MP 1.1.0 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>-1013053806</td></row>
+		<row><td>MPMINREQNOTMET</td><td>1033</td><td>It appears you are not running a version of MediaPortal that is supported by TVSeries, Please upgrade to MP 1.2 Beta or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>-1239521003</td></row>
+		<row><td>MPNOTFOUND</td><td>1033</td><td>MediaPortal could not be found or is not installed correctly, please Install MP 1.2.0 or greater and try again.\n\nSetup is now aborting.</td><td>0</td><td/><td>-1239537387</td></row>
 		<row><td>MPOLDVERSION</td><td>1033</td><td>It appears your MediaPortal version is out of date, some features of TVSeries may not be available or not work correctly.</td><td>0</td><td/><td>463309841</td></row>
 		<row><td>NEW_STRING1</td><td>1033</td><td>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.</td><td>0</td><td/><td>463323411</td></row>
 		<row><td>NEW_STRING2</td><td>1033</td><td>Release Notes HTML goes here</td><td>0</td><td/><td>-1281533039</td></row>
@@ -4117,9 +4114,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{4D5C2857-E745-4B27-8652-ECA13684E7E5}</td><td/></row>
+		<row><td>ProductCode</td><td>{088226D9-DC6B-44E0-86B3-2AF407D96DD1}</td><td/></row>
 		<row><td>ProductName</td><td>MP-TVSeries 2.7.0</td><td/></row>
-		<row><td>ProductVersion</td><td>2.7.0.1282</td><td/></row>
+		<row><td>ProductVersion</td><td>2.6.999.1291</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
