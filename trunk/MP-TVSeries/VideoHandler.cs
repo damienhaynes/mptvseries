@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Threading;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -46,7 +47,7 @@ namespace WindowPlugins.GUITVSeries
         static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
         DBEpisode m_currentEpisode;
         DBEpisode m_previousEpisode;
-        System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
+        System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();        
         public delegate void rateRequest(DBEpisode episode);
         public delegate void EpisodeWatchedDelegate(DBEpisode episode);
         public event rateRequest RateRequestOccured;
@@ -55,6 +56,9 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bIsExternalDVDPlayer = false;
         private bool m_bIsImageFile = false;
 		private bool listenToExternalPlayerEvents = false;
+        private Timer m_TraktTimer = null;
+        private TimerCallback m_timerDelegate = null;
+        private DateTime m_StartTime;
         #endregion
 
         #region Constructor
@@ -209,6 +213,15 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Update Trakt status of episode being watched
+        /// </summary>
+        private void TraktUpdater(Object stateInfo)
+        {
+            string progress = DateTime.Now.Subtract(m_StartTime).TotalMilliseconds.ToString();
+            Trakt.TraktAPI.SendUpdate(m_currentEpisode, progress, Trakt.TraktAPI.Status.Watching);
+        }
+
         /// <summary>        
         /// Updates the movie metadata on the playback screen (for when the user clicks info). 
         /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
@@ -216,12 +229,12 @@ namespace WindowPlugins.GUITVSeries
         /// Clears properties if (EventArgs.Argument == true)
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="e">Clear State</param>
         void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             bool clear = (bool)e.Argument;
             if (!clear)
-                System.Threading.Thread.Sleep(2000);
+                Thread.Sleep(2000);
 
             if (w.CancellationPending) return;
             
@@ -413,7 +426,7 @@ namespace WindowPlugins.GUITVSeries
                 LogPlayBackOp("stopped", filename);
                 try
                 {
-                    #region Set Resume Point or Watched                    
+                    #region Set Resume Point or Watched
                     double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
                     if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
@@ -505,9 +518,15 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
+                m_StartTime = DateTime.Now;
+
                 LogPlayBackOp("started", filename);
                 // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
                 w.RunWorkerAsync(false);
+
+                // timer check every second to check for queued parsing parameters
+                if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
+                m_TraktTimer = new Timer(m_timerDelegate, null, 3000, 900000);
             }
         }
         #endregion
@@ -563,6 +582,10 @@ namespace WindowPlugins.GUITVSeries
                 {                    
                     MarkEpisodeAsWatched(m_currentEpisode);
                     if (EpisodeWatched != null) EpisodeWatched(m_currentEpisode);
+
+                    // trakt API
+                    m_TraktTimer.Dispose();
+                    Trakt.TraktAPI.SendUpdate(m_currentEpisode, m_currentEpisode[DBEpisode.cLocalPlaytime], Trakt.TraktAPI.Status.Watched);
                 }
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
                 if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))

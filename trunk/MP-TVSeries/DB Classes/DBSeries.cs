@@ -703,6 +703,14 @@ namespace WindowPlugins.GUITVSeries
             return this[DBSeries.cParsedName];
         }
 
+        public static string GetSeriesYear(DBSeries series)
+        {
+            if (string.IsNullOrEmpty(series[DBOnlineSeries.cFirstAired]))
+                return string.Empty;
+
+            return series[DBOnlineSeries.cFirstAired].ToString().Split('-')[0];
+        }
+
         public static void UpdateUnWatched(DBEpisode episode)
         {
             DBOnlineSeries series = new DBOnlineSeries(episode[DBEpisode.cSeriesID]);
