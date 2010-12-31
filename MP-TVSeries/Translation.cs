@@ -319,7 +319,9 @@ namespace WindowPlugins.GUITVSeries
         public static string UnableToFindAny = "Unable to find any {0}";
         public static string UnableToFindAnyEpisode = "Unable to find any episodes";
                
-        public static string PlayNow = "Play Now";        
+        public static string PlayNow = "Play Now";
+
+        public static string TraktError = "Trakt Error";
 
         #endregion
 

@@ -205,6 +205,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
         public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
 
+        public const String cTraktUsername = "TraktUsername";
+        public const String cTraktPassword = "TraktPassword";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
