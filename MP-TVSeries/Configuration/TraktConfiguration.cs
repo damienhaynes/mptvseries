@@ -32,5 +32,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             DBOption.SetOptions(DBOption.cTraktPassword, textBoxPassword.Text);
         }
+
+        private void linkLabelSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {            
+            System.Diagnostics.Process.Start(@"http://trakt.tv");
+        }
     }
 }

@@ -92,7 +92,6 @@ namespace WindowPlugins.GUITVSeries
             this.contextMenuStrip_InsertFields = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip_Help = new System.Windows.Forms.ToolTip(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.addLogo = new System.Windows.Forms.Button();
             this.btnLogoEdit = new System.Windows.Forms.Button();
             this.lnkLogoExport = new System.Windows.Forms.LinkLabel();
@@ -100,8 +99,6 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoTemplate = new System.Windows.Forms.Button();
             this.lstLogos = new System.Windows.Forms.ListBox();
             this.lnkLogoImp = new System.Windows.Forms.LinkLabel();
-            this.btnlogoUp = new System.Windows.Forms.Button();
-            this.btnLogoDown = new System.Windows.Forms.Button();
             this.buttonViewTemplates = new System.Windows.Forms.Button();
             this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
             this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
@@ -133,7 +130,6 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoDownloadMissingArtwork = new System.Windows.Forms.CheckBox();
             this.checkboxAutoDownloadFanartSeriesName = new System.Windows.Forms.CheckBox();
             this.buttonStartImport = new System.Windows.Forms.Button();
-            this.button_TestReparse = new System.Windows.Forms.Button();
             this.dataGridView_Replace = new System.Windows.Forms.DataGridView();
             this.resetExpr = new System.Windows.Forms.LinkLabel();
             this.buildExpr = new System.Windows.Forms.LinkLabel();
@@ -143,6 +139,10 @@ namespace WindowPlugins.GUITVSeries
             this.textBox_dblocation = new System.Windows.Forms.TextBox();
             this.checkBox_ShowHidden = new System.Windows.Forms.CheckBox();
             this.linkMediaInfoUpdate = new System.Windows.Forms.LinkLabel();
+            this.button_TestReparse = new System.Windows.Forms.Button();
+            this.btnLogoDown = new System.Windows.Forms.Button();
+            this.btnlogoUp = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
@@ -225,6 +225,7 @@ namespace WindowPlugins.GUITVSeries
             this.label54 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
+            this.tabTrakt = new System.Windows.Forms.TabPage();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblRecentAddedDays = new System.Windows.Forms.Label();
@@ -285,11 +286,11 @@ namespace WindowPlugins.GUITVSeries
             this.label4 = new System.Windows.Forms.Label();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.tabTrakt = new System.Windows.Forms.TabPage();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dbOptionCheckBox1 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.traktConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.TraktConfiguration();
             this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptChkBoxScanFullscreenVideo = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBox2 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -299,7 +300,6 @@ namespace WindowPlugins.GUITVSeries
             this.playlistSettings = new WindowPlugins.GUITVSeries.Configuration.PlaylistSettings();
             this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
-            this.traktConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.TraktConfiguration();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
@@ -335,6 +335,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinMaxFanarts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
+            this.tabTrakt.SuspendLayout();
             this.tabPage_MP_DisplayControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownArtworkDelay)).BeginInit();
@@ -349,7 +350,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabAbout.SuspendLayout();
-            this.tabTrakt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -487,19 +487,7 @@ namespace WindowPlugins.GUITVSeries
             this.imageList1.Images.SetKeyName(8, "Internet.png");
             this.imageList1.Images.SetKeyName(9, "Settings.png");
             this.imageList1.Images.SetKeyName(10, "Netvibes.png");
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
-            this.button1.Location = new System.Drawing.Point(0, 678);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(804, 14);
-            this.button1.TabIndex = 0;
-            this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
-                    "ing progress of Import");
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.imageList1.Images.SetKeyName(11, "trakt.png");
             // 
             // addLogo
             // 
@@ -589,30 +577,6 @@ namespace WindowPlugins.GUITVSeries
             this.lnkLogoImp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip_Help.SetToolTip(this.lnkLogoImp, "Click to import logo rules from file");
             this.lnkLogoImp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLogoImp_LinkClicked);
-            // 
-            // btnlogoUp
-            // 
-            this.btnlogoUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnlogoUp.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up;
-            this.btnlogoUp.Location = new System.Drawing.Point(739, 71);
-            this.btnlogoUp.Name = "btnlogoUp";
-            this.btnlogoUp.Size = new System.Drawing.Size(32, 29);
-            this.btnlogoUp.TabIndex = 1;
-            this.toolTip_Help.SetToolTip(this.btnlogoUp, "Moves the logo position to the left when displayed in Media Portal");
-            this.btnlogoUp.UseVisualStyleBackColor = true;
-            this.btnlogoUp.Click += new System.EventHandler(this.btnlogoUp_Click);
-            // 
-            // btnLogoDown
-            // 
-            this.btnLogoDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogoDown.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_down;
-            this.btnLogoDown.Location = new System.Drawing.Point(740, 106);
-            this.btnLogoDown.Name = "btnLogoDown";
-            this.btnLogoDown.Size = new System.Drawing.Size(32, 29);
-            this.btnLogoDown.TabIndex = 2;
-            this.toolTip_Help.SetToolTip(this.btnLogoDown, "Moves the logo position to the right when displayed in Media Portal");
-            this.btnLogoDown.UseVisualStyleBackColor = true;
-            this.btnLogoDown.Click += new System.EventHandler(this.btnLogoDown_Click);
             // 
             // buttonViewTemplates
             // 
@@ -1021,18 +985,6 @@ namespace WindowPlugins.GUITVSeries
             this.buttonStartImport.UseVisualStyleBackColor = true;
             this.buttonStartImport.Click += new System.EventHandler(this.buttonStartImport_Click);
             // 
-            // button_TestReparse
-            // 
-            this.button_TestReparse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_TestReparse.Image = ((System.Drawing.Image)(resources.GetObject("button_TestReparse.Image")));
-            this.button_TestReparse.Location = new System.Drawing.Point(399, 158);
-            this.button_TestReparse.Name = "button_TestReparse";
-            this.button_TestReparse.Size = new System.Drawing.Size(28, 31);
-            this.button_TestReparse.TabIndex = 1;
-            this.toolTip_Help.SetToolTip(this.button_TestReparse, "Redo a local parsing test");
-            this.button_TestReparse.UseVisualStyleBackColor = true;
-            this.button_TestReparse.Click += new System.EventHandler(this.button_TestReparse_Click);
-            // 
             // dataGridView_Replace
             // 
             this.dataGridView_Replace.AllowUserToResizeColumns = false;
@@ -1195,6 +1147,55 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_Help.SetToolTip(this.linkMediaInfoUpdate, "Click here to force the plug-in to read the media information for local files aga" +
                     "in e.g. resolution, codecs...");
             this.linkMediaInfoUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkMediaInfoUpdate_LinkClicked);
+            // 
+            // button_TestReparse
+            // 
+            this.button_TestReparse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_TestReparse.Image = ((System.Drawing.Image)(resources.GetObject("button_TestReparse.Image")));
+            this.button_TestReparse.Location = new System.Drawing.Point(399, 158);
+            this.button_TestReparse.Name = "button_TestReparse";
+            this.button_TestReparse.Size = new System.Drawing.Size(28, 31);
+            this.button_TestReparse.TabIndex = 1;
+            this.toolTip_Help.SetToolTip(this.button_TestReparse, "Redo a local parsing test");
+            this.button_TestReparse.UseVisualStyleBackColor = true;
+            this.button_TestReparse.Click += new System.EventHandler(this.button_TestReparse_Click);
+            // 
+            // btnLogoDown
+            // 
+            this.btnLogoDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLogoDown.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_down;
+            this.btnLogoDown.Location = new System.Drawing.Point(740, 106);
+            this.btnLogoDown.Name = "btnLogoDown";
+            this.btnLogoDown.Size = new System.Drawing.Size(32, 29);
+            this.btnLogoDown.TabIndex = 2;
+            this.toolTip_Help.SetToolTip(this.btnLogoDown, "Moves the logo position to the right when displayed in Media Portal");
+            this.btnLogoDown.UseVisualStyleBackColor = true;
+            this.btnLogoDown.Click += new System.EventHandler(this.btnLogoDown_Click);
+            // 
+            // btnlogoUp
+            // 
+            this.btnlogoUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnlogoUp.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up;
+            this.btnlogoUp.Location = new System.Drawing.Point(739, 71);
+            this.btnlogoUp.Name = "btnlogoUp";
+            this.btnlogoUp.Size = new System.Drawing.Size(32, 29);
+            this.btnlogoUp.TabIndex = 1;
+            this.toolTip_Help.SetToolTip(this.btnlogoUp, "Moves the logo position to the left when displayed in Media Portal");
+            this.btnlogoUp.UseVisualStyleBackColor = true;
+            this.btnlogoUp.Click += new System.EventHandler(this.btnlogoUp_Click);
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
+            this.button1.Location = new System.Drawing.Point(0, 678);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(804, 14);
+            this.button1.TabIndex = 0;
+            this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
+                    "ing progress of Import");
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // toolTip_InfoHelp
             // 
@@ -2403,6 +2404,17 @@ namespace WindowPlugins.GUITVSeries
             this.label26.Text = "&Language:";
             this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // tabTrakt
+            // 
+            this.tabTrakt.Controls.Add(this.traktConfiguration1);
+            this.tabTrakt.ImageKey = "trakt.png";
+            this.tabTrakt.Location = new System.Drawing.Point(4, 31);
+            this.tabTrakt.Name = "tabTrakt";
+            this.tabTrakt.Size = new System.Drawing.Size(796, 643);
+            this.tabTrakt.TabIndex = 13;
+            this.tabTrakt.Text = "Trakt";
+            this.tabTrakt.UseVisualStyleBackColor = true;
+            // 
             // tabPage_MP_DisplayControl
             // 
             this.tabPage_MP_DisplayControl.AutoScroll = true;
@@ -3142,16 +3154,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 26);
             this.listBox_Log.TabIndex = 5;
             // 
-            // tabTrakt
-            // 
-            this.tabTrakt.Controls.Add(this.traktConfiguration1);
-            this.tabTrakt.Location = new System.Drawing.Point(4, 31);
-            this.tabTrakt.Name = "tabTrakt";
-            this.tabTrakt.Size = new System.Drawing.Size(796, 643);
-            this.tabTrakt.TabIndex = 13;
-            this.tabTrakt.Text = "Trakt";
-            this.tabTrakt.UseVisualStyleBackColor = true;
-            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -3184,6 +3186,16 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox1.ToolTip = "Enable to download series widebanners that do not contain a graphical series name" +
                 ".";
             this.dbOptionCheckBox1.UseVisualStyleBackColor = true;
+            // 
+            // traktConfiguration1
+            // 
+            this.traktConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.traktConfiguration1.Location = new System.Drawing.Point(3, 3);
+            this.traktConfiguration1.Name = "traktConfiguration1";
+            this.traktConfiguration1.Size = new System.Drawing.Size(785, 637);
+            this.traktConfiguration1.TabIndex = 0;
             // 
             // dbOptChkBoxCountEmptyFutureEps
             // 
@@ -3302,16 +3314,6 @@ namespace WindowPlugins.GUITVSeries
             this.aboutScreen.Size = new System.Drawing.Size(794, 640);
             this.aboutScreen.TabIndex = 0;
             // 
-            // traktConfiguration1
-            // 
-            this.traktConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.traktConfiguration1.Location = new System.Drawing.Point(3, 3);
-            this.traktConfiguration1.Name = "traktConfiguration1";
-            this.traktConfiguration1.Size = new System.Drawing.Size(785, 637);
-            this.traktConfiguration1.TabIndex = 0;
-            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3364,6 +3366,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinMaxFanarts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
+            this.tabTrakt.ResumeLayout(false);
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -3383,7 +3386,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
-            this.tabTrakt.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             this.ResumeLayout(false);
 
