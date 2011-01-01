@@ -580,6 +580,8 @@ namespace WindowPlugins.GUITVSeries
 
         void PlaybackOperationEnded(bool countAsWatched)
         {
+            m_TraktTimer.Dispose();
+
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
                 MPTVSeriesLog.Write("This episode counts as watched");
@@ -588,8 +590,7 @@ namespace WindowPlugins.GUITVSeries
                     MarkEpisodeAsWatched(m_currentEpisode);
                     if (EpisodeWatched != null) EpisodeWatched(m_currentEpisode);
 
-                    // trakt API
-                    m_TraktTimer.Dispose();
+                    // trakt API                    
                     double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
                     Trakt.TraktAPI.SendUpdate(m_currentEpisode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watched);
                 }
