@@ -179,6 +179,13 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap trakt {
+            get {
+                object obj = ResourceManager.GetObject("trakt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap tv_series_logo_noreflection {
             get {
                 object obj = ResourceManager.GetObject("tv_series_logo_noreflection", resourceCulture);

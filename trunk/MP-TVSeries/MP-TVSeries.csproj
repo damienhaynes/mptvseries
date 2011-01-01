@@ -418,6 +418,7 @@
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
     <None Include="Resources\Images\tick.png" />
+    <None Include="Resources\Images\trakt.png" />
     <Content Include="Resources\Languages\cs.xml" />
     <Content Include="Resources\Languages\da.xml" />
     <Content Include="Resources\Languages\de.xml" />
