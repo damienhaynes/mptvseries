@@ -218,8 +218,13 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private void TraktUpdater(Object stateInfo)
         {
-            string progress = DateTime.Now.Subtract(m_StartTime).TotalMilliseconds.ToString();
-            Trakt.TraktAPI.SendUpdate(m_currentEpisode, progress, Trakt.TraktAPI.Status.Watching);
+            double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
+            double progress = 0.0;
+
+            if (duration > 0)
+                progress = (DateTime.Now.Subtract(m_StartTime).TotalMinutes / duration) * 100;
+
+            Trakt.TraktAPI.SendUpdate(m_currentEpisode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watching);
         }
 
         /// <summary>        
@@ -585,7 +590,8 @@ namespace WindowPlugins.GUITVSeries
 
                     // trakt API
                     m_TraktTimer.Dispose();
-                    Trakt.TraktAPI.SendUpdate(m_currentEpisode, m_currentEpisode[DBEpisode.cLocalPlaytime], Trakt.TraktAPI.Status.Watched);
+                    double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
+                    Trakt.TraktAPI.SendUpdate(m_currentEpisode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watched);
                 }
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
                 if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))

@@ -20,7 +20,14 @@ namespace WindowPlugins.GUITVSeries.Trakt
             public const string SendUpdate = @"""type"":""{0}"",""status"":""{1}"",""title"":""{2}"",""year"":""{3}"",""season"":""{4}"",""episode"":""{5}"",""tvdbid"":""{6}"",""progress"":""{7}"",""plugin_version"":""{8}"",""media_center"":""{9}"",""media_center_version"":""{10}"",""media_center_date"":""{11}"",""duration"":""{12}"",""username"":""{13}"",""password"":""{14}""";
         }
 
-        public static void SendUpdate(DBEpisode episode, string progress, Status status)
+        /// <summary>
+        /// Send Post to trakt.tv api during episode watching or after episode watched
+        /// </summary>
+        /// <param name="episode">Episode object being watched</param>
+        /// <param name="progress">Current percentage of video complete</param>
+        /// <param name="duration">Length of video in minutes</param>
+        /// <param name="status">Watching or Watched</param>
+        public static void SendUpdate(DBEpisode episode, int progress, int duration, Status status)
         {
             string username = DBOption.GetOptions(DBOption.cTraktUsername);
             string password = DBOption.GetOptions(DBOption.cTraktPassword);
@@ -40,8 +47,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
             string tvdbid = series[DBSeries.cID];
             string version = Settings.Version.ToString();
             string mpversion = Settings.MPVersion.ToString();
-            string builddate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss");
-            string duration = episode[DBEpisode.cLocalPlaytime];
+            string builddate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss");            
 
             // final check that we have everything we need
             if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(seasonIdx) || string.IsNullOrEmpty(episodeIdx))
@@ -54,12 +60,12 @@ namespace WindowPlugins.GUITVSeries.Trakt
                                                             seasonIdx,
                                                             episodeIdx,
                                                             tvdbid,
-                                                            progress,
+                                                            progress.ToString(),
                                                             version,
                                                             "mp-tvseries",
                                                             mpversion,
                                                             builddate,
-                                                            duration,
+                                                            duration.ToString(),
                                                             username,
                                                             password);
             
