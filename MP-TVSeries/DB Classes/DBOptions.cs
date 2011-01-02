@@ -655,8 +655,13 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static void LogOptions() {
-            foreach (string key in optionsCache.Keys) {
-                MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
+            foreach (string key in optionsCache.Keys) 
+            {
+                // dont log private options
+                if (!key.Equals(DBOption.cTraktPassword) && !key.Equals(DBOption.cOnlineUserID))
+                {
+                    MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
+                }
             }
         }
 

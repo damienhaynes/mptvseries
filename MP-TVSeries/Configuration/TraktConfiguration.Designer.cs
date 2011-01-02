@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TraktConfiguration));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.linkLabelSignUp = new System.Windows.Forms.LinkLabel();
             this.richTextBoxDesc = new System.Windows.Forms.RichTextBox();
@@ -81,7 +80,9 @@
             this.richTextBoxDesc.ShortcutsEnabled = false;
             this.richTextBoxDesc.Size = new System.Drawing.Size(533, 37);
             this.richTextBoxDesc.TabIndex = 4;
-            this.richTextBoxDesc.Text = resources.GetString("richTextBoxDesc.Text");
+            this.richTextBoxDesc.Text = "trakt helps keep a record of what TV shows you are watching. Based on your favori" +
+                "tes, trakt recommends additional shows you\'ll enjoy! Watch a TV show in MediaPor" +
+                "tal...and trakt builds up your profile!";
             // 
             // textBoxPassword
             // 
