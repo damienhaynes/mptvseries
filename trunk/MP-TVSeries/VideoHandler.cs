@@ -57,8 +57,7 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bIsImageFile = false;
 		private bool listenToExternalPlayerEvents = false;
         private Timer m_TraktTimer = null;
-        private TimerCallback m_timerDelegate = null;
-        private DateTime m_StartTime;
+        private TimerCallback m_timerDelegate = null;        
         #endregion
 
         #region Constructor
@@ -218,11 +217,13 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private void TraktUpdater(Object stateInfo)
         {
+            // duration in minutes
             double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
             double progress = 0.0;
 
-            if (duration > 0)
-                progress = (DateTime.Now.Subtract(m_StartTime).TotalMinutes / duration) * 100;
+            // get current progress of player (in seconds) to work out percent complete
+            if (duration > 0.0)
+                progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
 
             Trakt.TraktAPI.SendUpdate(m_currentEpisode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watching);
         }
@@ -523,13 +524,11 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
-                m_StartTime = DateTime.Now;
-
                 LogPlayBackOp("started", filename);
                 // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
                 w.RunWorkerAsync(false);
 
-                // timer check every second to check for queued parsing parameters
+                // timer for trakt watcher status every 15mins
                 if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
                 m_TraktTimer = new Timer(m_timerDelegate, null, 3000, 900000);
             }
@@ -580,6 +579,7 @@ namespace WindowPlugins.GUITVSeries
 
         void PlaybackOperationEnded(bool countAsWatched)
         {
+            // cancel trakt watch timer
             m_TraktTimer.Dispose();
 
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
