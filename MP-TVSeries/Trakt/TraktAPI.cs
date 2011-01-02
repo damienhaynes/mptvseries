@@ -78,6 +78,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
             {
                 WebClient client = new WebClient();
                 client.Headers.Add("user-agent", Settings.UserAgent);
+                MPTVSeriesLog.Write("Trakt: Data: ", status, MPTVSeriesLog.LogLevel.Debug);
                 string result = client.UploadString(ApiURIs.APIPost, string.Concat("{", status, "}"));
                 MPTVSeriesLog.Write("Trakt: {0}", result);
             }
