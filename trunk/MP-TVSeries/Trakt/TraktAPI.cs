@@ -17,7 +17,23 @@ namespace WindowPlugins.GUITVSeries.Trakt
         private static class ApiURIs
         {
             public const string APIPost = @"http://api.trakt.tv/post";
+            public const string UserWatched = @"http://api.trakt.tv/user/watched/episodes.json/{0}/{1}";
             public const string SendUpdate = @"""type"":""{0}"",""status"":""{1}"",""title"":""{2}"",""year"":""{3}"",""season"":""{4}"",""episode"":""{5}"",""tvdbid"":""{6}"",""progress"":""{7}"",""plugin_version"":""{8}"",""media_center"":""{9}"",""media_center_version"":""{10}"",""media_center_date"":""{11}"",""duration"":""{12}"",""username"":""{13}"",""password"":""{14}""";
+        }
+
+        /// <summary>
+        /// Returns a list of watched items for a user
+        /// only friends or non-private users will return any data
+        /// Maximum of 100 items will be returned from API
+        /// </summary>
+        /// <param name="user">username of person to retrieve watched items</param>        
+        public static IEnumerable<TraktWatchedHistory> GetUserWatchedHistory(string user)
+        {
+            string apiKey = DBOption.GetOptions(DBOption.cTraktAPIKey);            
+            string userWatchedHistory = Transmit(string.Format(TraktAPI.ApiURIs.UserWatched, apiKey, user), string.Empty, false);           
+
+            // get list of objects from json array
+            return userWatchedHistory.FromJSONArray<TraktWatchedHistory>();           
         }
 
         /// <summary>
@@ -69,27 +85,34 @@ namespace WindowPlugins.GUITVSeries.Trakt
                                                             username,
                                                             password);
             
-            Transmit(data);
+            Transmit(ApiURIs.APIPost, data, true);
         }
 
-        private static void Transmit(string status)
+        private static string Transmit(string address, string status, bool notify)
         {
             try
             {
                 WebClient client = new WebClient();
                 client.Headers.Add("user-agent", Settings.UserAgent);
-                MPTVSeriesLog.Write("Trakt: Data: ", status, MPTVSeriesLog.LogLevel.Debug);
-                string result = client.UploadString(ApiURIs.APIPost, string.Concat("{", status, "}"));
+                if (!string.IsNullOrEmpty(status))
+                {
+                    MPTVSeriesLog.Write("Trakt: Post: ", status, MPTVSeriesLog.LogLevel.Debug);
+                    status = string.Concat("{", status, "}");
+                }
+                string result = client.UploadString(address, status);
                 MPTVSeriesLog.Write("Trakt: {0}", result);
+                return result;
             }
             catch (WebException e)
             {
                 // Notify user something bad happened
                 MPTVSeriesLog.Write("Trakt Error: {0}", e.Message);
-                TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, e.Message);
+                if (notify)
+                {
+                    TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, e.Message);
+                }
+                return null;
             }
-           
-            return;
         }
 
     }        

@@ -30,12 +30,39 @@ using MediaPortal.Util;
 using MediaPortal.Ripper;
 using System.Globalization;
 using System.Reflection;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace WindowPlugins.GUITVSeries
 {
+    #region JSON Extension Methods
+    public static class JSONExtensions
+    {
+        public static IEnumerable<T> FromJSONArray<T>(this string jsonArray)
+        {
+            if (string.IsNullOrEmpty(jsonArray)) return new List<T>();
+
+            using (var ms = new MemoryStream(Encoding.Default.GetBytes(jsonArray)))
+            {
+                var ser = new DataContractJsonSerializer(typeof(IEnumerable<T>));
+                var result = (IEnumerable<T>)ser.ReadObject(ms);
+
+                if (result == null)
+                {
+                    return new List<T>();
+                }
+                else
+                {
+                    return result;
+                }
+            }
+        }
+    }
+    #endregion
+
     #region String Extension Methods
     public static class StringExtensions
-    {
+    {        
         public static bool IsNumerical(this string number)
         {
             double isNumber = 0;
