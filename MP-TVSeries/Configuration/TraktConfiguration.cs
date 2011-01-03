@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using WindowPlugins.GUITVSeries.Trakt;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {
@@ -21,6 +22,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             textBoxUsername.Text = DBOption.GetOptions(DBOption.cTraktUsername);
             textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);
+            textBoxAPIKey.Text = DBOption.GetOptions(DBOption.cTraktAPIKey);
         }
 
         private void textBoxUsername_TextChanged(object sender, EventArgs e)
@@ -36,6 +38,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void linkLabelSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {            
             System.Diagnostics.Process.Start(@"http://trakt.tv");
+        }
+
+        private void textBoxAPIKey_TextChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cTraktAPIKey, textBoxAPIKey.Text);
         }
     }
 }
