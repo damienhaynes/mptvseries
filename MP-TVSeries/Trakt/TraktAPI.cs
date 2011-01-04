@@ -17,6 +17,16 @@ namespace WindowPlugins.GUITVSeries.Trakt
         }
 
         /// <summary>
+        /// Returns the series list for a user
+        /// </summary>
+        /// <param name="user">username of person to get series library</param>        
+        public static IEnumerable<TraktLibraryShows> GetSeriesForUser(string user)
+        {
+            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, apiKey, user), string.Empty, false);
+            return seriesForUser.FromJSONArray<TraktLibraryShows>();
+        }
+
+        /// <summary>
         /// Returns the series overview including ratings, top watchers, and most watched episodes      
         /// </summary>
         /// <param name="seriesID">tvdb series id of series to lookup</param>        
