@@ -8,17 +8,24 @@ namespace WindowPlugins.GUITVSeries.Trakt
 {
     static class TraktAPI
     {
+        static string apiKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
+
         public enum Status
         {
             Watching,
             Watched
         }
 
-        private static class ApiURIs
+        /// <summary>
+        /// Returns a users online profile
+        /// </summary>
+        /// <param name="user">username of person to retrieve profile</param>        
+        public static TraktUserProfile GetUserProfile(string user)
         {
-            public const string APIPost = @"http://api.trakt.tv/post";
-            public const string UserWatched = @"http://api.trakt.tv/user/watched/episodes.json/{0}/{1}";
-            public const string SendUpdate = @"""type"":""{0}"",""status"":""{1}"",""title"":""{2}"",""year"":""{3}"",""season"":""{4}"",""episode"":""{5}"",""tvdbid"":""{6}"",""progress"":""{7}"",""plugin_version"":""{8}"",""media_center"":""{9}"",""media_center_version"":""{10}"",""media_center_date"":""{11}"",""duration"":""{12}"",""username"":""{13}"",""password"":""{14}""";
+            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, apiKey, user), string.Empty, false);
+
+            // get list of objects from json array
+            return userProfile.FromJSON<TraktUserProfile>();
         }
 
         /// <summary>
@@ -29,11 +36,10 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// <param name="user">username of person to retrieve watched items</param>        
         public static IEnumerable<TraktWatchedHistory> GetUserWatchedHistory(string user)
         {
-            string apiKey = DBOption.GetOptions(DBOption.cTraktAPIKey);            
-            string userWatchedHistory = Transmit(string.Format(TraktAPI.ApiURIs.UserWatched, apiKey, user), string.Empty, false);           
+            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatched, apiKey, user), string.Empty, false);
 
             // get list of objects from json array
-            return userWatchedHistory.FromJSONArray<TraktWatchedHistory>();           
+            return userWatchedHistory.FromJSONArray<TraktWatchedHistory>();
         }
 
         /// <summary>
@@ -69,7 +75,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
             if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(seasonIdx) || string.IsNullOrEmpty(episodeIdx))
                 return;
 
-            string data = string.Format(ApiURIs.SendUpdate, type,
+            string data = string.Format(TraktURIs.SendUpdate, type,
                                                             status.ToString(),
                                                             title,
                                                             year,
@@ -84,8 +90,8 @@ namespace WindowPlugins.GUITVSeries.Trakt
                                                             duration.ToString(),
                                                             username,
                                                             password);
-            
-            Transmit(ApiURIs.APIPost, data, true);
+
+            Transmit(TraktURIs.APIPost, data, true);
         }
 
         private static string Transmit(string address, string status, bool notify)

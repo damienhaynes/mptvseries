@@ -57,6 +57,17 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
+
+        public static T FromJSON<T>(this string json)
+        {
+            if (string.IsNullOrEmpty(json)) return default(T);
+
+            using (var ms = new MemoryStream(Encoding.Default.GetBytes(json.ToCharArray())))
+            {
+                var ser = new DataContractJsonSerializer(typeof(T));
+                return (T)ser.ReadObject(ms);
+            }
+        }
     }
     #endregion
 
