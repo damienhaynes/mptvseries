@@ -17,14 +17,22 @@ namespace WindowPlugins.GUITVSeries.Trakt
         }
 
         /// <summary>
+        /// Returns the series overview including ratings, top watchers, and most watched episodes      
+        /// </summary>
+        /// <param name="seriesID">tvdb series id of series to lookup</param>        
+        public static TraktSeriesOverview GetSeriesOverview(string seriesID)
+        {
+            string seriesOverview = Transmit(string.Format(TraktURIs.SeriesOverview, apiKey, seriesID), string.Empty, false);
+            return seriesOverview.FromJSON<TraktSeriesOverview>();
+        }
+
+        /// <summary>
         /// Returns a users online profile
         /// </summary>
         /// <param name="user">username of person to retrieve profile</param>        
         public static TraktUserProfile GetUserProfile(string user)
         {
             string userProfile = Transmit(string.Format(TraktURIs.UserProfile, apiKey, user), string.Empty, false);
-
-            // get list of objects from json array
             return userProfile.FromJSON<TraktUserProfile>();
         }
 

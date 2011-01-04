@@ -282,6 +282,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
+    <Compile Include="Trakt\TraktSeriesOverview.cs" />
     <Compile Include="Trakt\TraktAPI.cs" />
     <Compile Include="Trakt\TraktError.cs" />
     <Compile Include="Trakt\TraktURIs.cs" />
