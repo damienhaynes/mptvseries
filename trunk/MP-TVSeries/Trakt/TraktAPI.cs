@@ -72,6 +72,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
             string username = DBOption.GetOptions(DBOption.cTraktUsername);
             string password = DBOption.GetOptions(DBOption.cTraktPassword);
 
+            // check if trakt is enabled
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return;
 
@@ -79,51 +80,53 @@ namespace WindowPlugins.GUITVSeries.Trakt
 
             if (series == null) return;
 
-            string type = "TVShow";
-            string title = series.ToString();
-            string year = DBSeries.GetSeriesYear(series);
-            string seasonIdx = episode[DBOnlineEpisode.cSeasonIndex];
-            string episodeIdx = episode[DBOnlineEpisode.cEpisodeIndex];
-            string tvdbid = series[DBSeries.cID];
-            string version = Settings.Version.ToString();
-            string mpversion = Settings.MPVersion.ToString();
-            string builddate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss");            
+            // create scrobble data
+            TraktScrobble scrobbleData = new TraktScrobble
+            {
+                MediaType = "TVShow",
+                Status = status.ToString(),
+                Title = series.ToString(),
+                Year = DBSeries.GetSeriesYear(series),
+                Season = episode[DBOnlineEpisode.cSeasonIndex],
+                Episode = episode[DBOnlineEpisode.cEpisodeIndex],
+                SeriesID = series[DBSeries.cID],
+                Progress = progress.ToString(),
+                PluginVersion = Settings.Version.ToString(),
+                MediaCenter = "mp-tvseries",
+                MediaCenterVersion = Settings.MPVersion.ToString(),
+                MediaCenterBuildDate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                Duration = duration.ToString(),
+                UserName = username,
+                Password = password
+            };
 
             // final check that we have everything we need
-            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(seasonIdx) || string.IsNullOrEmpty(episodeIdx))
+            // server can accept title if series id is not supplied
+            if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Season) || string.IsNullOrEmpty(scrobbleData.Episode))
                 return;
-
-            string data = string.Format(TraktURIs.SendUpdate, type,
-                                                            status.ToString(),
-                                                            title,
-                                                            year,
-                                                            seasonIdx,
-                                                            episodeIdx,
-                                                            tvdbid,
-                                                            progress.ToString(),
-                                                            version,
-                                                            "mp-tvseries",
-                                                            mpversion,
-                                                            builddate,
-                                                            duration.ToString(),
-                                                            username,
-                                                            password);
-
-            Transmit(TraktURIs.APIPost, data, true);
+            
+            // serialize Scrobble object to JSON and send to server
+            Transmit(TraktURIs.APIPost, scrobbleData.ToJSON(), true);
         }
 
-        private static string Transmit(string address, string status, bool notify)
+        /// <summary>
+        /// Uploads string to address using the Post Method
+        /// </summary>
+        /// <param name="address">address of resource</param>
+        /// <param name="data">json string to post, can be left empty</param>
+        /// <param name="notify">notify in GUI if any errors</param>
+        /// <returns>response as json string</returns>
+        private static string Transmit(string address, string data, bool notify)
         {
             try
             {
                 WebClient client = new WebClient();
                 client.Headers.Add("user-agent", Settings.UserAgent);
-                if (!string.IsNullOrEmpty(status))
+                if (!string.IsNullOrEmpty(data))
                 {
-                    MPTVSeriesLog.Write("Trakt: Post: ", status, MPTVSeriesLog.LogLevel.Debug);
-                    status = string.Concat("{", status, "}");
+                    MPTVSeriesLog.Write("Trakt: Post: ", data, MPTVSeriesLog.LogLevel.Debug);
                 }
-                string result = client.UploadString(address, status);
+                string result = client.UploadString(address, data);
                 MPTVSeriesLog.Write("Trakt: {0}", result);
                 return result;
             }

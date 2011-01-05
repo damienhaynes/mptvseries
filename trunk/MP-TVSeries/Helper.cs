@@ -64,8 +64,18 @@ namespace WindowPlugins.GUITVSeries
 
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(json.ToCharArray())))
             {
-                var ser = new DataContractJsonSerializer(typeof(T));
+                var ser = new DataContractJsonSerializer(typeof(T));                
                 return (T)ser.ReadObject(ms);
+            }
+        }
+
+        public static string ToJSON(this object obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var ser = new DataContractJsonSerializer(obj.GetType());
+                ser.WriteObject(ms, obj);
+                return Encoding.Default.GetString(ms.ToArray());
             }
         }
     }

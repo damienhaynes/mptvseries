@@ -283,6 +283,7 @@
     </Compile>
     <Compile Include="settings.cs" />
     <Compile Include="Trakt\TraktLibraryShows.cs" />
+    <Compile Include="Trakt\TraktScrobble.cs" />
     <Compile Include="Trakt\TraktSeriesOverview.cs" />
     <Compile Include="Trakt\TraktAPI.cs" />
     <Compile Include="Trakt\TraktError.cs" />
