@@ -102,13 +102,6 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap control_play_blue {
-            get {
-                object obj = ResourceManager.GetObject("control_play_blue", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap find {
             get {
                 object obj = ResourceManager.GetObject("find", resourceCulture);
@@ -116,9 +109,16 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap folder_explore {
+        internal static System.Drawing.Bitmap icon_faded {
             get {
-                object obj = ResourceManager.GetObject("folder_explore", resourceCulture);
+                object obj = ResourceManager.GetObject("icon_faded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap icon_normal {
+            get {
+                object obj = ResourceManager.GetObject("icon_normal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -147,27 +147,6 @@ namespace WindowPlugins.GUITVSeries.Properties {
         internal static System.Drawing.Bitmap importupdating {
             get {
                 object obj = ResourceManager.GetObject("importupdating", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap television_add {
-            get {
-                object obj = ResourceManager.GetObject("television_add", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap television_add_unlisted {
-            get {
-                object obj = ResourceManager.GetObject("television_add_unlisted", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap textfield_rename {
-            get {
-                object obj = ResourceManager.GetObject("textfield_rename", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
