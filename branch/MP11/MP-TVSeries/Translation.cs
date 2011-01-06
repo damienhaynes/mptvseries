@@ -347,6 +347,8 @@ namespace WindowPlugins.GUITVSeries
         public static string UnableToRetrieveSubtitles = "Unable to retrieve subtitles";
         public static string NoSubtitlesFoundOrRetrieved = "No subtitles found or retrieved";
 
+        public static string TraktError = "Trakt Error";
+
         #endregion
 
         #region Public Properties

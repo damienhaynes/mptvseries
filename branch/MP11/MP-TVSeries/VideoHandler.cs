@@ -23,10 +23,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Threading;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -46,7 +48,8 @@ namespace WindowPlugins.GUITVSeries
         static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
         DBEpisode m_currentEpisode;
         DBEpisode m_previousEpisode;
-        System.ComponentModel.BackgroundWorker w = new System.ComponentModel.BackgroundWorker();
+        BackgroundWorker PlayPropertyUpdater = new BackgroundWorker();
+        BackgroundWorker TraktScrobbleUpdater = new BackgroundWorker();
         public delegate void rateRequest(DBEpisode episode);
         public delegate void EpisodeWatchedDelegate(DBEpisode episode);
         public event rateRequest RateRequestOccured;
@@ -55,6 +58,8 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bIsExternalDVDPlayer = false;
         private bool m_bIsImageFile = false;
 		private bool listenToExternalPlayerEvents = false;
+        private Timer m_TraktTimer = null;
+        private TimerCallback m_timerDelegate = null;        
         #endregion
 
         #region Constructor
@@ -68,15 +73,18 @@ namespace WindowPlugins.GUITVSeries
             m_bIsExternalDVDPlayer = !xmlreader.GetValueAsBool("dvdplayer", "internal", true);
             
 			// external player handlers
-			MediaPortal.Util.Utils.OnStartExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStartExternal);
-			MediaPortal.Util.Utils.OnStopExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStopExternal);
+			Utils.OnStartExternal += new Utils.UtilEventHandler(onStartExternal);
+			Utils.OnStopExternal += new Utils.UtilEventHandler(onStopExternal);
 
             g_Player.PlayBackStopped += new MediaPortal.Player.g_Player.StoppedHandler(OnPlayBackStopped);
             g_Player.PlayBackEnded += new MediaPortal.Player.g_Player.EndedHandler(OnPlayBackEnded);
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(OnPlaybackChanged);
-            w.WorkerSupportsCancellation = true;
-            w.DoWork += new System.ComponentModel.DoWorkEventHandler(w_DoWork);
+            PlayPropertyUpdater.WorkerSupportsCancellation = true;
+            PlayPropertyUpdater.DoWork += new DoWorkEventHandler(SetPlayProperties_DoWork);
+
+            TraktScrobbleUpdater.WorkerSupportsCancellation = true;
+            TraktScrobbleUpdater.DoWork += new DoWorkEventHandler(TraktScrobble_DoWork);
         }
 
         #endregion
@@ -209,21 +217,54 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Private Methods
-        /// <summary>        
+        /// <summary>
+        /// Update Trakt status of episode being watched on Timer Interval
+        /// </summary>
+        private void TraktUpdater(Object stateInfo)
+        {
+            // duration in minutes
+            double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
+            double progress = 0.0;
+            
+            // get current progress of player (in seconds) to work out percent complete
+            if (duration > 0.0)
+                progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
+
+            Trakt.TraktAPI.SendUpdate(m_currentEpisode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watching);
+        }
+
+        /// <summary>
+        /// Update trakt status on playback finish
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TraktScrobble_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
+
+            double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
+
+            foreach (DBEpisode episode in episodes)
+            {
+                Trakt.TraktAPI.SendUpdate(episode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watched);
+            }
+        }
+
+        /// <summary>
         /// Updates the movie metadata on the playback screen (for when the user clicks info). 
         /// The delay is neccesary because Player tries to use metadata from the MyVideos database.
         /// We want to update this after that happens so the correct info is there.
         /// Clears properties if (EventArgs.Argument == true)
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void w_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        /// <param name="e">Clear State</param>
+        void SetPlayProperties_DoWork(object sender, DoWorkEventArgs e)
         {
             bool clear = (bool)e.Argument;
             if (!clear)
-                System.Threading.Thread.Sleep(2000);
+                Thread.Sleep(2000);
 
-            if (w.CancellationPending) return;
+            if (PlayPropertyUpdater.CancellationPending) return;
             
             SetGUIProperties((bool)e.Argument);
         }
@@ -249,8 +290,7 @@ namespace WindowPlugins.GUITVSeries
             GUIPropertyManager.SetProperty("#Play.Current.Plot", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeMain, m_currentEpisode));
 
 			// Show Episode Thumbnail or Series Poster if Hide Spoilers is enabled
-            string osdImage = string.Empty;
-            //bool hiddenEpLogo = false;
+            string osdImage = string.Empty;            
             if (!clear)
             {
                 foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoOSDImages)
@@ -283,7 +323,7 @@ namespace WindowPlugins.GUITVSeries
             GUIPropertyManager.SetProperty("#Play.Current.Thumb", clear ? " " : osdImage);
 
             // double check, i don't want play images to be cleared on ended or stopped...
-            if (w.CancellationPending) return;
+            if (PlayPropertyUpdater.CancellationPending) return;
 
             foreach (KeyValuePair<string, string> kvp in SkinSettings.VideoPlayImages)
             {
@@ -332,9 +372,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBEpisode ep in episodes)
             {
                 ep[DBOnlineEpisode.cWatched] = 1;
-                ep.Commit();
-                //DBSeason.UpdateUnWatched(ep);
-                //DBSeries.UpdateUnWatched(ep);
+                ep.Commit(); 
             }
             // Update Episode Counts
             DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
@@ -405,15 +443,15 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Playback Event Handlers
-        void OnPlayBackStopped(MediaPortal.Player.g_Player.MediaType type, int timeMovieStopped, string filename)
+        void OnPlayBackStopped(g_Player.MediaType type, int timeMovieStopped, string filename)
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
-                if (w.IsBusy) w.CancelAsync();
+                if (PlayPropertyUpdater.IsBusy) PlayPropertyUpdater.CancelAsync();
                 LogPlayBackOp("stopped", filename);
                 try
                 {
-                    #region Set Resume Point or Watched                    
+                    #region Set Resume Point or Watched
                     double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
                     if (!m_currentEpisode[DBOnlineEpisode.cWatched]
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
@@ -441,11 +479,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void OnPlayBackEnded(MediaPortal.Player.g_Player.MediaType type, string filename)
+        void OnPlayBackEnded(g_Player.MediaType type, string filename)
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
-                if (w.IsBusy) w.CancelAsync();
+                if (PlayPropertyUpdater.IsBusy) PlayPropertyUpdater.CancelAsync();
                 LogPlayBackOp("ended", filename);
                 try
                 {
@@ -468,7 +506,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (PlayBackOpWasOfConcern(g_Player.IsVideo? g_Player.MediaType.Video : g_Player.MediaType.Unknown, g_Player.CurrentFile))
             {
-                if (w.IsBusy) w.CancelAsync();
+                if (PlayPropertyUpdater.IsBusy) PlayPropertyUpdater.CancelAsync();
                 LogPlayBackOp("changed", g_Player.CurrentFile);
                 try 
                 {
@@ -501,13 +539,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        void OnPlayBackStarted(MediaPortal.Player.g_Player.MediaType type, string filename)
+        void OnPlayBackStarted(g_Player.MediaType type, string filename)
         {
             if (PlayBackOpIsOfConcern(type, filename))
             {
                 LogPlayBackOp("started", filename);
                 // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
-                w.RunWorkerAsync(false);
+                PlayPropertyUpdater.RunWorkerAsync(false);
+
+                // timer for trakt watcher status every 15mins
+                if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
+                m_TraktTimer = new Timer(m_timerDelegate, null, 3000, 900000);
             }
         }
         #endregion
@@ -537,7 +579,7 @@ namespace WindowPlugins.GUITVSeries
 		#endregion
 
         #region Helpers
-        bool PlayBackOpIsOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename)
+        bool PlayBackOpIsOfConcern(g_Player.MediaType type, string filename)
         {
             if (string.IsNullOrEmpty(filename)) return false;
 
@@ -546,7 +588,7 @@ namespace WindowPlugins.GUITVSeries
                     m_currentEpisode[DBEpisode.cFilename] == filename);
         }
 
-        bool PlayBackOpWasOfConcern(MediaPortal.Player.g_Player.MediaType type, string filename) {
+        bool PlayBackOpWasOfConcern(g_Player.MediaType type, string filename) {
             if (string.IsNullOrEmpty(filename)) return false;
 
             return (m_previousEpisode != null &&
@@ -554,8 +596,11 @@ namespace WindowPlugins.GUITVSeries
                     m_previousEpisode[DBEpisode.cFilename] == filename);
         }
 
-        void PlaybackOperationEnded(bool countAsWatched)
+        void  PlaybackOperationEnded(bool countAsWatched)
         {
+            // cancel trakt watch timer
+            m_TraktTimer.Dispose();
+
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
                 MPTVSeriesLog.Write("This episode counts as watched");
@@ -563,6 +608,15 @@ namespace WindowPlugins.GUITVSeries
                 {                    
                     MarkEpisodeAsWatched(m_currentEpisode);
                     if (EpisodeWatched != null) EpisodeWatched(m_currentEpisode);
+
+                    #region Trakt
+                    // submit watched state to trakt API
+                    // could be a double episode so set both episodes as watched
+                    SQLCondition condition = new SQLCondition();
+                    condition.Add(new DBEpisode(), DBEpisode.cFilename, m_currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                    TraktScrobbleUpdater.RunWorkerAsync(episodes);
+                    #endregion
                 }
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
                 if ((String.IsNullOrEmpty(m_currentEpisode[DBOnlineEpisode.cMyRating]) || m_currentEpisode[DBOnlineEpisode.cMyRating] == 0) && DBOption.GetOptions(DBOption.cAskToRate))

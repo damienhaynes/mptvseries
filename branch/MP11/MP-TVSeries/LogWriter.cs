@@ -196,8 +196,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_LogStream != null)
                 {
+                    #region Hide Personal Info
                     if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey))
                         entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
+
+                    if (OmmitKey && !String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cTraktPassword)))
+                        entry = entry.Replace("\"" + DBOption.GetOptions(DBOption.cTraktPassword) + "\"", "\"<traktPassword>\"");
+                    #endregion
 
                     String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
 

@@ -45,7 +45,7 @@ using SubtitleDownloader.Core;
 
 namespace WindowPlugins.GUITVSeries
 {
-    //[PluginIcons("WindowPlugins.GUITVSeries.Resources.Images.icon_normal.png", "WindowPlugins.GUITVSeries.Resources.Images.icon_faded.png")]
+    [PluginIcons("WindowPlugins.GUITVSeries.Resources.Images.icon_normal.png", "WindowPlugins.GUITVSeries.Resources.Images.icon_faded.png")]
     public class TVSeriesPlugin : GUIWindow, ISetupForm, IFeedback {
 
         #region Constructor

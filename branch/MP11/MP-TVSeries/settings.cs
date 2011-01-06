@@ -62,8 +62,11 @@ namespace WindowPlugins.GUITVSeries
         static Assembly _entryAssembly = null;
         static bool _isConfig;
         static Version _version = null;
+        static Version _mpVersion = null;
         static DateTime _buildDate;
+        static DateTime _mpBuildDate;
         static string _userAgent = null;
+
         #endregion
 
         #region Constructors
@@ -78,7 +81,9 @@ namespace WindowPlugins.GUITVSeries
                 _entryAssembly = Assembly.GetEntryAssembly();
                 _isConfig = !System.IO.Path.GetFileNameWithoutExtension(EntryAssembly.Location).Equals("mediaportal", StringComparison.InvariantCultureIgnoreCase);
                 _version = Assembly.GetCallingAssembly().GetName().Version;
+                _mpVersion = Assembly.GetEntryAssembly().GetName().Version;
                 _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
+                _mpBuildDate = getLinkerTimeStamp(System.IO.Path.Combine(Settings.GetPath(Path.app), "MediaPortal.exe"));
                 _userAgent = string.Format("MPTVSeries{0}/{1}", isConfig ? "Config" : string.Empty, Version);
             }
             catch (Exception) { }
@@ -130,8 +135,14 @@ namespace WindowPlugins.GUITVSeries
         public static Version Version
         { get { return _version; } }
 
+        public static Version MPVersion
+        { get { return _mpVersion; } }
+
         public static DateTime BuildDate
         { get { return _buildDate; } }
+
+        public static DateTime MPBuildDate
+        { get { return _mpBuildDate; } }
 
         public static string UserAgent
         { get { return _userAgent; } }

@@ -97,6 +97,8 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -122,6 +124,12 @@
     </Compile>
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\TraktConfiguration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\TraktConfiguration.Designer.cs">
+      <DependentUpon>TraktConfiguration.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
@@ -274,6 +282,14 @@
     </Compile>
     <Compile Include="settings.cs" />
     <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
+    <Compile Include="Trakt\TraktAPI.cs" />
+    <Compile Include="Trakt\TraktError.cs" />
+    <Compile Include="Trakt\TraktLibraryShows.cs" />
+    <Compile Include="Trakt\TraktScrobble.cs" />
+    <Compile Include="Trakt\TraktSeriesOverview.cs" />
+    <Compile Include="Trakt\TraktURIs.cs" />
+    <Compile Include="Trakt\TraktUserProfile.cs" />
+    <Compile Include="Trakt\TraktWatchedHistory.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
@@ -354,6 +370,9 @@
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\TraktConfiguration.resx">
+      <DependentUpon>TraktConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -401,10 +420,13 @@
     <None Include="Resources\Images\importpending.png" />
     <None Include="Resources\Images\importupdating.png" />
     <None Include="Resources\Images\importignored.png" />
+    <EmbeddedResource Include="Resources\Images\icon_faded.png" />
+    <EmbeddedResource Include="Resources\Images\icon_normal.png" />
     <Content Include="Resources\Images\television_add.png" />
     <Content Include="Resources\Images\television_add_unlisted.png" />
     <Content Include="Resources\Images\textfield_rename.png" />
     <None Include="Resources\Images\tick.png" />
+    <None Include="Resources\Images\trakt.png" />
     <Content Include="Resources\Languages\cs.xml" />
     <Content Include="Resources\Languages\da.xml" />
     <Content Include="Resources\Languages\de.xml" />

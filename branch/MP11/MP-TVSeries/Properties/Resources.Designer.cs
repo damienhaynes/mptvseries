@@ -123,6 +123,20 @@ namespace WindowPlugins.GUITVSeries.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap icon_faded {
+            get {
+                object obj = ResourceManager.GetObject("icon_faded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap icon_normal {
+            get {
+                object obj = ResourceManager.GetObject("icon_normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap importaccept {
             get {
                 object obj = ResourceManager.GetObject("importaccept", resourceCulture);
@@ -175,6 +189,13 @@ namespace WindowPlugins.GUITVSeries.Properties {
         internal static System.Drawing.Bitmap tick {
             get {
                 object obj = ResourceManager.GetObject("tick", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap trakt {
+            get {
+                object obj = ResourceManager.GetObject("trakt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
