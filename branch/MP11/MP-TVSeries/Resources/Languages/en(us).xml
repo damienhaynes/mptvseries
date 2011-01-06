@@ -293,5 +293,7 @@
   <string Field="AvailableMedia" Original="Available Media">Available Media</string>
 
   <string Field="Votes" Original="votes">votes</string>
+	
+	<string Field="TraktError" Original="Trakt Error">Trakt Error</string>
   
 </strings>
