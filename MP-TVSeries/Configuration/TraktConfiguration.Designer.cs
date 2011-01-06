@@ -29,16 +29,17 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonTestAPI = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxAPIKey = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.linkLabelSignUp = new System.Windows.Forms.LinkLabel();
             this.richTextBoxDesc = new System.Windows.Forms.RichTextBox();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxAPIKey = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,6 +48,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.buttonTestAPI);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.textBoxAPIKey);
@@ -63,6 +65,55 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "trakt Config";
+            // 
+            // buttonTestAPI
+            // 
+            this.buttonTestAPI.Location = new System.Drawing.Point(336, 113);
+            this.buttonTestAPI.Name = "buttonTestAPI";
+            this.buttonTestAPI.Size = new System.Drawing.Size(100, 23);
+            this.buttonTestAPI.TabIndex = 11;
+            this.buttonTestAPI.Text = "Test API";
+            this.buttonTestAPI.UseVisualStyleBackColor = true;
+            this.buttonTestAPI.Visible = false;
+            this.buttonTestAPI.Click += new System.EventHandler(this.buttonTestAPI_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(94, 171);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(255, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "The API Key can be found in the trakt settings page.";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(33, 171);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Note:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // textBoxAPIKey
+            // 
+            this.textBoxAPIKey.Location = new System.Drawing.Point(97, 116);
+            this.textBoxAPIKey.Name = "textBoxAPIKey";
+            this.textBoxAPIKey.Size = new System.Drawing.Size(223, 20);
+            this.textBoxAPIKey.TabIndex = 8;
+            this.textBoxAPIKey.TextChanged += new System.EventHandler(this.textBoxAPIKey_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(26, 119);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(48, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "API Key:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // linkLabelSignUp
             // 
@@ -129,44 +180,6 @@
             this.label1.Text = "Username:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 119);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(48, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "API Key:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // textBoxAPIKey
-            // 
-            this.textBoxAPIKey.Location = new System.Drawing.Point(97, 116);
-            this.textBoxAPIKey.Name = "textBoxAPIKey";
-            this.textBoxAPIKey.Size = new System.Drawing.Size(223, 20);
-            this.textBoxAPIKey.TabIndex = 8;
-            this.textBoxAPIKey.TextChanged += new System.EventHandler(this.textBoxAPIKey_TextChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(33, 171);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Note:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(94, 171);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(255, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "The API Key can be found in the trakt settings page.";
-            // 
             // TraktConfiguration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,9 +202,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox richTextBoxDesc;
         private System.Windows.Forms.LinkLabel linkLabelSignUp;
-        private System.Windows.Forms.TextBox textBoxAPIKey;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonTestAPI;
+        private System.Windows.Forms.TextBox textBoxAPIKey;
     }
 }
