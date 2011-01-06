@@ -88,7 +88,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
                 Title = series.ToString(),
                 Year = DBSeries.GetSeriesYear(series),
                 Season = episode[DBOnlineEpisode.cSeasonIndex],
-                Episode = episode[DBOnlineEpisode.cEpisodeIndex],
+                Episode = episode.TraktEpisode,
                 SeriesID = series[DBSeries.cID],
                 Progress = progress.ToString(),
                 PluginVersion = Settings.Version.ToString(),

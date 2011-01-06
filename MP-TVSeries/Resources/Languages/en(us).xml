@@ -295,5 +295,7 @@
   <string Field="Votes" Original="votes">votes</string>
   
   <string Field="LayoutCoveflow" Original="Coveflow">Coveflow</string>
+
+  <string Field="TraktError" Original="Trakt Error">Trakt Error</string>
   
 </strings>

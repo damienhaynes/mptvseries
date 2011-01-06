@@ -1600,6 +1600,19 @@ namespace WindowPlugins.GUITVSeries
 			}
         }
 
+        /// <summary>
+        /// Trakt expect special episodes with prefix 's' e.g Special 10 is Season 0 Episode s10
+        /// </summary>
+        public string TraktEpisode
+        {
+            get
+            {
+                if (m_onlineEpisode == null) return string.Empty;
+                if (m_onlineEpisode[cSeasonIndex] == 0) return string.Concat("s", m_onlineEpisode[cEpisodeIndex]);
+                return m_onlineEpisode[cEpisodeIndex];
+            }
+        }
+
         #region PrettyFilesize
         [DllImport("Shlwapi.dll", CharSet = CharSet.Auto)]
         static extern long StrFormatByteSize(long fileSize,
