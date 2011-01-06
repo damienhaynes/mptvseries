@@ -127,7 +127,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
                     MPTVSeriesLog.Write("Trakt: Post: ", data, MPTVSeriesLog.LogLevel.Debug);
                 }
                 string result = client.UploadString(address, data);
-                MPTVSeriesLog.Write("Trakt: {0}", result);
+                MPTVSeriesLog.Write("Trakt: {0}", result.Trim());
                 return result;
             }
             catch (WebException e)
@@ -142,5 +142,5 @@ namespace WindowPlugins.GUITVSeries.Trakt
             }
         }
 
-    }        
+    }
 }
