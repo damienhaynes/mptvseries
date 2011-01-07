@@ -16,6 +16,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {
             InitializeComponent();
             LoadFromDB();
+
+            // register text change event after loading password field as we dont want to re-hash
+            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
         }
 
         private void LoadFromDB()
@@ -32,7 +35,15 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void textBoxPassword_TextChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cTraktPassword, textBoxPassword.Text);
+            // Hash Password
+            DBOption.SetOptions(DBOption.cTraktPassword, textBoxPassword.Text.ToSHA1Hash());
+        }
+
+        private void textBoxPassword_Enter(object sender, EventArgs e)
+        {
+            // clear password field so can be re-entered easily, when re-entering config
+            // it wont look like original because its hashed, so it's less confusing if cleared
+            textBoxPassword.Text = string.Empty;
         }
 
         private void linkLabelSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -45,6 +56,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             DBOption.SetOptions(DBOption.cTraktAPIKey, textBoxAPIKey.Text);
         }
 
+        #region testing
         private void buttonTestAPI_Click(object sender, EventArgs e)
         {
             string username = DBOption.GetOptions(DBOption.cTraktUsername);
@@ -67,5 +79,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
             IEnumerable<TraktWatchedHistory> watchedHistory = TraktAPI.GetUserWatchedHistory(username);
             MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());
         }
+        #endregion
     }
 }
