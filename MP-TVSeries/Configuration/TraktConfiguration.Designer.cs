@@ -71,7 +71,7 @@
             this.buttonTestAPI.Location = new System.Drawing.Point(336, 113);
             this.buttonTestAPI.Name = "buttonTestAPI";
             this.buttonTestAPI.Size = new System.Drawing.Size(100, 23);
-            this.buttonTestAPI.TabIndex = 11;
+            this.buttonTestAPI.TabIndex = 7;
             this.buttonTestAPI.Text = "Test API";
             this.buttonTestAPI.UseVisualStyleBackColor = true;
             this.buttonTestAPI.Visible = false;
@@ -102,7 +102,7 @@
             this.textBoxAPIKey.Location = new System.Drawing.Point(97, 116);
             this.textBoxAPIKey.Name = "textBoxAPIKey";
             this.textBoxAPIKey.Size = new System.Drawing.Size(223, 20);
-            this.textBoxAPIKey.TabIndex = 8;
+            this.textBoxAPIKey.TabIndex = 6;
             this.textBoxAPIKey.TextChanged += new System.EventHandler(this.textBoxAPIKey_TextChanged);
             // 
             // label3
@@ -111,7 +111,7 @@
             this.label3.Location = new System.Drawing.Point(26, 119);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
-            this.label3.TabIndex = 7;
+            this.label3.TabIndex = 5;
             this.label3.Text = "API Key:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -121,7 +121,7 @@
             this.linkLabelSignUp.Location = new System.Drawing.Point(271, 146);
             this.linkLabelSignUp.Name = "linkLabelSignUp";
             this.linkLabelSignUp.Size = new System.Drawing.Size(49, 13);
-            this.linkLabelSignUp.TabIndex = 5;
+            this.linkLabelSignUp.TabIndex = 8;
             this.linkLabelSignUp.TabStop = true;
             this.linkLabelSignUp.Text = "Signup...";
             this.linkLabelSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelSignUp_LinkClicked);
@@ -138,7 +138,7 @@
             this.richTextBoxDesc.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.richTextBoxDesc.ShortcutsEnabled = false;
             this.richTextBoxDesc.Size = new System.Drawing.Size(533, 37);
-            this.richTextBoxDesc.TabIndex = 4;
+            this.richTextBoxDesc.TabIndex = 0;
             this.richTextBoxDesc.Text = "trakt helps keep a record of what TV shows you are watching. Based on your favori" +
                 "tes, trakt recommends additional shows you\'ll enjoy! Watch a TV show in MediaPor" +
                 "tal...and trakt builds up your profile!";
@@ -148,9 +148,9 @@
             this.textBoxPassword.Location = new System.Drawing.Point(97, 90);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(223, 20);
-            this.textBoxPassword.TabIndex = 3;
+            this.textBoxPassword.TabIndex = 4;
             this.textBoxPassword.UseSystemPasswordChar = true;
-            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
+            this.textBoxPassword.Enter += new System.EventHandler(this.textBoxPassword_Enter);
             // 
             // textBoxUsername
             // 
@@ -166,7 +166,7 @@
             this.label2.Location = new System.Drawing.Point(18, 93);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 1;
+            this.label2.TabIndex = 3;
             this.label2.Text = "Password:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -176,7 +176,7 @@
             this.label1.Location = new System.Drawing.Point(16, 67);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
-            this.label1.TabIndex = 0;
+            this.label1.TabIndex = 1;
             this.label1.Text = "Username:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
