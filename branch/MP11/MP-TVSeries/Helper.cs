@@ -32,6 +32,7 @@ using System.Globalization;
 using System.Reflection;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -144,6 +145,16 @@ namespace WindowPlugins.GUITVSeries
             return textInfo.ToTitleCase(input.ToLower());
         }
         static TextInfo textInfo = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo;
+
+        public static string ToSHA1Hash(this string password)
+        {
+            // don't store the hash if password is empty
+            if (string.IsNullOrEmpty(password)) return string.Empty;
+
+            byte[] buffer = Encoding.Default.GetBytes(password);
+            SHA1CryptoServiceProvider cryptoTransformSHA1 = new SHA1CryptoServiceProvider();
+            return BitConverter.ToString(cryptoTransformSHA1.ComputeHash(buffer)).Replace("-", "");
+        }
 
     }
     #endregion
