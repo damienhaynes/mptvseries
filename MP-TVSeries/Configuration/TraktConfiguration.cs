@@ -69,7 +69,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             MPTVSeriesLog.Write("Trakt: Getting Show overview for Series ID: '79488'");
             TraktSeriesOverview seriesOverview = TraktAPI.GetSeriesOverview("79488");
-            if (seriesOverview.status != "error") MPTVSeriesLog.Write("Successfully got data for {0}", seriesOverview.Title);
+            if (seriesOverview.Status != "error") MPTVSeriesLog.Write("Successfully got data for {0}", seriesOverview.Title);
 
             MPTVSeriesLog.Write("Trakt: Getting User Profile for user '{0}'", username);
             TraktUserProfile userProfile = TraktAPI.GetUserProfile(username);            
