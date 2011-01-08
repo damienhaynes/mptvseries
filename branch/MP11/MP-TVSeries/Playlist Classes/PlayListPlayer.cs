@@ -25,9 +25,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using System.Threading;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
 using MediaPortal.Util;
@@ -123,6 +124,9 @@ namespace WindowPlugins.GUITVSeries
 		bool _playlistAutoShuffle = DBOption.GetOptions(DBOption.cPlaylistAutoShuffle);
         string _currentPlaylistName = string.Empty;		
 		private bool listenToExternalPlayerEvents = false;
+        private Timer m_TraktTimer = null;
+        private TimerCallback m_timerDelegate = null;
+        BackgroundWorker TraktScrobbleUpdater = new BackgroundWorker();
 
         public PlayListPlayer()
         {
@@ -144,8 +148,12 @@ namespace WindowPlugins.GUITVSeries
             GUIWindowManager.Receivers += new SendMessageHandler(this.OnMessage);
 
 			// external player handlers
-			MediaPortal.Util.Utils.OnStartExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStartExternal);
-			MediaPortal.Util.Utils.OnStopExternal += new MediaPortal.Util.Utils.UtilEventHandler(onStopExternal);
+			Utils.OnStartExternal += new Utils.UtilEventHandler(onStartExternal);
+			Utils.OnStopExternal += new Utils.UtilEventHandler(onStopExternal);
+
+            // trakt scrobble background thread
+            TraktScrobbleUpdater.WorkerSupportsCancellation = true;
+            TraktScrobbleUpdater.DoWork += new DoWorkEventHandler(TraktScrobble_DoWork);
         }
 
         public void OnMessage(GUIMessage message)
@@ -156,7 +164,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     PlayListItem item = GetCurrentItem();
                     if (item != null)
-                    {                
+                    {
+                        // cancel trakt watch timer
+                        if (m_TraktTimer != null) m_TraktTimer.Dispose();
+
                         Reset();
                          _currentPlayList = PlayListType.PLAYLIST_NONE;
                          SetProperties(item, true);
@@ -168,6 +179,23 @@ namespace WindowPlugins.GUITVSeries
 
                 case GUIMessage.MessageType.GUI_MSG_PLAYBACK_ENDED:
                 {
+                    #region Trakt
+                    // submit watched state to trakt API
+                    // could be a double episode so set both episodes as watched
+                    PlayListItem item = GetCurrentItem();
+
+                    if (item != null)
+                    {
+                        if (item.Episode != null)
+                        {
+                            SQLCondition condition = new SQLCondition();
+                            condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
+                            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                            TraktScrobbleUpdater.RunWorkerAsync(episodes);
+                        }
+                    }
+                    #endregion
+
                     SetAsWatched();
                     PlayNext();
                     if (!g_Player.Playing)
@@ -294,6 +322,9 @@ namespace WindowPlugins.GUITVSeries
         {
             if (_currentPlayList == PlayListType.PLAYLIST_NONE) return;
 
+            // cancel trakt watch timer
+            if (m_TraktTimer != null) m_TraktTimer.Dispose();
+
             PlayList playlist = GetPlaylist(_currentPlayList);
             if (playlist.Count <= 0) return;
             int iItem = _currentItem;
@@ -319,9 +350,12 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public void PlayPrevious()
-        {
+        {            
             if (_currentPlayList == PlayListType.PLAYLIST_NONE)
                 return;
+
+            // cancel trakt watch timer
+            if (m_TraktTimer != null) m_TraktTimer.Dispose();
 
             PlayList playlist = GetPlaylist(_currentPlayList);
             if (playlist.Count <= 0) return;
@@ -447,19 +481,56 @@ namespace WindowPlugins.GUITVSeries
                     item.Played = true;
                     item.IsWatched = true; // for facade watched icons
                     skipmissing = false;
-                    if (MediaPortal.Util.Utils.IsVideo(item.FileName))
+                    if (Utils.IsVideo(item.FileName))
                     {
                         if (g_Player.HasVideo)
-                        {                            
+                        {
                             g_Player.ShowFullScreenWindow();
-                            System.Threading.Thread.Sleep(2000);
+                            Thread.Sleep(2000);
                             SetProperties(item, false);
+                            // timer for trakt watcher status every 15mins
+                            if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
+                            m_TraktTimer = new Timer(m_timerDelegate, item, 3000, 900000);
                         }
                     }
                 }
             }
             while (skipmissing);
             return g_Player.Playing;
+        }
+
+        /// <summary>
+        /// Update Trakt status of episode being watched on Timer Interval
+        /// </summary>
+        private void TraktUpdater(Object stateInfo)
+        {
+            PlayListItem item = (PlayListItem)stateInfo;
+            
+            // duration in minutes
+            double duration = item.Duration / 60000;
+            double progress = 0.0;
+
+            // get current progress of player (in seconds) to work out percent complete
+            if (duration > 0.0)
+                progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
+
+            Trakt.TraktAPI.SendUpdate(item.Episode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.watching);
+        }
+
+        /// <summary>
+        /// Update trakt status on playback finish
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TraktScrobble_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;            
+
+            foreach (DBEpisode episode in episodes)
+            {
+                double duration = episode[DBEpisode.cLocalPlaytime] / 60000;
+                Trakt.TraktAPI.SendUpdate(episode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.scrobble);
+            }
         }
 
         /// <summary>        

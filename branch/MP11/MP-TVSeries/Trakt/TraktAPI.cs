@@ -12,14 +12,14 @@ namespace WindowPlugins.GUITVSeries.Trakt
 
         public enum Status
         {
-            Watching,
-            Watched
+            watching,
+            scrobble
         }
 
         /// <summary>
         /// Returns the series list for a user
         /// </summary>
-        /// <param name="user">username of person to get series library</param>        
+        /// <param name="user">username of person to get series library</param>
         public static IEnumerable<TraktLibraryShows> GetSeriesForUser(string user)
         {
             string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, apiKey, user), string.Empty, false);
@@ -29,7 +29,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// <summary>
         /// Returns the series overview including ratings, top watchers, and most watched episodes      
         /// </summary>
-        /// <param name="seriesID">tvdb series id of series to lookup</param>        
+        /// <param name="seriesID">tvdb series id of series to lookup</param>
         public static TraktSeriesOverview GetSeriesOverview(string seriesID)
         {
             string seriesOverview = Transmit(string.Format(TraktURIs.SeriesOverview, apiKey, seriesID), string.Empty, false);
@@ -39,7 +39,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// <summary>
         /// Returns a users online profile
         /// </summary>
-        /// <param name="user">username of person to retrieve profile</param>        
+        /// <param name="user">username of person to retrieve profile</param>
         public static TraktUserProfile GetUserProfile(string user)
         {
             string userProfile = Transmit(string.Format(TraktURIs.UserProfile, apiKey, user), string.Empty, false);
@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// only friends or non-private users will return any data
         /// Maximum of 100 items will be returned from API
         /// </summary>
-        /// <param name="user">username of person to retrieve watched items</param>        
+        /// <param name="user">username of person to retrieve watched items</param>
         public static IEnumerable<TraktWatchedHistory> GetUserWatchedHistory(string user)
         {
             string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatched, apiKey, user), string.Empty, false);
@@ -82,9 +82,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
 
             // create scrobble data
             TraktScrobble scrobbleData = new TraktScrobble
-            {
-                MediaType = "TVShow",
-                Status = status.ToString(),
+            {                
                 Title = series.ToString(),
                 Year = DBSeries.GetSeriesYear(series),
                 Season = episode[DBOnlineEpisode.cSeasonIndex],
@@ -106,7 +104,19 @@ namespace WindowPlugins.GUITVSeries.Trakt
                 return;
             
             // serialize Scrobble object to JSON and send to server
-            Transmit(TraktURIs.APIPost, scrobbleData.ToJSON(), true);
+            string response = Transmit(string.Format(TraktURIs.Scrobble, status.ToString()), scrobbleData.ToJSON(), true);
+
+            // check response error status
+            if (!string.IsNullOrEmpty(response))
+            {
+                TraktError errorStatus = response.FromJSON<TraktError>();
+
+                // server handled error on post, display notification to user
+                if (errorStatus.Status != "success")
+                {
+                    TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, errorStatus.Error);
+                }
+            }
         }
 
         /// <summary>

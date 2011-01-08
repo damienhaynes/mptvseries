@@ -9,12 +9,6 @@ namespace WindowPlugins.GUITVSeries.Trakt
     [DataContract]
     public class TraktScrobble
     {
-        [DataMember(Name = "type")]
-        public string MediaType { get; set; }
-
-        [DataMember(Name = "status")]
-        public string Status { get; set; }
-
         [DataMember(Name = "title")]
         public string Title { get; set; }
 
