@@ -59,7 +59,7 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bIsImageFile = false;
 		private bool listenToExternalPlayerEvents = false;
         private Timer m_TraktTimer = null;
-        private TimerCallback m_timerDelegate = null;        
+        private TimerCallback m_timerDelegate = null;
         #endregion
 
         #region Constructor
@@ -230,7 +230,7 @@ namespace WindowPlugins.GUITVSeries
             if (duration > 0.0)
                 progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
 
-            Trakt.TraktAPI.SendUpdate(m_currentEpisode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watching);
+            Trakt.TraktAPI.SendUpdate(m_currentEpisode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.watching);
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace WindowPlugins.GUITVSeries
 
             foreach (DBEpisode episode in episodes)
             {
-                Trakt.TraktAPI.SendUpdate(episode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.Watched);
+                Trakt.TraktAPI.SendUpdate(episode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.scrobble);
             }
         }
 

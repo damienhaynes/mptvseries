@@ -9,10 +9,13 @@ namespace WindowPlugins.GUITVSeries.Trakt
     [DataContract]
     public class TraktError
     {
-        [DataMember]
-        public string status { get; set;}
+        [DataMember(Name = "status")]
+        public string Status { get; set;}
 
-        [DataMember]
-        public string message { get; set; }
+        [DataMember(Name = "message")]
+        public string Message { get; set; }
+
+        [DataMember(Name = "error")]
+        public string Error { get; set; }
     }
 }
