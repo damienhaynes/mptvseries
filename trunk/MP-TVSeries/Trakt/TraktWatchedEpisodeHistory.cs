@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace WindowPlugins.GUITVSeries.Trakt
 {
     [DataContract]
-    public class TraktWatchedHistory : TraktResponse
+    public class TraktWatchedEpisodeHistory : TraktResponse
     {
         [DataMember(Name="watched")]
         public string WatchedID { get; set; }
