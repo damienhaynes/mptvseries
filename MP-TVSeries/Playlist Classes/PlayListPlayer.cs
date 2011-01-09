@@ -505,8 +505,8 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private TraktScrobble CreateScrobbleData(DBEpisode episode)
         {
-            string username = DBOption.GetOptions(DBOption.cTraktUsername);
-            string password = DBOption.GetOptions(DBOption.cTraktPassword);
+            string username = TraktAPI.Username;
+            string password = TraktAPI.Password;
 
             // check if trakt is enabled
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))

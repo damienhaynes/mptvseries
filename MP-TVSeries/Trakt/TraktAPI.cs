@@ -70,12 +70,12 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// Maximum of 100 items will be returned from API
         /// </summary>
         /// <param name="user">username of person to retrieve watched items</param>
-        public static IEnumerable<TraktWatchedHistory> GetUserWatchedHistory(string user)
+        public static IEnumerable<TraktWatchedEpisodeHistory> GetUserWatchedHistory(string user)
         {
-            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatched, APIKey, user), string.Empty);
+            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, APIKey, user), string.Empty);
 
             // get list of objects from json array
-            return userWatchedHistory.FromJSONArray<TraktWatchedHistory>();
+            return userWatchedHistory.FromJSONArray<TraktWatchedEpisodeHistory>();
         }
 
         /// <summary>
