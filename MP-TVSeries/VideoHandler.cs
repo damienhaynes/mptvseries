@@ -38,7 +38,7 @@ using MediaPortal.Util;
 using MediaPortal.Playlists;
 using MediaPortal.Video.Database;
 using WindowPlugins.GUITVSeries;
-
+using WindowPlugins.GUITVSeries.Trakt;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -217,11 +217,52 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Private Methods
+
+        #region #Trakt Handling
+        /// <summary>
+        /// Create scrobble data that can be used to send to Trakt API
+        /// </summary>
+        private TraktScrobble CreateScrobbleData(DBEpisode episode)
+        {
+            string username = DBOption.GetOptions(DBOption.cTraktUsername);
+            string password = DBOption.GetOptions(DBOption.cTraktPassword);
+
+            // check if trakt is enabled
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return null;
+
+            DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+            if (series == null) return null;
+
+            // create scrobble data
+            TraktScrobble scrobbleData = new TraktScrobble
+            {
+                Title = series.ToString(),
+                Year = DBSeries.GetSeriesYear(series),
+                Season = episode[DBOnlineEpisode.cSeasonIndex],
+                Episode = episode.TraktEpisode,
+                SeriesID = series[DBSeries.cID],
+                PluginVersion = Settings.Version.ToString(),
+                MediaCenter = "mp-tvseries",
+                MediaCenterVersion = Settings.MPVersion.ToString(),
+                MediaCenterBuildDate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                UserName = username,
+                Password = password
+            };
+
+            return scrobbleData;
+        }
+
         /// <summary>
         /// Update Trakt status of episode being watched on Timer Interval
         /// </summary>
         private void TraktUpdater(Object stateInfo)
         {
+            // get scrobble data to send to api
+            TraktScrobble scrobbleData = CreateScrobbleData(m_currentEpisode);
+
+            if (scrobbleData == null) return;
+
             // duration in minutes
             double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
             double progress = 0.0;
@@ -230,14 +271,18 @@ namespace WindowPlugins.GUITVSeries
             if (duration > 0.0)
                 progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
 
-            Trakt.TraktAPI.SendUpdate(m_currentEpisode, Convert.ToInt32(progress), Convert.ToInt32(duration), Trakt.TraktAPI.Status.watching);
+            // set duration/progress in scrobble data
+            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
+            scrobbleData.Progress = Convert.ToInt32(progress).ToString();
+
+            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.watching);
+            if (response == null) return;
+            CheckTraktErrorAndNotify(response);
         }
 
         /// <summary>
         /// Update trakt status on playback finish
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void TraktScrobble_DoWork(object sender, DoWorkEventArgs e)
         {
             List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
@@ -246,9 +291,43 @@ namespace WindowPlugins.GUITVSeries
 
             foreach (DBEpisode episode in episodes)
             {
-                Trakt.TraktAPI.SendUpdate(episode, 100, Convert.ToInt32(duration), Trakt.TraktAPI.Status.scrobble);
+                // get scrobble data to send to api
+                TraktScrobble scrobbleData = CreateScrobbleData(episode);
+
+                if (scrobbleData != null)
+                {
+                    // set duration/progress in scrobble data
+                    scrobbleData.Duration = Convert.ToInt32(duration).ToString();
+                    scrobbleData.Progress = "100";
+
+                    TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.scrobble);
+                    if (response == null) continue;
+                    CheckTraktErrorAndNotify(response);
+                }
             }
         }
+
+        /// <summary>
+        /// Notify user in GUI if an error state was returned from Trakt API
+        /// </summary>
+        private void CheckTraktErrorAndNotify(TraktResponse response)
+        {
+            if (response.Status == null) return;
+
+            // check response error status
+            if (response.Status != "success")
+            {
+                MPTVSeriesLog.Write("Trakt Error: {0}", response.Error);
+                TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, response.Error);
+            }
+            else
+            {
+                // success
+                MPTVSeriesLog.Write("Trakt Response: {0}", response.Message);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Updates the movie metadata on the playback screen (for when the user clicks info). 

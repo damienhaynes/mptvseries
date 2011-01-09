@@ -297,5 +297,6 @@
   <string Field="LayoutCoveflow" Original="Coveflow">Coveflow</string>
 
   <string Field="TraktError" Original="Trakt Error">Trakt Error</string>
+  <string Field="TraktNotEnoughInfo" Original="Not enough information to send to server.">Not enough information to send to server.</string>
   
 </strings>

@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace WindowPlugins.GUITVSeries.Trakt
 {
     [DataContract]
-    public class TraktLibraryShows : TraktError
+    public class TraktLibraryShows : TraktResponse
     {
         [DataMember(Name = "title")]
         public string Title { get; set; }
