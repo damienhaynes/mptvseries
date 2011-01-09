@@ -322,7 +322,7 @@ namespace WindowPlugins.GUITVSeries
         public static string PlayNow = "Play Now";
 
         public static string TraktError = "Trakt Error";
-
+        public static string TraktNotEnoughInfo = "Not enough information to send to server.";
         #endregion
 
         #region Public Properties

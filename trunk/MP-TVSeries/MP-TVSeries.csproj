@@ -286,7 +286,7 @@
     <Compile Include="Trakt\TraktScrobble.cs" />
     <Compile Include="Trakt\TraktSeriesOverview.cs" />
     <Compile Include="Trakt\TraktAPI.cs" />
-    <Compile Include="Trakt\TraktError.cs" />
+    <Compile Include="Trakt\TraktResponse.cs" />
     <Compile Include="Trakt\TraktURIs.cs" />
     <Compile Include="Trakt\TraktUserProfile.cs" />
     <Compile Include="Trakt\TraktWatchedHistory.cs" />
