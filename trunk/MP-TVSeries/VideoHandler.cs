@@ -60,6 +60,7 @@ namespace WindowPlugins.GUITVSeries
 		private bool listenToExternalPlayerEvents = false;
         private Timer m_TraktTimer = null;
         private TimerCallback m_timerDelegate = null;
+        private bool TraktMarkedFirstAsWatched = false;
         #endregion
 
         #region Constructor
@@ -275,6 +276,20 @@ namespace WindowPlugins.GUITVSeries
             scrobbleData.Duration = Convert.ToInt32(duration).ToString();
             scrobbleData.Progress = Convert.ToInt32(progress).ToString();
 
+            // check if double episode has passed halfway mark and set as watched
+            if (m_currentEpisode[DBEpisode.cEpisodeIndex2] > 0 && progress > 50.0)
+            {
+                if (!TraktMarkedFirstAsWatched)
+                {
+                    SQLCondition condition = new SQLCondition();
+                    condition.Add(new DBEpisode(), DBEpisode.cFilename, m_currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                    TraktScrobbleUpdater.RunWorkerAsync(episodes[0]);
+                    Thread.Sleep(5000);
+                    TraktMarkedFirstAsWatched = true;
+                }
+            }
+
             TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.watching);
             if (response == null) return;
             CheckTraktErrorAndNotify(response);
@@ -285,26 +300,21 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private void TraktScrobble_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
+            DBEpisode episode = (DBEpisode)e.Argument;
 
             double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
 
-            foreach (DBEpisode episode in episodes)
-            {
-                // get scrobble data to send to api
-                TraktScrobble scrobbleData = CreateScrobbleData(episode);
+            // get scrobble data to send to api
+            TraktScrobble scrobbleData = CreateScrobbleData(episode);
+            if (scrobbleData == null) return;
+            
+            // set duration/progress in scrobble data
+            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
+            scrobbleData.Progress = "100";
 
-                if (scrobbleData != null)
-                {
-                    // set duration/progress in scrobble data
-                    scrobbleData.Duration = Convert.ToInt32(duration).ToString();
-                    scrobbleData.Progress = "100";
-
-                    TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.scrobble);
-                    if (response == null) continue;
-                    CheckTraktErrorAndNotify(response);
-                }
-            }
+            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.scrobble);
+            if (response == null) return;
+            CheckTraktErrorAndNotify(response);            
         }
 
         /// <summary>
@@ -629,6 +639,8 @@ namespace WindowPlugins.GUITVSeries
                 // timer for trakt watcher status every 15mins
                 if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
                 m_TraktTimer = new Timer(m_timerDelegate, null, 3000, 900000);
+
+                TraktMarkedFirstAsWatched = false;
             }
         }
         #endregion
@@ -690,11 +702,19 @@ namespace WindowPlugins.GUITVSeries
 
                     #region Trakt
                     // submit watched state to trakt API
-                    // could be a double episode so set both episodes as watched
-                    SQLCondition condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cFilename, m_currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
-                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                    TraktScrobbleUpdater.RunWorkerAsync(episodes);
+                    // could be a double episode so mark last one as watched
+                    // 1st episode is it set to watched during playback in traktUpdater
+                    if (m_currentEpisode[DBEpisode.cEpisodeIndex2] > 0)
+                    {
+                        SQLCondition condition = new SQLCondition();
+                        condition.Add(new DBEpisode(), DBEpisode.cFilename, m_currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                        List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                        TraktScrobbleUpdater.RunWorkerAsync(episodes[1]);
+                    }
+                    else
+                    {
+                        TraktScrobbleUpdater.RunWorkerAsync(m_currentEpisode);
+                    }
                     #endregion
                 }
                 // if the ep wasn't rated before, and the option to ask is set, bring up the ratings menu
