@@ -128,6 +128,7 @@ namespace WindowPlugins.GUITVSeries
         private Timer m_TraktTimer = null;
         private TimerCallback m_timerDelegate = null;
         BackgroundWorker TraktScrobbleUpdater = new BackgroundWorker();
+        private bool TraktMarkedFirstAsWatched = false;
 
         public PlayListPlayer()
         {
@@ -189,10 +190,17 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (item.Episode != null)
                         {
-                            SQLCondition condition = new SQLCondition();
-                            condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
-                            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                            TraktScrobbleUpdater.RunWorkerAsync(episodes);
+                            if (item.Episode[DBEpisode.cEpisodeIndex2] > 0)
+                            {
+                                SQLCondition condition = new SQLCondition();
+                                condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
+                                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                                TraktScrobbleUpdater.RunWorkerAsync(episodes[1]);
+                            }
+                            else
+                            {
+                                TraktScrobbleUpdater.RunWorkerAsync(item.Episode);
+                            }
                         }
                     }
                     #endregion
@@ -492,6 +500,8 @@ namespace WindowPlugins.GUITVSeries
                             // timer for trakt watcher status every 15mins
                             if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
                             m_TraktTimer = new Timer(m_timerDelegate, item, 3000, 900000);
+
+                            TraktMarkedFirstAsWatched = false;
                         }
                     }
                 }
@@ -558,6 +568,20 @@ namespace WindowPlugins.GUITVSeries
             scrobbleData.Duration = Convert.ToInt32(duration).ToString();
             scrobbleData.Progress = Convert.ToInt32(progress).ToString();
 
+            // check if double episode has passed halfway mark and set as watched
+            if (item.Episode[DBEpisode.cEpisodeIndex2] > 0 && progress > 50.0)
+            {
+                if (!TraktMarkedFirstAsWatched)
+                {
+                    SQLCondition condition = new SQLCondition();
+                    condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
+                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                    TraktScrobbleUpdater.RunWorkerAsync(episodes[0]);
+                    Thread.Sleep(5000);
+                    TraktMarkedFirstAsWatched = true;
+                }
+            }
+
             TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.watching);
             if (response == null) return;
             CheckTraktErrorAndNotify(response);
@@ -568,26 +592,21 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         private void TraktScrobble_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<DBEpisode> episodes = (List<DBEpisode>)e.Argument;
+            DBEpisode episode = (DBEpisode)e.Argument;
+      
+            double duration = episode[DBEpisode.cLocalPlaytime] / 60000;
 
-            foreach (DBEpisode episode in episodes)
-            {
-                double duration = episode[DBEpisode.cLocalPlaytime] / 60000;
+            // get scrobble data to send to api
+            TraktScrobble scrobbleData = CreateScrobbleData(episode);
+            if (scrobbleData == null) return;
+            
+            // set duration/progress in scrobble data
+            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
+            scrobbleData.Progress = "100";
 
-                // get scrobble data to send to api
-                TraktScrobble scrobbleData = CreateScrobbleData(episode);
-
-                if (scrobbleData != null)
-                {
-                    // set duration/progress in scrobble data
-                    scrobbleData.Duration = Convert.ToInt32(duration).ToString();
-                    scrobbleData.Progress = "100";
-
-                    TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.scrobble);
-                    if (response == null) continue;
-                    CheckTraktErrorAndNotify(response);
-                }
-            }
+            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.scrobble);
+            if (response == null) return;
+            CheckTraktErrorAndNotify(response);
         }
 
         /// <summary>

@@ -289,7 +289,7 @@
     <Compile Include="Trakt\TraktResponse.cs" />
     <Compile Include="Trakt\TraktURIs.cs" />
     <Compile Include="Trakt\TraktUserProfile.cs" />
-    <Compile Include="Trakt\TraktWatchedHistory.cs" />
+    <Compile Include="Trakt\TraktWatchedEpisodeHistory.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
