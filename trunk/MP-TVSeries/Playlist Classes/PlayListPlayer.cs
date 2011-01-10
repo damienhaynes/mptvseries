@@ -551,11 +551,6 @@ namespace WindowPlugins.GUITVSeries
         {
             PlayListItem item = (PlayListItem)stateInfo;
 
-            // get scrobble data to send to api
-            TraktScrobble scrobbleData = CreateScrobbleData(item.Episode);
-
-            if (scrobbleData == null) return;
-
             // duration in minutes
             double duration = item.Duration / 60000;
             double progress = 0.0;
@@ -564,24 +559,44 @@ namespace WindowPlugins.GUITVSeries
             if (duration > 0.0)
                 progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
 
-            // set duration/progress in scrobble data
-            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
-            scrobbleData.Progress = Convert.ToInt32(progress).ToString();
+            TraktScrobble scrobbleData = null;
 
             // check if double episode has passed halfway mark and set as watched
             if (item.Episode[DBEpisode.cEpisodeIndex2] > 0 && progress > 50.0)
             {
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
+                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+
                 if (!TraktMarkedFirstAsWatched)
                 {
-                    SQLCondition condition = new SQLCondition();
-                    condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
-                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                    TraktScrobbleUpdater.RunWorkerAsync(episodes[0]);
-                    Thread.Sleep(5000);
+                    // send scrobble Watched status of first episode
+                    TraktScrobbleUpdater.RunWorkerAsync(item.Episode);
                     TraktMarkedFirstAsWatched = true;
+                    Thread.Sleep(5000);
+
+                    // get scrobble data of 2nd episode now to send watching status
+                    scrobbleData = CreateScrobbleData(episodes[1]);
+                }
+                else
+                {
+                    // we are now watching 2nd part of episode                    
+                    scrobbleData = CreateScrobbleData(episodes[1]);
                 }
             }
+            else
+            {
+                // we are watched single episode or 1st part of double episode
+                scrobbleData = CreateScrobbleData(item.Episode);
+            }
 
+            if (scrobbleData == null) return;
+
+            // set duration/progress in scrobble data
+            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
+            scrobbleData.Progress = Convert.ToInt32(progress).ToString();
+
+            // set watching status on trakt
             TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.watching);
             if (response == null) return;
             CheckTraktErrorAndNotify(response);
