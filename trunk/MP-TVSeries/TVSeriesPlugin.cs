@@ -5415,12 +5415,16 @@ namespace WindowPlugins.GUITVSeries
             GUIDialogNotify pDlgNotify = (GUIDialogNotify)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_NOTIFY);
             if (pDlgNotify == null) return;
 
+            // if image is empty, attempt to load the default
+            string defaultLogo = Path.Combine(GUIGraphicsContext.Skin, @"Media\Logos\tvseries.png");
+            if (File.Exists(defaultLogo))
+            {
+                image = defaultLogo;
+            }
+
             pDlgNotify.SetHeading(heading);
-
             pDlgNotify.SetImage(image);
-
             pDlgNotify.SetText(text);
-
             pDlgNotify.DoModal(GUIWindowManager.ActiveWindow);
         }
 
