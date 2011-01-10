@@ -104,6 +104,9 @@ namespace WindowPlugins.GUITVSeries
                 m_currentEpisode = episode;
                 int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
 
+                // flag to handle trakt scrobble on double episodes
+                TraktMarkedFirstAsWatched = false;
+
                 // Check if file is an Image e.g. ISO
                 string filename = m_currentEpisode[DBEpisode.cFilename];
                 m_bIsImageFile = Helper.IsImageFile(filename);
@@ -178,30 +181,40 @@ namespace WindowPlugins.GUITVSeries
 
                 #region Ask user to Resume
 
-                // skip this if we are using an External Player                
+                // skip this if we are using an External Player
                 bool bExternalPlayer = m_bIsImageFile ? m_bIsExternalDVDPlayer : m_bIsExternalPlayer;
-                
-                if (timeMovieStopped > 0 && !bExternalPlayer) {                                       
+
+                if (timeMovieStopped > 0 && !bExternalPlayer)
+                {
                     MPTVSeriesLog.Write("Asking user to resume episode from: " + Utils.SecondsToHMSString(timeMovieStopped));
                     GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
 
-                    if (null != dlgYesNo) {
+                    if (null != dlgYesNo)
+                    {
                         dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
                         dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
                         dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
                         dlgYesNo.SetDefaultToYes(true);
                         dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
                         // reset resume data in DB
-                        if (!dlgYesNo.IsConfirmed) {
+                        if (!dlgYesNo.IsConfirmed)
+                        {
                             timeMovieStopped = 0;
                             m_currentEpisode[DBEpisode.cStopTime] = timeMovieStopped;
                             m_currentEpisode.Commit();
                             MPTVSeriesLog.Write("User selected to start episode from beginning", MPTVSeriesLog.LogLevel.Debug);
                         }
-                        else {
+                        else
+                        {
                             MPTVSeriesLog.Write("User selected to resume episode", MPTVSeriesLog.LogLevel.Debug);
+
+                            // dont scrobble first of double episode if resuming past halfway
+                            double duration = m_currentEpisode[DBEpisode.cLocalPlaytime];
+
+                            if ((timeMovieStopped * 1000) > (duration / 2))
+                                TraktMarkedFirstAsWatched = true;
                         }
-                    }                
+                    }
                 }
 
                 #endregion
@@ -282,15 +295,10 @@ namespace WindowPlugins.GUITVSeries
                     TraktScrobbleUpdater.RunWorkerAsync(m_currentEpisode);
                     TraktMarkedFirstAsWatched = true;
                     Thread.Sleep(5000);
-                    
-                    // get scrobble data of 2nd episode now to send watching status
-                    scrobbleData = CreateScrobbleData(episodes[1]);
                 }
-                else
-                {
-                    // we are now watching 2nd part of episode                    
-                    scrobbleData = CreateScrobbleData(episodes[1]);
-                }
+
+                // we are now watching 2nd part of episode
+                scrobbleData = CreateScrobbleData(episodes[1]);
             }
             else
             {
@@ -653,9 +661,7 @@ namespace WindowPlugins.GUITVSeries
 
                 // timer for trakt watcher status every 15mins
                 if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
-                m_TraktTimer = new Timer(m_timerDelegate, null, 3000, 900000);
-
-                TraktMarkedFirstAsWatched = false;
+                m_TraktTimer = new Timer(m_timerDelegate, null, 3000, 900000);                
             }
         }
         #endregion

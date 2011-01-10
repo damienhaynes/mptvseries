@@ -574,15 +574,10 @@ namespace WindowPlugins.GUITVSeries
                     TraktScrobbleUpdater.RunWorkerAsync(item.Episode);
                     TraktMarkedFirstAsWatched = true;
                     Thread.Sleep(5000);
+                }
 
-                    // get scrobble data of 2nd episode now to send watching status
-                    scrobbleData = CreateScrobbleData(episodes[1]);
-                }
-                else
-                {
-                    // we are now watching 2nd part of episode                    
-                    scrobbleData = CreateScrobbleData(episodes[1]);
-                }
+                // we are now watching 2nd part of episode
+                scrobbleData = CreateScrobbleData(episodes[1]);
             }
             else
             {
