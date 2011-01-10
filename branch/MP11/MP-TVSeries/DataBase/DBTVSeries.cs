@@ -56,6 +56,9 @@ namespace WindowPlugins.GUITVSeries
 
             string databaseFile = Settings.GetPath(Settings.Path.database);
 
+            bool writeToLog = false;
+            if (System.IO.File.Exists(databaseFile)) writeToLog = true;
+
             try
             {
                 m_db = new SQLiteClient(databaseFile);
@@ -67,13 +70,8 @@ namespace WindowPlugins.GUITVSeries
                 m_db.Execute("PRAGMA short_column_names=0;");
                 m_db.Execute("PRAGMA temp_store = MEMORY;");
 
-                // Indicies are now created when the tables exists
-                //m_db.Execute("create index if not exists epComp1 ON local_episodes(CompositeID ASC)");
-                //m_db.Execute("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)");
-                //m_db.Execute("create index if not exists seriesIDLocal on local_series(ID ASC)");
-                //m_db.Execute("create index if not exists seriesIDOnlineEp on online_episodes(SeriesID ASC)");
-                
-                MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'");
+                if (writeToLog)
+                    MPTVSeriesLog.Write("Successfully opened database '" + databaseFile + "'");
             }
             catch (Exception ex)
             {

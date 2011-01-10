@@ -251,7 +251,7 @@ namespace WindowPlugins.GUITVSeries
             // create scrobble data
             TraktScrobble scrobbleData = new TraktScrobble
             {
-                Title = series.ToString(),
+                Title = series[DBOnlineSeries.cOriginalName],
                 Year = DBSeries.GetSeriesYear(series),
                 Season = episode[DBOnlineEpisode.cSeasonIndex],
                 Episode = episode.TraktEpisode,

@@ -595,6 +595,15 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cSetHiddenSeriesAsScanIgnore) == null)
                     SetOptions(cSetHiddenSeriesAsScanIgnore, true);
 
+                if (GetOptions(cTraktAPIKey) == null)
+                    SetOptions(cTraktAPIKey, string.Empty);
+
+                if (GetOptions(cTraktPassword) == null)
+                    SetOptions(cTraktPassword, string.Empty);
+
+                if (GetOptions(cTraktUsername) == null)
+                    SetOptions(cTraktUsername, string.Empty);
+              
             }
             catch (Exception ex)
             {

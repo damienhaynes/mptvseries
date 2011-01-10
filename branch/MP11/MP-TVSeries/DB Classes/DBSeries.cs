@@ -50,7 +50,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         #endregion
 
-        public const int cDBVersion = 13;
+        public const int cDBVersion = 14;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
@@ -204,6 +204,11 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
                         }
 
+                        nUpgradeDBVersion++;
+                        break;
+                    case 13:
+                        // original name not working in previous release
+                        DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cOriginalName, (DBValue)string.Empty, new SQLCondition());
                         nUpgradeDBVersion++;
                         break;
                     default:

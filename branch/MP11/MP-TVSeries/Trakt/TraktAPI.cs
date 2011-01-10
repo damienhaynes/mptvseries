@@ -115,7 +115,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         {
             if (!string.IsNullOrEmpty(data))
             {
-                MPTVSeriesLog.Write("Trakt Post: ", data, MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Trakt Post: ", data, MPTVSeriesLog.LogLevel.Normal);
             }
 
             try
