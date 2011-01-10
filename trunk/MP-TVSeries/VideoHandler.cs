@@ -191,7 +191,7 @@ namespace WindowPlugins.GUITVSeries
 
                     if (null != dlgYesNo)
                     {
-                        dlgYesNo.SetHeading(GUILocalizeStrings.Get(900)); //resume movie?
+                        dlgYesNo.SetHeading(Translation.ResumeEpisode);
                         dlgYesNo.SetLine(1, m_currentEpisode.onlineEpisode.CompleteTitle);
                         dlgYesNo.SetLine(2, GUILocalizeStrings.Get(936) + " " + Utils.SecondsToHMSString(timeMovieStopped));
                         dlgYesNo.SetDefaultToYes(true);
