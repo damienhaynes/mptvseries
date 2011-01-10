@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace WindowPlugins.GUITVSeries.Trakt
 {
     [DataContract]
-    public class TraktUserProfile : TraktError
+    public class TraktUserProfile : TraktResponse
     {
         [DataMember(Name = "username")]
         public string Username { get; set; }
@@ -54,6 +54,9 @@ namespace WindowPlugins.GUITVSeries.Trakt
 
         [DataMember(Name = "episodes")]
         public Episodes Episodes { get; set; }
+
+        [DataMember(Name = "movies")]
+        public Movies Movies { get; set; }
     }
 
     [DataContract]
@@ -77,5 +80,24 @@ namespace WindowPlugins.GUITVSeries.Trakt
 
         [DataMember(Name = "unwatched")]
         public string UnWatchedCount { get; set; }
-    }    
+    }
+
+    [DataContract]
+    public class Movies
+    {
+        [DataMember(Name = "watched")]
+        public string WatchedCount { get; set; }
+
+        [DataMember(Name = "watched_trakt")]
+        public string WatchedTraktCount { get; set; }
+
+        [DataMember(Name = "watched_elsewhere")]
+        public string WatchedElseWhereCount { get; set; }
+
+        [DataMember(Name = "library")]
+        public string MovieCount { get; set; }
+
+        [DataMember(Name = "unwatched")]
+        public string UnWatchedCount { get; set; }
+    }
 }

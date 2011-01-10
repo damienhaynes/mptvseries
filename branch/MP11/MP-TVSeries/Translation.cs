@@ -348,7 +348,9 @@ namespace WindowPlugins.GUITVSeries
         public static string NoSubtitlesFoundOrRetrieved = "No subtitles found or retrieved";
 
         public static string TraktError = "Trakt Error";
+        public static string TraktNotEnoughInfo = "Not enough information to send to server.";
 
+        public static string ResumeEpisode = "Resume episode from last time?";
         #endregion
 
         #region Public Properties

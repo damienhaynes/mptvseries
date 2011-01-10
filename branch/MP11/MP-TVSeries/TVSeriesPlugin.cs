@@ -42,6 +42,7 @@ using Cornerstone.MP;
 using System.Xml;
 using WindowPlugins.GUITVSeries.Subtitles;
 using SubtitleDownloader.Core;
+using WindowPlugins.GUITVSeries.Trakt;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -506,6 +507,13 @@ namespace WindowPlugins.GUITVSeries
 
             #endregion
 
+            #region Trakt
+            TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
+            TraktAPI.APIKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            TraktAPI.UserAgent = Settings.UserAgent;
+            #endregion
+
             #region Skin Settings / Load
             InitSkinSettings();
             
@@ -516,7 +524,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
             return Load(xmlSkin);
             #endregion
-		}
+        }
 
         public override void DeInit()
         {

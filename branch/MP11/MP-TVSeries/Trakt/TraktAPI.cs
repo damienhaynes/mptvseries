@@ -8,8 +8,6 @@ namespace WindowPlugins.GUITVSeries.Trakt
 {
     static class TraktAPI
     {
-        static string apiKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
-
         public enum Status
         {
             watching,
@@ -17,12 +15,32 @@ namespace WindowPlugins.GUITVSeries.Trakt
         }
 
         /// <summary>
+        /// Trakt Username
+        /// </summary>
+        public static string Username { get; set; }
+
+        /// <summary>
+        /// Trakt Password with SHA1 Hash
+        /// </summary>
+        public static string Password { get; set; }
+
+        /// <summary>
+        /// Users API Key, this is not the developer key
+        /// </summary>
+        public static string APIKey { get; set; }
+
+        /// <summary>
+        /// UserAgent header used to Post to Trakt API
+        /// </summary>
+        public static string UserAgent { get; set; }
+
+        /// <summary>
         /// Returns the series list for a user
         /// </summary>
         /// <param name="user">username of person to get series library</param>
         public static IEnumerable<TraktLibraryShows> GetSeriesForUser(string user)
         {
-            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, apiKey, user), string.Empty, false);
+            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, APIKey, user), string.Empty);
             return seriesForUser.FromJSONArray<TraktLibraryShows>();
         }
 
@@ -32,7 +50,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// <param name="seriesID">tvdb series id of series to lookup</param>
         public static TraktSeriesOverview GetSeriesOverview(string seriesID)
         {
-            string seriesOverview = Transmit(string.Format(TraktURIs.SeriesOverview, apiKey, seriesID), string.Empty, false);
+            string seriesOverview = Transmit(string.Format(TraktURIs.SeriesOverview, APIKey, seriesID), string.Empty);
             return seriesOverview.FromJSON<TraktSeriesOverview>();
         }
 
@@ -42,7 +60,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// <param name="user">username of person to retrieve profile</param>
         public static TraktUserProfile GetUserProfile(string user)
         {
-            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, apiKey, user), string.Empty, false);
+            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, APIKey, user), string.Empty);
             return userProfile.FromJSON<TraktUserProfile>();
         }
 
@@ -52,71 +70,38 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// Maximum of 100 items will be returned from API
         /// </summary>
         /// <param name="user">username of person to retrieve watched items</param>
-        public static IEnumerable<TraktWatchedHistory> GetUserWatchedHistory(string user)
+        public static IEnumerable<TraktWatchedEpisodeHistory> GetUserWatchedHistory(string user)
         {
-            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatched, apiKey, user), string.Empty, false);
+            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, APIKey, user), string.Empty);
 
             // get list of objects from json array
-            return userWatchedHistory.FromJSONArray<TraktWatchedHistory>();
+            return userWatchedHistory.FromJSONArray<TraktWatchedEpisodeHistory>();
         }
 
         /// <summary>
         /// Send Post to trakt.tv api during episode watching or after episode watched
         /// </summary>
-        /// <param name="episode">Episode object being watched</param>
-        /// <param name="progress">Current percentage of video complete</param>
-        /// <param name="duration">Length of video in minutes</param>
+        /// <param name="scrobbleData">Episode object being scrobbled</param>
         /// <param name="status">Watching or Watched</param>
-        public static void SendUpdate(DBEpisode episode, int progress, int duration, Status status)
+        public static TraktResponse ScrobbleShowState(TraktScrobble scrobbleData, Status status)
         {
-            string username = DBOption.GetOptions(DBOption.cTraktUsername);
-            string password = DBOption.GetOptions(DBOption.cTraktPassword);
-
-            // check if trakt is enabled
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return;
-
-            DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-
-            if (series == null) return;
-
-            // create scrobble data
-            TraktScrobble scrobbleData = new TraktScrobble
-            {                
-                Title = series.ToString(),
-                Year = DBSeries.GetSeriesYear(series),
-                Season = episode[DBOnlineEpisode.cSeasonIndex],
-                Episode = episode.TraktEpisode,
-                SeriesID = series[DBSeries.cID],
-                Progress = progress.ToString(),
-                PluginVersion = Settings.Version.ToString(),
-                MediaCenter = "mp-tvseries",
-                MediaCenterVersion = Settings.MPVersion.ToString(),
-                MediaCenterBuildDate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                Duration = duration.ToString(),
-                UserName = username,
-                Password = password
-            };
-
-            // final check that we have everything we need
+            // check that we have everything we need
             // server can accept title if series id is not supplied
             if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Season) || string.IsNullOrEmpty(scrobbleData.Episode))
-                return;
+            {
+                TraktResponse error = new TraktResponse
+                {
+                    Error = Translation.TraktNotEnoughInfo,
+                    Status = "failure"
+                };
+                return error;
+            }
             
             // serialize Scrobble object to JSON and send to server
-            string response = Transmit(string.Format(TraktURIs.Scrobble, status.ToString()), scrobbleData.ToJSON(), true);
+            string response = Transmit(string.Format(TraktURIs.Scrobble, status.ToString()), scrobbleData.ToJSON());
 
-            // check response error status
-            if (!string.IsNullOrEmpty(response))
-            {
-                TraktError errorStatus = response.FromJSON<TraktError>();
-
-                // server handled error on post, display notification to user
-                if (errorStatus.Status != "success")
-                {
-                    TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, errorStatus.Error);
-                }
-            }
+            // return success or failure
+            return response.FromJSON<TraktResponse>();
         }
 
         /// <summary>
@@ -126,29 +111,28 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// <param name="data">json string to post, can be left empty</param>
         /// <param name="notify">notify in GUI if any errors</param>
         /// <returns>response as json string</returns>
-        private static string Transmit(string address, string data, bool notify)
+        private static string Transmit(string address, string data)
         {
+            if (!string.IsNullOrEmpty(data))
+            {
+                MPTVSeriesLog.Write("Trakt Post: ", data, MPTVSeriesLog.LogLevel.Debug);
+            }
+
             try
             {
                 WebClient client = new WebClient();
-                client.Headers.Add("user-agent", Settings.UserAgent);
-                if (!string.IsNullOrEmpty(data))
-                {
-                    MPTVSeriesLog.Write("Trakt: Post: ", data, MPTVSeriesLog.LogLevel.Debug);
-                }
-                string result = client.UploadString(address, data);
-                MPTVSeriesLog.Write("Trakt: {0}", result.Trim());
-                return result;
+                client.Headers.Add("user-agent", UserAgent);
+                return client.UploadString(address, data);
             }
             catch (WebException e)
             {
-                // Notify user something bad happened
-                MPTVSeriesLog.Write("Trakt Error: {0}", e.Message);
-                if (notify)
+                // something bad happened e.g. invalid login
+                TraktResponse error = new TraktResponse
                 {
-                    TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, e.Message);
-                }
-                return null;
+                    Status = "failure",
+                    Error = e.Message
+                };
+                return error.ToJSON();
             }
         }
 
