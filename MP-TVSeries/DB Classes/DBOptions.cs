@@ -574,6 +574,15 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cArtworkLimitSeasonPosters) == null)
                     SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
 
+                if (GetOptions(cTraktAPIKey) == null)
+                    SetOptions(cTraktAPIKey, string.Empty);
+
+                if (GetOptions(cTraktPassword) == null)
+                    SetOptions(cTraktPassword, string.Empty);
+
+                if (GetOptions(cTraktUsername) == null)
+                    SetOptions(cTraktUsername, string.Empty);
+              
             }
             catch (Exception ex)
             {
