@@ -2,7 +2,7 @@
 <!-- MP-TV-Series translation file -->
 <!-- Dansk (Da) -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
-<!-- Contributed by Steffansp. Last update 29. juli 2010 -->
+<!-- Contributed by Steffansp. Last update 7. january 2010 -->
 
 <strings>
 	<string Field="Series" Original="Series">Serie</string>
@@ -278,4 +278,24 @@
 	<string Field="AbsoluteOrder" Original="Absolute Order">Absolut visning</string>  
 	<string Field="Title" Original="Title">Title</string>
 	<string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Ændre online matching metode</string>
+	
+  <string Field="InsertDiskMessageLine1" Original="The media for the episode you have selected">Det valgte medie for afsnittet</string>
+  <string Field="InsertDiskMessageLine2" Original="is currently not available.">er på nuværende tidspunkt ikke tilgængelig.</string>
+  <string Field="InsertDiskMessageLine3" Original="Please insert or connect media">Indsæt venligt eller forbind mediet</string>
+  <string Field="InsertDiskMessageLine4" Original="labeled: {0}">mærket: {0}</string>
+  
+  <string Field="ShowHiddenItems" Original="Show Hidden Items">Vis skjulte emner</string>
+  <string Field="UnHide" Original="UnHide">Synliggør</string>
+
+  <string Field="CFS_Skip" Original="Skip">Spring over</string>
+  <string Field="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">Ingen match fundet, manuel søgning...</string>
+  <string Field="CFS_Local_Series" Original="Local Series:">Lokale serier:</string>
+
+  <string Field="AvailableMedia" Original="Available Media">Tilgængeligt medie</string>
+
+  <string Field="Votes" Original="votes">score</string>
+  
+  <string Field="LayoutCoveflow" Original="Coveflow">Coveflow</string>
+
+  <string Field="TraktError" Original="Trakt Error">Trakt fejl</string>
 </strings>
