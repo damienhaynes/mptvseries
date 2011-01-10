@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Xml;
+using System.Linq;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -76,7 +77,7 @@ namespace WindowPlugins.GUITVSeries
 
         public UpdateSeries(String sSeriesIDs)
         {
-            Work(sSeriesIDs);
+            listSeries = Work(sSeriesIDs).ToList();
         }
 
         public UpdateSeries(List<String> sSeriesIDs)
@@ -86,7 +87,7 @@ namespace WindowPlugins.GUITVSeries
 
         public UpdateSeries(String sSeriesIDs, String languageID)
         {
-            Work(sSeriesIDs, languageID);
+            listSeries = Work(sSeriesIDs, languageID).ToList();
         }
 
         private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
@@ -114,16 +115,16 @@ namespace WindowPlugins.GUITVSeries
 
                 if (node != null)
                 {
-                    foreach (XmlNode itemNode in node.ChildNodes)
+                    foreach (XmlNode itemNode in node.SelectNodes("/Data"))
                     {
                         bool hasDVDOrdering = false;
-                        bool hasAbsoluteOrdering = false;       
+                        bool hasAbsoluteOrdering = false;
                         DBOnlineSeries series = new DBOnlineSeries();
                         foreach (XmlNode seriesNode in itemNode)
                         {
-                            // first return item SHOULD ALWAYS be the series                            
+                            // first return item SHOULD ALWAYS be the series
                             if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
-                            {                           
+                            {
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
@@ -142,7 +143,7 @@ namespace WindowPlugins.GUITVSeries
                                 if (series != null) listSeries.Add(series);
                             }
                             else if(!hasDVDOrdering || !hasAbsoluteOrdering || seriesNode.Name.Equals("Episode", StringComparison.InvariantCultureIgnoreCase))
-                            {                                
+                            {
                                 foreach (XmlNode propertyNode in seriesNode.ChildNodes)
                                 {
                                     switch (propertyNode.Name)
