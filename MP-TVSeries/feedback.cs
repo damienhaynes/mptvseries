@@ -96,6 +96,11 @@ namespace WindowPlugins.GUITVSeries.Feedback
 		/// </summary>
 		public bool IsPassword { get; set; }
 
+		/// <summary>
+		/// Set Keyboard style to NORMAL or SMS Style
+		/// </summary>
+		public KeyboardStyles KeyboardStyle { get; set; }
+			
     }
 
     public enum DialogButtons

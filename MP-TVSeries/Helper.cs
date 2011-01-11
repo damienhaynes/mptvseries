@@ -65,7 +65,7 @@ namespace WindowPlugins.GUITVSeries
 
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(json.ToCharArray())))
             {
-                var ser = new DataContractJsonSerializer(typeof(T));                
+                var ser = new DataContractJsonSerializer(typeof(T));
                 return (T)ser.ReadObject(ms);
             }
         }
@@ -84,7 +84,7 @@ namespace WindowPlugins.GUITVSeries
 
     #region String Extension Methods
     public static class StringExtensions
-    {        
+    {
         public static bool IsNumerical(this string number)
         {
             double isNumber = 0;
@@ -641,18 +641,10 @@ namespace WindowPlugins.GUITVSeries
 
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly a in assemblies)
-                try
-                {
-                    if (a.GetName().Name == name && a.GetName().Version >= ver)
-                    {
-                        MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded.", name), MPTVSeriesLog.LogLevel.Debug);
-                        result = true;
-                        break;
-                    }
-                }
-                catch
-                {
-                    MPTVSeriesLog.Write(string.Format("Assembly.GetName() call failed for '{0}'!\n", a.Location));
+                if (a.GetName().Name == name && a.GetName().Version >= ver) {
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded.", name), MPTVSeriesLog.LogLevel.Debug);
+                    result = true;
+                    break;
                 }
 
             if (!result) {
