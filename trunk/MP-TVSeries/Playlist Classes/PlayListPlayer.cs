@@ -192,6 +192,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             if (item.Episode[DBEpisode.cEpisodeIndex2] > 0)
                             {
+                                // only set 2nd episode as watched here
                                 SQLCondition condition = new SQLCondition();
                                 condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
                                 List<DBEpisode> episodes = DBEpisode.Get(condition, false);

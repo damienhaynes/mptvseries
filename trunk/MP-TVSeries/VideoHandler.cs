@@ -297,12 +297,12 @@ namespace WindowPlugins.GUITVSeries
                     Thread.Sleep(5000);
                 }
 
-                // we are now watching 2nd part of episode
+                // we are now watching 2nd part of double episode
                 scrobbleData = CreateScrobbleData(episodes[1]);
             }
             else
             {
-                // we are watched single episode or 1st part of double episode
+                // we are watching a single episode or 1st part of double episode
                 scrobbleData = CreateScrobbleData(m_currentEpisode);
             }
 
@@ -565,8 +565,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     #region Set Resume Point or Watched
                     double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
-                    if (!m_currentEpisode[DBOnlineEpisode.cWatched]
-                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
+                    if ((timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
                         m_currentEpisode[DBEpisode.cStopTime] = 0;
                         m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -708,10 +707,10 @@ namespace WindowPlugins.GUITVSeries
                     m_previousEpisode[DBEpisode.cFilename] == filename);
         }
 
-        void  PlaybackOperationEnded(bool countAsWatched)
+        void PlaybackOperationEnded(bool countAsWatched)
         {
             // cancel trakt watch timer
-            m_TraktTimer.Dispose();
+            if (m_TraktTimer != null) m_TraktTimer.Dispose();
 
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
@@ -727,6 +726,7 @@ namespace WindowPlugins.GUITVSeries
                     // 1st episode is it set to watched during playback in traktUpdater
                     if (m_currentEpisode[DBEpisode.cEpisodeIndex2] > 0)
                     {
+                        // only set 2nd episode as watched here
                         SQLCondition condition = new SQLCondition();
                         condition.Add(new DBEpisode(), DBEpisode.cFilename, m_currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
                         List<DBEpisode> episodes = DBEpisode.Get(condition, false);
