@@ -40,7 +40,7 @@ using WindowPlugins.GUITVSeries.Feedback;
 using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
-using WindowPlugins.GUITVSeries.Trakt;
+using Trakt;
 
 namespace WindowPlugins.GUITVSeries
 {

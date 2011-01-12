@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using Trakt.Show;
+using Trakt.User;
+using WindowPlugins.GUITVSeries;
 
-namespace WindowPlugins.GUITVSeries.Trakt
+namespace Trakt
 {
     static class TraktAPI
     {
@@ -42,6 +45,16 @@ namespace WindowPlugins.GUITVSeries.Trakt
         {
             string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, APIKey, user), string.Empty);
             return seriesForUser.FromJSONArray<TraktLibraryShows>();
+        }
+
+        /// <summary>
+        /// Returns the movie list for a user
+        /// </summary>
+        /// <param name="user">username of person to get movie library</param>
+        public static IEnumerable<TraktLibraryMovies> GetMoviesForUser(string user)
+        {
+            string moviesForUser = Transmit(string.Format(TraktURIs.UserLibraryMovies, APIKey, user), string.Empty);
+            return moviesForUser.FromJSONArray<TraktLibraryMovies>();
         }
 
         /// <summary>
@@ -83,7 +96,7 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// </summary>
         /// <param name="scrobbleData">Episode object being scrobbled</param>
         /// <param name="status">Watching or Watched</param>
-        public static TraktResponse ScrobbleShowState(TraktScrobble scrobbleData, Status status)
+        public static TraktResponse ScrobbleShowState(TraktEpisodeScrobble scrobbleData, Status status)
         {
             // check that we have everything we need
             // server can accept title if series id is not supplied

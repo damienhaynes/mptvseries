@@ -6,7 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using WindowPlugins.GUITVSeries.Trakt;
+using Trakt;
+using Trakt.Show;
+using Trakt.User;
 
 namespace WindowPlugins.GUITVSeries.Configuration
 {

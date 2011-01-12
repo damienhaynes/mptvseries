@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace WindowPlugins.GUITVSeries.Trakt
+namespace Trakt.Show
 {
     [DataContract]
-    public class TraktScrobble
+    public class TraktEpisodeScrobble
     {
         [DataMember(Name = "title")]
         public string Title { get; set; }
