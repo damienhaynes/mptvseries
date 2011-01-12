@@ -282,6 +282,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
+    <Compile Include="Trakt\Movie\TraktMovieScrobble.cs.cs" />
     <Compile Include="Trakt\TraktExtensions.cs" />
     <Compile Include="Trakt\User\TraktLibraryMovies.cs" />
     <Compile Include="Trakt\User\TraktLibraryShows.cs" />
