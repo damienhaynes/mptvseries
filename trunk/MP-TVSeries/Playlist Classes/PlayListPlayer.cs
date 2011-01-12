@@ -36,7 +36,8 @@ using MediaPortal.Player;
 using MediaPortal.Playlists;
 using MediaPortal.Profile;
 using MediaPortal.Configuration;
-using WindowPlugins.GUITVSeries.Trakt;
+using Trakt;
+using Trakt.Show;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -514,7 +515,7 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Create scrobble data that can be used to send to Trakt API
         /// </summary>
-        private TraktScrobble CreateScrobbleData(DBEpisode episode)
+        private TraktEpisodeScrobble CreateScrobbleData(DBEpisode episode)
         {
             string username = TraktAPI.Username;
             string password = TraktAPI.Password;
@@ -527,7 +528,7 @@ namespace WindowPlugins.GUITVSeries
             if (series == null) return null;
 
             // create scrobble data
-            TraktScrobble scrobbleData = new TraktScrobble
+            TraktEpisodeScrobble scrobbleData = new TraktEpisodeScrobble
             {
                 Title = series[DBOnlineSeries.cOriginalName],
                 Year = DBSeries.GetSeriesYear(series),
@@ -560,7 +561,7 @@ namespace WindowPlugins.GUITVSeries
             if (duration > 0.0)
                 progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
 
-            TraktScrobble scrobbleData = null;
+            TraktEpisodeScrobble scrobbleData = null;
 
             // check if double episode has passed halfway mark and set as watched
             if (item.Episode[DBEpisode.cEpisodeIndex2] > 0 && progress > 50.0)
@@ -608,7 +609,7 @@ namespace WindowPlugins.GUITVSeries
             double duration = episode[DBEpisode.cLocalPlaytime] / 60000;
 
             // get scrobble data to send to api
-            TraktScrobble scrobbleData = CreateScrobbleData(episode);
+            TraktEpisodeScrobble scrobbleData = CreateScrobbleData(episode);
             if (scrobbleData == null) return;
             
             // set duration/progress in scrobble data
