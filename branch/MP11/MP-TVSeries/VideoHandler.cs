@@ -38,7 +38,8 @@ using MediaPortal.Util;
 using MediaPortal.Playlists;
 using MediaPortal.Video.Database;
 using WindowPlugins.GUITVSeries;
-using WindowPlugins.GUITVSeries.Trakt;
+using Trakt;
+using Trakt.Show;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -236,7 +237,7 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Create scrobble data that can be used to send to Trakt API
         /// </summary>
-        private TraktScrobble CreateScrobbleData(DBEpisode episode)
+        private TraktEpisodeScrobble CreateScrobbleData(DBEpisode episode)
         {
             string username = TraktAPI.Username;
             string password = TraktAPI.Password;
@@ -249,7 +250,7 @@ namespace WindowPlugins.GUITVSeries
             if (series == null) return null;
 
             // create scrobble data
-            TraktScrobble scrobbleData = new TraktScrobble
+            TraktEpisodeScrobble scrobbleData = new TraktEpisodeScrobble
             {
                 Title = series[DBOnlineSeries.cOriginalName],
                 Year = DBSeries.GetSeriesYear(series),
@@ -280,7 +281,7 @@ namespace WindowPlugins.GUITVSeries
             if (duration > 0.0)
                 progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
 
-            TraktScrobble scrobbleData = null;
+            TraktEpisodeScrobble scrobbleData = null;
 
             // check if double episode has passed halfway mark and set as watched
             if (m_currentEpisode[DBEpisode.cEpisodeIndex2] > 0 && progress > 50.0)
@@ -297,12 +298,12 @@ namespace WindowPlugins.GUITVSeries
                     Thread.Sleep(5000);
                 }
 
-                // we are now watching 2nd part of episode
+                // we are now watching 2nd part of double episode
                 scrobbleData = CreateScrobbleData(episodes[1]);
             }
             else
             {
-                // we are watched single episode or 1st part of double episode
+                // we are watching a single episode or 1st part of double episode
                 scrobbleData = CreateScrobbleData(m_currentEpisode);
             }
 
@@ -328,7 +329,7 @@ namespace WindowPlugins.GUITVSeries
             double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
 
             // get scrobble data to send to api
-            TraktScrobble scrobbleData = CreateScrobbleData(episode);
+            TraktEpisodeScrobble scrobbleData = CreateScrobbleData(episode);
             if (scrobbleData == null) return;
             
             // set duration/progress in scrobble data
@@ -489,7 +490,7 @@ namespace WindowPlugins.GUITVSeries
             // Update Episode Counts
             DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-            DBSeason.UpdateEpisodeCounts(series, season);           
+            DBSeason.UpdateEpisodeCounts(series, season);
         }
 
         /// <summary>
@@ -565,8 +566,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     #region Set Resume Point or Watched
                     double watchedAfter = DBOption.GetOptions(DBOption.cWatchedAfter);
-                    if (!m_currentEpisode[DBOnlineEpisode.cWatched]
-                        && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
+                    if ((timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
                         m_currentEpisode[DBEpisode.cStopTime] = 0;
                         m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -708,16 +708,16 @@ namespace WindowPlugins.GUITVSeries
                     m_previousEpisode[DBEpisode.cFilename] == filename);
         }
 
-        void  PlaybackOperationEnded(bool countAsWatched)
+        void PlaybackOperationEnded(bool countAsWatched)
         {
             // cancel trakt watch timer
-            m_TraktTimer.Dispose();
+            if (m_TraktTimer != null) m_TraktTimer.Dispose();
 
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
                 MPTVSeriesLog.Write("This episode counts as watched");
                 if (countAsWatched)
-                {                    
+                {
                     MarkEpisodeAsWatched(m_currentEpisode);
                     if (EpisodeWatched != null) EpisodeWatched(m_currentEpisode);
 
@@ -727,6 +727,7 @@ namespace WindowPlugins.GUITVSeries
                     // 1st episode is it set to watched during playback in traktUpdater
                     if (m_currentEpisode[DBEpisode.cEpisodeIndex2] > 0)
                     {
+                        // only set 2nd episode as watched here
                         SQLCondition condition = new SQLCondition();
                         condition.Add(new DBEpisode(), DBEpisode.cFilename, m_currentEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
                         List<DBEpisode> episodes = DBEpisode.Get(condition, false);

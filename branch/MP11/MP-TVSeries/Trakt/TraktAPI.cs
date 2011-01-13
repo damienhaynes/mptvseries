@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using Trakt.Show;
+using Trakt.User;
+using Trakt.Movie;
+using WindowPlugins.GUITVSeries;
 
-namespace WindowPlugins.GUITVSeries.Trakt
+namespace Trakt
 {
     static class TraktAPI
     {
@@ -42,6 +46,16 @@ namespace WindowPlugins.GUITVSeries.Trakt
         {
             string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, APIKey, user), string.Empty);
             return seriesForUser.FromJSONArray<TraktLibraryShows>();
+        }
+
+        /// <summary>
+        /// Returns the movie list for a user
+        /// </summary>
+        /// <param name="user">username of person to get movie library</param>
+        public static IEnumerable<TraktLibraryMovies> GetMoviesForUser(string user)
+        {
+            string moviesForUser = Transmit(string.Format(TraktURIs.UserLibraryMovies, APIKey, user), string.Empty);
+            return moviesForUser.FromJSONArray<TraktLibraryMovies>();
         }
 
         /// <summary>
@@ -83,10 +97,10 @@ namespace WindowPlugins.GUITVSeries.Trakt
         /// </summary>
         /// <param name="scrobbleData">Episode object being scrobbled</param>
         /// <param name="status">Watching or Watched</param>
-        public static TraktResponse ScrobbleShowState(TraktScrobble scrobbleData, Status status)
+        public static TraktResponse ScrobbleShowState(TraktEpisodeScrobble scrobbleData, Status status)
         {
             // check that we have everything we need
-            // server can accept title if series id is not supplied
+            // server can accept title/year if imdb id is not supplied
             if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Season) || string.IsNullOrEmpty(scrobbleData.Episode))
             {
                 TraktResponse error = new TraktResponse
@@ -98,7 +112,33 @@ namespace WindowPlugins.GUITVSeries.Trakt
             }
             
             // serialize Scrobble object to JSON and send to server
-            string response = Transmit(string.Format(TraktURIs.Scrobble, status.ToString()), scrobbleData.ToJSON());
+            string response = Transmit(string.Format(TraktURIs.ScrobbleShow, status.ToString()), scrobbleData.ToJSON());
+
+            // return success or failure
+            return response.FromJSON<TraktResponse>();
+        }
+
+        /// <summary>
+        /// Send Post to trakt.tv api during movie watching or after movie watched
+        /// </summary>
+        /// <param name="scrobbleData">Movie object being scrobbled</param>
+        /// <param name="status">Watching or Watched</param>
+        public static TraktResponse ScrobbleMovieState(TraktMovieScrobble scrobbleData, Status status)
+        {
+            // check that we have everything we need
+            // server can accept title if series id is not supplied
+            if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Year))
+            {
+                TraktResponse error = new TraktResponse
+                {
+                    Error = Translation.TraktNotEnoughInfo,
+                    Status = "failure"
+                };
+                return error;
+            }
+
+            // serialize Scrobble object to JSON and send to server
+            string response = Transmit(string.Format(TraktURIs.ScrobbleMovie, status.ToString()), scrobbleData.ToJSON());
 
             // return success or failure
             return response.FromJSON<TraktResponse>();

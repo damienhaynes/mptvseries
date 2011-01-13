@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace WindowPlugins.GUITVSeries.Trakt
+namespace Trakt.User
 {
     [DataContract]
     public class TraktUserProfile : TraktResponse

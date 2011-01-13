@@ -42,7 +42,7 @@ using Cornerstone.MP;
 using System.Xml;
 using WindowPlugins.GUITVSeries.Subtitles;
 using SubtitleDownloader.Core;
-using WindowPlugins.GUITVSeries.Trakt;
+using Trakt;
 
 namespace WindowPlugins.GUITVSeries
 {
