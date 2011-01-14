@@ -26,13 +26,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void LoadFromDB()
         {
             textBoxUsername.Text = DBOption.GetOptions(DBOption.cTraktUsername);
-            textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);
-            textBoxAPIKey.Text = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);            
 
             TraktAPI.UserAgent = Settings.UserAgent;
             TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
-            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
-            TraktAPI.APIKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);            
         }
 
         private void textBoxUsername_TextChanged(object sender, EventArgs e)
@@ -57,18 +55,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {            
             System.Diagnostics.Process.Start(@"http://trakt.tv");
         }
-
-        private void textBoxAPIKey_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cTraktAPIKey, textBoxAPIKey.Text);
-        }
-
+        
         #region testing
         private void buttonTestAPI_Click(object sender, EventArgs e)
         {
             string username = TraktAPI.Username;
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(TraktAPI.APIKey)) return;
+            if (string.IsNullOrEmpty(username)) return;
 
             MPTVSeriesLog.Write("Trakt: Getting Shows for user '{0}'", username);
             IEnumerable<TraktLibraryShows> showsForUser = TraktAPI.GetSeriesForUser(username);

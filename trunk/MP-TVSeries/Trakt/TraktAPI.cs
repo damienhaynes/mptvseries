@@ -29,11 +29,6 @@ namespace Trakt
         public static string Password { get; set; }
 
         /// <summary>
-        /// Users API Key, this is not the developer key
-        /// </summary>
-        public static string APIKey { get; set; }
-
-        /// <summary>
         /// UserAgent header used to Post to Trakt API
         /// </summary>
         public static string UserAgent { get; set; }
@@ -44,7 +39,7 @@ namespace Trakt
         /// <param name="user">username of person to get series library</param>
         public static IEnumerable<TraktLibraryShows> GetSeriesForUser(string user)
         {
-            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, APIKey, user), string.Empty);
+            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, user), string.Empty);
             return seriesForUser.FromJSONArray<TraktLibraryShows>();
         }
 
@@ -54,7 +49,7 @@ namespace Trakt
         /// <param name="user">username of person to get movie library</param>
         public static IEnumerable<TraktLibraryMovies> GetMoviesForUser(string user)
         {
-            string moviesForUser = Transmit(string.Format(TraktURIs.UserLibraryMovies, APIKey, user), string.Empty);
+            string moviesForUser = Transmit(string.Format(TraktURIs.UserLibraryMovies, user), string.Empty);
             return moviesForUser.FromJSONArray<TraktLibraryMovies>();
         }
 
@@ -64,7 +59,7 @@ namespace Trakt
         /// <param name="seriesID">tvdb series id of series to lookup</param>
         public static TraktSeriesOverview GetSeriesOverview(string seriesID)
         {
-            string seriesOverview = Transmit(string.Format(TraktURIs.SeriesOverview, APIKey, seriesID), string.Empty);
+            string seriesOverview = Transmit(string.Format(TraktURIs.SeriesOverview, seriesID), string.Empty);
             return seriesOverview.FromJSON<TraktSeriesOverview>();
         }
 
@@ -74,7 +69,7 @@ namespace Trakt
         /// <param name="user">username of person to retrieve profile</param>
         public static TraktUserProfile GetUserProfile(string user)
         {
-            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, APIKey, user), string.Empty);
+            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, user), string.Empty);
             return userProfile.FromJSON<TraktUserProfile>();
         }
 
@@ -86,7 +81,7 @@ namespace Trakt
         /// <param name="user">username of person to retrieve watched items</param>
         public static IEnumerable<TraktWatchedEpisodeHistory> GetUserWatchedHistory(string user)
         {
-            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, APIKey, user), string.Empty);
+            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, user), string.Empty);
 
             // get list of objects from json array
             return userWatchedHistory.FromJSONArray<TraktWatchedEpisodeHistory>();
