@@ -1106,56 +1106,16 @@ namespace WindowPlugins.GUITVSeries
 					#endregion
 
 					#region Cycle Artwork
-					case (int)eContextItems.cycleSeriesBanner: {
-							int nCurrent = selectedSeries.BannerList.IndexOf(selectedSeries.Banner);
-							nCurrent++;
-							if (nCurrent >= selectedSeries.BannerList.Count)
-								nCurrent = 0;
-
-							selectedSeries.Banner = selectedSeries.BannerList[nCurrent];
-							selectedSeries.Commit();
-
-							// No need to re-load the facade for non-graphical layouts
-							if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
-								seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(selectedSeries);
-							else
-								LoadFacade();
-						}
+					case (int)eContextItems.cycleSeriesBanner:
+                        CycleSeriesBanner(selectedSeries, true);
 						break;
 
-					case (int)eContextItems.cycleSeriesPoster: {
-							int nCurrent = selectedSeries.PosterList.IndexOf(selectedSeries.Poster);
-							nCurrent++;
-							if (nCurrent >= selectedSeries.PosterList.Count)
-								nCurrent = 0;
-
-							selectedSeries.Poster = selectedSeries.PosterList[nCurrent];
-							selectedSeries.Commit();
-
-							// No need to re-load the facade for non-graphical layouts
-							if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
-								seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(selectedSeries);
-							else
-								LoadFacade();
-						}
+					case (int)eContextItems.cycleSeriesPoster:
+                        CycleSeriesPoster(selectedSeries, true);
 						break;
 
-					case (int)eContextItems.cycleSeasonPoster: {
-							int nCurrent = selectedSeason.BannerList.IndexOf(selectedSeason.Banner);
-							nCurrent++;
-							if (nCurrent >= selectedSeason.BannerList.Count)
-								nCurrent = 0;
-
-							selectedSeason.Banner = selectedSeason.BannerList[nCurrent];
-							selectedSeason.Commit();
-							m_bUpdateBanner = true;
-
-							// No need to re-load the facade for non-graphical layouts
-							if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
-								seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(selectedSeason);
-							else
-								LoadFacade();
-						}
+					case (int)eContextItems.cycleSeasonPoster:
+                        CycleSeasonPoster(selectedSeason, true);
 						break;
 					#endregion
 
@@ -1509,6 +1469,55 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Selected Episode OnAction Play: ", m_SelectedEpisode[DBEpisode.cCompositeID].ToString(), MPTVSeriesLog.LogLevel.Debug);
                     CommonPlayEpisodeAction();
 
+                    break;
+
+                case Action.ActionType.ACTION_PREV_PICTURE:
+                case Action.ActionType.ACTION_NEXT_PICTURE:
+                    // Cycle Artwork
+					if (this.m_Facade.SelectedListItem == null || this.m_Facade.SelectedListItem.TVTag == null)
+						return;
+
+                    // can only cycle artwork on series and seasons
+					if (this.listLevel == Listlevel.Group || this.listLevel == Listlevel.Episode)
+						return;
+
+					selectedSeries = null;
+					selectedSeason = null;
+					selectedEpisode = null;
+
+                    bool nextImage = action.wID == Action.ActionType.ACTION_NEXT_PICTURE ? true : false;
+
+					switch (this.listLevel) 
+                    {
+						case Listlevel.Series:
+							selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
+                            string layout = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                            switch (this.m_Facade.CurrentLayout)
+                            {
+                                case GUIFacadeControl.Layout.LargeIcons:
+                                    CycleSeriesBanner(selectedSeries, nextImage);
+                                    break;
+                                case GUIFacadeControl.Layout.Filmstrip:
+                                case GUIFacadeControl.Layout.CoverFlow:
+                                    CycleSeriesPoster(selectedSeries, nextImage);
+                                    break;
+                                case GUIFacadeControl.Layout.List:
+                                    if (layout == "ListPosters")
+                                    {
+                                        CycleSeriesPoster(selectedSeries, nextImage);
+                                    }
+                                    else
+                                    {
+                                        CycleSeriesBanner(selectedSeries, nextImage);
+                                    }
+                                    break;
+                            }
+							break;
+						case Listlevel.Season:
+							selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
+                            CycleSeasonPoster(selectedSeason, nextImage);
+							break;
+					}
                     break;
 
 				default:
@@ -2110,6 +2119,7 @@ namespace WindowPlugins.GUITVSeries
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write(string.Format("Error in bg_ProgressChanged: {0}: {1}", ex.Message, ex.InnerException));
+                MPTVSeriesLog.Write(ex.StackTrace);
             }
         }
 
@@ -5247,6 +5257,94 @@ namespace WindowPlugins.GUITVSeries
             }
 		}
 		#endregion
+
+        private void CycleSeriesBanner(DBSeries series, bool next)
+        {
+            if (series.BannerList.Count <= 1) return;
+
+            int nCurrent = series.BannerList.IndexOf(series.Banner);
+
+            if (next)
+            {
+                nCurrent++;
+                if (nCurrent >= series.BannerList.Count)
+                    nCurrent = 0;
+            }
+            else
+            {
+                nCurrent--;
+                if (nCurrent < 0)
+                    nCurrent = series.BannerList.Count - 1;
+            }
+
+            series.Banner = series.BannerList[nCurrent];
+            series.Commit();
+
+            // No need to re-load the facade for non-graphical layouts
+            if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
+                seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(series);
+            else
+                LoadFacade();
+        }
+
+        private void CycleSeriesPoster(DBSeries series, bool next)
+        {
+            if (series.PosterList.Count <= 1) return;
+
+            int nCurrent = series.PosterList.IndexOf(series.Poster);
+
+            if (next)
+            {
+                nCurrent++;
+                if (nCurrent >= series.PosterList.Count)
+                    nCurrent = 0;
+            }
+            else
+            {
+                nCurrent--;
+                if (nCurrent < 0)
+                    nCurrent = series.PosterList.Count - 1;
+            }
+
+            series.Poster = series.PosterList[nCurrent];
+            series.Commit();
+
+            // No need to re-load the facade for non-graphical layouts
+            if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
+                seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(series);
+            else
+                LoadFacade();
+        }
+
+        private void CycleSeasonPoster(DBSeason season, bool next)
+        {
+            if (season.BannerList.Count <= 1) return;
+
+            int nCurrent = season.BannerList.IndexOf(season.Banner);
+
+            if (next)
+            {
+                nCurrent++;
+                if (nCurrent >= season.BannerList.Count)
+                    nCurrent = 0;
+            }
+            else
+            {
+                nCurrent--;
+                if (nCurrent < 0)
+                    nCurrent = season.BannerList.Count - 1;
+            }
+
+            season.Banner = season.BannerList[nCurrent];
+            season.Commit();
+            m_bUpdateBanner = true;
+
+            // No need to re-load the facade for non-graphical layouts
+            if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.List)
+                seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
+            else
+                LoadFacade();
+        }
 
         private void CommonPlayEpisodeAction() {
             if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {
