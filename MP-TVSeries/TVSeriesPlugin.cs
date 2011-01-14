@@ -494,8 +494,7 @@ namespace WindowPlugins.GUITVSeries
 
             #region Trakt
             TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
-            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
-            TraktAPI.APIKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);            
             TraktAPI.UserAgent = Settings.UserAgent;
             #endregion
 
