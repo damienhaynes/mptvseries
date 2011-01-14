@@ -21,7 +21,7 @@ namespace Trakt.Show
         [DataMember(Name = "episode")]
         public string Episode { get; set; }
 
-        [DataMember(Name = "tvdbid")]
+        [DataMember(Name = "tvdb_id")]
         public string SeriesID { get; set; }
 
         [DataMember(Name = "progress")]
