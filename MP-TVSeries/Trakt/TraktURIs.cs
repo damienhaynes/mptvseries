@@ -15,5 +15,6 @@ namespace Trakt
         public const string SeriesOverview = @"http://api.trakt.tv/show/summary.json/5daf4d0b339a90d7473c6f1ed7f609c4e69f92b4/{0}";
         public const string UserLibraryShows = @"http://api.trakt.tv/user/library/shows.json/5daf4d0b339a90d7473c6f1ed7f609c4e69f92b4/{0}";
         public const string UserLibraryMovies = @"http://api.trakt.tv/user/library/movies.json/5daf4d0b339a90d7473c6f1ed7f609c4e69f92b4/{0}";
+        public const string SyncEpisodeLibrary = @"http://api.trakt.tv/show/episode/{0}/5daf4d0b339a90d7473c6f1ed7f609c4e69f92b4";        
     }
 }

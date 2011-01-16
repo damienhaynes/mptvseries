@@ -234,40 +234,7 @@ namespace WindowPlugins.GUITVSeries
         #region Private Methods
 
         #region #Trakt Handling
-        /// <summary>
-        /// Create scrobble data that can be used to send to Trakt API
-        /// </summary>
-        private TraktEpisodeScrobble CreateScrobbleData(DBEpisode episode)
-        {
-            string username = TraktAPI.Username;
-            string password = TraktAPI.Password;
-
-            // check if trakt is enabled
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
-
-            DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-            if (series == null) return null;
-
-            // create scrobble data
-            TraktEpisodeScrobble scrobbleData = new TraktEpisodeScrobble
-            {
-                Title = series[DBOnlineSeries.cOriginalName],
-                Year = DBSeries.GetSeriesYear(series),
-                Season = episode[DBOnlineEpisode.cSeasonIndex],
-                Episode = episode.TraktEpisode,
-                SeriesID = series[DBSeries.cID],
-                PluginVersion = Settings.Version.ToString(),
-                MediaCenter = "mp-tvseries",
-                MediaCenterVersion = Settings.MPVersion.ToString(),
-                MediaCenterBuildDate = Settings.MPBuildDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                UserName = username,
-                Password = password
-            };
-
-            return scrobbleData;
-        }
-
+        
         /// <summary>
         /// Update Trakt status of episode being watched on Timer Interval
         /// </summary>
@@ -299,12 +266,12 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // we are now watching 2nd part of double episode
-                scrobbleData = CreateScrobbleData(episodes[1]);
+                scrobbleData = TraktHandler.CreateScrobbleData(episodes[1]);
             }
             else
             {
                 // we are watching a single episode or 1st part of double episode
-                scrobbleData = CreateScrobbleData(m_currentEpisode);
+                scrobbleData = TraktHandler.CreateScrobbleData(m_currentEpisode);
             }
 
             if (scrobbleData == null) return;
@@ -314,9 +281,9 @@ namespace WindowPlugins.GUITVSeries
             scrobbleData.Progress = Convert.ToInt32(progress).ToString();
 
             // set watching status on trakt
-            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.watching);
+            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktScrobbleStates.watching);
             if (response == null) return;
-            CheckTraktErrorAndNotify(response);
+            TraktHandler.CheckTraktErrorAndNotify(response, true);
         }
 
         /// <summary>
@@ -329,38 +296,24 @@ namespace WindowPlugins.GUITVSeries
             double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
 
             // get scrobble data to send to api
-            TraktEpisodeScrobble scrobbleData = CreateScrobbleData(episode);
+            TraktEpisodeScrobble scrobbleData = TraktHandler.CreateScrobbleData(episode);
             if (scrobbleData == null) return;
             
             // set duration/progress in scrobble data
             scrobbleData.Duration = Convert.ToInt32(duration).ToString();
             scrobbleData.Progress = "100";
 
-            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktAPI.Status.scrobble);
+            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktScrobbleStates.scrobble);
             if (response == null) return;
-            CheckTraktErrorAndNotify(response);            
-        }
+            TraktHandler.CheckTraktErrorAndNotify(response, true);
 
-        /// <summary>
-        /// Notify user in GUI if an error state was returned from Trakt API
-        /// </summary>
-        private void CheckTraktErrorAndNotify(TraktResponse response)
-        {
-            if (response.Status == null) return;
-
-            // check response error status
-            if (response.Status != "success")
+            if (response.Status == "success")
             {
-                MPTVSeriesLog.Write("Trakt Error: {0}", response.Error);
-                TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, response.Error);
-            }
-            else
-            {
-                // success
-                MPTVSeriesLog.Write("Trakt Response: {0}", response.Message);
+                // set trakt flags so we dont waste time syncing later
+                episode[DBOnlineEpisode.cTraktLibrary] = 1;
+                episode[DBOnlineEpisode.cTraktSeen] = 1;
             }
         }
-
         #endregion
 
         /// <summary>

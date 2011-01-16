@@ -42,7 +42,7 @@ namespace WindowPlugins.GUITVSeries
         Created
     }
 
-    public class DBEpisode : DBTable, ICacheable<DBEpisode>
+    public class DBEpisode : DBTable, ICacheable<DBEpisode>, IEquatable<DBEpisode>
     {
         public static void overRide(DBEpisode old, DBEpisode newObject)
         {
@@ -57,7 +57,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
-        public const int cDBVersion = 7;
+        public const int cDBVersion = 8;
 
         #region Local DB Fields
         public const String cFilename = "EpisodeFilename";
@@ -235,6 +235,12 @@ namespace WindowPlugins.GUITVSeries
                                 episode.Commit();
                             }
                         }
+                        nUpgradeDBVersion++;
+                        break;
+
+                    case 7:
+                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, new SQLCondition());
+                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, new SQLCondition());
                         nUpgradeDBVersion++;
                         break;
 
@@ -1625,5 +1631,22 @@ namespace WindowPlugins.GUITVSeries
             return sbBuffer.ToString();
         }
         #endregion
+
+        #region IEquatable<Vector> Members
+
+        public bool Equals(DBEpisode other)
+        {
+            bool result = false;
+
+            if (this[cCompositeID].Equals(other[cCompositeID]))
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        #endregion
+
     }
 }
