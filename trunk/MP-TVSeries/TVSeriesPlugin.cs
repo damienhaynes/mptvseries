@@ -174,9 +174,10 @@ namespace WindowPlugins.GUITVSeries
         private bool skipSeasonIfOne_DirectionDown = true;
         private string[] m_back_up_select_this = null;        
         private bool m_bUpdateBanner = false;
-        private TimerCallback m_timerDelegate = null;
+        private TimerCallback m_timerDelegate = null;        
         private System.Threading.Timer m_scanTimer = null;
 		private System.Threading.Timer m_FanartTimer = null;
+        private System.Threading.Timer m_TraktSyncTimer = null;
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();        
@@ -496,6 +497,9 @@ namespace WindowPlugins.GUITVSeries
             TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
             TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);            
             TraktAPI.UserAgent = Settings.UserAgent;
+
+            // Timer to process episodes to send to trakt, will also be called after new episodes are added to library
+            m_TraktSyncTimer = new System.Threading.Timer(new TimerCallback(TraktSynchronize), null, 15000, Timeout.Infinite);          
             #endregion
 
             #region Skin Settings / Load
@@ -4282,7 +4286,7 @@ namespace WindowPlugins.GUITVSeries
             // timer check every second to check for queued parsing parameters
             if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(ImporterQueueMonitor);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay * 1000, 1000);
-
+            
             // Setup Disk Watcher (DeviceManager) and Folder/File Watcher
             if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
             {
@@ -4334,18 +4338,28 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
-        {            
+        {
             setProcessAnimationStatus(false);
 
             if (m_parserUpdater.UpdateScan)
-            {                
+            {
                 DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, m_LastUpdateScan.ToString());
                 setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
             m_parserUpdaterWorking = false;
             if (bDataUpdated)
             {
-               if (m_Facade != null) LoadFacade();
+                if (m_Facade != null) LoadFacade();
+
+                if (!TraktHandler.SyncInProgress)
+                {
+                    m_TraktSyncTimer.Change(0, Timeout.Infinite);
+                }
+                else
+                {
+                    // sync may still be in progress e.g. inital sync can take a while
+                    m_TraktSyncTimer.Change(3600000, Timeout.Infinite);
+                }
             }
         }
 
@@ -4358,8 +4372,40 @@ namespace WindowPlugins.GUITVSeries
             if (nProgress == 30 && m_Facade != null) LoadFacade();
         }
 
-		#region Facade Item Selected
-		// triggered when a selection change was made on the facade
+        #region Trakt
+
+        private void TraktSynchronize(Object stateInfo)
+        {
+            if (string.IsNullOrEmpty(TraktAPI.Username) || string.IsNullOrEmpty(TraktAPI.Password)) 
+                return;
+
+            // Handle one sync at a time, can be scheduled on next timer interval
+            if (TraktHandler.SyncInProgress) return; 
+
+            MPTVSeriesLog.Write("Trakt: Synchronize Start");
+            TraktHandler.SyncInProgress = true;
+
+            List<DBEpisode> episodesLibrary = TraktHandler.GetEpisodesToSync(TraktSyncModes.library);
+            List<DBEpisode> episodesSeen = TraktHandler.GetEpisodesToSync(TraktSyncModes.seen);
+
+            // remove any seen episodes from library episode list as 'seen' counts as being part of the library
+            // dont want to hit the server unnecessarily
+            episodesLibrary.RemoveAll(e => episodesSeen.Contains(e));
+
+            // sync library
+            TraktHandler.SynchronizeLibrary(episodesLibrary, false);
+
+            // sync Seen
+            TraktHandler.SynchronizeLibrary(episodesSeen, true);
+            
+            MPTVSeriesLog.Write("Trakt: Synchronize Complete");
+            TraktHandler.SyncInProgress = false;
+        }
+
+        #endregion
+
+        #region Facade Item Selected
+        // triggered when a selection change was made on the facade
 		private void onFacadeItemSelected(GUIListItem item, GUIControl parent) {
 			// if this is not a message from the facade, exit
 			if (parent != m_Facade && parent != m_Facade.FilmstripLayout &&

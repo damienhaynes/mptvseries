@@ -542,6 +542,21 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         public static bool IsSeriesRemoved { get; set; }
 
+        /// <summary>
+        /// Get the Year component from Series First Aired date
+        /// </summary>
+        public string Year
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this[DBOnlineSeries.cFirstAired]))
+                    return string.Empty;
+
+                return this[DBOnlineSeries.cFirstAired].ToString().Split('-')[0];
+            }
+        }
+
+
         public override bool Commit()
         {
             if (m_onlineSeries != null)
@@ -706,14 +721,6 @@ namespace WindowPlugins.GUITVSeries
                 if (!String.IsNullOrEmpty(pretty)) return pretty;
             }
             return this[DBSeries.cParsedName];
-        }
-
-        public static string GetSeriesYear(DBSeries series)
-        {
-            if (string.IsNullOrEmpty(series[DBOnlineSeries.cFirstAired]))
-                return string.Empty;
-
-            return series[DBOnlineSeries.cFirstAired].ToString().Split('-')[0];
         }
 
         public static void UpdateUnWatched(DBEpisode episode)

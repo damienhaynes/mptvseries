@@ -10,14 +10,22 @@ using WindowPlugins.GUITVSeries;
 
 namespace Trakt
 {
-    static class TraktAPI
+    public enum TraktScrobbleStates
     {
-        public enum Status
-        {
-            watching,
-            scrobble
-        }
+        watching,
+        scrobble
+    }
 
+    public enum TraktSyncModes
+    {
+        library,
+        seen,
+        unlibrary,
+        unseen
+    }
+
+    static class TraktAPI
+    {       
         /// <summary>
         /// Trakt Username
         /// </summary>
@@ -92,10 +100,10 @@ namespace Trakt
         /// </summary>
         /// <param name="scrobbleData">Episode object being scrobbled</param>
         /// <param name="status">Watching or Watched</param>
-        public static TraktResponse ScrobbleShowState(TraktEpisodeScrobble scrobbleData, Status status)
+        public static TraktResponse ScrobbleShowState(TraktEpisodeScrobble scrobbleData, TraktScrobbleStates status)
         {
             // check that we have everything we need
-            // server can accept title/year if imdb id is not supplied
+            // server can accept title/year if tvdb id is not supplied
             if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Season) || string.IsNullOrEmpty(scrobbleData.Episode))
             {
                 TraktResponse error = new TraktResponse
@@ -118,7 +126,7 @@ namespace Trakt
         /// </summary>
         /// <param name="scrobbleData">Movie object being scrobbled</param>
         /// <param name="status">Watching or Watched</param>
-        public static TraktResponse ScrobbleMovieState(TraktMovieScrobble scrobbleData, Status status)
+        public static TraktResponse ScrobbleMovieState(TraktMovieScrobble scrobbleData, TraktScrobbleStates status)
         {
             // check that we have everything we need
             // server can accept title if series id is not supplied
@@ -134,6 +142,32 @@ namespace Trakt
 
             // serialize Scrobble object to JSON and send to server
             string response = Transmit(string.Format(TraktURIs.ScrobbleMovie, status.ToString()), scrobbleData.ToJSON());
+
+            // return success or failure
+            return response.FromJSON<TraktResponse>();
+        }
+
+        /// <summary>
+        /// Sync episode library with Trakt
+        /// </summary>
+        /// <param name="syncData">Series and List of episodes</param>
+        /// <param name="mode">Sync mode operation</param>
+        public static TraktResponse SyncEpisodeLibrary(TraktSync syncData, TraktSyncModes mode)
+        {
+            // check that we have everything we need
+            // server can accept title/year if imdb id is not supplied
+            if (string.IsNullOrEmpty(syncData.SeriesID))
+            {
+                TraktResponse error = new TraktResponse
+                {
+                    Error = Translation.TraktNotEnoughInfo,
+                    Status = "failure"
+                };
+                return error;
+            }
+
+            // serialize Scrobble object to JSON and send to server
+            string response = Transmit(string.Format(TraktURIs.SyncEpisodeLibrary, mode.ToString()), syncData.ToJSON());
 
             // return success or failure
             return response.FromJSON<TraktResponse>();
