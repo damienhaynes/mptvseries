@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 TraktSync.Episode episode = new TraktSync.Episode();
                 episode.SeasonIndex = ep[DBOnlineEpisode.cSeasonIndex];
-                episode.EpisodeIndex = ep[DBOnlineEpisode.cEpisodeIndex];
+                episode.EpisodeIndex = ep.TraktEpisode;
                 epList.Add(episode);
             }
 
@@ -78,17 +78,18 @@ namespace WindowPlugins.GUITVSeries
         {
             List<DBEpisode> episodes = new List<DBEpisode>();
 
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
+
             if (mode == TraktSyncModes.library)
             {
                 // standard conditions include filename and hidden checks
-                SQLCondition conditions = new SQLCondition();
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, SQLConditionType.Equal);
                 episodes = DBEpisode.Get(conditions);
             }
 
             if (mode == TraktSyncModes.seen)
             {
-                SQLCondition conditions = new SQLCondition();
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, SQLConditionType.Equal);
