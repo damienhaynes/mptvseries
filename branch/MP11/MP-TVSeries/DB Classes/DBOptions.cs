@@ -221,8 +221,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSetHiddenSeriesAsScanIgnore = "SetHiddenSeriesAsScanIgnore";
 
         public const String cTraktUsername = "TraktUsername";
-        public const String cTraktPassword = "TraktPassword";
-        public const String cTraktAPIKey = "TraktAPIKey";
+        public const String cTraktPassword = "TraktPassword";        
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -595,9 +594,6 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cSetHiddenSeriesAsScanIgnore) == null)
                     SetOptions(cSetHiddenSeriesAsScanIgnore, true);
 
-                if (GetOptions(cTraktAPIKey) == null)
-                    SetOptions(cTraktAPIKey, string.Empty);
-
                 if (GetOptions(cTraktPassword) == null)
                     SetOptions(cTraktPassword, string.Empty);
 
@@ -689,7 +685,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (string key in optionsCache.Keys)
             {
                 // dont log private options
-                if (!key.Equals(DBOption.cTraktPassword) && !key.Equals(DBOption.cTraktAPIKey) && !key.Equals(DBOption.cOnlineUserID))
+                if (!key.Equals(DBOption.cTraktPassword) && !key.Equals(DBOption.cOnlineUserID))
                 {
                     MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
                 }

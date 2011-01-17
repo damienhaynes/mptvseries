@@ -1767,6 +1767,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cAbsoluteNumber:
                                 case DBEpisode.cIsAvailable:
                                 case DBOnlineEpisode.cRatingCount:
+                                case DBOnlineEpisode.cTraktLibrary:
+                                case DBOnlineEpisode.cTraktSeen:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;

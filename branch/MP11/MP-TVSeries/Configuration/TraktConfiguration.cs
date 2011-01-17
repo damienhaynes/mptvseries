@@ -26,13 +26,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void LoadFromDB()
         {
             textBoxUsername.Text = DBOption.GetOptions(DBOption.cTraktUsername);
-            textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);
-            textBoxAPIKey.Text = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);            
 
             TraktAPI.UserAgent = Settings.UserAgent;
             TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
-            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
-            TraktAPI.APIKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);            
         }
 
         private void textBoxUsername_TextChanged(object sender, EventArgs e)
@@ -57,34 +55,76 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {            
             System.Diagnostics.Process.Start(@"http://trakt.tv");
         }
-
-        private void textBoxAPIKey_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cTraktAPIKey, textBoxAPIKey.Text);
-        }
-
+        
         #region testing
         private void buttonTestAPI_Click(object sender, EventArgs e)
         {
             string username = TraktAPI.Username;
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(TraktAPI.APIKey)) return;
+            if (string.IsNullOrEmpty(username)) return;
 
-            MPTVSeriesLog.Write("Trakt: Getting Shows for user '{0}'", username);
-            IEnumerable<TraktLibraryShows> showsForUser = TraktAPI.GetSeriesForUser(username);
-            MPTVSeriesLog.Write("Show Count: {0}", showsForUser.Count().ToString());
+            //TraktSync traktSync = new TraktSync();
 
-            MPTVSeriesLog.Write("Trakt: Getting Show overview for Series ID: '79488'");
-            TraktSeriesOverview seriesOverview = TraktAPI.GetSeriesOverview("79488");
-            if (seriesOverview.Status != "failure") MPTVSeriesLog.Write("Successfully got data for {0}", seriesOverview.Title);
+            //List<DBEpisode> episodes = DBEpisode.Get(79488);
 
-            MPTVSeriesLog.Write("Trakt: Getting User Profile for user '{0}'", username);
-            TraktUserProfile userProfile = TraktAPI.GetUserProfile(username);            
-            if(userProfile != null && !string.IsNullOrEmpty(userProfile.Protected)) MPTVSeriesLog.Write("Successfully got data for {0}", userProfile.FullName);
+            //DBSeries series = Helper.getCorrespondingSeries(79488);
 
-            MPTVSeriesLog.Write("Trakt: Getting watched History for user '{0}'", username);
-            IEnumerable<TraktWatchedEpisodeHistory> watchedHistory = TraktAPI.GetUserWatchedHistory(username);
-            MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());
+            //traktSync.SeriesID = series[DBSeries.cID];
+            //traktSync.IMDBID = series[DBOnlineSeries.cIMDBID];
+            //traktSync.Password = TraktAPI.Password;
+            //traktSync.UserName = TraktAPI.Username;
+            //traktSync.Year = DBSeries.GetSeriesYear(series);
+            //traktSync.Title = series[DBOnlineSeries.cOriginalName];
+
+            //List<TraktSync.Episode> epList = new List<TraktSync.Episode>();
+
+            //foreach(DBEpisode ep in episodes)
+            //{
+            //    TraktSync.Episode episode = new TraktSync.Episode();
+            //    episode.SeasonIndex = ep[DBOnlineEpisode.cSeasonIndex];
+            //    episode.EpisodeIndex = ep[DBOnlineEpisode.cEpisodeIndex];
+            //    epList.Add(episode);
+            //}
+
+            //traktSync.EpisodeList = epList;
+
+            //TraktResponse response = TraktAPI.SyncEpisodeLibrary(traktSync, TraktAPI.SyncModes.library);
+            //if (response.Message != null) MPTVSeriesLog.Write("Trakt Response: " + response.Message);
+            //if (response.Error != null) MPTVSeriesLog.Write("Trakt Error: " + response.Error);
+
+            //System.Threading.Thread.Sleep(2000);
+
+            //response = TraktAPI.SyncEpisodeLibrary(traktSync, TraktAPI.SyncModes.unlibrary);
+            //if (response.Message != null) MPTVSeriesLog.Write("Trakt Response: " + response.Message);
+            //if (response.Error != null) MPTVSeriesLog.Write("Trakt Error: " + response.Error);
+
+            //System.Threading.Thread.Sleep(2000);
+
+            //response = TraktAPI.SyncEpisodeLibrary(traktSync, TraktAPI.SyncModes.seen);
+            //if (response.Message != null) MPTVSeriesLog.Write("Trakt Response: " + response.Message);
+            //if (response.Error != null) MPTVSeriesLog.Write("Trakt Error: " + response.Error);
+
+            //System.Threading.Thread.Sleep(2000);
+
+            //response = TraktAPI.SyncEpisodeLibrary(traktSync, TraktAPI.SyncModes.unseen);
+            //if (response.Message != null) MPTVSeriesLog.Write("Trakt Response: " + response.Message);
+            //if (response.Error != null) MPTVSeriesLog.Write("Trakt Error: " + response.Error);
+
+        //    MPTVSeriesLog.Write("Trakt: Getting Shows for user '{0}'", username);
+        //    IEnumerable<TraktLibraryShows> showsForUser = TraktAPI.GetSeriesForUser(username);
+        //    MPTVSeriesLog.Write("Show Count: {0}", showsForUser.Count().ToString());
+
+        //    MPTVSeriesLog.Write("Trakt: Getting Show overview for Series ID: '79488'");
+        //    TraktSeriesOverview seriesOverview = TraktAPI.GetSeriesOverview("79488");
+        //    if (seriesOverview.Status != "failure") MPTVSeriesLog.Write("Successfully got data for {0}", seriesOverview.Title);
+
+        //    MPTVSeriesLog.Write("Trakt: Getting User Profile for user '{0}'", username);
+        //    TraktUserProfile userProfile = TraktAPI.GetUserProfile(username);            
+        //    if(userProfile != null && !string.IsNullOrEmpty(userProfile.Protected)) MPTVSeriesLog.Write("Successfully got data for {0}", userProfile.FullName);
+
+        //    MPTVSeriesLog.Write("Trakt: Getting watched History for user '{0}'", username);
+        //    IEnumerable<TraktWatchedEpisodeHistory> watchedHistory = TraktAPI.GetUserWatchedHistory(username);
+        //    MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());
         }
         #endregion
     }

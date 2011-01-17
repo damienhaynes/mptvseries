@@ -68,6 +68,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cProductionCode = "ProductionCode";
         public const String cAbsoluteNumber = "absolute_number";
         public const String cSeasonID = "seasonid";
+        public const String cTraktSeen = "TraktSeen";
+        public const String cTraktLibrary = "TraktLibrary";
         #endregion
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
@@ -155,6 +157,9 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cDownloadExpectedNames, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBField.cTypeString));
+
+            base.AddColumn(cTraktSeen, new DBField(DBField.cTypeInt));
+            base.AddColumn(cTraktLibrary, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {

@@ -179,9 +179,10 @@ namespace WindowPlugins.GUITVSeries
         private List<string> availableSubtitleDownloaderNames = null;
         private bool torrentWorking = false;        
         private bool m_bUpdateBanner = false;
-        private TimerCallback m_timerDelegate = null;
+        private TimerCallback m_timerDelegate = null;        
         private System.Threading.Timer m_scanTimer = null;
 		private System.Threading.Timer m_FanartTimer = null;
+        private System.Threading.Timer m_TraktSyncTimer = null;
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();        
@@ -509,9 +510,11 @@ namespace WindowPlugins.GUITVSeries
 
             #region Trakt
             TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
-            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
-            TraktAPI.APIKey = DBOption.GetOptions(DBOption.cTraktAPIKey);
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);            
             TraktAPI.UserAgent = Settings.UserAgent;
+
+            // Timer to process episodes to send to trakt, will also be called after new episodes are added to library
+            m_TraktSyncTimer = new System.Threading.Timer(new TimerCallback(TraktSynchronize), null, 15000, Timeout.Infinite);          
             #endregion
 
             #region Skin Settings / Load
@@ -1573,6 +1576,55 @@ namespace WindowPlugins.GUITVSeries
 
                     break;
 
+                case Action.ActionType.ACTION_PREV_PICTURE:
+                case Action.ActionType.ACTION_NEXT_PICTURE:
+                    // Cycle Artwork
+					if (this.m_Facade.SelectedListItem == null || this.m_Facade.SelectedListItem.TVTag == null)
+						return;
+
+                    // can only cycle artwork on series and seasons
+					if (this.listLevel == Listlevel.Group || this.listLevel == Listlevel.Episode)
+						return;
+
+					selectedSeries = null;
+					selectedSeason = null;
+					selectedEpisode = null;
+
+                    bool nextImage = action.wID == Action.ActionType.ACTION_NEXT_PICTURE ? true : false;
+
+					switch (this.listLevel) 
+                    {
+						case Listlevel.Series:
+							selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
+                            string layout = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                            switch (this.m_Facade.View)
+                            {
+                                case GUIFacadeControl.ViewMode.LargeIcons:
+                                    CycleSeriesBanner(selectedSeries, nextImage);
+                                    break;
+                                case GUIFacadeControl.ViewMode.Filmstrip:
+                                case GUIFacadeControl.ViewMode.CoverFlow:
+                                    CycleSeriesPoster(selectedSeries, nextImage);
+                                    break;
+                                case GUIFacadeControl.ViewMode.List:
+                                    if (layout == "ListPosters")
+                                    {
+                                        CycleSeriesPoster(selectedSeries, nextImage);
+                                    }
+                                    else
+                                    {
+                                        CycleSeriesBanner(selectedSeries, nextImage);
+                                    }
+                                    break;
+                            }
+							break;
+						case Listlevel.Season:
+							selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
+                            CycleSeasonPoster(selectedSeason, nextImage);
+							break;
+					}
+                    break;
+
 				default:
 					base.OnAction(action);
 					break;
@@ -2298,6 +2350,7 @@ namespace WindowPlugins.GUITVSeries
             catch (Exception ex)
             {
                 MPTVSeriesLog.Write(string.Format("Error in bg_ProgressChanged: {0}: {1}", ex.Message, ex.InnerException));
+                MPTVSeriesLog.Write(ex.StackTrace);
             }
         }
 
@@ -4488,7 +4541,7 @@ namespace WindowPlugins.GUITVSeries
             // timer check every second to check for queued parsing parameters
             if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(ImporterQueueMonitor);
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay * 1000, 1000);
-
+            
             // Setup Disk Watcher (DeviceManager) and Folder/File Watcher
             if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
             {
@@ -4541,18 +4594,28 @@ namespace WindowPlugins.GUITVSeries
         }
 
         void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
-        {            
+        {
             setProcessAnimationStatus(false);
 
             if (m_parserUpdater.UpdateScan)
-            {                
+            {
                 DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, m_LastUpdateScan.ToString());
                 setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
             m_parserUpdaterWorking = false;
             if (bDataUpdated)
             {
-               if (m_Facade != null) LoadFacade();
+                if (m_Facade != null) LoadFacade();
+
+                if (!TraktHandler.SyncInProgress)
+                {
+                    m_TraktSyncTimer.Change(0, Timeout.Infinite);
+                }
+                else
+                {
+                    // sync may still be in progress e.g. inital sync can take a while
+                    m_TraktSyncTimer.Change(3600000, Timeout.Infinite);
+                }
             }
         }
 
@@ -4565,8 +4628,40 @@ namespace WindowPlugins.GUITVSeries
             if (nProgress == 30 && m_Facade != null) LoadFacade();
         }
 
-		#region Facade Item Selected
-		// triggered when a selection change was made on the facade
+        #region Trakt
+
+        private void TraktSynchronize(Object stateInfo)
+        {
+            if (string.IsNullOrEmpty(TraktAPI.Username) || string.IsNullOrEmpty(TraktAPI.Password)) 
+                return;
+
+            // Handle one sync at a time, can be scheduled on next timer interval
+            if (TraktHandler.SyncInProgress) return; 
+
+            MPTVSeriesLog.Write("Trakt: Synchronize Start");
+            TraktHandler.SyncInProgress = true;
+
+            List<DBEpisode> episodesLibrary = TraktHandler.GetEpisodesToSync(TraktSyncModes.library);
+            List<DBEpisode> episodesSeen = TraktHandler.GetEpisodesToSync(TraktSyncModes.seen);
+
+            // remove any seen episodes from library episode list as 'seen' counts as being part of the library
+            // dont want to hit the server unnecessarily
+            episodesLibrary.RemoveAll(e => episodesSeen.Contains(e));
+
+            // sync library
+            TraktHandler.SynchronizeLibrary(episodesLibrary, false);
+
+            // sync Seen
+            TraktHandler.SynchronizeLibrary(episodesSeen, true);
+            
+            MPTVSeriesLog.Write("Trakt: Synchronize Complete");
+            TraktHandler.SyncInProgress = false;
+        }
+
+        #endregion
+
+        #region Facade Item Selected
+        // triggered when a selection change was made on the facade
 		private void onFacadeItemSelected(GUIListItem item, GUIControl parent) {
 			// if this is not a message from the facade, exit
 			if (parent != m_Facade && parent != m_Facade.FilmstripView &&
@@ -5478,6 +5573,94 @@ namespace WindowPlugins.GUITVSeries
             }
 		}
 		#endregion
+
+        private void CycleSeriesBanner(DBSeries series, bool next)
+        {
+            if (series.BannerList.Count <= 1) return;
+
+            int nCurrent = series.BannerList.IndexOf(series.Banner);
+
+            if (next)
+            {
+                nCurrent++;
+                if (nCurrent >= series.BannerList.Count)
+                    nCurrent = 0;
+            }
+            else
+            {
+                nCurrent--;
+                if (nCurrent < 0)
+                    nCurrent = series.BannerList.Count - 1;
+            }
+
+            series.Banner = series.BannerList[nCurrent];
+            series.Commit();
+
+            // No need to re-load the facade for non-graphical layouts
+            if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+                seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(series);
+            else
+                LoadFacade();
+        }
+
+        private void CycleSeriesPoster(DBSeries series, bool next)
+        {
+            if (series.PosterList.Count <= 1) return;
+
+            int nCurrent = series.PosterList.IndexOf(series.Poster);
+
+            if (next)
+            {
+                nCurrent++;
+                if (nCurrent >= series.PosterList.Count)
+                    nCurrent = 0;
+            }
+            else
+            {
+                nCurrent--;
+                if (nCurrent < 0)
+                    nCurrent = series.PosterList.Count - 1;
+            }
+
+            series.Poster = series.PosterList[nCurrent];
+            series.Commit();
+
+            // No need to re-load the facade for non-graphical layouts
+            if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+                seriesposter.Filename = ImageAllocator.GetSeriesPosterAsFilename(series);
+            else
+                LoadFacade();
+        }
+
+        private void CycleSeasonPoster(DBSeason season, bool next)
+        {
+            if (season.BannerList.Count <= 1) return;
+
+            int nCurrent = season.BannerList.IndexOf(season.Banner);
+
+            if (next)
+            {
+                nCurrent++;
+                if (nCurrent >= season.BannerList.Count)
+                    nCurrent = 0;
+            }
+            else
+            {
+                nCurrent--;
+                if (nCurrent < 0)
+                    nCurrent = season.BannerList.Count - 1;
+            }
+
+            season.Banner = season.BannerList[nCurrent];
+            season.Commit();
+            m_bUpdateBanner = true;
+
+            // No need to re-load the facade for non-graphical layouts
+            if (m_Facade.View == GUIFacadeControl.ViewMode.List)
+                seasonbanner.Filename = ImageAllocator.GetSeasonBannerAsFilename(season);
+            else
+                LoadFacade();
+        }
 
         private void CommonPlayEpisodeAction() {
             if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0) {

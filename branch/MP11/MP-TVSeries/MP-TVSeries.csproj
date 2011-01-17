@@ -282,7 +282,9 @@
     </Compile>
     <Compile Include="settings.cs" />
     <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
+    <Compile Include="TraktHandler.cs" />
     <Compile Include="Trakt\Movie\TraktMovieScrobble.cs" />
+    <Compile Include="Trakt\Show\TraktSync.cs" />
     <Compile Include="Trakt\TraktAPI.cs" />
     <Compile Include="Trakt\TraktExtensions.cs" />
     <Compile Include="Trakt\TraktResponse.cs" />
