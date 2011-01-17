@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
                 Title = series[DBOnlineSeries.cOriginalName],
                 Year = series.Year,
                 Season = episode[DBOnlineEpisode.cSeasonIndex],
-                Episode = episode.TraktEpisode,
+                Episode = episode[DBOnlineEpisode.cEpisodeIndex],
                 SeriesID = series[DBSeries.cID],
                 PluginVersion = Settings.Version.ToString(),
                 MediaCenter = "mp-tvseries",
@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 TraktSync.Episode episode = new TraktSync.Episode();
                 episode.SeasonIndex = ep[DBOnlineEpisode.cSeasonIndex];
-                episode.EpisodeIndex = ep.TraktEpisode;
+                episode.EpisodeIndex = ep[DBOnlineEpisode.cEpisodeIndex];
                 epList.Add(episode);
             }
 
@@ -83,9 +83,10 @@ namespace WindowPlugins.GUITVSeries
 
             if (mode == TraktSyncModes.library)
             {
-                // standard conditions include filename and hidden checks
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, SQLConditionType.Equal);
-                episodes = DBEpisode.Get(conditions);
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+                episodes = DBEpisode.Get(conditions, false);
             }
 
             if (mode == TraktSyncModes.seen)
