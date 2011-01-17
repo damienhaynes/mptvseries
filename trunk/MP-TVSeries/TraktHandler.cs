@@ -83,9 +83,10 @@ namespace WindowPlugins.GUITVSeries
 
             if (mode == TraktSyncModes.library)
             {
-                // standard conditions include filename and hidden checks
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, SQLConditionType.Equal);
-                episodes = DBEpisode.Get(conditions);
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+                episodes = DBEpisode.Get(conditions, false);
             }
 
             if (mode == TraktSyncModes.seen)
