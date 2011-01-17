@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
                 Title = series[DBOnlineSeries.cOriginalName],
                 Year = series.Year,
                 Season = episode[DBOnlineEpisode.cSeasonIndex],
-                Episode = episode.TraktEpisode,
+                Episode = episode[DBOnlineEpisode.cEpisodeIndex],
                 SeriesID = series[DBSeries.cID],
                 PluginVersion = Settings.Version.ToString(),
                 MediaCenter = "mp-tvseries",
@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 TraktSync.Episode episode = new TraktSync.Episode();
                 episode.SeasonIndex = ep[DBOnlineEpisode.cSeasonIndex];
-                episode.EpisodeIndex = ep.TraktEpisode;
+                episode.EpisodeIndex = ep[DBOnlineEpisode.cEpisodeIndex];
                 epList.Add(episode);
             }
 
