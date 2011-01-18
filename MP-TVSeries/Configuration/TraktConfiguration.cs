@@ -55,7 +55,42 @@ namespace WindowPlugins.GUITVSeries.Configuration
         {            
             System.Diagnostics.Process.Start(@"http://trakt.tv");
         }
-        
+
+        private void buttonSeriesIgnore_Click(object sender, EventArgs e)
+        {
+            SeriesSelect SeriesSelectDlg = new SeriesSelect();
+
+            // Get list of series in view
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cTraktIgnore, 1, SQLConditionType.Equal);            
+            SeriesSelectDlg.CheckedItems = DBSeries.Get(conditions);
+
+            // Get list of series not in view
+            conditions = new SQLCondition();
+            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cTraktIgnore, 1, SQLConditionType.NotEqual);            
+            SeriesSelectDlg.UnCheckedItems = DBSeries.Get(conditions);
+
+            // Show series list dialog
+            DialogResult result = SeriesSelectDlg.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                foreach (DBSeries series in SeriesSelectDlg.CheckedItems)
+                {
+                    // ignore these series
+                    series[DBOnlineSeries.cTraktIgnore] = 1;
+                    series.Commit();
+                }
+
+                foreach (DBSeries series in SeriesSelectDlg.UnCheckedItems)
+                {
+                    // unignore these series
+                    series[DBOnlineSeries.cTraktIgnore] = 0;
+                    series.Commit();
+                }
+            }
+        }
+
         #region testing
         private void buttonTestAPI_Click(object sender, EventArgs e)
         {
@@ -127,5 +162,6 @@ namespace WindowPlugins.GUITVSeries.Configuration
         //    MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());
         }
         #endregion
+
     }
 }

@@ -25,7 +25,7 @@ namespace WindowPlugins.GUITVSeries
                 return null;
 
             DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-            if (series == null) return null;
+            if (series == null || series[DBOnlineSeries.cTraktIgnore]) return null;
 
             // create scrobble data
             TraktEpisodeScrobble scrobbleData = new TraktEpisodeScrobble
@@ -79,7 +79,7 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = new List<DBEpisode>();
 
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
+            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);            
 
             if (mode == TraktSyncModes.library)
             {
@@ -114,7 +114,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (string seriesID in uniqueSeriesIDs)
             {
                 DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesID));
-                if (series == null) continue;
+                if (series == null || series[DBOnlineSeries.cTraktIgnore]) continue;
 
                 TraktSync traktSync = GetTraktSyncObject(series, episodes);
 
