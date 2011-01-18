@@ -94,6 +94,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cHasNewEpisodes = "HasNewEpisodes";
 
+        public const String cTraktIgnore = "TraktIgnore";
+
         #endregion
 
         public const int cDBVersion = 3;
@@ -202,6 +204,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
             base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
+            base.AddColumn(cTraktIgnore, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {

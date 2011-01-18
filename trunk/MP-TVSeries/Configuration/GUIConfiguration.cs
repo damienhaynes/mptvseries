@@ -1824,6 +1824,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasLocalFilesTemp:
                                 case DBOnlineSeries.cOnlineDataImported:
                                 case DBSeries.cDuplicateLocalName:
+                                case DBOnlineSeries.cTraktIgnore:
                                     // hide these fields, they are handled internally
                                     break;
                                 
@@ -1849,7 +1850,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeSortOrder:
                                 case DBSeries.cHidden:
                                 case DBSeries.cScanIgnore:
-                                case DBOnlineSeries.cRatingCount:
+                                case DBOnlineSeries.cRatingCount:                                
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
                                      break;
