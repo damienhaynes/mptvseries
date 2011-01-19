@@ -72,8 +72,14 @@ namespace Trakt.User
         [DataMember(Name = "watched")]
         public string WatchedCount { get; set; }
 
+        [DataMember(Name = "watched_unique")]
+        public string WatchedUniqueCount { get; set; }
+
         [DataMember(Name = "watched_trakt")]
         public string WatchedTraktCount { get; set; }
+
+        [DataMember(Name = "watched_trakt_unique")]
+        public string WatchedTraktUniqueCount { get; set; }
 
         [DataMember(Name = "watched_elsewhere")]
         public string WatchedElseWhereCount { get; set; }
