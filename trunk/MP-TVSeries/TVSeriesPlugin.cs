@@ -4393,10 +4393,10 @@ namespace WindowPlugins.GUITVSeries
             episodesLibrary.RemoveAll(e => episodesSeen.Contains(e));
 
             // sync library
-            TraktHandler.SynchronizeLibrary(episodesLibrary, false);
+            TraktHandler.SynchronizeLibrary(episodesLibrary, TraktSyncModes.library);
 
             // sync Seen
-            TraktHandler.SynchronizeLibrary(episodesSeen, true);
+            TraktHandler.SynchronizeLibrary(episodesSeen, TraktSyncModes.seen);
             
             MPTVSeriesLog.Write("Trakt: Synchronize Complete");
             TraktHandler.SyncInProgress = false;
