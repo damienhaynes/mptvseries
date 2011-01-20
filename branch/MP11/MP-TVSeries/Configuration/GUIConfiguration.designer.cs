@@ -239,7 +239,7 @@ namespace WindowPlugins.GUITVSeries
             this.label29 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.tabTrakt = new System.Windows.Forms.TabPage();
-            this.traktConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.TraktConfiguration();
+            this.traktConfiguration = new WindowPlugins.GUITVSeries.Configuration.TraktConfiguration();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblRecentAddedDays = new System.Windows.Forms.Label();
@@ -2566,13 +2566,13 @@ namespace WindowPlugins.GUITVSeries
             // 
             // traktConfiguration1
             // 
-            this.traktConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.traktConfiguration.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.traktConfiguration1.Location = new System.Drawing.Point(3, 3);
-            this.traktConfiguration1.Name = "traktConfiguration1";
-            this.traktConfiguration1.Size = new System.Drawing.Size(790, 637);
-            this.traktConfiguration1.TabIndex = 0;
+            this.traktConfiguration.Location = new System.Drawing.Point(3, 3);
+            this.traktConfiguration.Name = "traktConfiguration1";
+            this.traktConfiguration.Size = new System.Drawing.Size(790, 637);
+            this.traktConfiguration.TabIndex = 0;
             // 
             // tabPage_MP_DisplayControl
             // 
