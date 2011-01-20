@@ -111,7 +111,17 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 			SeriesSelect SeriesSelectDlg = new SeriesSelect();
 			
             // Set Current View
-            SeriesSelectDlg.ViewTag = "|" + txtViewName.Text + "|"; ;
+            string viewTag = "|" + txtViewName.Text + "|"; ;
+
+            // Get list of series in view
+            SQLCondition conditions = new SQLCondition();
+            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, viewTag, SQLConditionType.Like);
+            SeriesSelectDlg.CheckedItems = DBSeries.Get(conditions);
+
+            // Get list of series not in view
+            conditions = new SQLCondition();
+            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, viewTag, SQLConditionType.NotLike);
+            SeriesSelectDlg.UnCheckedItems = DBSeries.Get(conditions);
 
             // Show series list dialog
 			DialogResult result = SeriesSelectDlg.ShowDialog(this);
@@ -119,7 +129,7 @@ namespace WindowPlugins.GUITVSeries.Configuration {
             if (result == DialogResult.OK) {
                 SeriesToAdd = SeriesSelectDlg.CheckedItems;
                 SeriesToRemove = SeriesSelectDlg.UnCheckedItems;
-            }            
+            }
 		}
 
 		private void txtViewName_TextChanged(object sender, EventArgs e) {

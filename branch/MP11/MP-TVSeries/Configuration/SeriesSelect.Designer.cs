@@ -25,8 +25,8 @@
 		private void InitializeComponent() {
             this.checkedListBoxSeries = new System.Windows.Forms.CheckedListBox();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.labelSeriesSelected = new System.Windows.Forms.Label();
             this.chkBoxToggleAll = new System.Windows.Forms.CheckBox();
+            this.labelSeriesSelected = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // checkedListBoxSeries
@@ -40,7 +40,6 @@
             this.checkedListBoxSeries.ScrollAlwaysVisible = true;
             this.checkedListBoxSeries.Size = new System.Drawing.Size(272, 319);
             this.checkedListBoxSeries.TabIndex = 0;
-            this.checkedListBoxSeries.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSeries_ItemCheck);
             // 
             // buttonOK
             // 
@@ -53,27 +52,28 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // labelSeriesSelected
-            // 
-            this.labelSeriesSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSeriesSelected.AutoSize = true;
-            this.labelSeriesSelected.Location = new System.Drawing.Point(111, 345);
-            this.labelSeriesSelected.Name = "labelSeriesSelected";
-            this.labelSeriesSelected.Size = new System.Drawing.Size(93, 13);
-            this.labelSeriesSelected.TabIndex = 2;
-            this.labelSeriesSelected.Text = "0: Series Selected";
-            // 
             // chkBoxToggleAll
             // 
             this.chkBoxToggleAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chkBoxToggleAll.AutoSize = true;
-            this.chkBoxToggleAll.Location = new System.Drawing.Point(13, 343);
+            this.chkBoxToggleAll.Location = new System.Drawing.Point(13, 344);
             this.chkBoxToggleAll.Name = "chkBoxToggleAll";
             this.chkBoxToggleAll.Size = new System.Drawing.Size(70, 17);
             this.chkBoxToggleAll.TabIndex = 3;
             this.chkBoxToggleAll.Text = "Select &All";
             this.chkBoxToggleAll.UseVisualStyleBackColor = true;
             this.chkBoxToggleAll.CheckedChanged += new System.EventHandler(this.chkBoxToggleAll_CheckedChanged);
+            // 
+            // labelSeriesSelected
+            // 
+            this.labelSeriesSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSeriesSelected.AutoSize = true;
+            this.labelSeriesSelected.Location = new System.Drawing.Point(98, 345);
+            this.labelSeriesSelected.Name = "labelSeriesSelected";
+            this.labelSeriesSelected.Size = new System.Drawing.Size(93, 13);
+            this.labelSeriesSelected.TabIndex = 2;
+            this.labelSeriesSelected.Text = "0: Series Selected";
+            this.labelSeriesSelected.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // SeriesSelect
             // 
@@ -101,8 +101,8 @@
 		#endregion
 
 		private System.Windows.Forms.CheckedListBox checkedListBoxSeries;
-		private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Label labelSeriesSelected;
+        private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.CheckBox chkBoxToggleAll;
+        private System.Windows.Forms.Label labelSeriesSelected;
 	}
 }

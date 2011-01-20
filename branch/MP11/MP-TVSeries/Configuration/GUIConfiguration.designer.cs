@@ -2555,7 +2555,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // tabTrakt
             // 
-            this.tabTrakt.Controls.Add(this.traktConfiguration1);
+            this.tabTrakt.Controls.Add(this.traktConfiguration);
             this.tabTrakt.ImageIndex = 11;
             this.tabTrakt.Location = new System.Drawing.Point(4, 31);
             this.tabTrakt.Name = "tabTrakt";
@@ -3745,6 +3745,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label lblRecentAddedDays;
         private System.Windows.Forms.NumericUpDown nudRecentlyAddedDays;
         private System.Windows.Forms.TabPage tabTrakt;
-        private Configuration.TraktConfiguration traktConfiguration1;
+        private Configuration.TraktConfiguration traktConfiguration;
     }
 }

@@ -9,8 +9,7 @@ using System.Windows.Forms;
 namespace WindowPlugins.GUITVSeries.Configuration {
 	public partial class SeriesSelect : Form {
 
-        public List<DBSeries> m_SeriesChecked = new List<DBSeries>();
-        public List<DBSeries> m_SeriesUnChecked = new List<DBSeries>();
+        private int CheckedCount { get; set; }
 
 		public List<DBSeries> CheckedItems {
 			get {
@@ -30,37 +29,28 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 			}
 		} private List<DBSeries> _uncheckedItems = new List<DBSeries>();
 
-        public string ViewTag { get; set; }
-        public int CheckedCount { get; set; }
-
 		public SeriesSelect() {
 			InitializeComponent();
 		}
 
-		protected override void OnLoad(EventArgs e) {            
-            // Get list of series in view
-            SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, ViewTag, SQLConditionType.Like);
-            m_SeriesChecked = DBSeries.Get(conditions);
-            
-            // Get list of series not in view                    
-            conditions = new SQLCondition();
-            conditions.Add(new DBOnlineSeries(), DBOnlineSeries.cViewTags, ViewTag, SQLConditionType.NotLike);
-            m_SeriesUnChecked = DBSeries.Get(conditions);
-        
-			// Populate series list, if view already 
-			// has series added mark as checked at top of list
-            foreach (DBSeries series in m_SeriesChecked) {
+		protected override void OnLoad(EventArgs e)
+        {
+			// Populate series list, 
+			// mark as checked at top of list
+            foreach (DBSeries series in CheckedItems)
+            {
 				checkedListBoxSeries.Items.Add(series, true);
 			}
 
-            foreach (DBSeries series in m_SeriesUnChecked) {				
-				checkedListBoxSeries.Items.Add(series, false);				
+            foreach (DBSeries series in UnCheckedItems)
+            {
+				checkedListBoxSeries.Items.Add(series, false);
 			}
 
-            CheckedCount = m_SeriesChecked.Count;
+            CheckedCount = CheckedItems.Count;
             labelSeriesSelected.Text = CheckedCount.ToString() + " Series Selected";
 
+            this.checkedListBoxSeries.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSeries_ItemCheck);
 			base.OnLoad(e);
 		}
 
@@ -106,11 +96,12 @@ namespace WindowPlugins.GUITVSeries.Configuration {
 		}
 
         private void chkBoxToggleAll_CheckedChanged(object sender, EventArgs e)
-        {                    
+        {
             for (int i = 0; i < checkedListBoxSeries.Items.Count; i++)
             {
                 checkedListBoxSeries.SetItemChecked(i, chkBoxToggleAll.Checked);                   
-            }           
+            }
         }
+
 	}
 }

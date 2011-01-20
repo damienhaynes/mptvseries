@@ -25,7 +25,7 @@ namespace WindowPlugins.GUITVSeries
                 return null;
 
             DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-            if (series == null) return null;
+            if (series == null || series[DBOnlineSeries.cTraktIgnore]) return null;
 
             // create scrobble data
             TraktEpisodeScrobble scrobbleData = new TraktEpisodeScrobble
@@ -76,10 +76,26 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> GetEpisodesToSync(TraktSyncModes mode)
         {
+            // Get episodes for every series
+            return GetEpisodesToSync(null, mode);
+        }
+
+        public static List<DBEpisode> GetEpisodesToSync(DBSeries series, TraktSyncModes mode)
+        {
             List<DBEpisode> episodes = new List<DBEpisode>();
 
             SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
+
+            if (series == null)
+            {
+                // Get episodes for every series
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
+            }
+            else
+            {
+                // Get episodes for a single series
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+            }
 
             if (mode == TraktSyncModes.library)
             {
@@ -100,11 +116,9 @@ namespace WindowPlugins.GUITVSeries
             return episodes;
         }
 
-        public static void SynchronizeLibrary(List<DBEpisode> episodes, bool watched)
+        public static void SynchronizeLibrary(List<DBEpisode> episodes, TraktSyncModes mode)
         {
             if (episodes.Count == 0) return;
-
-            MPTVSeriesLog.Write("Trakt: Synchronizing {0} episodes in Library", watched ? "watched" : "available");
 
             // get unique series ids
             var uniqueSeriesIDs = (from seriesIDs in episodes
@@ -114,12 +128,13 @@ namespace WindowPlugins.GUITVSeries
             foreach (string seriesID in uniqueSeriesIDs)
             {
                 DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesID));
-                if (series == null) continue;
+                if (series == null || series[DBOnlineSeries.cTraktIgnore]) continue;
+
+                MPTVSeriesLog.Write("Trakt: Synchronizing '{0}' episodes for series '{1}.", mode.ToString(), series.ToString());
 
                 TraktSync traktSync = GetTraktSyncObject(series, episodes);
 
                 // upload to trakt
-                TraktSyncModes mode = watched ? TraktSyncModes.seen : TraktSyncModes.library;
                 TraktResponse response = TraktAPI.SyncEpisodeLibrary(traktSync, mode);
 
                 // check for any error and log result
@@ -128,27 +143,35 @@ namespace WindowPlugins.GUITVSeries
                 if (response.Status == "success")
                 {
                     // flag episodes and commit to database
-                    if (watched)
+                    switch (mode)
                     {
-                        SQLCondition conditions = new SQLCondition();
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, seriesID, SQLConditionType.Equal);
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, SQLConditionType.Equal);
+                        case TraktSyncModes.seen:
+                            SQLCondition conditions = new SQLCondition();
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, seriesID, SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, SQLConditionType.Equal);
 
-                        // we always flag traktLibrary field as the 'traktSeen' field counts as part of library
-                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 1, conditions);
-                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 1, conditions);
-                    }
-                    else
-                    {
-                        //  we can't do a global set as our conditions are from two different tables
-                        // where filename is not empty and traktLibrary = 0
-                        foreach (DBEpisode ep in episodes.Where(e => e[DBEpisode.cSeriesID] == seriesID))
-                        {
-                            ep[DBOnlineEpisode.cTraktLibrary] = 1;
-                            ep.Commit();
-                        }
+                            // we always flag traktLibrary field as the 'traktSeen' field counts as part of library
+                            DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 1, conditions);
+                            DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 1, conditions);
+                            break;
+
+                        case TraktSyncModes.library:
+                            //  we can't do a global set as our conditions are from two different tables
+                            // where filename is not empty and traktLibrary = 0
+                            foreach (DBEpisode ep in episodes.Where(e => e[DBEpisode.cSeriesID] == seriesID))
+                            {
+                                ep[DBOnlineEpisode.cTraktLibrary] = 1;
+                                ep.Commit();
+                            }
+                            break;
+
+                        case TraktSyncModes.unseen:
+                            break;
+
+                        case TraktSyncModes.unlibrary:
+                            break;
                     }
                 }
 
