@@ -126,6 +126,12 @@ namespace WindowPlugins.GUITVSeries
             this.aboutScreen.setUpPaths();
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            traktConfiguration.CancelSynchronization();
+            base.OnClosing(e);
+        }
+
         void ConfigurationForm_Resize(object sender, EventArgs e)
         {
             this.Refresh();
@@ -1239,6 +1245,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void buttonStartImport_Click(object sender, EventArgs e)
         {
+            traktConfiguration.EnableSyncButtonState(false);
+
             if (m_parser != null)
             {
                 AbortImport();
@@ -1267,6 +1275,11 @@ namespace WindowPlugins.GUITVSeries
 
             if (ipp != null)
                 this.tabPage_Import.Controls.Remove(ipp);
+        }
+
+        public void EnableImportButtonState(bool enable)
+        {
+            this.buttonStartImport.Enabled = enable;
         }
 
         private void StartImport()
@@ -1303,7 +1316,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        #region Import Wizard Events        
+        #region Import Wizard Events
         private void ImportWizard_OnFinishedLocalParsing(UserInputResults values, UserFinishedRequestedAction reqAction)
         {
             ParsingWizardParsingPage.ParsingGridPopulated -= new ImportPanelParsing.ParsingGridPopulatedDelegate(ImportWizard_OnParsingGridPopulated);
@@ -1322,6 +1335,10 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardSeriesIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedSeriesID);
 
                 ParsingWizardSeriesIDPage.Init(values.ParseResults);                                
+            }
+            else if (reqAction == UserFinishedRequestedAction.Cancel)
+            {
+                traktConfiguration.EnableSyncButtonState(true);
             }
         }
 
@@ -1373,7 +1390,11 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardHost.RemoveDetailsPanel(ParsingWizardSeriesIDPage);
                 ParsingWizardParsingPage.Init();
                 ParsingWizardSeriesIDPage.ClearResults();                                
-            }     
+            }
+            else if (requestAction == UserFinishedRequestedAction.Cancel)
+            {
+                traktConfiguration.EnableSyncButtonState(true);
+            }
         }
 
         private void ImportWizard_OnParsingGridPopulated()
@@ -1396,6 +1417,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 case UserFinishedRequestedAction.Cancel:                   
                     ParsingWizardProgress.DeInit();
+                    traktConfiguration.EnableSyncButtonState(true);
                     break;
 
                 case UserFinishedRequestedAction.Next:
@@ -1422,6 +1444,9 @@ namespace WindowPlugins.GUITVSeries
             // user clicked finished (can only do this after import wizard is complete)
             ParsingWizardProgress.DeInit();
             this.tabPage_Import.Controls.Remove(ParsingWizardHost);
+            
+            // allow user to manually sync on trakt            
+            traktConfiguration.EnableSyncButtonState(true);
         }
         #endregion
 
@@ -1439,7 +1464,7 @@ namespace WindowPlugins.GUITVSeries
                 // refresh regex and replacements
                 FilenameParser.reLoadExpressions();
 
-                m_parser = new OnlineParsing(this);                
+                m_parser = new OnlineParsing(this);
                 m_parser.Start(parsingParams);
             }
         }
