@@ -139,10 +139,15 @@ namespace WindowPlugins.GUITVSeries
 
                 MPTVSeriesLog.Write("Trakt: Synchronizing '{0}' episodes for series '{1}'.", mode.ToString(), series.ToString());
 
-                TraktSync traktSync = GetTraktSyncObject(series, episodes);
+                TraktSync traktSync = GetTraktSyncObject(series, episodes);                
 
                 // upload to trakt
                 TraktResponse response = TraktAPI.SyncEpisodeLibrary(traktSync, mode);
+                if (response == null)
+                {
+                    MPTVSeriesLog.Write("Trakt Error: Response from server was unexpected.");
+                    continue;
+                }
 
                 // check for any error and log result
                 CheckTraktErrorAndNotify(response, false);
@@ -197,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         public static void CheckTraktErrorAndNotify(TraktResponse response, bool notify)
         {
-            if (response.Status == null) return;
+            if (response == null || response.Status == null) return;
 
             // check response error status
             if (response.Status != "success")
