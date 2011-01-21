@@ -97,22 +97,29 @@ namespace WindowPlugins.GUITVSeries
                 conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
             }
 
-            if (mode == TraktSyncModes.library)
+            switch (mode)
             {
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-                conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
-                episodes = DBEpisode.Get(conditions, false);
-            }
+                case TraktSyncModes.library:
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                    conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
+                    episodes = DBEpisode.Get(conditions, false);
+                    break;
 
-            if (mode == TraktSyncModes.seen)
-            {
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, SQLConditionType.Equal);
-                episodes = DBEpisode.Get(conditions, false);
-            }
+                case TraktSyncModes.seen:
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, SQLConditionType.Equal);
+                    episodes = DBEpisode.Get(conditions, false);
+                    break;
 
+                case TraktSyncModes.unseen:
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 2, SQLConditionType.Equal);
+                    episodes = DBEpisode.Get(conditions, false);
+                    break;
+            }
+            
             return episodes;
         }
 
@@ -130,7 +137,7 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesID));
                 if (series == null || series[DBOnlineSeries.cTraktIgnore]) continue;
 
-                MPTVSeriesLog.Write("Trakt: Synchronizing '{0}' episodes for series '{1}.", mode.ToString(), series.ToString());
+                MPTVSeriesLog.Write("Trakt: Synchronizing '{0}' episodes for series '{1}'.", mode.ToString(), series.ToString());
 
                 TraktSync traktSync = GetTraktSyncObject(series, episodes);
 
@@ -142,11 +149,12 @@ namespace WindowPlugins.GUITVSeries
 
                 if (response.Status == "success")
                 {
+                    SQLCondition conditions = new SQLCondition();
+
                     // flag episodes and commit to database
                     switch (mode)
                     {
                         case TraktSyncModes.seen:
-                            SQLCondition conditions = new SQLCondition();
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, seriesID, SQLConditionType.Equal);
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
@@ -158,7 +166,7 @@ namespace WindowPlugins.GUITVSeries
                             break;
 
                         case TraktSyncModes.library:
-                            //  we can't do a global set as our conditions are from two different tables
+                            // we can't do a global set as our conditions are from two different tables
                             // where filename is not empty and traktLibrary = 0
                             foreach (DBEpisode ep in episodes.Where(e => e[DBEpisode.cSeriesID] == seriesID))
                             {
@@ -168,6 +176,10 @@ namespace WindowPlugins.GUITVSeries
                             break;
 
                         case TraktSyncModes.unseen:
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, seriesID, SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 2, SQLConditionType.Equal);
+                            DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, conditions);
                             break;
 
                         case TraktSyncModes.unlibrary:

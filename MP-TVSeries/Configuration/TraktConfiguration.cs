@@ -159,12 +159,18 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 if (bgTraktSync.CancellationPending) return;
 
+                if (series[DBSeries.cID] <= 0) continue;
+
+                List<DBEpisode> episodesUnSeen = TraktHandler.GetEpisodesToSync(series, TraktSyncModes.unseen);
                 List<DBEpisode> episodesLibrary = TraktHandler.GetEpisodesToSync(series, TraktSyncModes.library);
                 List<DBEpisode> episodesSeen = TraktHandler.GetEpisodesToSync(series, TraktSyncModes.seen);
 
                 // remove any seen episodes from library episode list as 'seen' counts as being part of the library
                 // dont want to hit the server unnecessarily
                 episodesLibrary.RemoveAll(eps => episodesSeen.Contains(eps));
+
+                // sync UnSeen
+                TraktHandler.SynchronizeLibrary(episodesUnSeen, TraktSyncModes.unseen);
 
                 // sync library
                 TraktHandler.SynchronizeLibrary(episodesLibrary, TraktSyncModes.library);
