@@ -59,6 +59,22 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
+	<div class="main_title">TVSeries v2.6.8 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.6.7:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added Synchronization of your library including watched state to trakt.tv. Synchronization can be manually run from configuration or have the plugin handle this automatically in GUI. Toggling watched states from GUI will also be reflected online but you can only set something unwatched if it has not been scrobbled online. Removal of series/episode is not yet supported but is available via API.</p></li>
+			<li><p>Added ability to map ACTION_PREV_PICTURE and ACTION_NEXT_PICTURE to remote control button or keyboard button. When action is recieved, it will cycle the series/season artwork. This is a shortcut to invoking the context menu and selecting Cycle Artwork.</p></li>
+			<li><p>Fixed 'Mark All as Watched' option applying watched state to episodes that were in database but not visible on screen. Will now respect 'Show Local Files Only' setting, also will check that episode has aired, ignoring episodes with future air date.</p></li>			
+			<li><p>Fixed theTVDB.com Series ID not being sent to trakt.tv when episode was scrobbled. This was a minor issue as we were sending correct original english title as well.</p></li>
+			<li><p>Fixed trakt.tv play count not incrementing after 1st watch if episode did not play to 100%.</p></li>
+			<li><p>Removed the trakt.tv user API key from configuration as it was un-needed, we can re-use the developer key.</p></li>				
+		</ul>
+	</div>
+	
 	<div class="main_title">TVSeries v2.6.7 Maintenance Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log since v2.6.6:</div>
@@ -66,10 +82,11 @@ ul {
 	</div>
 	<div class="tab_content">
 		<ul>
-			<li><p>Trakt.tv support, tvseries can send watching and watched status online for anything new played. Watch your library build online and see what your friends are watching etc. Enter in your trakt username and password in configuration.</p></li>
+			<li><p>trakt.tv support, tvseries can send watching and watched status online for anything new played. Watch your library build online and see what your friends are watching etc. Enter in your trakt username and password in configuration.</p></li>
 			<li><p>Added default icon to Dialog Notify, skins can add a tvseries.png in skins Media Logos folder.</p></li>
+			<li><p>Added Logo to Configuration plugins section.</p></li>
 			<li><p>Fix translation for Resume video dialog, now correctly displays 'episode' intead of 'movie'.</p></li>
-			<li><p>Updated Danish and Russian translations, thanks Steffansp and Undel.</p></li>			
+			<li><p>Updated Danish and Russian translations, thanks Steffansp and Undel.</p></li>
 		</ul>
 	</div>
 	
