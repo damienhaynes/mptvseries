@@ -650,7 +650,7 @@ namespace WindowPlugins.GUITVSeries
 			if (OptionsMenuButton != null)
 				OptionsMenuButton.Label = Translation.ButtonOptions;
 
-			setProcessAnimationStatus(m_parserUpdaterWorking);			
+			setProcessAnimationStatus(m_parserUpdaterWorking || TraktHandler.SyncInProgress);			
 
 			if (m_Logos_Image != null) {
 				logosHeight = m_Logos_Image.Height;
@@ -1077,77 +1077,137 @@ namespace WindowPlugins.GUITVSeries
 				if (dlg.SelectedId == -1) return;
 
 				#region Selected Menu Item Actions
-				switch (dlg.SelectedId) {
+                
+                List<DBEpisode> episodeList = new List<DBEpisode>();
+                SQLCondition conditions = null;
+
+				switch (dlg.SelectedId)
+                {
 					#region Watched/Unwatched
-					case (int)eContextItems.toggleWatched: {
-							// toggle watched
-							if (selectedEpisode != null) {
-								if (selectedEpisode[DBEpisode.cFilename].ToString().Length > 0) {
-									SQLCondition condition = new SQLCondition();
-									condition.Add(new DBEpisode(), DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
-									List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-									foreach (DBEpisode episode in episodes) {
-										episode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
-										episode.Commit();
-										//DBSeason.UpdateUnWatched(episode);
-										//DBSeries.UpdateUnWatched(episode);
-									}
-								}
-								else {
-									selectedEpisode[DBOnlineEpisode.cWatched] = selectedEpisode[DBOnlineEpisode.cWatched] == 0;
-									selectedEpisode.Commit();
-									//DBSeason.UpdateUnWatched(selectedEpisode);
-									//DBSeries.UpdateUnWatched(selectedEpisode);
-								}
-								// Update Episode Counts
-								DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
-								LoadFacade();
-							}
-						}
+					case (int)eContextItems.toggleWatched:
+                        // toggle watched
+                        if (selectedEpisode != null)
+                        {
+                            bool watched = selectedEpisode[DBOnlineEpisode.cWatched];
+                            if (selectedEpisode[DBEpisode.cFilename].ToString().Length > 0)
+                            {
+                                conditions = new SQLCondition();
+                                conditions.Add(new DBEpisode(), DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
+                                List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
+                                foreach (DBEpisode episode in episodes)
+                                {
+                                    episode[DBOnlineEpisode.cWatched] = !watched;
+                                    episode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
+                                    episode.Commit();
+                                }
+                            }
+                            else
+                            {
+                                selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
+                                selectedEpisode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
+                                selectedEpisode.Commit();
+                            }
+                            // Update Episode Counts
+                            DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+
+                            // Update Trakt
+                            m_TraktSyncTimer.Change(10000, Timeout.Infinite);
+
+                            LoadFacade();
+                        }
 						break;
 
-					case (int)eContextItems.actionMarkAllWatched:
-						// all watched
-						if (this.listLevel == Listlevel.Series && m_SelectedSeries != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
-							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
-							m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = false;
-							m_SelectedSeries.Commit();
-							// Updated Episode Counts
-							DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
-							cache.dump();
-						}
-						else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 1 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
-												" and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
-							m_SelectedSeason[DBSeason.cUnwatchedItems] = false;
-							m_SelectedSeason.Commit();
-							DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
-							cache.dump();
-						}
-						LoadFacade(); // refresh
+					case (int)eContextItems.actionMarkAllWatched:                     
+                        // Mark all watched that are visible on the facade and
+                        // do not air in the future...its misleading marking watched on episodes
+                        // you cant see. People could import a new episode and have it marked as watched accidently
+
+                        if (selectedSeries != null)
+                        {
+                            conditions = new SQLCondition();
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, DateTime.Now.ToString("yyyy-MM-dd"), SQLConditionType.LessEqualThan);
+                        }
+
+                        if (selectedSeason != null)
+                        {
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, selectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+                        }
+
+                        episodeList = DBEpisode.Get(conditions, true);
+
+                        // reset traktSeen flag for later synchronization 
+                        // and set watched state
+                        foreach (DBEpisode episode in episodeList)
+                        {
+                            episode[DBOnlineEpisode.cWatched] = 1;
+                            episode[DBOnlineEpisode.cTraktSeen] = 0;
+                            episode.Commit();
+                        }
+
+                        // Updated Episode Counts
+                        if (this.listLevel == Listlevel.Series && selectedSeries != null)
+                        {
+                            DBSeries.UpdateEpisodeCounts(selectedSeries);
+                        }
+                        else if (this.listLevel == Listlevel.Season && selectedSeason != null)
+                        {
+                            DBSeason.UpdateEpisodeCounts(selectedSeries, selectedSeason);
+                        }
+
+                        cache.dump();
+
+                        // sync to trakt
+                        m_TraktSyncTimer.Change(10000, Timeout.Infinite);
+
+                        // refresh facade
+						LoadFacade();
 						break;
 
 					case (int)eContextItems.actionMarkAllUnwatched:
-						// all unwatched
-						if (this.listLevel == Listlevel.Series && m_SelectedSeries != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
-							DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 1 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + m_SelectedSeries[DBSeries.cID]);
-							m_SelectedSeries[DBOnlineSeries.cUnwatchedItems] = true;
-							m_SelectedSeries.Commit();
-							DBSeries.UpdateEpisodeCounts(m_SelectedSeries);
-							cache.dump();
-						}
-						else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null) {
-							DBTVSeries.Execute("update online_episodes set watched = 0 where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + m_SelectedSeason[DBSeason.cSeriesID] +
-												" and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + m_SelectedSeason[DBSeason.cIndex]);
-							m_SelectedSeason[DBSeason.cUnwatchedItems] = true;
-							m_SelectedSeason.Commit();
-							DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
-							cache.dump();
-						}
-						LoadFacade(); // refresh
-						break;
+                        // Mark all unwatched that are visible on the facade
+
+                        if (selectedSeries != null)
+                        {
+                            conditions = new SQLCondition();
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, selectedSeries[DBSeries.cID], SQLConditionType.Equal);
+                        }
+
+                        if (selectedSeason != null)
+                        {
+                            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, selectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
+                        }
+
+                        episodeList = DBEpisode.Get(conditions, true);
+
+                        // set traktSeen flag and watched state
+                        // when traktSeen = 2, the seen flag will be removed from trakt
+                        foreach (DBEpisode episode in episodeList)
+                        {
+                            episode[DBOnlineEpisode.cWatched] = 0;
+                            episode[DBOnlineEpisode.cTraktSeen] = 2;
+                            episode.Commit();
+                        }
+
+                        // Updated Episode Counts
+                        if (this.listLevel == Listlevel.Series && selectedSeries != null)
+                        {
+                            DBSeries.UpdateEpisodeCounts(selectedSeries);
+                        }
+                        else if (this.listLevel == Listlevel.Season && selectedSeason != null)
+                        {
+                            DBSeason.UpdateEpisodeCounts(selectedSeries, selectedSeason);
+                        }
+
+                        cache.dump();
+
+                        // sync to trakt
+                        m_TraktSyncTimer.Change(10000, Timeout.Infinite);
+
+                        // refresh facade
+                        LoadFacade();
+                        break;
+						
 					#endregion
 
 					#region Playlist
@@ -4552,7 +4612,7 @@ namespace WindowPlugins.GUITVSeries
 
 		public void ImporterQueueMonitor(Object stateInfo)
         {
-            if (!m_parserUpdaterWorking)
+            if (!m_parserUpdaterWorking && !TraktHandler.SyncInProgress)
             {
                 // need to not be doing something yet (we don't want to accumulate parser objects !)
                 bool bUpdateScanNeeded = false;
@@ -4636,24 +4696,33 @@ namespace WindowPlugins.GUITVSeries
                 return;
 
             // Handle one sync at a time, can be scheduled on next timer interval
-            if (TraktHandler.SyncInProgress) return; 
+            // or if an import is currently running we can wait till after import is finished
+            if (TraktHandler.SyncInProgress || m_parserUpdaterWorking) return;
+
+            setProcessAnimationStatus(true);
 
             MPTVSeriesLog.Write("Trakt: Synchronize Start");
             TraktHandler.SyncInProgress = true;
 
+            List<DBEpisode> episodesUnSeen = TraktHandler.GetEpisodesToSync(TraktSyncModes.unseen);
             List<DBEpisode> episodesLibrary = TraktHandler.GetEpisodesToSync(TraktSyncModes.library);
             List<DBEpisode> episodesSeen = TraktHandler.GetEpisodesToSync(TraktSyncModes.seen);
-
+            
             // remove any seen episodes from library episode list as 'seen' counts as being part of the library
             // dont want to hit the server unnecessarily
             episodesLibrary.RemoveAll(e => episodesSeen.Contains(e));
+
+            // sync UnSeen
+            TraktHandler.SynchronizeLibrary(episodesUnSeen, TraktSyncModes.unseen);
 
             // sync library
             TraktHandler.SynchronizeLibrary(episodesLibrary, TraktSyncModes.library);
 
             // sync Seen
             TraktHandler.SynchronizeLibrary(episodesSeen, TraktSyncModes.seen);
-            
+
+            setProcessAnimationStatus(false);
+
             MPTVSeriesLog.Write("Trakt: Synchronize Complete");
             TraktHandler.SyncInProgress = false;
         }

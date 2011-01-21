@@ -2713,15 +2713,30 @@ namespace WindowPlugins.GUITVSeries
             {
                 Font fontDefault = treeView_Library.Font;
 
+                SQLCondition conditions = new SQLCondition();
+                List<DBEpisode> episodeList = new List<DBEpisode>();
+
+                DBSeries series = null;
+                DBSeason season = null;
+                DBEpisode episode = null;
+
                 switch (nodeWatched.Name)
                 {
                     case DBSeries.cTableName:
-                        DBSeries series = (DBSeries)nodeWatched.Tag;
-                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + series[DBSeries.cID]);
-                        //DBTVSeries.Execute("update season set " + DBSeason.cUnwatchedItems + " = 0 and " + DBSeason.cEpisodesUnWatched + " = 0 where " + DBSeason.Q(DBSeason.cSeriesID) + " = " + series[DBSeries.cID]);
-                        //DBTVSeries.Execute("update online_series set " + DBOnlineSeries.cUnwatchedItems + " = 0 and " + DBOnlineSeries.cEpisodesUnWatched + " = 0 where " + DBOnlineSeries.Q(DBOnlineSeries.cID) + " = " + series[DBSeries.cID]);
-                        //series[DBOnlineSeries.cUnwatchedItems] = false;
-                        //series.Commit();
+                        series = (DBSeries)nodeWatched.Tag;
+
+                        conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, DateTime.Now.ToString("yyyy-MM-dd"), SQLConditionType.LessEqualThan);
+                        episodeList = DBEpisode.Get(conditions, false);
+
+                        foreach (DBEpisode ep in episodeList)
+                        {
+                            ep[DBOnlineEpisode.cWatched] = watched;
+                            ep[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
+                            ep.Commit();
+                        }
+
                         // Updated Episode Counts
                         DBSeries.UpdateEpisodeCounts(series);
 
@@ -2729,93 +2744,133 @@ namespace WindowPlugins.GUITVSeries
                         {
                             for (int i = 0; i < nodeWatched.Nodes.Count; i++)
                             {
-                                //Child Season fonts:
-                                DBSeason s = (DBSeason)nodeWatched.Nodes[i].Tag;
-                                if (watched == 1)
-                                    nodeWatched.Nodes[i].ForeColor = System.Drawing.Color.DarkBlue;
-                                else nodeWatched.Nodes[i].ForeColor = treeView_Library.ForeColor;
+                                // set color of nodeWatched
+                                if (watched == 1 && series[DBOnlineSeries.cHasLocalFiles])
+                                    nodeWatched.ForeColor = System.Drawing.Color.DarkBlue;
+                                else if (watched == 0 && series[DBOnlineSeries.cHasLocalFiles])
+                                    nodeWatched.ForeColor = treeView_Library.ForeColor;
 
-                                //Child Episode fonts:
+                                // Child Season fonts:
+                                DBSeason s = (DBSeason)nodeWatched.Nodes[i].Tag;
+                                if (watched == 1 && s[DBSeason.cHasLocalFiles])
+                                    nodeWatched.Nodes[i].ForeColor = System.Drawing.Color.DarkBlue;
+                                else if (watched == 0 && s[DBSeason.cHasLocalFiles])
+                                    nodeWatched.Nodes[i].ForeColor = treeView_Library.ForeColor;
+
+                                // Child Episode fonts:
                                 if (nodeWatched.Nodes[i].Nodes.Count > 0)
                                 {
-                                    for (int j = 0; j < nodeWatched.Nodes[i].Nodes.Count; j++)
+                                    // only mark the ones we have actually set as watched
+                                    int epCount = 0;
+                                    if (watched == 1)
+                                        epCount = episodeList.Where(e => e[DBOnlineEpisode.cSeasonIndex] == s[DBSeason.cIndex]).Count();
+                                    else
+                                        epCount = nodeWatched.Nodes[i].Nodes.Count;
+
+                                    for (int j = 0; j < epCount; j++)
                                     {
                                         DBEpisode ep = (DBEpisode)nodeWatched.Nodes[i].Nodes[j].Tag;
-                                        if (watched == 1)
+                                        if (watched == 1 && !string.IsNullOrEmpty(ep[DBEpisode.cFilename]))
                                             nodeWatched.Nodes[i].Nodes[j].ForeColor = System.Drawing.Color.DarkBlue;
-                                        else nodeWatched.Nodes[i].Nodes[j].ForeColor = treeView_Library.ForeColor;
+                                        else if (watched == 0 && !string.IsNullOrEmpty(ep[DBEpisode.cFilename]))
+                                            nodeWatched.Nodes[i].Nodes[j].ForeColor = treeView_Library.ForeColor;
                                     }
                                 }
                             }
                         }
 
                         cache.dump();
-
                         break;
 
                     case DBSeason.cTableName:
-                        DBSeason season = (DBSeason)nodeWatched.Tag;
-                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID) + " = " + season[DBSeason.cSeriesID] +
-                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + season[DBSeason.cIndex]);
-                        //season[DBSeason.cUnwatchedItems] = false;
-                        //season.Commit();
-                        DBSeries series2 = DBSeries.Get(season[DBSeason.cSeriesID]);
-                        DBSeason.UpdateEpisodeCounts(series2, season);
+                        season = (DBSeason)nodeWatched.Tag;
+                        series = DBSeries.Get(season[DBSeason.cSeriesID]);
 
-                        //Parent Series color:
-                        if (series2[DBOnlineSeries.cUnwatchedItems] == 0)
-                            nodeWatched.Parent.ForeColor = System.Drawing.Color.DarkBlue;
-                        else nodeWatched.Parent.ForeColor = treeView_Library.ForeColor;
-                        
-                        //Child Episodes color:
-                        if (nodeWatched.Nodes.Count > 0)
+                        conditions = new SQLCondition();
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, DateTime.Now.ToString("yyyy-MM-dd"), SQLConditionType.LessEqualThan);
+                        episodeList = DBEpisode.Get(conditions, false);
+
+                        foreach (DBEpisode ep in episodeList)
                         {
-                            for (int i = 0; i < nodeWatched.Nodes.Count; i++)
+                            ep[DBOnlineEpisode.cWatched] = watched;
+                            ep[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
+                            ep.Commit();
+                        }
+
+                        // update episode counts
+                        DBSeason.UpdateEpisodeCounts(series, season);
+
+                        // set color of nodeWatched
+                        if (watched == 1 && season[DBSeason.cHasLocalFiles])
+                            nodeWatched.ForeColor = System.Drawing.Color.DarkBlue;
+                        else if (watched == 0 && season[DBSeason.cHasLocalFiles])
+                            nodeWatched.ForeColor = treeView_Library.ForeColor;
+
+                        // Parent Series color:
+                        if (series[DBOnlineSeries.cUnwatchedItems] == 0 && series[DBOnlineSeries.cHasLocalFiles])
+                            nodeWatched.Parent.ForeColor = System.Drawing.Color.DarkBlue;
+                        else if (series[DBOnlineSeries.cUnwatchedItems] == 1 && series[DBOnlineSeries.cHasLocalFiles])
+                            nodeWatched.Parent.ForeColor = treeView_Library.ForeColor;
+                        
+                        // Child Episodes color:
+                        if (episodeList.Count > 0)
+                        {
+                            // only mark the ones we have actually set as watched
+                            int epCount = 0;
+                            if (watched == 1)
+                                epCount = episodeList.Count();
+                            else
+                                epCount = nodeWatched.Nodes.Count;
+
+                            for (int i = 0; i < epCount; i++)
                             {
                                 DBEpisode ep = (DBEpisode)nodeWatched.Nodes[i].Tag;
-                                if (watched == 1)
+                                if (watched == 1 && !string.IsNullOrEmpty(ep[DBEpisode.cFilename]))
                                     nodeWatched.Nodes[i].ForeColor = System.Drawing.Color.DarkBlue;
-                                else nodeWatched.Nodes[i].ForeColor = treeView_Library.ForeColor;
+                                else if (watched == 0 && !string.IsNullOrEmpty(ep[DBEpisode.cFilename]))
+                                    nodeWatched.Nodes[i].ForeColor = treeView_Library.ForeColor;
                             }
                         }
 
-                        cache.dump();
-                        
+                        cache.dump();                        
                         break;
 
                     case DBEpisode.cTableName:
-                        DBEpisode episode = (DBEpisode)nodeWatched.Tag;
-                        DBTVSeries.Execute("update online_episodes set watched = " + watched + " where " + DBOnlineEpisode.Q(DBOnlineEpisode.cCompositeID) + " = \"" + episode[DBEpisode.cCompositeID] + "\"");/* +
-                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex) + " = " + episode[DBEpisode.cSeasonIndex] +
-                                            " and " + DBOnlineEpisode.Q(DBOnlineEpisode.cEpisodeIndex) + " = " + episode[DBEpisode.cEpisodeIndex]);*/
-                        //episode.Commit();
-                        DBSeries series3 = DBSeries.Get(episode[DBEpisode.cSeriesID]);
-                        DBSeason season3 = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                        DBSeason.UpdateEpisodeCounts(series3, season3);
+                        episode = (DBEpisode)nodeWatched.Tag;
 
-                        //Parent Series color
-                        if (series3[DBOnlineSeries.cUnwatchedItems] == 0)
+                        episode[DBOnlineEpisode.cWatched] = watched;
+                        episode[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
+                        episode.Commit();
+
+                        series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
+                        season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
+                        DBSeason.UpdateEpisodeCounts(series, season);
+
+                        // set color of nodeWatched
+                        if (watched == 1 && !string.IsNullOrEmpty(episode[DBEpisode.cFilename]))
+                            nodeWatched.ForeColor = System.Drawing.Color.DarkBlue;
+                        else if (watched == 0 && !string.IsNullOrEmpty(episode[DBEpisode.cFilename]))
+                            nodeWatched.ForeColor = treeView_Library.ForeColor;
+
+                        // Parent Series color
+                        if (series[DBOnlineSeries.cUnwatchedItems] == 0 && series[DBOnlineSeries.cHasLocalFiles])
                             nodeWatched.Parent.ForeColor = System.Drawing.Color.DarkBlue;
-                        else nodeWatched.Parent.ForeColor = treeView_Library.ForeColor;
+                        else if (series[DBOnlineSeries.cUnwatchedItems] == 1 && series[DBOnlineSeries.cHasLocalFiles])
+                            nodeWatched.Parent.ForeColor = treeView_Library.ForeColor;
 
-                        //Parent Season color
-                        if (season3[DBSeason.cUnwatchedItems] == 0)
+                        // Parent Season color
+                        if (season[DBSeason.cUnwatchedItems] == 0 && season[DBSeason.cHasLocalFiles])
                             nodeWatched.Parent.Parent.ForeColor = System.Drawing.Color.DarkBlue;
-                        else nodeWatched.Parent.Parent.ForeColor = treeView_Library.ForeColor;
+                        else if (season[DBSeason.cUnwatchedItems] == 1 && season[DBSeason.cHasLocalFiles])
+                            nodeWatched.Parent.Parent.ForeColor = treeView_Library.ForeColor;
 
                         cache.dump();
-
                         break;
                 }
-                //reload tree? - need to just refresh the pane on the right with new database information since we changed it!
-                //this.dataGridView1.Refresh();
-
-                //set color of nodeWatched
-                if (watched == 1)
-                    nodeWatched.ForeColor = System.Drawing.Color.DarkBlue;
-                else nodeWatched.ForeColor = treeView_Library.ForeColor;
-
-                //Refresh treeView
+               
+                // Refresh treeView
                 this.treeView_Library.ResumeLayout();
             }
         }

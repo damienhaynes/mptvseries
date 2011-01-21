@@ -13,19 +13,26 @@ namespace Trakt
         {
             if (string.IsNullOrEmpty(jsonArray)) return new List<T>();
 
-            using (var ms = new MemoryStream(Encoding.Default.GetBytes(jsonArray)))
+            try
             {
-                var ser = new DataContractJsonSerializer(typeof(IEnumerable<T>));
-                var result = (IEnumerable<T>)ser.ReadObject(ms);
+                using (var ms = new MemoryStream(Encoding.Default.GetBytes(jsonArray)))
+                {
+                    var ser = new DataContractJsonSerializer(typeof(IEnumerable<T>));
+                    var result = (IEnumerable<T>)ser.ReadObject(ms);
 
-                if (result == null)
-                {
-                    return new List<T>();
+                    if (result == null)
+                    {
+                        return new List<T>();
+                    }
+                    else
+                    {
+                        return result;
+                    }
                 }
-                else
-                {
-                    return result;
-                }
+            }
+            catch (Exception)
+            {
+                return new List<T>();
             }
         }
 
@@ -33,10 +40,17 @@ namespace Trakt
         {
             if (string.IsNullOrEmpty(json)) return default(T);
 
-            using (var ms = new MemoryStream(Encoding.Default.GetBytes(json.ToCharArray())))
+            try
             {
-                var ser = new DataContractJsonSerializer(typeof(T));
-                return (T)ser.ReadObject(ms);
+                using (var ms = new MemoryStream(Encoding.Default.GetBytes(json.ToCharArray())))
+                {
+                    var ser = new DataContractJsonSerializer(typeof(T));
+                    return (T)ser.ReadObject(ms);
+                }
+            }
+            catch (Exception)
+            {
+                return default(T);
             }
         }
 

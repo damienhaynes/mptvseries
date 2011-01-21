@@ -147,7 +147,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         #region Trakt Synchronize
 
         private void bgTraktSync_DoWork(object sender, DoWorkEventArgs e)
-        {            
+        {
+            MPTVSeriesLog.Write("Trakt: Synchronize Start");
+
             buttonManualSync.Text = cButtonCancelSync;
             ConfigurationForm.GetInstance().EnableImportButtonState(false);
 
@@ -159,12 +161,18 @@ namespace WindowPlugins.GUITVSeries.Configuration
             {
                 if (bgTraktSync.CancellationPending) return;
 
+                if (series[DBSeries.cID] <= 0) continue;
+
+                List<DBEpisode> episodesUnSeen = TraktHandler.GetEpisodesToSync(series, TraktSyncModes.unseen);
                 List<DBEpisode> episodesLibrary = TraktHandler.GetEpisodesToSync(series, TraktSyncModes.library);
                 List<DBEpisode> episodesSeen = TraktHandler.GetEpisodesToSync(series, TraktSyncModes.seen);
 
                 // remove any seen episodes from library episode list as 'seen' counts as being part of the library
                 // dont want to hit the server unnecessarily
                 episodesLibrary.RemoveAll(eps => episodesSeen.Contains(eps));
+
+                // sync UnSeen
+                TraktHandler.SynchronizeLibrary(episodesUnSeen, TraktSyncModes.unseen);
 
                 // sync library
                 TraktHandler.SynchronizeLibrary(episodesLibrary, TraktSyncModes.library);
@@ -174,7 +182,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
                 int percentage = Convert.ToInt32((double)(100 * progress++) / seriesList.Count());
                 bgTraktSync.ReportProgress(percentage);
-             }
+            }
+
+            MPTVSeriesLog.Write("Trakt: Synchronize Complete");
         }
 
         private void bgTraktSync_ProgressChanged(object sender, ProgressChangedEventArgs e)
