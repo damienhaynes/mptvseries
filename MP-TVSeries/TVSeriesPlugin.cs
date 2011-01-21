@@ -635,7 +635,7 @@ namespace WindowPlugins.GUITVSeries
 			if (OptionsMenuButton != null)
 				OptionsMenuButton.Label = Translation.ButtonOptions;
 
-			setProcessAnimationStatus(m_parserUpdaterWorking);			
+			setProcessAnimationStatus(m_parserUpdaterWorking || TraktHandler.SyncInProgress);			
 
 			if (m_Logos_Image != null) {
 				logosHeight = m_Logos_Image.Height;
@@ -4357,7 +4357,7 @@ namespace WindowPlugins.GUITVSeries
 
 		public void ImporterQueueMonitor(Object stateInfo)
         {
-            if (!m_parserUpdaterWorking)
+            if (!m_parserUpdaterWorking && !TraktHandler.SyncInProgress)
             {
                 // need to not be doing something yet (we don't want to accumulate parser objects !)
                 bool bUpdateScanNeeded = false;
@@ -4440,7 +4440,10 @@ namespace WindowPlugins.GUITVSeries
                 return;
 
             // Handle one sync at a time, can be scheduled on next timer interval
-            if (TraktHandler.SyncInProgress) return; 
+            // or if an import is currently running we can wait till after import is finished
+            if (TraktHandler.SyncInProgress || m_parserUpdaterWorking) return;
+
+            setProcessAnimationStatus(true);
 
             MPTVSeriesLog.Write("Trakt: Synchronize Start");
             TraktHandler.SyncInProgress = true;
@@ -4461,7 +4464,9 @@ namespace WindowPlugins.GUITVSeries
 
             // sync Seen
             TraktHandler.SynchronizeLibrary(episodesSeen, TraktSyncModes.seen);
-            
+
+            setProcessAnimationStatus(false);
+
             MPTVSeriesLog.Write("Trakt: Synchronize Complete");
             TraktHandler.SyncInProgress = false;
         }
