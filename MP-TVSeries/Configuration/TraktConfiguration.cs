@@ -147,7 +147,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         #region Trakt Synchronize
 
         private void bgTraktSync_DoWork(object sender, DoWorkEventArgs e)
-        {            
+        {
+            MPTVSeriesLog.Write("Trakt: Synchronize Start");
+
             buttonManualSync.Text = cButtonCancelSync;
             ConfigurationForm.GetInstance().EnableImportButtonState(false);
 
@@ -180,7 +182,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
                 int percentage = Convert.ToInt32((double)(100 * progress++) / seriesList.Count());
                 bgTraktSync.ReportProgress(percentage);
-             }
+            }
+
+            MPTVSeriesLog.Write("Trakt: Synchronize Complete");
         }
 
         private void bgTraktSync_ProgressChanged(object sender, ProgressChangedEventArgs e)
