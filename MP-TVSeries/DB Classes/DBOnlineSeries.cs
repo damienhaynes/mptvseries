@@ -248,6 +248,8 @@ namespace WindowPlugins.GUITVSeries
                         // if the user choose a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "en"; // English (original)
+                        DBValue currentTitle = base[DBOnlineSeries.cPrettyName];
+
                         if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
                             return base[DBOnlineSeries.cPrettyName];
                         else
@@ -257,23 +259,31 @@ namespace WindowPlugins.GUITVSeries
                             else
                             {
                                 // we need to get it
-                                MPTVSeriesLog.Write("Retrieving original Series Name...");
+                                MPTVSeriesLog.Write("Retrieving Original Series Name for '{0}'", currentTitle);
                                 UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], origLanguage);
                                 if (origParser != null && origParser.Results.Count == 1)
                                 {
-                                    base[DBOnlineSeries.cOriginalName] = origParser.Results[0][DBOnlineSeries.cPrettyName];
-                                    Commit(); // save for next time
-                                    MPTVSeriesLog.Write("Original Series Name retrieved");
-                                    return origParser.Results[0][DBOnlineSeries.cPrettyName];
+                                    DBValue origTitle = origParser.Results[0][DBOnlineSeries.cPrettyName];
+
+                                    // there may not be an english title, so localized title is the original name
+                                    origTitle = string.IsNullOrEmpty(origTitle) ? base[DBOnlineSeries.cPrettyName] : origTitle;
+
+                                    // save for next time
+                                    base[DBOnlineSeries.cOriginalName] = origTitle;
+                                    Commit();
+
+                                    MPTVSeriesLog.Write("Original Series Name retrieved: '{0}'", origTitle);
+                                    return origTitle;
                                 }
                                 else
                                 {
-                                    MPTVSeriesLog.Write("Original Series Name could not be retrieved");
                                     // something wrong
+                                    MPTVSeriesLog.Write("Original Series Name could not be retrieved");
                                     return base[DBOnlineSeries.cPrettyName];
                                 }
                             }
                         }
+
                     default:
                         return base[fieldName];
                 }
