@@ -43,22 +43,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void LoadFromDB()
         {
             textBoxUsername.Text = DBOption.GetOptions(DBOption.cTraktUsername);
-            textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);            
+            textBoxPassword.Text = DBOption.GetOptions(DBOption.cTraktPassword);
 
             TraktAPI.UserAgent = Settings.UserAgent;
             TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
-            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);            
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
         }
 
         private void textBoxUsername_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cTraktUsername, textBoxUsername.Text);
+            TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
         }
 
         private void textBoxPassword_TextChanged(object sender, EventArgs e)
         {
             // Hash Password
             DBOption.SetOptions(DBOption.cTraktPassword, textBoxPassword.Text.ToSHA1Hash());
+            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
         }
 
         private void textBoxPassword_Enter(object sender, EventArgs e)
@@ -69,7 +71,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
         }
 
         private void linkLabelSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {            
+        {
             System.Diagnostics.Process.Start(@"http://trakt.tv");
         }
 

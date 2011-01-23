@@ -1000,6 +1000,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cViewTags:
                                 case DBOnlineSeries.cHasNewEpisodes: //gets cleared and updated at end of scan
                                 case DBOnlineSeries.cTraktIgnore:
+                                case DBOnlineSeries.cOriginalName:
                                     break;
                                 case DBOnlineSeries.cEpisodeOrders:
                                     if (bUpdateNewSeries)
