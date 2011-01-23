@@ -103,8 +103,7 @@ namespace Trakt
         public static TraktResponse ScrobbleShowState(TraktEpisodeScrobble scrobbleData, TraktScrobbleStates status)
         {
             // check that we have everything we need
-            // server can accept title/year if tvdb id is not supplied
-            if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Season) || string.IsNullOrEmpty(scrobbleData.Episode))
+            if (string.IsNullOrEmpty(scrobbleData.SeriesID) || string.IsNullOrEmpty(scrobbleData.Season) || string.IsNullOrEmpty(scrobbleData.Episode))
             {
                 TraktResponse error = new TraktResponse
                 {
@@ -129,7 +128,7 @@ namespace Trakt
         public static TraktResponse ScrobbleMovieState(TraktMovieScrobble scrobbleData, TraktScrobbleStates status)
         {
             // check that we have everything we need
-            // server can accept title if series id is not supplied
+            // server can accept title if movie id is not supplied
             if (string.IsNullOrEmpty(scrobbleData.Title) || string.IsNullOrEmpty(scrobbleData.Year))
             {
                 TraktResponse error = new TraktResponse
