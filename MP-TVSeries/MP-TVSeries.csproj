@@ -83,9 +83,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="SubCentral, Version=0.9.1.154, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SubCentral, Version=0.9.1.106, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\SubCentral.dll</HintPath>
+    </Reference>
+    <Reference Include="SubtitleDownloader, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\SubtitleDownloader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -109,12 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cache.cs" />
-    <Compile Include="Configuration\ArtworkDownloadLimits.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Configuration\ArtworkDownloadLimits.Designer.cs">
-      <DependentUpon>ArtworkDownloadLimits.cs</DependentUpon>
-    </Compile>
     <Compile Include="Configuration\DeleteDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +145,7 @@
     </Compile>
     <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
+    <Compile Include="DB Classes\DBUserSelections.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -282,16 +281,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
+    <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="TraktHandler.cs" />
     <Compile Include="Trakt\Movie\TraktMovieScrobble.cs" />
     <Compile Include="Trakt\Show\TraktSync.cs" />
+    <Compile Include="Trakt\TraktAPI.cs" />
     <Compile Include="Trakt\TraktExtensions.cs" />
+    <Compile Include="Trakt\TraktResponse.cs" />
     <Compile Include="Trakt\User\TraktLibraryMovies.cs" />
     <Compile Include="Trakt\User\TraktLibraryShows.cs" />
     <Compile Include="Trakt\Show\TraktEpisodeScrobble.cs" />
     <Compile Include="Trakt\Show\TraktSeriesOverview.cs" />
-    <Compile Include="Trakt\TraktAPI.cs" />
-    <Compile Include="Trakt\TraktResponse.cs" />
     <Compile Include="Trakt\TraktURIs.cs" />
     <Compile Include="Trakt\User\TraktUserProfile.cs" />
     <Compile Include="Trakt\User\TraktWatchedEpisodeHistory.cs" />
@@ -307,9 +307,6 @@
     <EmbeddedResource Include="Configuration\About.resx">
       <DependentUpon>About.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ArtworkDownloadLimits.resx">
-      <DependentUpon>ArtworkDownloadLimits.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ChooseFromSelection.resx">
       <DependentUpon>ChooseFromSelection.cs</DependentUpon>
@@ -422,14 +419,18 @@
   <ItemGroup>
     <None Include="Resources\Images\busy.gif" />
     <None Include="Resources\Images\big_spinner.gif" />
+    <Content Include="Resources\Images\control_play_blue.png" />
     <None Include="Resources\Images\find.png" />
     <Content Include="Resources\Images\folder_explore.png" />
     <None Include="Resources\Images\importaccept.png" />
     <None Include="Resources\Images\importpending.png" />
     <None Include="Resources\Images\importupdating.png" />
     <None Include="Resources\Images\importignored.png" />
-    <EmbeddedResource Include="Resources\Images\icon_normal.png" />
     <EmbeddedResource Include="Resources\Images\icon_faded.png" />
+    <EmbeddedResource Include="Resources\Images\icon_normal.png" />
+    <Content Include="Resources\Images\television_add.png" />
+    <Content Include="Resources\Images\television_add_unlisted.png" />
+    <Content Include="Resources\Images\textfield_rename.png" />
     <None Include="Resources\Images\tick.png" />
     <None Include="Resources\Images\trakt.png" />
     <Content Include="Resources\Languages\cs.xml" />

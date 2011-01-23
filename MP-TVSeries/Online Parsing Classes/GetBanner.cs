@@ -21,94 +21,70 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
-using System.Globalization;
 using System.Xml;
 using System.Net;
 using System.IO;
-using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public delegate void NewArtWorkDownloadDoneHandler(string artworkFile);
-
-    enum ArtworkStyles
+    public delegate void newArtWorkDownloadDoneHandler(string artworkFile);
+    class BannerSeries
     {
-        graphical,
-        text,
-        blank,
-        season,
-        seasonwide,
-        unknown
-    }
-
-    abstract class Artwork<T> : IComparable<T> where T : Artwork<T>
-    {
-        public string SeriesName = string.Empty;
-        public string OnlinePath = string.Empty;
-        public string FileName = string.Empty;
-        public string Language = string.Empty;
-        public double Rating = 0.0;
-        public int RatingCount = 0;
-
-        public int CompareTo(T other)
-        {
-            // Sort by:
-            // 1. Local Language 
-            // 2. Highest Rated
-            // 3. Number of Votes
-
-            double thisArtwork = this.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
-            double otherArtwork = other.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
-
-            if (this.Rating == other.Rating)
-            {
-                thisArtwork += this.RatingCount;
-                otherArtwork += other.RatingCount;
-            }
-
-            thisArtwork += this.Rating;
-            otherArtwork += other.Rating;
-
-            return otherArtwork.CompareTo(thisArtwork);
-        }        
-    }
-
-    class WideBannerSeries : Artwork<WideBannerSeries>
-    {
-        public ArtworkStyles Style = ArtworkStyles.graphical;
+        public bool bGraphical = false;
+        public bool bHighestRated = false;        
+        public String sSeriesName = String.Empty;
+        public String sOnlineBannerPath = String.Empty;
+        public String sBannerFileName = String.Empty;
+        public String sBannerLang = String.Empty;
     };
 
-    class PosterSeries : Artwork<PosterSeries> {}   
-
-    class PosterSeason : Artwork<PosterSeason>
-    {
-        public String SeasonIndex = string.Empty;
-        public ArtworkStyles Style = ArtworkStyles.season;
+    class PosterSeries
+    {        
+        public bool bHighestRated = false;        
+        public String sSeriesName = String.Empty;
+        public String sOnlinePosterPath = String.Empty;
+        public String sPosterFileName = String.Empty;
+        public String sPosterLang = String.Empty;
     };
 
-    class SeriesBannersMap : System.IEquatable<SeriesBannersMap>
+    class BannerSeason
     {
-        public string SeriesID = string.Empty;
-        public List<WideBannerSeries> SeriesWideBanners = new List<WideBannerSeries>();
-        public List<PosterSeries> SeriesPosters = new List<PosterSeries>();
-        public List<PosterSeason> SeasonPosters = new List<PosterSeason>();
+        public int nIndex = 0;
+        public bool bIsNeeded = false;
+        public bool bHighestRated = false;
+        public String sSeriesName = String.Empty;
+        public String sOnlineBannerPath = String.Empty;
+        public String sBannerFileName = String.Empty;
+        public String sBannerLang = String.Empty;
+        public String sSeason = string.Empty;
+    };
 
-        public SeriesBannersMap() {}
+    class seriesBannersMap : System.IEquatable<seriesBannersMap>    
+    {
+        public string seriesID = string.Empty;
+        public List<BannerSeries> seriesBanners = new List<BannerSeries>();
+        public List<PosterSeries> seriesPosters = new List<PosterSeries>();
+        public List<BannerSeason> seasonBanners = new List<BannerSeason>();
 
-        public SeriesBannersMap(string seriesID)
+        public seriesBannersMap()
         {
-            this.SeriesID = seriesID;
+        }
+
+        public seriesBannersMap(string seriesID)
+        {
+            this.seriesID = seriesID;
         }
 
         #region IEquatable<seriesBannersMap> Members
 
-        bool IEquatable<SeriesBannersMap>.Equals(SeriesBannersMap other)
+        bool IEquatable<seriesBannersMap>.Equals(seriesBannersMap other)
         {
-            return SeriesID.Equals(other.SeriesID);
+            return seriesID.Equals(other.seriesID);
         }
 
         #endregion
@@ -116,9 +92,12 @@ namespace WindowPlugins.GUITVSeries
 
     class GetBanner
     {
-        public event NewArtWorkDownloadDoneHandler BannerDownloadDone;
-        public List<SeriesBannersMap> SeriesBannersMap = new List<SeriesBannersMap>();
-    
+        public event newArtWorkDownloadDoneHandler BannerDownloadDone;
+        public List<seriesBannersMap> seriesBannersMap = new List<seriesBannersMap>();
+
+        //static String sBannersBasePath = Settings.GetPath(Settings.Path.banners) + @"\";
+        //String localizedSeriesName = string.Empty;
+
         public GetBanner(string seriesID)
         {
             doWork(seriesID);
@@ -126,210 +105,203 @@ namespace WindowPlugins.GUITVSeries
 
         private void doWork(string seriesID)
         {
-            XmlNode banners = OnlineAPI.getBannerList(Int32.Parse(seriesID));
-            if (banners == null) return;
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.getBannerList(Int32.Parse(seriesID));
+            List<BannerSeries> m_bannerSeriesList = new List<BannerSeries>();
+            List<PosterSeries> m_posterSeriesList = new List<PosterSeries>();
+            List<BannerSeason> m_bannerSeasonList = new List<BannerSeason>();
+            seriesBannersMap map = new seriesBannersMap();
 
-            if (Helper.getCorrespondingSeries(Int32.Parse(seriesID)) == null) return;
-
-            string SeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
-            List<WideBannerSeries> widebannerSeriesList = new List<WideBannerSeries>();
-            List<PosterSeries> posterSeriesList = new List<PosterSeries>();
-            List<PosterSeason> posterSeasonList = new List<PosterSeason>();
-            SeriesBannersMap map = new SeriesBannersMap();
-
-            #region Series WideBanners
-            foreach (XmlNode banner in banners.SelectNodes("/Banners/Banner[BannerType='series']"))
-            {
-                WideBannerSeries seriesWideBanners = new WideBannerSeries();
-                
-                seriesWideBanners.Language = banner.SelectSingleNode("Language").InnerText;
-                seriesWideBanners.OnlinePath = banner.SelectSingleNode("BannerPath").InnerText;
-                seriesWideBanners.SeriesName = SeriesName;
-
-                try
+            if (node != null)
+            {                
+                foreach (XmlNode topNode in node.ChildNodes)
                 {
-                    seriesWideBanners.Style = (ArtworkStyles)Enum.Parse(typeof(ArtworkStyles), banner.SelectSingleNode("BannerType2").InnerText, true);
-                }
-                catch
-                {
-                    // maybe a new style introduced
-                    seriesWideBanners.Style = ArtworkStyles.unknown;
-                }
+                    bool bHighestRatedSeriesBannerIsSet = false;
+                    bool bHighestRatedSeriesPosterIsSet = false;
+                    bool bHighestRatedSeasonIsSet = false;
 
-                if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
-                {
-                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo);
-                    seriesWideBanners.Rating = Math.Round(rating, 1, MidpointRounding.AwayFromZero);
-                }
+                    string sCurrentSeason = string.Empty;
+                    string[] sPreviousSeasons = { "" };
 
-                if (!string.IsNullOrEmpty(banner.SelectSingleNode("RatingCount").InnerText))
-                    seriesWideBanners.RatingCount = int.Parse(banner.SelectSingleNode("RatingCount").InnerText);                                
+                    foreach (XmlNode itemNode in topNode.ChildNodes)
+                    {                        
+                        if(itemNode.Name == "Banner")
+                        {
+                            BannerSeason seasonBanners = new BannerSeason();
+                            BannerSeries seriesBanners = new BannerSeries();
+                            PosterSeries seriesPosters = new PosterSeries();
 
-                widebannerSeriesList.Add(seriesWideBanners);                
-            }           
-            // sort by highest rated
-            widebannerSeriesList.Sort();
+                            bool isSeries = false;
+                            bool isPoster = false;
+                            bool isSeason = false;
+                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                            {
+                                switch (propertyNode.Name)
+                                {
+                                    case "BannerPath":
+                                        seasonBanners.sOnlineBannerPath = propertyNode.InnerText;
+                                        seriesBanners.sOnlineBannerPath = propertyNode.InnerText;
+                                        seriesPosters.sOnlinePosterPath = propertyNode.InnerText;
+                                        break;
 
-            // remove banners of no interest
-            if (!DBOption.GetOptions(DBOption.cGetTextBanners))
-            {
-                widebannerSeriesList.RemoveAll(b => b.Style == ArtworkStyles.text);
-            }
-            if (!DBOption.GetOptions(DBOption.cGetBlankBanners))
-            {
-                widebannerSeriesList.RemoveAll(b => b.Style == ArtworkStyles.blank);
-            }
+                                    case "BannerType":
+                                        if (propertyNode.InnerText.Equals("series", StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            isPoster = false;
+                                            isSeries = true;
+                                        }
 
-            // Respect User Limits, exception: if higher rated image or localised image is uploaded online
-            int limit = DBOption.GetOptions(DBOption.cArtworkLimitSeriesWideBanners);
-            if (limit < widebannerSeriesList.Count)
-                widebannerSeriesList.RemoveRange(limit, widebannerSeriesList.Count - limit);
-            
-            map.SeriesWideBanners = widebannerSeriesList;
-            #endregion
+                                        if (propertyNode.InnerText.Equals("poster", StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            isPoster = true;
+                                            isSeries = true;
+                                        }                                    
+                                        break;
 
-            #region Series Posters
-            foreach (XmlNode banner in banners.SelectNodes("/Banners/Banner[BannerType='poster']"))
-            {
-                PosterSeries seriesPoster = new PosterSeries();
+                                    case "BannerType2":
+                                        if (isSeries)
+                                        {
+                                            if (propertyNode.InnerText.Equals("Graphical", StringComparison.CurrentCultureIgnoreCase))
+                                            {
+                                                // The first Banner is the Highest Rated Banner                                                
+                                                if (!bHighestRatedSeriesBannerIsSet)
+                                                {
+                                                    bHighestRatedSeriesBannerIsSet = true;
+                                                    seriesBanners.bHighestRated = true;
+                                                }
+                                                seriesBanners.bGraphical = true;
+                                            }
+                                            if (propertyNode.InnerText.Equals("680x1000", StringComparison.CurrentCultureIgnoreCase))
+                                            {
+                                                if (!bHighestRatedSeriesPosterIsSet)
+                                                {
+                                                    bHighestRatedSeriesPosterIsSet = true;
+                                                    seriesPosters.bHighestRated = true;
+                                                }                                                
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (propertyNode.InnerText.Equals("season", StringComparison.CurrentCultureIgnoreCase))                                            
+                                                 isSeason = true;
+                                        }
+                                        break;
 
-                seriesPoster.Language = banner.SelectSingleNode("Language").InnerText;
-                seriesPoster.OnlinePath = banner.SelectSingleNode("BannerPath").InnerText;
-                seriesPoster.SeriesName = SeriesName;
+                                    case "Language":
+                                        seasonBanners.sBannerLang = propertyNode.InnerText;
+                                        seriesBanners.sBannerLang = propertyNode.InnerText;
+                                        seriesPosters.sPosterLang = propertyNode.InnerText;
+                                        break;
 
-                if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
-                {
-                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo);
-                    seriesPoster.Rating = Math.Round(rating, 1, MidpointRounding.AwayFromZero);
-                }
+                                    case "Season":
+                                        sCurrentSeason = propertyNode.InnerText;
+                                        seasonBanners.sSeason = sCurrentSeason;
+                                        
+                                        // Each season can have a highest rated banner
+                                        // Search through all previous season banners                                        
+                                        bHighestRatedSeasonIsSet = false;
+                                        for (int i = 0; i < sPreviousSeasons.Length; i++)
+                                        {   
+                                            // If season has already been identified as highest rated
+                                            // then set flag
+                                            if (sPreviousSeasons[i].Equals(sCurrentSeason))
+                                            {
+                                                bHighestRatedSeasonIsSet = true;
+                                                break;
+                                            }
+                                        }
 
-                if (!string.IsNullOrEmpty(banner.SelectSingleNode("RatingCount").InnerText))
-                    seriesPoster.RatingCount = int.Parse(banner.SelectSingleNode("RatingCount").InnerText);
+                                        if (!bHighestRatedSeasonIsSet)
+                                        {
+                                            bHighestRatedSeasonIsSet = true;
+                                            seasonBanners.bHighestRated = true;
+                                            Array.Resize(ref sPreviousSeasons, sPreviousSeasons.Length + 1);
+                                            sPreviousSeasons[sPreviousSeasons.Length - 1] = sCurrentSeason;                                            
+                                        }                                                                                                                        
+                                        break;
+                                }                                
+                            }
 
-                posterSeriesList.Add(seriesPoster);
-            }
+                            try
+                            {
+                                seriesBanners.sSeriesName = seriesPosters.sSeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
+                            }
+                            catch { return; }
+                            seasonBanners.sSeriesName = seriesBanners.sSeriesName;
 
-            posterSeasonList.Sort();
-
-            limit = DBOption.GetOptions(DBOption.cArtworkLimitSeriesPosters);
-            if (limit < posterSeriesList.Count)
-                posterSeriesList.RemoveRange(limit, posterSeriesList.Count - limit);
-            
-            map.SeriesPosters = posterSeriesList;
-            #endregion
-
-            #region Season Posters
-            List<string> seasons = new List<string>();
-            foreach (XmlNode banner in banners.SelectNodes("/Banners/Banner[BannerType='season']"))
-            {
-                PosterSeason seasonPoster = new PosterSeason();
-
-                seasonPoster.Language = banner.SelectSingleNode("Language").InnerText;
-                seasonPoster.OnlinePath = banner.SelectSingleNode("BannerPath").InnerText;
-                seasonPoster.SeasonIndex = banner.SelectSingleNode("Season").InnerText;
-                seasonPoster.SeriesName = SeriesName;
-
-                try
-                {
-                    seasonPoster.Style = (ArtworkStyles)Enum.Parse(typeof(ArtworkStyles), banner.SelectSingleNode("BannerType2").InnerText, true);
-                }
-                catch
-                {
-                    // maybe a new style introduced
-                    seasonPoster.Style = ArtworkStyles.unknown;
-                }
-
-                if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
-                {
-                    double rating = double.Parse(banner.SelectSingleNode("Rating").InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo);
-                    seasonPoster.Rating = Math.Round(rating, 1, MidpointRounding.AwayFromZero);
-                }
-
-                if (!string.IsNullOrEmpty(banner.SelectSingleNode("RatingCount").InnerText))
-                    seasonPoster.RatingCount = int.Parse(banner.SelectSingleNode("RatingCount").InnerText);
-
-                if (!seasons.Contains(seasonPoster.SeasonIndex))
-                    seasons.Add(seasonPoster.SeasonIndex);
-
-                posterSeasonList.Add(seasonPoster);
-            }
-
-            posterSeasonList.Sort();
-
-            // we dont support season widebanners
-            posterSeasonList.RemoveAll(p => p.Style == ArtworkStyles.seasonwide);            
-
-            limit = DBOption.GetOptions(DBOption.cArtworkLimitSeasonPosters);
-            List<PosterSeason> posterSeasonListTemp = new List<PosterSeason>(posterSeasonList);
-
-            foreach (string season in seasons)
-            {
-                int count = 0;
-                foreach (PosterSeason pSeason in posterSeasonListTemp)
-                {
-                    if (season == pSeason.SeasonIndex)
-                    {
-                        count++;
-                        if (limit < count) posterSeasonList.Remove(pSeason);
+                            if (isSeries)
+                            {
+                                if (isPoster)
+                                    m_posterSeriesList.Add(seriesPosters);
+                                else
+                                    m_bannerSeriesList.Add(seriesBanners);
+                            }
+                            else if (isSeason)
+                                m_bannerSeasonList.Add(seasonBanners);
+                        }                        
                     }
                 }
-            }
-          
-            map.SeasonPosters = posterSeasonList;
-            #endregion                       
+                map.seasonBanners = m_bannerSeasonList;
+                map.seriesBanners = m_bannerSeriesList;
+                map.seriesPosters = m_posterSeriesList;
 
-            // series already in?
-            if (SeriesBannersMap.Contains(map))
-            {
-                SeriesBannersMap seriesMap = SeriesBannersMap[SeriesBannersMap.IndexOf(map)];
-                seriesMap.SeasonPosters.AddRange(map.SeasonPosters);
-                seriesMap.SeriesWideBanners.AddRange(map.SeriesWideBanners);
-                seriesMap.SeriesPosters.AddRange(map.SeriesPosters);
+                // series already in?
+                if (seriesBannersMap.Contains(map))
+                {
+                    seriesBannersMap seriesMap = seriesBannersMap[seriesBannersMap.IndexOf(map)];
+                    seriesMap.seasonBanners.AddRange(map.seasonBanners);
+                    seriesMap.seriesBanners.AddRange(map.seriesBanners);
+                    seriesMap.seriesPosters.AddRange(map.seriesPosters);
+                }
+                else seriesBannersMap.Add(map);
+
             }
-            else
-                SeriesBannersMap.Add(map);
-         
         }
 
         public void DownloadBanners(string bannerLang)
         {
             // now that we have all the paths, download all the files
-            foreach (SeriesBannersMap map in SeriesBannersMap)
+            foreach (seriesBannersMap map in seriesBannersMap)
             {
-                foreach (WideBannerSeries bannerSeries in map.SeriesWideBanners)
+                foreach (BannerSeries bannerSeries in map.seriesBanners)
                 {
-                    if (bannerLang == bannerSeries.Language || "en" == bannerSeries.Language || "" == bannerSeries.Language) //also always english ones
+                    if (bannerLang == bannerSeries.sBannerLang || "en" == bannerSeries.sBannerLang || "" == bannerSeries.sBannerLang) //also always english ones
                     {
                         // mark the filename with the language                        
-                        bannerSeries.FileName = Helper.cleanLocalPath(bannerSeries.SeriesName) + @"\-lang" + bannerSeries.Language + "-" + bannerSeries.OnlinePath;
+                        bannerSeries.sBannerFileName = Helper.cleanLocalPath(bannerSeries.sSeriesName) + @"\-lang" + bannerSeries.sBannerLang + "-" + bannerSeries.sOnlineBannerPath;
                         
-                        string file = OnlineAPI.DownloadBanner(bannerSeries.OnlinePath, Settings.Path.banners, bannerSeries.FileName);
+                        string file = Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeries.sOnlineBannerPath, Settings.Path.banners, bannerSeries.sBannerFileName);
                         if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);                      
+                            BannerDownloadDone(file);
+                        //string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeries.sBannerFileName;                        
+                        //int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeries.sBannerFileName);
+                        //while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
                     }
                 }
             
-                foreach (PosterSeries posterSeries in map.SeriesPosters)
+                foreach (PosterSeries posterSeries in map.seriesPosters)
                 {
-                    if (bannerLang == posterSeries.Language || "en" == posterSeries.Language || "" == posterSeries.Language) //also always english ones
+                    if (bannerLang == posterSeries.sPosterLang || "en" == posterSeries.sPosterLang || "" == posterSeries.sPosterLang) //also always english ones
                     {
                         // mark the filename with the language                        
-                        posterSeries.FileName = Helper.cleanLocalPath(posterSeries.SeriesName) + @"\-lang" + posterSeries.Language + "-" + posterSeries.OnlinePath;                        
-                        string file = OnlineAPI.DownloadBanner(posterSeries.OnlinePath, Settings.Path.banners, posterSeries.FileName);
+                        posterSeries.sPosterFileName = Helper.cleanLocalPath(posterSeries.sSeriesName) + @"\-lang" + posterSeries.sPosterLang + "-" + posterSeries.sOnlinePosterPath;                        
+                        string file = Online_Parsing_Classes.OnlineAPI.DownloadBanner(posterSeries.sOnlinePosterPath, Settings.Path.banners, posterSeries.sPosterFileName);
                         if (BannerDownloadDone != null)
                             BannerDownloadDone(file);
                     }
                 }
 
-                foreach (PosterSeason bannerSeason in map.SeasonPosters)
+                foreach (BannerSeason bannerSeason in map.seasonBanners)
                 {
-                    if (bannerLang == bannerSeason.Language || "en" == bannerSeason.Language || "" == bannerSeason.Language)
+                    if (bannerLang == bannerSeason.sBannerLang || "en" == bannerSeason.sBannerLang || "" == bannerSeason.sBannerLang)
                     {
-                        bannerSeason.FileName = Helper.cleanLocalPath(bannerSeason.SeriesName) + @"\-lang" + bannerSeason.Language + "-" + bannerSeason.OnlinePath;
+                        bannerSeason.sBannerFileName = Helper.cleanLocalPath(bannerSeason.sSeriesName) + @"\-lang" + bannerSeason.sBannerLang + "-" + bannerSeason.sOnlineBannerPath;
                         
-                        string file = OnlineAPI.DownloadBanner(bannerSeason.OnlinePath, Settings.Path.banners, bannerSeason.FileName);
+                        string file = Online_Parsing_Classes.OnlineAPI.DownloadBanner(bannerSeason.sOnlineBannerPath, Settings.Path.banners, bannerSeason.sBannerFileName);
                         if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);                        
+                            BannerDownloadDone(file);
+                        //string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + bannerSeason.sBannerFileName;                        
+                        //int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.banners, bannerSeason.sBannerFileName);
+                        //while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID)) System.Windows.Forms.Application.DoEvents();
                     }
                 }
             }
@@ -343,7 +315,7 @@ namespace WindowPlugins.GUITVSeries
         
         public GetFanart(int SeriesID)
         {
-            XmlNode node = OnlineAPI.getBannerList(SeriesID);
+            XmlNode node = Online_Parsing_Classes.OnlineAPI.getBannerList(SeriesID);
             if (node != null)
             {
                 foreach (XmlNode topNode in node.ChildNodes)
@@ -386,5 +358,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
         }
-    }    
+    }
+
+    
 }
