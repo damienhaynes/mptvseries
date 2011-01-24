@@ -210,6 +210,19 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             if (string.IsNullOrEmpty(username)) return;
 
+            IEnumerable<TraktUserCalendar> calendar = TraktAPI.GetCalendarForUser(username);
+            MPTVSeriesLog.Write("Calendar Count: {0}", calendar.Count().ToString());
+            
+            foreach (var day in calendar)
+            {
+                MPTVSeriesLog.Write(day.Date);
+                foreach (var ep in day.Episodes)
+                {
+                    MPTVSeriesLog.Write(ep.Show.Title + " - " + ep.Episode.SeasonIndex + "x" + ep.Episode.EpisodeIndex + " - " + ep.Episode.Title);
+                }
+
+            }
+
             //TraktSync traktSync = new TraktSync();
 
             //List<DBEpisode> episodes = DBEpisode.Get(79488);
