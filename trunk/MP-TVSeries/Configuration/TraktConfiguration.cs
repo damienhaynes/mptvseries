@@ -210,18 +210,18 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             if (string.IsNullOrEmpty(username)) return;
 
-            IEnumerable<TraktUserCalendar> calendar = TraktAPI.GetCalendarForUser(username);
-            MPTVSeriesLog.Write("Calendar Count: {0}", calendar.Count().ToString());
+            //IEnumerable<TraktUserCalendar> calendar = TraktAPI.GetCalendarForUser(username);
+            //MPTVSeriesLog.Write("Calendar Count: {0}", calendar.Count().ToString());
             
-            foreach (var day in calendar)
-            {
-                MPTVSeriesLog.Write(day.Date);
-                foreach (var ep in day.Episodes)
-                {
-                    MPTVSeriesLog.Write(ep.Show.Title + " - " + ep.Episode.SeasonIndex + "x" + ep.Episode.EpisodeIndex + " - " + ep.Episode.Title);
-                }
+            //foreach (var day in calendar)
+            //{
+            //    MPTVSeriesLog.Write(day.Date);
+            //    foreach (var ep in day.Episodes)
+            //    {
+            //        MPTVSeriesLog.Write(ep.Show.Title + " - " + ep.Episode.SeasonIndex + "x" + ep.Episode.EpisodeIndex + " - " + ep.Episode.Title);
+            //    }
 
-            }
+            //}
 
             //TraktSync traktSync = new TraktSync();
 
@@ -270,21 +270,21 @@ namespace WindowPlugins.GUITVSeries.Configuration
             //if (response.Message != null) MPTVSeriesLog.Write("Trakt Response: " + response.Message);
             //if (response.Error != null) MPTVSeriesLog.Write("Trakt Error: " + response.Error);
 
-            //    MPTVSeriesLog.Write("Trakt: Getting Shows for user '{0}'", username);
-            //    IEnumerable<TraktLibraryShows> showsForUser = TraktAPI.GetSeriesForUser(username);
-            //    MPTVSeriesLog.Write("Show Count: {0}", showsForUser.Count().ToString());
+            //MPTVSeriesLog.Write("Trakt: Getting Shows for user '{0}'", username);
+            //IEnumerable<TraktLibraryShows> showsForUser = TraktAPI.GetSeriesForUser(username);
+            //MPTVSeriesLog.Write("Show Count: {0}", showsForUser.Count().ToString());
 
-            //    MPTVSeriesLog.Write("Trakt: Getting Show overview for Series ID: '79488'");
-            //    TraktSeriesOverview seriesOverview = TraktAPI.GetSeriesOverview("79488");
-            //    if (seriesOverview.Status != "failure") MPTVSeriesLog.Write("Successfully got data for {0}", seriesOverview.Title);
+            //MPTVSeriesLog.Write("Trakt: Getting Show overview for Series ID: '79488'");
+            //TraktSeriesOverview seriesOverview = TraktAPI.GetSeriesOverview("79488");
+            //if (seriesOverview.Status != "failure") MPTVSeriesLog.Write("Successfully got data for {0}", seriesOverview.Title);
 
-            //    MPTVSeriesLog.Write("Trakt: Getting User Profile for user '{0}'", username);
-            //    TraktUserProfile userProfile = TraktAPI.GetUserProfile(username);            
-            //    if(userProfile != null && !string.IsNullOrEmpty(userProfile.Protected)) MPTVSeriesLog.Write("Successfully got data for {0}", userProfile.FullName);
+            //MPTVSeriesLog.Write("Trakt: Getting User Profile for user '{0}'", username);
+            //TraktUserProfile userProfile = TraktAPI.GetUserProfile(username);
+            //if (userProfile != null && !string.IsNullOrEmpty(userProfile.Protected)) MPTVSeriesLog.Write("Successfully got data for {0}", userProfile.FullName);
 
-            //    MPTVSeriesLog.Write("Trakt: Getting watched History for user '{0}'", username);
-            //    IEnumerable<TraktWatchedEpisodeHistory> watchedHistory = TraktAPI.GetUserWatchedHistory(username);
-            //    MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());
+            //MPTVSeriesLog.Write("Trakt: Getting watched History for user '{0}'", username);
+            //IEnumerable<TraktWatchedEpisodeHistory> watchedHistory = TraktAPI.GetUserWatchedHistory(username);
+            //MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());
         }
         #endregion
 
