@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
+using Trakt.Common;
 
 namespace Trakt.User
 {
@@ -41,6 +42,12 @@ namespace Trakt.User
 
         [DataMember(Name = "stats")]
         public Stats Statistics { get; set; }
+
+        [DataMember(Name = "watching")]
+        public TraktEpisode Watching { get; set; }
+
+        [DataMember(Name = "watched")]
+        public List<TraktEpisode> WatchedHistory { get; set; }
     }
 
     [DataContract]
@@ -63,7 +70,7 @@ namespace Trakt.User
     public class Shows
     {
         [DataMember(Name = "library")]
-        public string SeriesCount { get; set; }
+        public string Count { get; set; }
     }
 
     [DataContract]
