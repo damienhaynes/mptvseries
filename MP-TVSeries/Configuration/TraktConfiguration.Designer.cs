@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.buttonManualSync = new System.Windows.Forms.Button();
             this.progressTraktSync = new System.Windows.Forms.ProgressBar();
@@ -49,8 +51,6 @@
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,6 +88,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "trakt Config";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(18, 70);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(38, 13);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Login";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Location = new System.Drawing.Point(100, 73);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(469, 5);
+            this.groupBox5.TabIndex = 22;
+            this.groupBox5.TabStop = false;
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -104,7 +122,7 @@
             this.buttonManualSync.Name = "buttonManualSync";
             this.buttonManualSync.Size = new System.Drawing.Size(149, 23);
             this.buttonManualSync.TabIndex = 19;
-            this.buttonManualSync.Text = "Manual Synchronize";
+            this.buttonManualSync.Text = "&Manual Synchronize";
             this.buttonManualSync.UseVisualStyleBackColor = true;
             this.buttonManualSync.Click += new System.EventHandler(this.buttonManualSync_Click);
             // 
@@ -224,7 +242,7 @@
             // 
             // buttonTestAPI
             // 
-            this.buttonTestAPI.Location = new System.Drawing.Point(469, 548);
+            this.buttonTestAPI.Location = new System.Drawing.Point(101, 349);
             this.buttonTestAPI.Name = "buttonTestAPI";
             this.buttonTestAPI.Size = new System.Drawing.Size(100, 23);
             this.buttonTestAPI.TabIndex = 10;
@@ -278,24 +296,6 @@
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "&Username:";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(18, 70);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(38, 13);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Login";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Location = new System.Drawing.Point(100, 73);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(469, 5);
-            this.groupBox5.TabIndex = 22;
-            this.groupBox5.TabStop = false;
             // 
             // TraktConfiguration
             // 
