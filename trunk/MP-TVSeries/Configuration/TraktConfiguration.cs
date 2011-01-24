@@ -282,6 +282,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
             //TraktUserProfile userProfile = TraktAPI.GetUserProfile(username);
             //if (userProfile != null && !string.IsNullOrEmpty(userProfile.Protected)) MPTVSeriesLog.Write("Successfully got data for {0}", userProfile.FullName);
 
+            //MPTVSeriesLog.Write("Trakt: Getting User Friends for user '{0}'", username);
+            //IEnumerable<TraktUserProfile> userFriends = TraktAPI.GetUserFriends(username);
+            //MPTVSeriesLog.Write("Friend Count: {0}", userFriends.Count().ToString());
+
             //MPTVSeriesLog.Write("Trakt: Getting watched History for user '{0}'", username);
             //IEnumerable<TraktWatchedEpisodeHistory> watchedHistory = TraktAPI.GetUserWatchedHistory(username);
             //MPTVSeriesLog.Write("Watched History Count: {0}", watchedHistory.Count().ToString());

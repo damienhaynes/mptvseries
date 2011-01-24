@@ -106,6 +106,16 @@ namespace Trakt
         }
 
         /// <summary>
+        /// Returns a list of Friends and their user profiles
+        /// </summary>
+        /// <param name="user">username of person to retrieve friends list</param>
+        public static IEnumerable<TraktUserProfile> GetUserFriends(string user)
+        {
+            string userFriends = Transmit(string.Format(TraktURIs.UserFriends, user), string.Empty);
+            return userFriends.FromJSONArray<TraktUserProfile>();
+        }
+
+        /// <summary>
         /// Returns a list of watched items for a user
         /// only friends or non-private users will return any data
         /// Maximum of 100 items will be returned from API
