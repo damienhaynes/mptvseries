@@ -25,7 +25,9 @@ namespace Trakt
     }
 
     static class TraktAPI
-    {       
+    {
+        private const string cAPIKey = "5daf4d0b339a90d7473c6f1ed7f609c4e69f92b4";
+
         /// <summary>
         /// Trakt Username
         /// </summary>
@@ -61,7 +63,7 @@ namespace Trakt
         /// <param name="days">Number of days to return in calendar</param>
         public static IEnumerable<TraktUserCalendar> GetCalendarForUser(string user, string startDate, string days)
         {
-            string userCalendar = Transmit(string.Format(TraktURIs.UserCalendarShows, user, startDate, days), string.Empty);
+            string userCalendar = Transmit(string.Format(TraktURIs.UserCalendarShows, user, startDate, days), GetUserAuthentication());
             return userCalendar.FromJSONArray<TraktUserCalendar>();
         }
 
@@ -71,7 +73,7 @@ namespace Trakt
         /// <param name="user">username of person to get series library</param>
         public static IEnumerable<TraktLibraryShows> GetSeriesForUser(string user)
         {
-            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, user), string.Empty);
+            string seriesForUser = Transmit(string.Format(TraktURIs.UserLibraryShows, user), GetUserAuthentication());
             return seriesForUser.FromJSONArray<TraktLibraryShows>();
         }
 
@@ -81,7 +83,7 @@ namespace Trakt
         /// <param name="user">username of person to get movie library</param>
         public static IEnumerable<TraktLibraryMovies> GetMoviesForUser(string user)
         {
-            string moviesForUser = Transmit(string.Format(TraktURIs.UserLibraryMovies, user), string.Empty);
+            string moviesForUser = Transmit(string.Format(TraktURIs.UserLibraryMovies, user), GetUserAuthentication());
             return moviesForUser.FromJSONArray<TraktLibraryMovies>();
         }
 
@@ -101,7 +103,7 @@ namespace Trakt
         /// <param name="user">username of person to retrieve profile</param>
         public static TraktUserProfile GetUserProfile(string user)
         {
-            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, user), string.Empty);
+            string userProfile = Transmit(string.Format(TraktURIs.UserProfile, user), GetUserAuthentication());
             return userProfile.FromJSON<TraktUserProfile>();
         }
 
@@ -111,7 +113,7 @@ namespace Trakt
         /// <param name="user">username of person to retrieve friends list</param>
         public static IEnumerable<TraktUserProfile> GetUserFriends(string user)
         {
-            string userFriends = Transmit(string.Format(TraktURIs.UserFriends, user), string.Empty);
+            string userFriends = Transmit(string.Format(TraktURIs.UserFriends, user), GetUserAuthentication());
             return userFriends.FromJSONArray<TraktUserProfile>();
         }
 
@@ -123,7 +125,7 @@ namespace Trakt
         /// <param name="user">username of person to retrieve watched items</param>
         public static IEnumerable<TraktWatchedEpisodeHistory> GetUserWatchedHistory(string user)
         {
-            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, user), string.Empty);
+            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, user), GetUserAuthentication());
 
             // get list of objects from json array
             return userWatchedHistory.FromJSONArray<TraktWatchedEpisodeHistory>();
@@ -206,6 +208,11 @@ namespace Trakt
             return response.FromJSON<TraktResponse>();
         }
 
+        private static string GetUserAuthentication()
+        {
+            return new TraktAuthentication { Username = TraktAPI.Username, Password = TraktAPI.Password }.ToJSON();
+        }
+
         /// <summary>
         /// Uploads string to address using the Post Method
         /// </summary>
@@ -219,6 +226,9 @@ namespace Trakt
             {
                 MPTVSeriesLog.Write("Trakt Post: ", data, MPTVSeriesLog.LogLevel.Normal);
             }
+
+            // Update API key in placeholder
+            address = address.Replace("<apiKey>", cAPIKey);
 
             try
             {

@@ -286,6 +286,7 @@
     <Compile Include="Trakt\Movie\TraktMovieScrobble.cs" />
     <Compile Include="Trakt\Common\TraktEpisode.cs" />
     <Compile Include="Trakt\Show\TraktSync.cs" />
+    <Compile Include="Trakt\TraktAuthentication.cs" />
     <Compile Include="Trakt\TraktExtensions.cs" />
     <Compile Include="Trakt\User\TraktLibraryMovies.cs" />
     <Compile Include="Trakt\User\TraktLibraryShows.cs" />
