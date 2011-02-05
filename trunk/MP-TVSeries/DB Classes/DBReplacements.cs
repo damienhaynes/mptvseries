@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
-        public const int cDBVersion = 4;
+        public const int cDBVersion = 5;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -156,13 +156,58 @@ namespace WindowPlugins.GUITVSeries
                         //Disable regex setting for all
                         DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
                         nUpgradeDBVersion++;
-                        break;                        
+                        break;
+                    case 4:
+                        // add the part/roman stuff - defaults for comments
+                        var newIndex  = DBReplacements.GetAll().Length;
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = newIndex++;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 0;
+                        replacement[DBReplacements.cBefore] = "1";
+                        replacement[DBReplacements.cToReplace] = @"(?<=(\s?\.?P[ar]*t\s?)) (X)?(IX|IV|V?I{0,3})";
+                        replacement[DBReplacements.cWith] = @"<RomanToArabic>";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = newIndex++;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 0;
+                        replacement[DBReplacements.cBefore] = "1";
+                        replacement[DBReplacements.cToReplace] = @"(?<!(?:S\d+.?E\\d+\-E\d+.*|S\d+.?E\d+.*|\s\d+x\d+.*))P[ar]*t\s?(\d+)(\s?of\s\d{1,2})?";
+                        replacement[DBReplacements.cWith] = @" S01E${1} ";
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = newIndex++;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 0;
+                        replacement[DBReplacements.cBefore] = "1";
+                        replacement[DBReplacements.cToReplace] = @"(?<!(?:S\d+.?E\\d+\-E\d+.*|S\d+.?E\d+.*|\s\d+x\d+\s.*))(\d{1,2})\s?of\s\d{1,2}";
+                        replacement[DBReplacements.cWith] = @" S01E${1} ";
+                        replacement[DBReplacements.cIsRegex] = true;
+                        try
+                        {
+                          replacement.Commit();
+                        }
+                        catch (Exception) { }  
+
+                        nUpgradeDBVersion++;
+                        break;  
                     default:
                         {
                             // no replacements in the db => put the default ones
                             AddDefaults();
 
-                            nUpgradeDBVersion=4;
+                            nUpgradeDBVersion=5;
                         }
                         break;
                 }
@@ -272,6 +317,53 @@ namespace WindowPlugins.GUITVSeries
             replacement.Commit();
 
             DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
+
+            // low roman numerals preceded by Part or pt (for eg. Part 4 => 1x04)
+            replacement = new DBReplacements();
+            replacement[DBReplacements.cIndex] = 12;
+            replacement[DBReplacements.cEnabled] = 1;
+            replacement[DBReplacements.cTagEnabled] = 0;
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cToReplace] = @"(?<=(\s?\.?P[ar]*t\s?)) (X)?(IX|IV|V?I{0,3})";
+            replacement[DBReplacements.cWith] = @"<RomanToArabic>"; // special operator that causes them to be converted to arabics
+            replacement[DBReplacements.cIsRegex] = true;
+            try
+            {
+              replacement.Commit();
+            }
+            catch (Exception) { }
+
+            // Part n or Part n of m - not preceded by 1x01 or s1e01
+            replacement = new DBReplacements();
+            replacement[DBReplacements.cIndex] = 13;
+            replacement[DBReplacements.cEnabled] = 1;
+            replacement[DBReplacements.cTagEnabled] = 0;
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cToReplace] = @"(?<!(?:S\d+.?E\\d+\-E\d+.*|S\d+.?E\d+.*|\s\d+x\d+.*))P[ar]*t\s?(\d+)(\s?of\s\d{1,2})?";
+            replacement[DBReplacements.cWith] = @" S01E${1} ";
+            replacement[DBReplacements.cIsRegex] = true;
+            try
+            {
+              replacement.Commit();
+            }
+            catch (Exception) { }
+
+            // n of m - not preceded by 1x01 or s1e01
+            replacement = new DBReplacements();
+            replacement[DBReplacements.cIndex] = 14;
+            replacement[DBReplacements.cEnabled] = 1;
+            replacement[DBReplacements.cTagEnabled] = 0;
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cToReplace] = @"(?<!(?:S\d+.?E\\d+\-E\d+.*|S\d+.?E\d+.*|\s\d+x\d+\s.*))(\d{1,2})\s?of\s\d{1,2}";
+            replacement[DBReplacements.cWith] = @" S01E${1} ";
+            replacement[DBReplacements.cIsRegex] = true;
+            try
+            {
+              replacement.Commit();
+            }
+            catch (Exception) { }  
+
+            
 
         }
 
