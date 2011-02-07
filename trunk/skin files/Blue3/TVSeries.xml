@@ -545,103 +545,114 @@
 			<posX>40</posX>
 			<posY>97</posY>
 			<layout>StackLayout</layout>
+      <!--<layout>StackLayout(0, Vertical, true)</layout>-->
 			<visible>!Control.HasFocus(50)</visible>
 			<control>
-	            <description>Switch View</description>
-	            <type>button</type>
-	            <id>2</id>
-	            <label>Switch View</label>
-				<onleft>50</onleft>
-	            <onright>50</onright>
-	            <onup>21</onup>
-				<ondown>3</ondown>
-            </control> 
+        <description>Switch View</description>
+        <type>button</type>
+        <id>2</id>
+        <label>Switch View</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <onup>21</onup>
+        <ondown>3</ondown>
+        </control> 
 			<control>
-	            <description>Change Layout</description>
-	            <type>button</type>
-	            <id>3</id>
-	            <label>Change Layout</label>
-				<onleft>50</onleft>
-	            <onright>50</onright>
-	            <onup>2</onup>
-				<ondown>5</ondown>
+        <description>Change Layout</description>
+        <type>button</type>
+        <id>3</id>
+        <label>Change Layout</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <onup>2</onup>
+        <ondown>5</ondown>
 			</control>
 			<control>
-	            <description>Run Import</description>
-	            <type>button</type>
-	            <id>5</id>
-	            <label>Run Import</label>
-				<onleft>50</onleft>
-	            <onright>50</onright>
-	            <onup>3</onup>
-				<ondown>20</ondown>
+        <description>Run Import</description>
+        <type>button</type>
+        <id>5</id>
+        <label>Run Import</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <onup>3</onup>
+        <ondown>20</ondown>
 			</control>
 			<control>
-	            <description>Current Playlist</description>
-	            <type>button</type>
-	            <id>20</id>
-	            <label>4555</label>
-	            <action>33</action>
-				<onleft>50</onleft>
-	            <onright>50</onright>
-	            <ondown>9</ondown>
-	            <onup>5</onup>
+        <description>Current Playlist</description>
+        <type>button</type>
+        <id>20</id>
+        <label>4555</label>
+        <action>33</action>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <ondown>9</ondown>
+        <onup>5</onup>
 			</control>	
 			<control>
-	            <description>My Playlists</description>
-	            <type>button</type>
-	            <id>9</id>
-	            <label>983</label>
-				<onleft>50</onleft>
-	            <onright>50</onright>
-	            <ondown>4</ondown>
-	            <onup>20</onup>
+        <description>My Playlists</description>
+        <type>button</type>
+        <id>9</id>
+        <label>983</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <ondown>4</ondown>
+        <onup>20</onup>
 			</control>		  
 			<control>
-	            <description>Options</description>
-	            <type>button</type>
-	            <id>4</id>
-	            <label>496</label>
-				<onleft>50</onleft>
-	            <onright>50</onright>
-	            <onup>9</onup>
-				<ondown>66608</ondown>
+        <description>Options</description>
+        <type>button</type>
+        <id>4</id>
+        <label>496</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <onup>9</onup>
+        <ondown>66608</ondown>
 			</control>		
-			<control>
-		        <description>Video Settings</description>
-		        <type>button</type>
-		        <id>66608</id>
-		        <label>Video Settings</label>
-		        <hyperlink>703</hyperlink>			
-				<onleft>50</onleft>
-		        <onright>50</onright>
-				<ondown>10</ondown>
-	            <onup>4</onup>
+        <control>
+        <description>Video Settings</description>
+        <type>button</type>
+        <id>66608</id>
+        <label>Video Settings</label>
+        <hyperlink>703</hyperlink>			
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <ondown>10</ondown>
+        <onup>4</onup>
 			</control>
 			<control>
-	            <description>Moving Pictures</description>
-	            <type>button</type>
-	            <id>10</id>
-	            <hyperlink>96742</hyperlink>
-	            <label>My Movies</label>
-	            <onleft>50</onleft>
-				<onright>50</onright>
-	            <ondown>30</ondown>
-	            <onup>66608</onup>
-	            <visible>plugin.isenabled(Moving Pictures)</visible>
+        <description>Moving Pictures</description>
+        <type>button</type>
+        <id>10</id>
+        <hyperlink>96742</hyperlink>
+        <label>My Movies</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <ondown>66612</ondown>
+        <onup>66608</onup>
+        <visible>plugin.isenabled(Moving Pictures)</visible>
 			</control>
 			<control>
-	            <description>My Trailers</description>
-	            <type>button</type>
-	            <id>30</id>
-	            <hyperlink>5900</hyperlink>
-	            <label>My Trailers</label>
-	            <onleft>50</onleft>
-				<onright>50</onright>
-	            <ondown>2</ondown>
-	            <onup>10</onup>
-	            <visible>plugin.isenabled(My Trailers)</visible>
-			</control>	
+        <description>SubCentral</description>
+        <type>button</type>
+        <id>66612</id>
+        <label>287</label>
+        <hyperlink>84623</hyperlink>
+        <onup>10</onup>
+        <ondown>181966</ondown>
+        <onleft>50</onleft>
+        <visible>plugin.isenabled(SubCentral)+control.isvisible(1239)</visible>
+      </control>
+      <control>
+        <description>Download Central</description>
+        <type>button</type>
+        <id>181966</id>
+        <label>Download</label>
+        <hyperlink>181966</hyperlink>
+        <onup>66612</onup>
+        <ondown>2</ondown>		  
+        <onleft>50</onleft>
+        <visible>plugin.isenabled(dlCentral)+control.isvisible(1239)</visible>
+      </control>
 		</control>
 	</control>
 	
