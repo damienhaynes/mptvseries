@@ -120,6 +120,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cMainMirror = "mainMirror";
         public const String cGetBlankBanners = "getBlankBanners";
+        public const String cGetTextBanners = "getTextBanners";
         public const String cGetEpisodeSnapshots = "getEpisodeSnapshots";
 
         public const String cWatchedAfter = "watchedAfter";
@@ -222,6 +223,10 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTraktUsername = "TraktUsername";
         public const String cTraktPassword = "TraktPassword";        
+
+        public const String cArtworkLimitSeriesWideBanners = "ArtworkLimitSeriesWideBanners";
+ 	    public const String cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
+ 	    public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -599,6 +604,21 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cTraktUsername) == null)
                     SetOptions(cTraktUsername, string.Empty);
+
+                if (GetOptions(cGetBlankBanners) == null)
+                    SetOptions(cGetBlankBanners, false);
+ 
+ 	            if (GetOptions(cGetTextBanners) == null)
+ 	                SetOptions(cGetTextBanners, false);
+ 
+ 	            if (GetOptions(cArtworkLimitSeriesWideBanners) == null) 
+ 	                SetOptions(cArtworkLimitSeriesWideBanners, 3);
+ 
+ 	            if (GetOptions(cArtworkLimitSeriesPosters) == null) 
+ 	                SetOptions(cArtworkLimitSeriesPosters, 3);
+ 
+ 	            if (GetOptions(cArtworkLimitSeasonPosters) == null)
+ 	                SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
               
             }
             catch (Exception ex)

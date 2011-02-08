@@ -2534,6 +2534,7 @@ namespace WindowPlugins.GUITVSeries
                             List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
 
                             setGUIProperty(guiProperty.GroupCount, items.Count.ToString());
+                            setGUIProperty("#itemcount", items.Count.ToString());
 
                             if (items.Count == 0)
                                 bFacadeEmpty = true;
@@ -2621,7 +2622,10 @@ namespace WindowPlugins.GUITVSeries
 							
 							// Get list of series for current view
                             seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
-                            
+
+                            // set mediaportal itemcount property
+                            setGUIProperty("#itemcount", seriesList.Count.ToString());
+
                             // Sort Series List if Title has been user edited
                             string titleField = DBOption.GetOptions(DBOption.cSeries_UseSortName) ? DBOnlineSeries.cSortName : DBOnlineSeries.cPrettyName;
                             seriesList.Sort(new Comparison<DBSeries>((x, y) => 
@@ -2742,6 +2746,9 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // view handling                               
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
+
+                            // set mediaportal itemcount property
+                            setGUIProperty("#itemcount", seasons.Count.ToString());
 
                             bool canBeSkipped = (seasons.Count == 1) && DBOption.GetOptions(DBOption.cSkipSeasonViewOnSingleSeason);
                             if (!canBeSkipped)
@@ -2897,6 +2904,7 @@ namespace WindowPlugins.GUITVSeries
                             // Update Filtered Episode Count Property, this acurately displays the number of items on the facade
                             // #TVSeries.Series.EpisodeCount is not desirable in some views e.g. Recently Added or views that filter by episode fields
                             setGUIProperty(guiProperty.FilteredEpisodeCount, episodesToDisplay.Count.ToString());
+                            setGUIProperty("#itemcount", episodesToDisplay.Count.ToString());
 
                             int watchedCount = 0;
                             int unwatchedCount = episodesToDisplay.Count;
@@ -3204,8 +3212,9 @@ namespace WindowPlugins.GUITVSeries
 
         public static void setGUIProperty(string name, string value)
         {
-            string property = "#TVSeries." + name;
-            //MPTVSeriesLog.Write("[{0}]: {1}", property, value);
+            string property = name;
+            if (!property.StartsWith("#"))
+             property = string.Concat("#TVSeries.", property);            
             GUIPropertyManager.SetProperty(property, value);
         }
 

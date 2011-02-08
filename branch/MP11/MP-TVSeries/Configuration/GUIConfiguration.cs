@@ -4737,6 +4737,12 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cNewEpisodeRecentDays, (int)nudRecentlyAddedDays.Value);
         }
+
+        private void buttonArtworkDownloadLimits_Click(object sender, EventArgs e)
+        {
+            ArtworkDownloadLimits artworkLimitDlg = new ArtworkDownloadLimits();
+            artworkLimitDlg.ShowDialog(this);
+        }
     }
     
     public class BannerComboItem
