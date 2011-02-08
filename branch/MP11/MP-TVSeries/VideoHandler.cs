@@ -364,8 +364,7 @@ namespace WindowPlugins.GUITVSeries
                     switch (kvp.Key) 
                     {
                         case "episode":
-                            if (!DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) || m_currentEpisode[DBOnlineEpisode.cWatched])
-                                osdImage = ImageAllocator.ExtractFullName(localLogos.getFirstEpLogo(m_currentEpisode));
+                            osdImage = ImageAllocator.GetEpisodeImage(m_currentEpisode);
                             break;
                         case "season":
                             osdImage = season.Banner;
