@@ -290,8 +290,10 @@
     <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
     <Compile Include="TraktHandler.cs" />
     <Compile Include="Trakt\Movie\TraktMovieScrobble.cs" />
+    <Compile Include="Trakt\Common\TraktEpisode.cs" />
     <Compile Include="Trakt\Show\TraktSync.cs" />
     <Compile Include="Trakt\TraktAPI.cs" />
+    <Compile Include="Trakt\TraktAuthentication.cs" />
     <Compile Include="Trakt\TraktExtensions.cs" />
     <Compile Include="Trakt\TraktResponse.cs" />
     <Compile Include="Trakt\User\TraktLibraryMovies.cs" />
@@ -299,6 +301,7 @@
     <Compile Include="Trakt\Show\TraktEpisodeScrobble.cs" />
     <Compile Include="Trakt\Show\TraktSeriesOverview.cs" />
     <Compile Include="Trakt\TraktURIs.cs" />
+    <Compile Include="Trakt\User\TraktUserCalendar.cs" />
     <Compile Include="Trakt\User\TraktUserProfile.cs" />
     <Compile Include="Trakt\User\TraktWatchedEpisodeHistory.cs" />
     <Compile Include="Trakt\User\TraktWatchedMovieHistory.cs" />

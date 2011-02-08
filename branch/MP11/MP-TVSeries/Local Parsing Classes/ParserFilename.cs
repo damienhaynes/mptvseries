@@ -181,14 +181,17 @@ namespace WindowPlugins.GUITVSeries
         {
             foreach (var replacement in replacements)
             {
-                if (replacement.Key.IsMatch(runAgainst)
+              if (replacement.Key.IsMatch(runAgainst)
                     && tags.Contains(replacement.Key.ToString()))
-                {
-                    m_Tags.Add(replacement.Key.ToString());
-                }
-                runAgainst = replacement.Key.Replace(runAgainst, replacement.Value);
+              {
+                m_Tags.Add(replacement.Key.ToString());
+              }
+
+              runAgainst = replacement.Value.Equals("<RomanToArabic>", StringComparison.OrdinalIgnoreCase) // special case romans
+                         ? replacement.Key.Replace(runAgainst, m => " " + Parse1To19RomanNumberOrKeep(m.Value) + " ") 
+                         : replacement.Key.Replace(runAgainst, replacement.Value);
             }
-            return runAgainst;
+          return runAgainst;
         }
 
         public FilenameParser(string filename)
@@ -295,6 +298,60 @@ namespace WindowPlugins.GUITVSeries
             }
 
             return finalRegEx;
+        }
+
+        static string Parse1To19RomanNumberOrKeep(string roman)
+        {
+          var intRepresentation = Parse1To19RomanNumber(roman);
+          return intRepresentation.HasValue ? intRepresentation.ToString() : roman;
+        }
+
+        static int? Parse1To19RomanNumber(string roman)
+        {
+          roman = roman.ToUpper().Trim();
+          switch (roman)
+          {
+            case "I":
+              return 1;
+            case "II":
+              return 2;
+            case "III":
+              return 3;
+            case "IV":
+              return 4;
+            case "V":
+              return 5;
+            case "VI":
+              return 6;
+            case "VII":
+              return 7;
+            case "VIII":
+              return 8;
+            case "IX":
+              return 9;
+            case "X":
+              return 10;
+            case "XI":
+              return 11;
+            case "XII":
+              return 12;
+            case "XIII":
+              return 13;
+            case "XIV":
+              return 14;
+            case "XV":
+              return 15;
+            case "XVI":
+              return 16;
+            case "XVII":
+              return 17;
+            case "XVIII":
+              return 18;
+            case "XIX":
+              return 19;
+            default:
+              return null;
+          }
         }
     }
 }

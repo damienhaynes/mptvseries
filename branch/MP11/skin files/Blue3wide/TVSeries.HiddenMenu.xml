@@ -41,6 +41,7 @@
 					<posX>71</posX>
 					<posY>121</posY>
 					<layout>StackLayout</layout>
+          <!--<layout>StackLayout(0, Vertical, true)</layout>-->
 					<visible>!Control.HasFocus(50)</visible>
 					<control>
 						<description>Switch View</description>
@@ -122,22 +123,32 @@
 						<label>My Movies</label>
 						<onleft>50</onleft>
 						<onright>50</onright>
-						<ondown>30</ondown>
+						<ondown>66612</ondown>
 						<onup>66608</onup>
 						<visible>plugin.isenabled(Moving Pictures)</visible>
-					</control>
-					<control>
-						<description>My Trailers</description>
-						<type>button</type>
-						<id>30</id>
-						<hyperlink>5900</hyperlink>
-						<label>My Trailers</label>
-						<onleft>50</onleft>
-						<onright>50</onright>
-						<ondown>2</ondown>
-						<onup>10</onup>
-						<visible>plugin.isenabled(My Trailers)</visible>
 					</control>					
+          <control>
+            <description>SubCentral</description>
+            <type>button</type>
+            <id>66612</id>
+            <label>287</label>
+            <hyperlink>84623</hyperlink>
+            <onup>10</onup>
+            <ondown>181966</ondown>
+            <onleft>50</onleft>
+            <visible>plugin.isenabled(SubCentral)+control.isvisible(1239)</visible>
+          </control>
+          <control>
+            <description>Download Central</description>
+            <type>button</type>
+            <id>181966</id>
+            <label>Download</label>
+            <hyperlink>181966</hyperlink>
+            <onup>66612</onup>
+            <ondown>2</ondown>		  
+            <onleft>50</onleft>
+            <visible>plugin.isenabled(dlCentral)+control.isvisible(1239)</visible>
+          </control>
 				</control>
 				<control>
 					<id>0</id>

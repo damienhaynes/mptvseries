@@ -681,17 +681,9 @@ namespace WindowPlugins.GUITVSeries
             TVSeriesPlugin.setGUIProperty(guiProperty.Subtitle.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));            
             TVSeriesPlugin.setGUIProperty(guiProperty.Description.ToString(), FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
             TVSeriesPlugin.setGUIProperty(guiProperty.Logos.ToString(), localLogos.getLogos(ref episode, TVSeriesPlugin.logosHeight, TVSeriesPlugin.logosWidth));
-            if (episode[DBOnlineEpisode.cWatched] || item.IsPlayed || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail))
-            {
-                GUIPropertyManager.SetProperty("#selectedthumb", ImageAllocator.GetEpisodeImage(episode));
-                TVSeriesPlugin.setGUIProperty(guiProperty.EpisodeImage.ToString(), ImageAllocator.GetEpisodeImage(episode));
-            }
-            else
-            {
-                GUIPropertyManager.SetProperty("#selectedthumb", " ");
-                TVSeriesPlugin.clearGUIProperty(guiProperty.EpisodeImage.ToString());
-            }
-
+            TVSeriesPlugin.setGUIProperty(guiProperty.EpisodeImage.ToString(), ImageAllocator.GetEpisodeImage(episode));
+            GUIPropertyManager.SetProperty("#selectedthumb", ImageAllocator.GetEpisodeImage(episode));           
+            
             TVSeriesPlugin.pushFieldsToSkin(episode, "Episode");
             
             // Some strange issues with logos when using mouse and hovering over current item

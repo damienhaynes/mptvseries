@@ -138,7 +138,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Static Methods
-        
+       
         public static Fanart getFanart(int seriesID)
         {
             Fanart f = null;
@@ -203,7 +203,39 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Instance Methods
-        
+
+        public string FanartThumbFilename
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_ThumbFileName)) return _ThumbFileName;
+
+                List<DBFanart> fanarts = DBFanart.GetAll(SeriesID, true);
+
+                // check if we have populated the db with fanarts
+                if (fanarts == null || fanarts.Count == 0) 
+                    return string.Empty;
+
+                // get a fallback fanart if preferred one does not exist
+                _ThumbFileName = Path.Combine(Settings.GetPath(Settings.Path.fanart), fanarts[0][DBFanart.cThumbnailPath]);
+                
+                // favour chosen fanart if it exists
+                fanarts.RemoveAll(f => f.Chosen != true);
+
+                // should only be left with one if there is one chosen
+                if (fanarts.Count > 0)
+                    _ThumbFileName = Path.Combine(Settings.GetPath(Settings.Path.fanart), fanarts[0][DBFanart.cThumbnailPath]);
+
+                // cached thumbs may not be downloaded
+                // currently only get retrieved on fanart chooser window open
+                if (File.Exists(_ThumbFileName))
+                    return _ThumbFileName;
+
+                // let skin handle it
+                return string.Empty;
+            }
+        } string _ThumbFileName = string.Empty;
+
         public string FanartFilename
         {
             get 

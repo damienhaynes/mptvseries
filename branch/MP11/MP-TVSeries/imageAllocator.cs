@@ -367,11 +367,21 @@ namespace WindowPlugins.GUITVSeries
 
         public static String GetEpisodeImage(DBEpisode episode)
         {
-            if (String.IsNullOrEmpty(episode.Image)) return string.Empty;
-            if (episode.Image.Length > 0 && System.IO.File.Exists(episode.Image))
-              return episode.Image;
+            bool HideEpisodeImage = true;
+            if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail)))
+                HideEpisodeImage = false;
+
+            // show episode image
+            if (!HideEpisodeImage && !String.IsNullOrEmpty(episode.Image) && System.IO.File.Exists(episode.Image))
+            {
+                return episode.Image;
+            }
             else
-              return String.Empty;
+            {
+                // show a fanart thumb instead
+                Fanart fanart = Fanart.getFanart(episode[DBOnlineEpisode.cSeriesID]);
+                return fanart.FanartThumbFilename;
+            }
         }
 
         public static String GetOtherImage(string sFileName, System.Drawing.Size size, bool bPersistent)
