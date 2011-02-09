@@ -61,7 +61,9 @@ namespace WindowPlugins.GUITVSeries
         UpdateUserFavourites,
 
         UpdateRecentlyAdded,
-        BroadcastRecentlyAdded
+        BroadcastRecentlyAdded,
+
+        SyncTraktWatchedState
     }
 
     public class ParsingProgress
@@ -95,6 +97,7 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.MediaInfo,            
             ParsingAction.IdentifyNewSeries, 
             ParsingAction.IdentifyNewEpisodes,
+            ParsingAction.SyncTraktWatchedState,
             ParsingAction.UpdateEpisodeCounts
         };
 
@@ -145,9 +148,10 @@ namespace WindowPlugins.GUITVSeries
 
             m_actions.Add(action);
             if (action == ParsingAction.List_Add) {
-                m_actions.Add(ParsingAction.MediaInfo);                
+                m_actions.Add(ParsingAction.MediaInfo);
                 m_actions.Add(ParsingAction.IdentifyNewSeries);
                 m_actions.Add(ParsingAction.IdentifyNewEpisodes);
+                m_actions.Add(ParsingAction.SyncTraktWatchedState);
                 m_actions.Add(ParsingAction.UpdateEpisodeCounts);
                 m_actions.Add(ParsingAction.BroadcastRecentlyAdded);
             }
@@ -381,6 +385,10 @@ namespace WindowPlugins.GUITVSeries
                         // signal the facade to be reloaded.
                         // TODO: smart way to report progress and expose as property to skins
                         m_worker.ReportProgress(30);
+                        break;
+                    
+                    case ParsingAction.SyncTraktWatchedState:
+                        TraktHandler.SyncTraktWatchedState();
                         break;
 
                     case ParsingAction.GetOnlineUpdates:
