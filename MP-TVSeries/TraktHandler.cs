@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using Trakt;
 using Trakt.Show;
+using Trakt.User;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -195,6 +196,39 @@ namespace WindowPlugins.GUITVSeries
                 // wait a short period before uploading another series
                 Thread.Sleep(2000);
             }
+        }
+
+        /// <summary>
+        /// Gets the 100 Most Recently Watched on Trakt and 
+        /// syncs the watched state locally
+        /// </summary>
+        public static void SyncTraktWatchedState()
+        {
+            if (string.IsNullOrEmpty(TraktAPI.Username) || string.IsNullOrEmpty(TraktAPI.Password))
+                return;
+
+            // Get all local unwatched episodes
+            SQLCondition conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal);
+            List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
+
+            MPTVSeriesLog.Write("Getting Most Recently Watched from Trakt:");
+            
+            foreach (var watchedItem in TraktAPI.GetUserWatchedHistory(TraktAPI.Username))
+            {         
+                string seriesID = watchedItem.Show.SeriesID;
+                string seasonIdx = watchedItem.Episode.SeasonIndex;
+                string episodeIdx = watchedItem.Episode.EpisodeIndex;
+
+                foreach(DBEpisode episode in episodes.Where(e => e[DBEpisode.cSeriesID] == seriesID &&
+                                                                 e[DBEpisode.cSeasonIndex] == seasonIdx &&
+                                                                 e[DBEpisode.cEpisodeIndex] == episodeIdx)) {
+                    // commit watched state
+                    episode[DBOnlineEpisode.cWatched] = true;
+                    episode.Commit();
+                }
+            }
+            MPTVSeriesLog.Write("Finished Syncing Watched state from Trakt");
+
         }
 
         /// <summary>
