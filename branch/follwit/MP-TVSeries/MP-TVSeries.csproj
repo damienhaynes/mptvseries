@@ -147,6 +147,13 @@
     </Compile>
     <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
+    <Compile Include="FollwitTv\FollwitConnector.cs" />
+    <Compile Include="FollwitTv\FollwitSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FollwitTv\FollwitSettingsPanel.Designer.cs">
+      <DependentUpon>FollwitSettingsPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -401,6 +408,9 @@
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FollwitTv\FollwitSettingsPanel.resx">
+      <DependentUpon>FollwitSettingsPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>APIKey.Designer.cs</LastGenOutput>
@@ -524,6 +534,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\External\FollwitApi\FollwitApi.csproj">
+      <Project>{75EBA361-8137-4107-A5B5-753CE959983B}</Project>
+      <Name>FollwitApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

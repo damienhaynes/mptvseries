@@ -206,7 +206,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
 
         public const String cTraktUsername = "TraktUsername";
-        public const String cTraktPassword = "TraktPassword";        
+        public const String cTraktPassword = "TraktPassword";
+
+        public const String cFollwitEnabled = "FollwitEnabled";
+        public const String cFollwitBaseUrl = "FollwitBaseUrl";
+        public const String cFollwitUsername = "FollwitUsername";
+        public const String cFollwitHashedPassword = "FollwitHashedPassword";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -578,6 +583,19 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cTraktUsername) == null)
                     SetOptions(cTraktUsername, string.Empty);
+
+                if (GetOptions(cFollwitEnabled) == null)
+                    SetOptions(cFollwitEnabled, false);
+
+                if (GetOptions(cFollwitBaseUrl) == null)
+                    SetOptions(cFollwitBaseUrl, "http://devtv.follw.it/");
+
+
+                if (GetOptions(cFollwitUsername) == null)
+                    SetOptions(cFollwitUsername, string.Empty);
+
+                if (GetOptions(cFollwitHashedPassword) == null)
+                    SetOptions(cFollwitHashedPassword, string.Empty);
               
             }
             catch (Exception ex)
