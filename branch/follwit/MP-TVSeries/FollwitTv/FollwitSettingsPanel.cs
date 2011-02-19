@@ -46,7 +46,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
         private void Sync() {
             FollwitConnector.FullSync();
-            MessageBox.Show("Done.", "follw.it");
+            MessageBox.Show("Now syncing...", "follw.it");
         }
 
         private void OpenUserPage() {

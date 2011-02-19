@@ -43,6 +43,7 @@ using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
 using MediaPortal.GUI.Library;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 #if DEBUG
 using System.Diagnostics;
@@ -2560,6 +2561,8 @@ namespace WindowPlugins.GUITVSeries
                             ep.Commit();
                         }
 
+                        FollwitConnector.Watch(episodeList, watched == 1);
+
                         // Updated Episode Counts
                         DBSeries.UpdateEpisodeCounts(series);
 
@@ -2622,6 +2625,8 @@ namespace WindowPlugins.GUITVSeries
                             ep.Commit();
                         }
 
+                        FollwitConnector.Watch(episodeList, watched == 1);
+
                         // update episode counts
                         DBSeason.UpdateEpisodeCounts(series, season);
 
@@ -2666,6 +2671,8 @@ namespace WindowPlugins.GUITVSeries
                         episode[DBOnlineEpisode.cWatched] = watched;
                         episode[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
                         episode.Commit();
+
+                        FollwitConnector.Watch(episode, watched == 1, false);
 
                         series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
                         season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);

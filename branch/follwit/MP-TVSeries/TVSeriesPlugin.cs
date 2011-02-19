@@ -41,6 +41,7 @@ using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
 using Trakt;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -1097,14 +1098,18 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     episode[DBOnlineEpisode.cWatched] = !watched;
                                     episode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
-                                    episode.Commit();
+                                    episode.Commit();                                    
                                 }
+
+                                FollwitConnector.Watch(episodes, !watched);
                             }
                             else
                             {
                                 selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
                                 selectedEpisode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
                                 selectedEpisode.Commit();
+
+                                FollwitConnector.Watch(selectedEpisode, !watched, false);
                             }
                             // Update Episode Counts
                             DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
@@ -1143,6 +1148,8 @@ namespace WindowPlugins.GUITVSeries
                             episode[DBOnlineEpisode.cTraktSeen] = 0;
                             episode.Commit();
                         }
+
+                        FollwitConnector.Watch(episodeList, true);
 
                         // Updated Episode Counts
                         if (this.listLevel == Listlevel.Series && selectedSeries != null)
@@ -1187,6 +1194,8 @@ namespace WindowPlugins.GUITVSeries
                             episode[DBOnlineEpisode.cTraktSeen] = 2;
                             episode.Commit();
                         }
+
+                        FollwitConnector.Watch(episodeList, false);
 
                         // Updated Episode Counts
                         if (this.listLevel == Listlevel.Series && selectedSeries != null)
@@ -3303,6 +3312,9 @@ namespace WindowPlugins.GUITVSeries
                 if (Int32.TryParse(value, out rating))
                 {
                     Online_Parsing_Classes.OnlineAPI.SubmitRating(level == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
+
+                    if (level == Listlevel.Episode)
+                        FollwitConnector.Rate((DBEpisode)item, rating);
                 }
             }
 

@@ -1147,6 +1147,7 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                     case DBOnlineEpisode.cTraktLibrary:
                                     case DBOnlineEpisode.cTraktSeen:
+                                    case DBOnlineEpisode.cFollwitId:
                                         // do nothing here, those information are local only
                                         break;
 
@@ -2097,6 +2098,7 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineEpisode.cMyRating:
                     case DBOnlineEpisode.cTraktLibrary:
                     case DBOnlineEpisode.cTraktSeen:
+                    case DBOnlineEpisode.cFollwitId:
                         // do nothing here, those information are local only
                         break;
 
