@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Follwit.API;
+using Follwit.API.Data;
+using CookComputing.XmlRpc;
 
 namespace WindowPlugins.GUITVSeries.FollwitTv {
     public class FollwitConnector {
@@ -62,12 +64,73 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             internal set { DBOption.SetOptions(DBOption.cFollwitHashedPassword, value); }
         }
 
+        public static void FullSync() {
+            MPTVSeriesLog.Write("Begining follw.it full synchronization.");
+            DateTime start = DateTime.Now;
+
+            // grab list of all local episodes
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+
+            // basic data structures used for our processing loop
+            Dictionary<string, DBEpisode> episodeLookup = new Dictionary<string, DBEpisode>();
+            List<FitEpisode> epsToSend = new List<FitEpisode>();
+            List<XmlRpcStruct> totalOutput = new List<XmlRpcStruct>();
+
+            // send episodes to server in small groups at a time.
+            foreach (DBEpisode currEpisode in episodes) {
+                FitEpisode fitEpisode = GetFitEpisode(currEpisode);
+                episodeLookup[fitEpisode.SourceId] = currEpisode;
+                epsToSend.Add(fitEpisode);
+
+                if (epsToSend.Count > 30) {
+                    object[] output = (object[]) FollwitConnector.FollwitApi.BulkAction(epsToSend);
+                    foreach (object currRecord in output) totalOutput.Add((XmlRpcStruct)currRecord);
+                    epsToSend.Clear();
+                }
+            }
+
+            // send remaining group of episodes
+            object[] output2 = (object[])FollwitConnector.FollwitApi.BulkAction(epsToSend);
+            foreach (object currRecord in output2) totalOutput.Add((XmlRpcStruct)currRecord);
+
+            // locally store returned data (currently only follwit id)
+            foreach (XmlRpcStruct currRecord in totalOutput) {
+                DBEpisode ep = episodeLookup[(string)currRecord["SourceId"]];
+                ep[DBOnlineEpisode.cFollwitId] = (string)currRecord["EpisodeId"];
+                ep.Commit();
+            }
+
+            MPTVSeriesLog.Write("Finished follw.it full synchronization. (" + (DateTime.Now - start).ToString() + ")");
+        }
+
+        public static FitEpisode GetFitEpisode(DBEpisode mptvEpisode) {
+            if (mptvEpisode == null)
+                return null;
+            
+            FitEpisode fitEp = new FitEpisode();
+            fitEp.SourceName = "tvdb";
+            fitEp.SourceId = mptvEpisode.onlineEpisode[DBOnlineEpisode.cID];
+            fitEp.InCollection = true;
+
+            if (!String.IsNullOrEmpty(mptvEpisode[DBOnlineEpisode.cMyRating])) {
+                int value;
+                int.TryParse(mptvEpisode[DBOnlineEpisode.cMyRating], out value);
+                fitEp.Rating = (int)Math.Round(value / 2.0);
+            }
+
+            fitEp.Watched = mptvEpisode[DBOnlineEpisode.cWatched] == 1;
+
+            return fitEp;
+        }
+
         private static void _follwitAPI_RequestEvent(string RequestText) {
-            throw new NotImplementedException();
+            MPTVSeriesLog.Write(RequestText, MPTVSeriesLog.LogLevel.Debug);
         }
 
         private static void _follwitAPI_ResponseEvent(string ResponseText) {
-            throw new NotImplementedException();
+            MPTVSeriesLog.Write(ResponseText, MPTVSeriesLog.LogLevel.Debug);
         }
 
     }

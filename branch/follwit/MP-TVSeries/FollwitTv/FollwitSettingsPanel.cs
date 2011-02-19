@@ -45,7 +45,8 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         private void Sync() {
-            MessageBox.Show("This functionality is not yet implemented.", "Oops!");
+            FollwitConnector.FullSync();
+            MessageBox.Show("Done.", "follw.it");
         }
 
         private void OpenUserPage() {

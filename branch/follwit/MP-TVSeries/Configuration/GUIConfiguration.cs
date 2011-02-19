@@ -1616,6 +1616,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cRatingCount:
                                 case DBOnlineEpisode.cTraktLibrary:
                                 case DBOnlineEpisode.cTraktSeen:
+                                case DBOnlineEpisode.cFollwitId:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
