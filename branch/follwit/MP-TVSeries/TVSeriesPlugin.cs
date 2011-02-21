@@ -765,7 +765,7 @@ namespace WindowPlugins.GUITVSeries
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
 
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled)
                             {
                                 pItem = new GUIListItem(Translation.RateEpisode + " ...");
                                 dlg.Add(pItem);
@@ -774,7 +774,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (this.listLevel != Listlevel.Group)
                         {
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled)
                             {
                                 pItem = new GUIListItem(Translation.RateSeries + " ...");
                                 dlg.Add(pItem);
@@ -3315,6 +3315,8 @@ namespace WindowPlugins.GUITVSeries
 
                     if (level == Listlevel.Episode)
                         FollwitConnector.Rate((DBEpisode)item, rating);
+                    else 
+                        FollwitConnector.Rate((DBSeries)item, rating);
                 }
             }
 

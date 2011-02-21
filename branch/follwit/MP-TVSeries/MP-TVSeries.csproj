@@ -131,6 +131,12 @@
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\ProgressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProgressDialog.Designer.cs">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\TraktConfiguration.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -384,6 +390,9 @@
     <EmbeddedResource Include="Configuration\PinCode.resx">
       <DependentUpon>PinCode.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ProgressDialog.resx">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ProgressLabel.resx">
       <DependentUpon>ProgressLabel.cs</DependentUpon>

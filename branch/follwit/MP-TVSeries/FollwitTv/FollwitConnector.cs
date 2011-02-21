@@ -6,6 +6,7 @@ using Follwit.API;
 using Follwit.API.Data;
 using CookComputing.XmlRpc;
 using System.Threading;
+using WindowPlugins.GUITVSeries.Configuration;
 
 namespace WindowPlugins.GUITVSeries.FollwitTv {
     public class FollwitConnector {
@@ -67,6 +68,10 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         public static void FullSync() {
+            FullSync(null);
+        }
+
+        public static void FullSync(ProgressDialog.ProgressDelegate progress) {
             if (!Enabled) return;
 
             Thread thread = new Thread(new ThreadStart(delegate {
@@ -83,6 +88,10 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     Dictionary<string, DBEpisode> episodeLookup = new Dictionary<string, DBEpisode>();
                     List<FitEpisode> epsToSend = new List<FitEpisode>();
                     List<XmlRpcStruct> totalOutput = new List<XmlRpcStruct>();
+                   
+                    int sent = 0;
+                    int total = episodes.Count;
+                    bool canceled = false;
 
                     // send episodes to server in small groups at a time.
                     foreach (DBEpisode currEpisode in episodes) {
@@ -97,13 +106,22 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         if (epsToSend.Count > 30) {
                             object[] output = (object[])FollwitConnector.FollwitApi.BulkAction(epsToSend);
                             foreach (object currRecord in output) totalOutput.Add((XmlRpcStruct)currRecord);
+                            sent += epsToSend.Count;
                             epsToSend.Clear();
+
+                            // send progress update to any listeners
+                            try { if (progress != null) canceled = progress(ProgressDialog.Status.RUNNING, (sent * 100) / total); }
+                            catch (Exception) { }
+
+                            // if the listener sent a cancel message, we are done
+                            if (canceled) break;
                         }
                     }
 
                     // send remaining group of episodes
                     object[] output2 = (object[])FollwitConnector.FollwitApi.BulkAction(epsToSend);
                     foreach (object currRecord in output2) totalOutput.Add((XmlRpcStruct)currRecord);
+                    sent += epsToSend.Count;
 
                     // locally store returned data (currently only follwit id)
                     foreach (XmlRpcStruct currRecord in totalOutput) {
@@ -112,7 +130,21 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         ep.Commit();
                     }
 
-                    MPTVSeriesLog.Write("[follw.it] Finished full synchronization. (" + (DateTime.Now - start).ToString() + ")");
+                    // send final progress update to listeners
+                    if (canceled) {
+                        try { if (progress != null) progress(ProgressDialog.Status.CANCELED, (sent * 100) / total); }
+                        catch (Exception) { }
+
+                        MPTVSeriesLog.Write("[follw.it] Synchronized {0}/{1} episodes. Canceled by user. ({2}).",
+                                            sent, total, DateTime.Now - start);
+                    }
+                    else {
+                        try { if (progress != null) progress(ProgressDialog.Status.DONE, (sent * 100) / total); }
+                        catch (Exception) { }
+
+                        MPTVSeriesLog.Write("[follw.it] Finished full synchronization. (" + (DateTime.Now - start).ToString() + ")");
+
+                    }
                 }
                 catch (Exception e) {
                     // ah crap.
@@ -121,7 +153,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             }));
 
             thread.IsBackground = true;
-            thread.Name = "follw.it full syncer";
+            thread.Name = "follw.it syncer";
             thread.Start();
         }
 
@@ -191,6 +223,40 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             thread.Start();
         }
 
+        public static void NowWatching(DBEpisode episode, bool watching) {
+            if (!Enabled || episode == null) return;
+            DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
+
+            Thread thread = new Thread(new ThreadStart(delegate {
+                try {
+                    // start timer and send request
+                    DateTime start = DateTime.Now;
+                    if (watching) FollwitApi.WatchingTVEpisode("follwit", episode[DBOnlineEpisode.cFollwitId]);
+                    else FollwitApi.StopWatchingTVEpisode("follwit", episode[DBOnlineEpisode.cFollwitId]);
+
+                    // log our success
+                    MPTVSeriesLog.Write("[follw.it] Sent {0} watching status for '{1} S{2}E{3}'. ({4})",
+                                        watching ? "now" : "stopped",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        episode[DBOnlineEpisode.cCombinedSeason],
+                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        DateTime.Now - start);
+                }
+                catch (Exception e) {
+                    // ah crap.
+                    MPTVSeriesLog.Write("[follw.it] Failed sending now watching status for '{0} S{1}E{2}': {3}",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        episode[DBOnlineEpisode.cCombinedSeason],
+                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        e.Message);
+                }
+            }));
+
+            thread.IsBackground = true;
+            thread.Name = "follw.it now watching updater";
+            thread.Start();
+        }
+
         public static void Rate(DBEpisode episode, int rating) {
             if (!Enabled || episode == null) return;
             DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
@@ -225,6 +291,35 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             thread.Start();
         }
 
+        public static void Rate(DBSeries series, int rating) {
+            if (!Enabled || series == null) return;
+
+            Thread thread = new Thread(new ThreadStart(delegate {
+                try {
+                    // start timer and send request
+                    DateTime start = DateTime.Now;
+                    int fivePointRating = (int)Math.Round(rating / 2.0);
+                    FollwitApi.RateTVSeries("tvdb", series[DBOnlineSeries.cID], fivePointRating);
+
+                    // log our success
+                    MPTVSeriesLog.Write("[follw.it] Rated '{0}' a {1}/5. ({2})",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        fivePointRating,
+                                        DateTime.Now - start);
+                }
+                catch (Exception e) {
+                    // ah crap.
+                    MPTVSeriesLog.Write("[follw.it] Failed rating '{0}': {1}",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        e.Message);
+                }
+            }));
+
+            thread.IsBackground = true;
+            thread.Name = "follw.it series rating updater";
+            thread.Start();
+        }
+
         public static FitEpisode GetFitEpisode(DBEpisode mptvEpisode) {
             if (mptvEpisode == null)
                 return null;
@@ -246,11 +341,11 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         private static void _follwitAPI_RequestEvent(string RequestText) {
-            MPTVSeriesLog.Write(RequestText, MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write(RequestText, MPTVSeriesLog.LogLevel.DebugSQL);
         }
 
         private static void _follwitAPI_ResponseEvent(string ResponseText) {
-            MPTVSeriesLog.Write(ResponseText, MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write(ResponseText, MPTVSeriesLog.LogLevel.DebugSQL);
         }
 
     }

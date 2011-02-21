@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Follwit.API.UI;
 using System.Diagnostics;
+using WindowPlugins.GUITVSeries.Configuration;
 
 namespace WindowPlugins.GUITVSeries.FollwitTv {
     public partial class FollwitSettingsPanel : UserControl {
@@ -45,8 +46,12 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         private void Sync() {
-            FollwitConnector.FullSync();
-            MessageBox.Show("Now syncing...", "follw.it");
+            ProgressDialog popup = new ProgressDialog();
+            popup.Text = "Synchronizing Collection...";
+            popup.Owner = FindForm();
+            FollwitConnector.FullSync(popup.SetProgress);
+            popup.ShowDialog();
+
         }
 
         private void OpenUserPage() {

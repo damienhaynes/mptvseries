@@ -8,6 +8,7 @@ using System.Web;
 using MediaPortal.GUI.Library;
 using MediaPortal.Dialogs;
 using ICSharpCode.SharpZipLib.Zip;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
@@ -143,6 +144,12 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       string account = DBOption.GetOptions(DBOption.cOnlineUserID);
       if (String.IsNullOrEmpty(account))
       {
+        // if there is no tvdb account identifier, but we are using follwit. dont display the
+        // "please fill in ID" error.
+        if (FollwitConnector.Enabled) {
+          return false;
+        }
+
         GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
         dlgOK.SetHeading(Translation.TVDB_INFO_TITLE);
         dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID_1);
