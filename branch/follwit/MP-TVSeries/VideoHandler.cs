@@ -671,6 +671,7 @@ namespace WindowPlugins.GUITVSeries
 
             // if needed, asynchronously notify follw.it we arnt watching the show anymore
             FollwitConnector.NowWatching(m_currentEpisode, false);
+            if (countAsWatched) FollwitConnector.Watch(m_currentEpisode, true, true);
 
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {

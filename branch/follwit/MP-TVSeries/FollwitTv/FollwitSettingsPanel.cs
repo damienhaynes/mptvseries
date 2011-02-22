@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             ProgressDialog popup = new ProgressDialog();
             popup.Text = "Synchronizing Collection...";
             popup.Owner = FindForm();
-            FollwitConnector.FullSync(popup.SetProgress);
+            FollwitConnector.SyncAllEpisodes(popup.SetProgress);
             popup.ShowDialog();
 
         }

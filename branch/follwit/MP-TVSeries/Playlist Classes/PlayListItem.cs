@@ -196,8 +196,6 @@ namespace WindowPlugins.GUITVSeries
                 {
                     ep[DBOnlineEpisode.cWatched] = "1";
                     ep.Commit();
-
-                    FollwitConnector.Watch(ep, true, true);
                 }
                 // Update Episode Counts
                 DBSeries series = Helper.getCorrespondingSeries(_episode[DBEpisode.cSeriesID]);

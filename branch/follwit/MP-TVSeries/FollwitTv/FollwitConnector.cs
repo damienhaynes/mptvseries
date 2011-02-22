@@ -67,22 +67,43 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             internal set { DBOption.SetOptions(DBOption.cFollwitHashedPassword, value); }
         }
 
-        public static void FullSync() {
-            FullSync(null);
+        public static void SyncNewEpisodes() {
+            SyncNewEpisodes(null);
         }
 
-        public static void FullSync(ProgressDialog.ProgressDelegate progress) {
-            if (!Enabled) return;
+        public static void SyncNewEpisodes(ProgressDialog.ProgressDelegate progress) {
+            // grab list of all local episodes
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFollwitId, 0, SQLConditionType.Equal);
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+
+            SyncEpisodes(episodes, progress);
+        }
+
+        public static void SyncAllEpisodes() {
+            SyncAllEpisodes(null);
+        }
+
+        public static void SyncAllEpisodes(ProgressDialog.ProgressDelegate progress) {
+            // grab list of all local episodes
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
+            List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+
+            SyncEpisodes(episodes, progress);
+        }
+
+        public static void SyncEpisodes(List<DBEpisode> episodes) {
+            SyncEpisodes(episodes, null);
+        }
+
+        public static void SyncEpisodes(List<DBEpisode> episodes, ProgressDialog.ProgressDelegate progress) {
+            if (!Enabled || episodes == null) return;
 
             Thread thread = new Thread(new ThreadStart(delegate {
                 try {
-                    MPTVSeriesLog.Write("[follw.it] Beginning full synchronization.");
+                    MPTVSeriesLog.Write("[follw.it] Beginning synchronization of {0} episodes.", episodes.Count);
                     DateTime start = DateTime.Now;
-
-                    // grab list of all local episodes
-                    SQLCondition condition = new SQLCondition();
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, 0, SQLConditionType.GreaterThan);
-                    List<DBEpisode> episodes = DBEpisode.Get(condition, false);
 
                     // basic data structures used for our processing loop
                     Dictionary<string, DBEpisode> episodeLookup = new Dictionary<string, DBEpisode>();
@@ -142,13 +163,13 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         try { if (progress != null) progress(ProgressDialog.Status.DONE, (sent * 100) / total); }
                         catch (Exception) { }
 
-                        MPTVSeriesLog.Write("[follw.it] Finished full synchronization. (" + (DateTime.Now - start).ToString() + ")");
+                        MPTVSeriesLog.Write("[follw.it] Syncrhonized {0} episodes. ({1})", sent, DateTime.Now - start);
 
                     }
                 }
                 catch (Exception e) {
                     // ah crap.
-                    MPTVSeriesLog.Write("[follw.it] Failed full synchronization: {0}", e.Message);
+                    MPTVSeriesLog.Write("[follw.it] Failed episode synchronization: {0}", e.Message);
                 }
             }));
 
