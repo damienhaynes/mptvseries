@@ -163,7 +163,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         try { if (progress != null) progress(ProgressDialog.Status.DONE, (sent * 100) / total); }
                         catch (Exception) { }
 
-                        MPTVSeriesLog.Write("[follw.it] Syncrhonized {0} episodes. ({1})", sent, DateTime.Now - start);
+                        MPTVSeriesLog.Write("[follw.it] Synchronized {0} episodes. ({1})", sent, DateTime.Now - start);
 
                     }
                 }

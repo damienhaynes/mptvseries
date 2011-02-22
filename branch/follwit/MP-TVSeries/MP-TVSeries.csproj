@@ -562,7 +562,11 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>if exist $(ProjectDir)PostBuild.bat call $(ProjectDir)PostBuild.bat $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>cd $(TargetDir)
+copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
+copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
+call merge.bat
+if exist $(ProjectDir)PostBuild.bat call $(ProjectDir)PostBuild.bat $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
     <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
   </PropertyGroup>
 </Project>
