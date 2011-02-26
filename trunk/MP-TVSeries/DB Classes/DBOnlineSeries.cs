@@ -284,6 +284,12 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
 
+                    case cSummary:
+                        DBValue summary = base[cSummary];
+                        if (string.IsNullOrEmpty(summary))
+                            summary = Translation.SummaryNotAvailable;
+                        return summary;
+
                     default:
                         return base[fieldName];
                 }
