@@ -227,7 +227,23 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return base[fieldName];
+                switch (fieldName)
+                {
+                    case cEpisodeSummary:
+                        DBValue summary = base[cEpisodeSummary];
+                        if (string.IsNullOrEmpty(summary))
+                            summary = Translation.SummaryNotAvailable;
+                        return summary;
+                    
+                    case cEpisodeName:
+                        DBValue title = base[cEpisodeName];
+                        if (string.IsNullOrEmpty(title))
+                            title = string.Format("{0} {1}", Translation.Episode, base[cEpisodeIndex]);
+                        return title;
+
+                    default:
+                        return base[fieldName];
+                }
             }
             set
             {

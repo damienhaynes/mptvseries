@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 23rd Sept 2010 -->
+<!-- Last Updated: 27th Feburary 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Series</string>
@@ -300,5 +300,7 @@
   <string Field="TraktNotEnoughInfo" Original="Not enough information to send to server.">Not enough information to send to server.</string>
 
   <string Field="ResumeEpisode" Original="Resume episode from last time?">Resume episode from last time?</string>
+	
+	<string Field="SummaryNotAvailable" Original="No summary is currently available.">No summary is currently available.</string>
   
 </strings>

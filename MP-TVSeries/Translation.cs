@@ -325,6 +325,8 @@ namespace WindowPlugins.GUITVSeries
         public static string TraktNotEnoughInfo = "Not enough information to send to server.";
 
         public static string ResumeEpisode = "Resume episode from last time?";
+
+        public static string SummaryNotAvailable = "No summary is currently available.";
         #endregion
 
         #region Public Properties
