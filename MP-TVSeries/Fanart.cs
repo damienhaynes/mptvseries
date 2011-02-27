@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -230,6 +232,19 @@ namespace WindowPlugins.GUITVSeries
                 // currently only get retrieved on fanart chooser window open
                 if (File.Exists(_ThumbFileName))
                     return _ThumbFileName;
+                else
+                {
+                    // lets create one from the fullsize fanart on disk
+                    string fullSizeFanart = Fanart.getFanart(SeriesID).FanartFilename;
+                    if (!string.IsNullOrEmpty(fullSizeFanart) && File.Exists(fullSizeFanart))
+                    {
+                        Image img = Image.FromFile(fullSizeFanart);
+                        Bitmap bmp = ImageAllocator.Resize(img, new Size(400, 225));
+
+                        bmp.Save(_ThumbFileName, ImageFormat.Jpeg);
+                        return _ThumbFileName;
+                    }
+                }
 
                 // let skin handle it
                 return string.Empty;
