@@ -6,6 +6,7 @@ using System.Threading;
 using Trakt;
 using Trakt.Show;
 using Trakt.User;
+using Trakt.Rate;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -231,23 +232,89 @@ namespace WindowPlugins.GUITVSeries
 
         }
 
+        public static void RateEpisode(DBEpisode episode)
+        {
+            if (string.IsNullOrEmpty(TraktAPI.Username) || string.IsNullOrEmpty(TraktAPI.Password))
+                return;
+
+            new Thread(delegate()
+                {
+                    DBSeries series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                    
+                    TraktRateValue loveorhate = episode[DBOnlineEpisode.cMyRating] >= 7.0 ? TraktRateValue.love : TraktRateValue.hate;
+
+                    TraktRateEpisode episodeData = new TraktRateEpisode()
+                    {
+                        Episode = episode[DBOnlineEpisode.cEpisodeIndex],
+                        Rating = loveorhate.ToString(),
+                        Season = episode[DBOnlineEpisode.cSeasonIndex],
+                        SeriesID = episode[DBOnlineEpisode.cSeriesID],
+                        Year = series.Year,
+                        Title = series[DBOnlineSeries.cOriginalName],
+                        UserName = TraktAPI.Username,
+                        Password = TraktAPI.Password
+                    };
+
+                    TraktRateResponse response = TraktAPI.RateEpisode(episodeData);
+                    
+                    // check for any error and notify
+                    CheckTraktErrorAndNotify(response, false);
+                })
+                {
+                    IsBackground = true,
+                    Name = "Trakt Rate Episode"
+                }.Start();
+        }
+
+        public static void RateSeries(DBSeries series)
+        {
+            if (string.IsNullOrEmpty(TraktAPI.Username) || string.IsNullOrEmpty(TraktAPI.Password))
+                return;
+
+            new Thread(delegate()
+            {
+                TraktRateValue loveorhate = series[DBOnlineSeries.cMyRating] >= 7.0 ? TraktRateValue.love : TraktRateValue.hate;
+
+                TraktRateSeries seriesData = new TraktRateSeries()
+                {
+                    Rating = loveorhate.ToString(),
+                    SeriesID = series[DBOnlineSeries.cID],
+                    Year = series.Year,
+                    Title = series[DBOnlineSeries.cOriginalName],
+                    UserName = TraktAPI.Username,
+                    Password = TraktAPI.Password,
+                };
+
+                TraktRateResponse response = TraktAPI.RateSeries(seriesData);
+
+                // check for any error and notify
+                CheckTraktErrorAndNotify(response, false);
+            })
+            {
+                IsBackground = true,
+                Name = "Trakt Rate Series"
+            }.Start();
+        }
+
         /// <summary>
         /// Notify user in GUI if an error state was returned from Trakt API
         /// </summary>
-        public static void CheckTraktErrorAndNotify(TraktResponse response, bool notify)
+        public static void CheckTraktErrorAndNotify<T>(T response, bool notify)
         {
-            if (response == null || response.Status == null) return;
+            var r = response as TraktResponse;
+
+            if (r == null || r.Status == null) return;
 
             // check response error status
-            if (response.Status != "success")
+            if (r.Status != "success")
             {
-                MPTVSeriesLog.Write("Trakt Error: {0}", response.Error);
-                if (notify) TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, response.Error);
+                MPTVSeriesLog.Write("Trakt Error: {0}", r.Error);
+                if (notify) TVSeriesPlugin.ShowNotifyDialog(Translation.TraktError, r.Error);
             }
             else
             {
                 // success
-                MPTVSeriesLog.Write("Trakt Response: {0}", response.Message);
+                MPTVSeriesLog.Write("Trakt Response: {0}", r.Message);
             }
         }
 

@@ -3319,6 +3319,12 @@ namespace WindowPlugins.GUITVSeries
             if (item["Rating"] == "")
                 item["Rating"] = value;
 
+            // Send to trakt
+            if (level == Listlevel.Episode)
+                TraktHandler.RateEpisode(item as DBEpisode);
+            else
+                TraktHandler.RateSeries(item as DBSeries);
+
             item.Commit();
         }
 
