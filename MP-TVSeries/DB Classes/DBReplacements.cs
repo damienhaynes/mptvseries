@@ -236,16 +236,8 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<space>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "2";
-            replacement[DBReplacements.cEnabled] = "1";
-            replacement[DBReplacements.cTagEnabled] = "0";
-            replacement[DBReplacements.cBefore] = "0";
-            replacement[DBReplacements.cToReplace] = "-<space>";
-            replacement[DBReplacements.cWith] = @"<empty>";
-            replacement.Commit();
-
             // to avoid being parsed as second episode 20/80
-            replacement[DBReplacements.cIndex] = "3";
+            replacement[DBReplacements.cIndex] = "2";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -253,7 +245,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "4";
+            replacement[DBReplacements.cIndex] = "3";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -261,7 +253,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "5";
+            replacement[DBReplacements.cIndex] = "4";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -269,7 +261,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "6";
+            replacement[DBReplacements.cIndex] = "5";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -277,7 +269,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "7";
+            replacement[DBReplacements.cIndex] = "6";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -285,7 +277,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "8";
+            replacement[DBReplacements.cIndex] = "7";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -293,14 +285,14 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "9";
+            replacement[DBReplacements.cIndex] = "8";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
             replacement[DBReplacements.cToReplace] = "HR.HDTV";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "10";
+            replacement[DBReplacements.cIndex] = "9";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -308,7 +300,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "11";
+            replacement[DBReplacements.cIndex] = "10";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -320,7 +312,7 @@ namespace WindowPlugins.GUITVSeries
 
             // low roman numerals preceded by Part or pt (for eg. Part 4 => 1x04)
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 12;
+            replacement[DBReplacements.cIndex] = 11;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -335,7 +327,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Part n or Part n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 13;
+            replacement[DBReplacements.cIndex] = 12;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -350,7 +342,7 @@ namespace WindowPlugins.GUITVSeries
 
             // n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 14;
+            replacement[DBReplacements.cIndex] = 13;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
