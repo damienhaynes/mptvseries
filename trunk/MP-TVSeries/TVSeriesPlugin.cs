@@ -1051,13 +1051,11 @@ namespace WindowPlugins.GUITVSeries
                                 switch (listLevel)
                                 {
                                     case Listlevel.Episode:
-                                        showRatingsDialog(m_SelectedEpisode, false);
-                                        MPTVSeriesLog.Write(string.Format("Setting rating of {0} to: {1}/10", m_SelectedEpisode, m_SelectedEpisode[DBOnlineEpisode.cMyRating]));
+                                        showRatingsDialog(m_SelectedEpisode, false);                                        
                                         break;
                                     case Listlevel.Series:
                                     case Listlevel.Season:
-                                        showRatingsDialog(m_SelectedSeries, false);
-                                        MPTVSeriesLog.Write(string.Format("Setting rating of {0} to: {1}/10", m_SelectedSeries, m_SelectedSeries[DBOnlineSeries.cMyRating]));
+                                        showRatingsDialog(m_SelectedSeries, false);                                        
                                         break;
                                 }
                                 LoadFacade();
@@ -3291,29 +3289,37 @@ namespace WindowPlugins.GUITVSeries
                 // Reset rating
                 if (dlg.SelectedLabelText == Translation.ResetRating)
                     value = "0";
-            }
+            }           
 
-            string type = (level == Listlevel.Episode ? DBOnlineEpisode.cMyRating : DBOnlineSeries.cMyRating);
-            string id = item[level == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
-
-            // Submit rating online database if current rating is different
-            if (!String.IsNullOrEmpty(value) && value != item[type])
+            new Thread(delegate(object o)
             {
+                DBTable tItem = ((KeyValuePair<DBTable, string>)o).Key;
+                string tValue = ((KeyValuePair<DBTable, string>)o).Value;
+
+                Listlevel tLevel = tItem is DBEpisode ? Listlevel.Episode : Listlevel.Series;
+                string id = tItem[tLevel == Listlevel.Episode ? DBOnlineEpisode.cID : DBOnlineSeries.cID];
+                
+                // Submit rating online database
                 int rating = -1;
-                if (Int32.TryParse(value, out rating))
+                if (Int32.TryParse(tValue, out rating))
                 {
-                    Online_Parsing_Classes.OnlineAPI.SubmitRating(level == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
+                    Online_Parsing_Classes.OnlineAPI.SubmitRating(tLevel == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
                 }
-            }
+                
+            })
+            {
+                IsBackground = true,
+                Name = "tvdb rating sender"
+            }.Start(new KeyValuePair<DBTable, string>(item, value));
 
             // Apply to local database
-            item[type] = value;
-            // Set the all user rating if not already set                
-            if (item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] == "")
-                item[level == Listlevel.Episode ? DBOnlineEpisode.cRating : DBOnlineSeries.cRating] = value;
+            item["myRating"] = value;
+
+            // Set the all user rating if not already set
+            if (item["Rating"] == "")
+                item["Rating"] = value;
 
             item.Commit();
-
         }
 
         #region Layout Menu
@@ -5859,6 +5865,31 @@ namespace WindowPlugins.GUITVSeries
             pDlgNotify.SetImage(image);
             pDlgNotify.SetText(text);
             pDlgNotify.DoModal(GUIWindowManager.ActiveWindow);
+        }
+
+        private delegate void ShowDialogOkDelegate(string heading, string[] lines);
+
+        /// <summary>
+        /// Displays a ok dialog.
+        /// </summary>
+        public static void ShowDialogOk(string heading, string[] lines)
+        {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                ShowDialogOkDelegate d = ShowDialogOk;
+                GUIGraphicsContext.form.Invoke(d, heading, lines);
+                return;
+            }
+
+            GUIDialogOK pDlgOk = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+            if (pDlgOk == null) return;
+
+            pDlgOk.SetHeading(heading);
+            for(int i = 1; i <= lines.Length; i++)
+            {
+                pDlgOk.SetLine(i, lines[i - 1]);
+            }
+            pDlgOk.DoModal(GUIWindowManager.ActiveWindow);
         }
 
         private void TellUserSomethingWentWrong()
