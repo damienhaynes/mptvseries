@@ -6,6 +6,7 @@ using System.Net;
 using Trakt.Show;
 using Trakt.User;
 using Trakt.Movie;
+using Trakt.Rate;
 using WindowPlugins.GUITVSeries;
 
 namespace Trakt
@@ -22,6 +23,19 @@ namespace Trakt
         seen,
         unlibrary,
         unseen
+    }
+
+    public enum TraktRateType
+    {
+        episode,
+        show,
+        movie
+    }
+
+    public enum TraktRateValue
+    {
+        love,
+        hate
     }
 
     static class TraktAPI
@@ -206,6 +220,18 @@ namespace Trakt
 
             // return success or failure
             return response.FromJSON<TraktResponse>();
+        }
+
+        public static TraktRateResponse RateEpisode(TraktRateEpisode episode)
+        {
+            string response = Transmit(string.Format(TraktURIs.RateItem, TraktRateType.episode.ToString()), episode.ToJSON());
+            return response.FromJSON<TraktRateResponse>();
+        }
+
+        public static TraktRateResponse RateSeries(TraktRateSeries series)
+        {
+            string response = Transmit(string.Format(TraktURIs.RateItem, TraktRateType.show.ToString()), series.ToJSON());
+            return response.FromJSON<TraktRateResponse>();
         }
 
         private static string GetUserAuthentication()
