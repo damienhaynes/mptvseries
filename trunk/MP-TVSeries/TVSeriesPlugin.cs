@@ -2605,6 +2605,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             // view handling                               
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
+                            seasons.Sort();
 
                             // set mediaportal itemcount property
                             setGUIProperty("#itemcount", seasons.Count.ToString());
