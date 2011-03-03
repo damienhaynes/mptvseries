@@ -291,6 +291,9 @@
     <Compile Include="TraktHandler.cs" />
     <Compile Include="Trakt\Movie\TraktMovieScrobble.cs" />
     <Compile Include="Trakt\Common\TraktEpisode.cs" />
+    <Compile Include="Trakt\Rate\TraktRateEpisode.cs" />
+    <Compile Include="Trakt\Rate\TraktRateResponse.cs" />
+    <Compile Include="Trakt\Rate\TraktRateSeries.cs" />
     <Compile Include="Trakt\Show\TraktSync.cs" />
     <Compile Include="Trakt\TraktAPI.cs" />
     <Compile Include="Trakt\TraktAuthentication.cs" />

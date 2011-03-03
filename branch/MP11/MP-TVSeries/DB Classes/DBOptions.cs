@@ -228,6 +228,8 @@ namespace WindowPlugins.GUITVSeries
  	    public const String cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
  	    public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
 
+        public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -525,7 +527,7 @@ namespace WindowPlugins.GUITVSeries
 					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
 
 				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
-					SetOptions(cMarkRatedEpisodeAsWatched, 0);
+					SetOptions(cMarkRatedEpisodeAsWatched, 1);
 
                 if (GetOptions(cSubstituteMissingArtwork) == null)
                     SetOptions(cSubstituteMissingArtwork, 0);
@@ -620,6 +622,9 @@ namespace WindowPlugins.GUITVSeries
  	            if (GetOptions(cArtworkLimitSeasonPosters) == null)
  	                SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
               
+                if (GetOptions(cSortSpecialSeasonLast) == null)
+                    SetOptions(cSortSpecialSeasonLast, true);
+
             }
             catch (Exception ex)
             {

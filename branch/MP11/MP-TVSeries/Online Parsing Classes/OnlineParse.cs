@@ -61,7 +61,9 @@ namespace WindowPlugins.GUITVSeries
         UpdateUserFavourites,
 
         UpdateRecentlyAdded,
-        BroadcastRecentlyAdded
+        BroadcastRecentlyAdded,
+
+        SyncTraktWatchedState
     }
 
     public class ParsingProgress
@@ -95,6 +97,7 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.MediaInfo,            
             ParsingAction.IdentifyNewSeries, 
             ParsingAction.IdentifyNewEpisodes,
+            ParsingAction.SyncTraktWatchedState,
             ParsingAction.UpdateEpisodeCounts
         };
 
@@ -148,6 +151,7 @@ namespace WindowPlugins.GUITVSeries
                 m_actions.Add(ParsingAction.MediaInfo);                
                 m_actions.Add(ParsingAction.IdentifyNewSeries);
                 m_actions.Add(ParsingAction.IdentifyNewEpisodes);
+                m_actions.Add(ParsingAction.SyncTraktWatchedState);
                 m_actions.Add(ParsingAction.UpdateEpisodeCounts);
                 m_actions.Add(ParsingAction.BroadcastRecentlyAdded);
             }
@@ -381,6 +385,10 @@ namespace WindowPlugins.GUITVSeries
                         // signal the facade to be reloaded.
                         // TODO: smart way to report progress and expose as property to skins
                         m_worker.ReportProgress(30);
+                        break;
+
+                    case ParsingAction.SyncTraktWatchedState:
+                        TraktHandler.SyncTraktWatchedState();
                         break;
 
                     case ParsingAction.GetOnlineUpdates:
@@ -1383,11 +1391,15 @@ namespace WindowPlugins.GUITVSeries
 
                 #region Season Posters
                 // update the season artwork for series
-                foreach (DBSeason season in DBSeason.Get(series[DBSeries.cID]))
+                List<DBSeason> localSeasons = DBSeason.Get(new SQLCondition(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal), false);
+
+                foreach (DBSeason season in localSeasons)
                 {
+                    // get season posters from map for the current season
                     List<PosterSeason> seasonPosters = new List<PosterSeason>(seriesArtwork.SeasonPosters);
                     seasonPosters.RemoveAll(s => s.SeasonIndex != season[DBSeason.cIndex]);
 
+                    // add to existing range of season posters in database
                     foreach (PosterSeason bannerSeason in seasonPosters)
                     {
                         if (!season[DBSeason.cBannerFileNames].ToString().Contains(bannerSeason.FileName))

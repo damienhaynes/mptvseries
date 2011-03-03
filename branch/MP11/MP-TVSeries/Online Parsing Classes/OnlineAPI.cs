@@ -143,11 +143,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       string account = DBOption.GetOptions(DBOption.cOnlineUserID);
       if (String.IsNullOrEmpty(account))
       {
-        GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-        dlgOK.SetHeading(Translation.TVDB_INFO_TITLE);
-        dlgOK.SetLine(1, Translation.TVDB_INFO_ACCOUNTID_1);
-        dlgOK.SetLine(2, Translation.TVDB_INFO_ACCOUNTID_2);
-        dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+            string[] lines = new string[] { Translation.TVDB_INFO_ACCOUNTID_1, Translation.TVDB_INFO_ACCOUNTID_2 };
+            TVSeriesPlugin.ShowDialogOk(Translation.TVDB_INFO_TITLE, lines);
         MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
         return false;
       }
@@ -166,16 +163,17 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         {
           GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
           dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
-          if (!TVSeriesPlugin.IsNetworkAvailable) {
-              dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_1);
-              dlgOK.SetLine(2, Translation.NETWORK_ERROR_UNAVAILABLE_2);
+                if (!TVSeriesPlugin.IsNetworkAvailable)
+                {
+                    string[] lines = new string[] { Translation.NETWORK_ERROR_UNAVAILABLE_1, Translation.NETWORK_ERROR_UNAVAILABLE_2 };
+                    TVSeriesPlugin.ShowDialogOk(Translation.TVDB_ERROR_TITLE, lines);
           }
-          else {
-              dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_1);
-              dlgOK.SetLine(2, Translation.TVDB_ERROR_UNAVAILABLE_2);
+                else
+                {
+                    string[] lines = new string[] { Translation.TVDB_ERROR_UNAVAILABLE_1, Translation.TVDB_ERROR_UNAVAILABLE_2 };
+                    TVSeriesPlugin.ShowDialogOk(Translation.TVDB_ERROR_TITLE, lines);
           }
-
-          dlgOK.DoModal(GUIWindowManager.ActiveWindow);
+                
           MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");
           return false;
         }
