@@ -484,7 +484,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cParentalControlPinCode, string.Empty);
 
 				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
-					SetOptions(cMarkRatedEpisodeAsWatched, 0);
+					SetOptions(cMarkRatedEpisodeAsWatched, 1);
 
                 if (GetOptions(cSubstituteMissingArtwork) == null)
                     SetOptions(cSubstituteMissingArtwork, 0);
