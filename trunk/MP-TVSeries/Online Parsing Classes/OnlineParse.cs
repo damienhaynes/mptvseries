@@ -1391,11 +1391,15 @@ namespace WindowPlugins.GUITVSeries
 
                 #region Season Posters
                 // update the season artwork for series
-                foreach (DBSeason season in DBSeason.Get(series[DBSeries.cID]))
+                List<DBSeason> localSeasons = DBSeason.Get(new SQLCondition(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal), false);
+
+                foreach (DBSeason season in localSeasons)
                 {
+                    // get season posters from map for the current season
                     List<PosterSeason> seasonPosters = new List<PosterSeason>(seriesArtwork.SeasonPosters);
                     seasonPosters.RemoveAll(s => s.SeasonIndex != season[DBSeason.cIndex]);
 
+                    // add to existing range of season posters in database
                     foreach (PosterSeason bannerSeason in seasonPosters)
                     {
                         if (!season[DBSeason.cBannerFileNames].ToString().Contains(bannerSeason.FileName))

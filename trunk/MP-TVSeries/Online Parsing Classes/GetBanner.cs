@@ -29,6 +29,7 @@ using System.Globalization;
 using System.Xml;
 using System.Net;
 using System.IO;
+using System.Linq;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 
 namespace WindowPlugins.GUITVSeries
@@ -136,6 +137,7 @@ namespace WindowPlugins.GUITVSeries
             List<PosterSeries> posterSeriesList = new List<PosterSeries>();
             List<PosterSeason> posterSeasonList = new List<PosterSeason>();
             SeriesBannersMap map = new SeriesBannersMap();
+            map.SeriesID = seriesID;
 
             #region Series WideBanners
             foreach (XmlNode banner in banners.SelectNodes("/Banners/Banner[BannerType='series']"))
@@ -320,9 +322,12 @@ namespace WindowPlugins.GUITVSeries
                             BannerDownloadDone(file);
                     }
                 }
-
+                List<DBSeason> localSeasons = DBSeason.Get(new SQLCondition(new DBSeason(), DBSeason.cSeriesID, map.SeriesID, SQLConditionType.Equal), false);
                 foreach (PosterSeason bannerSeason in map.SeasonPosters)
                 {
+                    // only download season banners if we have online season in database
+                    if (!localSeasons.Any(s => s[DBSeason.cIndex] == bannerSeason.SeasonIndex)) continue;
+
                     if (bannerLang == bannerSeason.Language || "en" == bannerSeason.Language || "" == bannerSeason.Language)
                     {
                         bannerSeason.FileName = Helper.cleanLocalPath(bannerSeason.SeriesName) + @"\-lang" + bannerSeason.Language + "-" + bannerSeason.OnlinePath;
