@@ -31,7 +31,7 @@ using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBSeason : DBTable, ICacheable<DBSeason>
+    public class DBSeason : DBTable, ICacheable<DBSeason>, IComparable<DBSeason>
     {
         public static void overRide(DBSeason old, DBSeason newObject)
         {
@@ -626,6 +626,16 @@ namespace WindowPlugins.GUITVSeries
             // Hide Season
             this[DBSeason.cHidden] = hide;
             this.Commit();
+        }
+
+        public int CompareTo(DBSeason other)
+        {
+            // sort specials last if needed
+            
+            int tSeason = this[DBSeason.cIndex] == 0 ? (1000 * DBOption.GetOptions(DBOption.cSortSpecialSeasonLast)) : (int)this[DBSeason.cIndex];
+            int oSeason = other[DBSeason.cIndex] == 0 ? (1000 * DBOption.GetOptions(DBOption.cSortSpecialSeasonLast)) : (int)other[DBSeason.cIndex];
+
+            return tSeason.CompareTo(oSeason);
         }
 
     }

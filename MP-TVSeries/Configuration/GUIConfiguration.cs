@@ -609,6 +609,9 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
+            // sort specials at end of season list if needed
+            altSeasonList.Sort();
+
             foreach (DBSeries series in seriesList)
             {
                 string sName = (DBOption.GetOptions(DBOption.cSeries_UseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);

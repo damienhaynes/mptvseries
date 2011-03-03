@@ -206,7 +206,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
 
         public const String cTraktUsername = "TraktUsername";
-        public const String cTraktPassword = "TraktPassword";        
+        public const String cTraktPassword = "TraktPassword";
+
+        public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -579,6 +581,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cTraktUsername) == null)
                     SetOptions(cTraktUsername, string.Empty);
               
+                if (GetOptions(cSortSpecialSeasonLast) == null)
+                    SetOptions(cSortSpecialSeasonLast, true);
+
             }
             catch (Exception ex)
             {
