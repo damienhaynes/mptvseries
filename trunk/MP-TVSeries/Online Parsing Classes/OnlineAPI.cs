@@ -8,6 +8,7 @@ using System.Web;
 using MediaPortal.GUI.Library;
 using MediaPortal.Dialogs;
 using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Core;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
@@ -435,37 +436,45 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
       return null;
     }
-
-    static UTF8Encoding enc = new UTF8Encoding();
+    
     static Dictionary<string, XmlDocument> DecompressZipToXmls(Stream s)
     {
-      MPTVSeriesLog.Write("Decompressing Stream...", MPTVSeriesLog.LogLevel.Debug);
-      int bytes = 2048;
-      byte[] data = new byte[2048];
-      Dictionary<string, XmlDocument> docsInZip = new Dictionary<string, XmlDocument>();
-      ZipInputStream zis = new ZipInputStream(s);
-      ZipEntry currEntry = null;
-      StringBuilder b = new StringBuilder();
-      while ((currEntry = zis.GetNextEntry()) != null)
-      {
-        MPTVSeriesLog.Write("Decompressing Entry: ", currEntry.Name, MPTVSeriesLog.LogLevel.Debug);
-        XmlDocument d = new XmlDocument();
-        while ((bytes = zis.Read(data, 0, data.Length)) > 0)
-          b.Append(enc.GetString(data, 0, bytes));
-        MPTVSeriesLog.Write("Decompression done, now loading as XML...", MPTVSeriesLog.LogLevel.Debug);
-        try
+        MPTVSeriesLog.Write("Decompressing Stream...", MPTVSeriesLog.LogLevel.Debug);
+
+        Dictionary<string, XmlDocument> docsInZip = new Dictionary<string, XmlDocument>();
+        
+        ZipInputStream zis = new ZipInputStream(s);
+        ZipEntry currEntry = zis.GetNextEntry();
+
+        while (currEntry != null)
         {
-            d.LoadXml(b.ToString());
-            MPTVSeriesLog.Write("Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug);
-            docsInZip.Add(currEntry.Name, d);
+            MPTVSeriesLog.Write("Decompressing Entry: ", currEntry.Name, MPTVSeriesLog.LogLevel.Debug);
+            
+            byte[] buffer = new byte[4096];
+
+            XmlDocument doc = new XmlDocument();
+            MemoryStream stream = new MemoryStream();
+
+            try
+            {
+                StreamUtils.Copy(zis, stream, buffer);
+                stream.Position = 0;
+
+                MPTVSeriesLog.Write("Decompression done, now loading as XML...", MPTVSeriesLog.LogLevel.Debug);
+                doc.Load(stream);
+
+                MPTVSeriesLog.Write("Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug);
+                docsInZip.Add(currEntry.Name, doc);
+            }
+            catch (XmlException e)
+            {
+                MPTVSeriesLog.Write("Failed to load XML: " + e.Message.ToString());
+            }
+
+            stream.Close();
+            currEntry = zis.GetNextEntry();
         }
-        catch (XmlException e)
-        {
-            MPTVSeriesLog.Write("Failed to load XML: " + e.Message.ToString());
-        }
-        b.Remove(0, b.Length);                
-      }
-      return docsInZip;
+        return docsInZip;
     }
 
     #endregion
