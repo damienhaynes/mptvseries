@@ -199,8 +199,7 @@ namespace WindowPlugins.GUITVSeries
                         nUpgradeDBVersion++;
                         break;
 
-                    case 4:
-                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cDownloadPending, 0, new SQLCondition());
+                    case 4:                        
                         nUpgradeDBVersion++;
                         break;
 
