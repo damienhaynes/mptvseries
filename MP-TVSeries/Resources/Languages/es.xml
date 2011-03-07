@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TVSeries translation file -->
 <!-- Spanish (es) -->
-<!-- Last Updated: 10th Oct 2010 -->
+<!-- Last Updated: 08th Mar 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
@@ -34,7 +34,7 @@
   <string Field="Confirm" Original="Confirm">Confirmar</string>
   <string Field="Completed" Original="Completed">Completado</string>
   <string Field="No_subtitles_found" Original="No subtitles found">No se encontraron subtítulos</string>
-  <string Field="CFS_No_Results_Found" Original="no results found!">¡No se han encontrado resultados!</string>
+  <string Field="CFS_No_Results_Found">¡No se encontraron resultados!</string>
   <string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Oculto para no adelantar información *</string>
   <string Field="Yes" Original="Yes">Sí</string>
   <string Field="No" Original="No">No</string>
@@ -98,7 +98,7 @@
   <string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Elija temporada correcta</string>
   <string Field="CFS_Local_Season_Index" Original="Local Season index:">Índice local de temporadas:</string>
   <string Field="CFS_Available_Seasons" Original="Available Seasons list:">Listado de temporadas disponibles:</string>
-  <string Field="CFS_Skip_Never_Ask_Again" Original="skip / Never ask again">Omitir / No volver a preguntar</string>
+  <string Field="CFS_Skip_Never_Ask_Again">Omitir / No volver a preguntar</string>
   <string Field="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Reemplazar archivo de subtítulos</string>
   <string Field="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Hay un archivo de subtítulos antiguo: ¿Sobreescribir?</string>
   <string Field="RecentlyAdded" Original="Recently Added">Añadido recientemente</string>
@@ -269,9 +269,14 @@
   <string Field="InsertDiskMessageLine4">etiquetado: {0}</string>
   <string Field="ShowHiddenItems">Mostrar elementos ocultos</string>
   <string Field="UnHide">Mostrar</string>
-  <string Field="CFS_Skip">Descartar</string>
-  <string Field="CFS_No_Match_Manual_Search">Sin resultados, búsqueda manual...</string>
+  <string Field="CFS_Skip">Omitir</string>
+  <string Field="CFS_No_Match_Manual_Search">No se ha encontrado coincidencia, búsqueda manual...</string>
   <string Field="CFS_Local_Series">Series Locales:</string>
-  <string Field="AvailableMedia">Archivos Disponibles</string>
-  <string Field="Votes">Votos</string>
+  <string Field="AvailableMedia">Archivos disponibles</string>
+  <string Field="Votes">votos</string>
+  <string Field="LayoutCoveflow">Coverflow</string>
+  <string Field="TraktError">Trakt Error</string>
+  <string Field="TraktNotEnoughInfo">No hay información suficiente para enviar al servidor.</string>
+  <string Field="ResumeEpisode">¿Reanudar episodio desde la última posición?</string>
+  <string Field="SummaryNotAvailable">No hay resumen disponible.</string>
 </strings>
