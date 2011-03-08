@@ -961,7 +961,7 @@ namespace WindowPlugins.GUITVSeries
             if (!bUpdateNewSeries && SeriesList.Count > 0) {
                 // let's check which of these we have any interest in
                 for (int i = 0; i < SeriesList.Count; i++) {
-                    if (!seriesUpdated.Contains(SeriesList[i][DBSeries.cID])) {
+                    if (seriesUpdated == null || !seriesUpdated.Contains(SeriesList[i][DBSeries.cID])) {
                         SeriesList.RemoveAt(i);
                         i--;
                     }
