@@ -961,7 +961,7 @@ namespace WindowPlugins.GUITVSeries
             if (!bUpdateNewSeries && SeriesList.Count > 0) {
                 // let's check which of these we have any interest in
                 for (int i = 0; i < SeriesList.Count; i++) {
-                    if (!seriesUpdated.Contains(SeriesList[i][DBSeries.cID])) {
+                    if (seriesUpdated == null || !seriesUpdated.Contains(SeriesList[i][DBSeries.cID])) {
                         SeriesList.RemoveAt(i);
                         i--;
                     }
@@ -1140,9 +1140,7 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cCompositeID:
                                     case DBEpisode.cSeriesID:
                                     case DBOnlineEpisode.cWatched:
-                                    case DBOnlineEpisode.cHidden:
-                                    case DBOnlineEpisode.cDownloadPending:
-                                    case DBOnlineEpisode.cDownloadExpectedNames:
+                                    case DBOnlineEpisode.cHidden:                                    
                                     case DBOnlineEpisode.cMyRating:
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                     case DBOnlineEpisode.cTraktLibrary:
@@ -2089,8 +2087,6 @@ namespace WindowPlugins.GUITVSeries
                     case DBEpisode.cSeriesID:
                     case DBOnlineEpisode.cWatched:
                     case DBOnlineEpisode.cHidden:
-                    case DBOnlineEpisode.cDownloadPending:
-                    case DBOnlineEpisode.cDownloadExpectedNames:
                     case DBOnlineEpisode.cMyRating:
                     case DBOnlineEpisode.cTraktLibrary:
                     case DBOnlineEpisode.cTraktSeen:
@@ -2489,10 +2485,6 @@ namespace WindowPlugins.GUITVSeries
 
                     episode.Commit();
 
-                    // reloads the episode, in order to get a proper link on the onlineEpisode, and set the PendingDownload to 0 
-                    episode = new DBEpisode(progress.full_filename, false);
-                    episode[DBOnlineEpisode.cDownloadPending] = 0;
-                    episode.Commit();
                 }
 
                 if(++nIndex % 25 == 0)

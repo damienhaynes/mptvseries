@@ -1777,9 +1777,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cIsOnRemovable:
                                 case DBOnlineEpisode.cHidden:
                                 case DBOnlineEpisode.cID:
-                                case DBOnlineEpisode.cLastUpdated:
-                                case DBOnlineEpisode.cDownloadExpectedNames:
-                                case DBOnlineEpisode.cDownloadPending:
+                                case DBOnlineEpisode.cLastUpdated:                                
                                 case DBOnlineEpisode.cWatched:
                                 case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                 case DBOnlineEpisode.cEpisodeThumbnailUrl:

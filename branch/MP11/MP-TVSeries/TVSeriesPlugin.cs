@@ -2673,7 +2673,7 @@ namespace WindowPlugins.GUITVSeries
                                         bool bWatched = (int.Parse(series[DBOnlineSeries.cEpisodesUnWatched])==0);
                                         bool bAvailable = series[DBOnlineSeries.cHasLocalFiles];
 
-                                        LoadWatchedFlag(item, bWatched, bAvailable, false);
+                                        LoadWatchedFlag(item, bWatched, bAvailable);
                                     }
                                     item.TVTag = series;
                                     
@@ -2789,7 +2789,7 @@ namespace WindowPlugins.GUITVSeries
                                             bool bWatched = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
                                             bool bAvailable = season[DBSeason.cHasLocalFiles];
 
-                                            if (!LoadWatchedFlag(item, bWatched, bAvailable, false))
+                                            if (!LoadWatchedFlag(item, bWatched, bAvailable))
                                             {
                                                 if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                                 {
@@ -3014,10 +3014,9 @@ namespace WindowPlugins.GUITVSeries
                                     // show watched flag image if skin supports it
                                     // this should take precedence over least used option for appending logo/ep thumb
                                     bool bWatched = episode[DBOnlineEpisode.cWatched];
-                                    bool bAvailable = episode[DBEpisode.cFilename].ToString().Length > 0;
-                                    bool bDownloading = episode[DBOnlineEpisode.cDownloadPending];
+                                    bool bAvailable = episode[DBEpisode.cFilename].ToString().Length > 0;                                    
 
-                                    if (!LoadWatchedFlag(item, bWatched, bAvailable, bDownloading))
+                                    if (!LoadWatchedFlag(item, bWatched, bAvailable))
                                     {
                                         if (DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
                                         {
@@ -3026,7 +3025,11 @@ namespace WindowPlugins.GUITVSeries
                                         }
                                     }
 
-                                    if (bg.CancellationPending) return;
+                                    if (bg.CancellationPending)
+                                    {
+                                        MPTVSeriesLog.Write("Cancelling Episode List Load");
+                                        return;
+                                    }
                                     else
                                     {
                                         ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, count, item);
@@ -3120,7 +3123,7 @@ namespace WindowPlugins.GUITVSeries
 			}
 		}
 
-        private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable, bool bDownloading)
+        private bool LoadWatchedFlag(GUIListItem item, bool bWatched, bool bAvailable)
         {
             // Series & Season List Images
             string sListFilename = string.Empty;
@@ -5590,7 +5593,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (!loader.Load(playlist, strPlayList))
             {
-                TellUserSomethingWentWrong();
+                ShowDialogOk(Translation.Playlist, new string[] { GUILocalizeStrings.Get(477) });
                 return;
             }
 
@@ -5959,18 +5962,6 @@ namespace WindowPlugins.GUITVSeries
                 pDlgOk.SetLine(i, lines[i - 1]);
             }
             pDlgOk.DoModal(GUIWindowManager.ActiveWindow);
-        }
-
-        private void TellUserSomethingWentWrong()
-        {
-            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-            if (dlgOK != null)
-            {
-                dlgOK.SetHeading(6);
-                dlgOK.SetLine(1, 477);
-                dlgOK.SetLine(2, string.Empty);
-                dlgOK.DoModal(GetID);
-            }
         }
 
         ~TVSeriesPlugin()

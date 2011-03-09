@@ -914,7 +914,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (!loader.Load(playlist, strPlayList))
             {
-                TellUserSomethingWentWrong();
+                TVSeriesPlugin.ShowDialogOk(Translation.Playlist, new string[] { GUILocalizeStrings.Get(477) });
                 return;
             }
 
@@ -977,18 +977,6 @@ namespace WindowPlugins.GUITVSeries
                 {
                     GUIWindowManager.ActivateWindow(GetID);
                 }                
-            }
-        }
-
-        private void TellUserSomethingWentWrong()
-        {
-            GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-            if (dlgOK != null)
-            {
-                dlgOK.SetHeading(6);
-                dlgOK.SetLine(1, 477);
-                dlgOK.SetLine(2, string.Empty);
-                dlgOK.DoModal(GetID);
             }
         }
 

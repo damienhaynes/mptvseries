@@ -67,26 +67,14 @@ namespace WindowPlugins.GUITVSeries
                 playlist.Name = Path.GetFileName(playlistFileName);
                 basePath = Path.GetDirectoryName(Path.GetFullPath(playlistFileName));
 
-                XmlNodeList nodeList = doc.DocumentElement.SelectNodes("/Playlist");
+                XmlNodeList nodeList = doc.DocumentElement.SelectNodes("/Playlist/Episode");
                 if (nodeList == null)
                     return false;
 
                 foreach (XmlNode node in nodeList)
-                {                
-                    foreach (XmlNode itemNode in node.ChildNodes)
-                    {
-                        if (itemNode.Name == "Episode")
-                        {
-                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                            {
-                                if (propertyNode.Name == "ID")
-                                {
-                                    if (!AddItem(propertyNode.InnerText))
-                                        return false;
-                                }
-                            }
-                        }
-                    }                   
+                {
+                    if (!AddItem(node.SelectSingleNode("ID").InnerText))
+                        return false;
                 }        
             }
             catch (Exception ex)
@@ -103,12 +91,12 @@ namespace WindowPlugins.GUITVSeries
             condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episodeID, SQLConditionType.Equal);
 
             List<DBEpisode> ep = DBEpisode.Get(condition, false);
-
-            if (ep.Count != 1)
-                return false;
             
-            PlayListItem newItem = new PlayListItem(ep[0]);
-            playlist.Add(newItem);
+            if (ep.Count > 0)
+            {
+                PlayListItem newItem = new PlayListItem(ep[0]);
+                playlist.Add(newItem);
+            }
             return true;
         }
 
