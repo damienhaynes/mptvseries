@@ -219,9 +219,12 @@ namespace WindowPlugins.GUITVSeries.GUI
                 actorItem.Item = actor;
                 actorItem.IconImage = "defaultActor.png";
                 actorItem.IconImageBig = "defaultActor.png";
-                actorItem.ThumbnailImage = "defaultActor.png";
-                actorItem.OnItemSelected += OnActorSelected;
-                Utils.SetDefaultIcons(actorItem);
+                if (string.IsNullOrEmpty(actor.ImageRemotePath))
+                {
+                    // work around for MediaPortal 1.1.x not loading new images
+                    actorItem.ThumbnailImage = "defaultActor.png";
+                }
+                actorItem.OnItemSelected += OnActorSelected;                
                 FacadeActors.Add(actorItem);
             }
 
