@@ -210,6 +210,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
 
+        public const String cActorLayout = "ActorLayout";
+        
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -583,6 +585,9 @@ namespace WindowPlugins.GUITVSeries
               
                 if (GetOptions(cSortSpecialSeasonLast) == null)
                     SetOptions(cSortSpecialSeasonLast, true);
+
+                if (GetOptions(cActorLayout) == null)
+                    SetOptions(cActorLayout, 0);
 
             }
             catch (Exception ex)

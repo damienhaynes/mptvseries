@@ -31,6 +31,8 @@ using MediaPortal.Ripper;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Net;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -635,6 +637,30 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        #endregion
+
+        #region Web Methods
+        public static bool DownloadFile(string url, string localFile)
+        {
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add("user-agent", Settings.UserAgent);
+
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(localFile));
+                if (!File.Exists(localFile) || ImageAllocator.LoadImageFastFromFile(localFile) == null)
+                {
+                    MPTVSeriesLog.Write("Downloading new file from: " + url, MPTVSeriesLog.LogLevel.Debug);
+                    webClient.DownloadFile(url, localFile);
+                }
+                return true;
+            }
+            catch (WebException)
+            {
+                MPTVSeriesLog.Write("File download failed from '{0}' to '{1}'", url, localFile);
+                return false;
+            }
+        }
         #endregion
     }
 }

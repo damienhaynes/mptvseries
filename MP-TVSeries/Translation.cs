@@ -327,6 +327,11 @@ namespace WindowPlugins.GUITVSeries
         public static string ResumeEpisode = "Resume episode from last time?";
 
         public static string SummaryNotAvailable = "No summary is currently available.";
+
+        public static string Timeout = "Timeout";
+        public static string NoActors = "There are no Actors for this series.";
+        public static string GettingActors = "Getting Actors from Online";
+        
         #endregion
 
         #region Public Properties
