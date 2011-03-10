@@ -13,7 +13,7 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 <wiki:toc max_depth="3" />
 
 = Skinner's Change Log =
-== v2.6 - v2.7 ==
+== v3.0 (Not Released, v1.2 Beta only) ==
  * Added Coverflow support, to enable skin support from skin you need to add the coverflow facade control and also enable it in TVSeries.SkinSettings.xml:
 {{{
 <layouts>
@@ -34,6 +34,24 @@ Coverflow is supported in Series and Season view and will load the Poster image 
     <episodethumbs>90</episodethumbs>
 </graphicsquality>
 }}}
+== v2.6 - v2.7 ==
+* New Skin Properties
+|| *Propterty* || *Description* ||
+|| #TVSeries.Current.Fanart || The Filename of the current fanart loaded, can be used in texture property elsewhere e.g. Actors GUI ||
+|| #itemcount || Item count of facade objects, this is for skins re-using this property from other plugins ||
+
+ * New GUI to display Actors for Series:
+|| *IDs* || *Description* ||
+|| 9816 || Actors GUI Window ID ||
+|| 2 || Layout GUI Button ||
+|| 3 || Refresh GUI Button ||
+
+ * The following skin properties for Actors GUI can be used:
+|| *Propterty* || *Description* ||
+|| #TVSeries.Actor.Name || Name Actor ||
+|| #TVSeries.Actor.Role || Role the plays ||
+|| #TVSeries.Actor.Image || Image of Actor ||
+|| #TVSeries.Actor.SeriesID || The tvdb SeriesID for series ||
 
 == v2.5 - v2.6 ==
  * A *New* Image (indicating recently added episodes or Unwatched episodes) overlayed on Series WideBanners / Posters Filmstrip, requires a new image in the skins media directory: *tvseries_newlabel.png*. The position of the image can be controlled from TVSeries.SkinSettings.xml with the following code:
@@ -72,8 +90,8 @@ Coverflow is supported in Series and Season view and will load the Poster image 
 }}}
 
 == v2.3 - v2.5 ==
- * New Skin Properties:
-|| *Property* || *Description* ||
+* New Skin Properties:
+|| *ID* || *Description* ||
 ||#TVSeries.LastOnlineUpdate||Push's the Last Date\Time an Online Update occurred ||
 ||#TVSeries.WatchedCount||Push's the Watched Count of episodes in Episode View||
 ||#TVSeries.UnWatchedCount||Push's the UnWatched Count of episodes in Episode View||
