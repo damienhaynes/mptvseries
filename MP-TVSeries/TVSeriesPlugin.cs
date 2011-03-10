@@ -211,7 +211,7 @@ namespace WindowPlugins.GUITVSeries
         public static String m_sFormatEpisodeSubtitle = String.Empty;
         public static String m_sFormatEpisodeMain = String.Empty;
 
-        private String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
+        public static String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
         public static int logosHeight = 100;
         public static int logosWidth = 250;
         private Control m_localControlForInvoke;
