@@ -59,6 +59,30 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
+  <div class="main_title">TVSeries v2.7.0 Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added GUI to display Actor Names, Roles and Images for Series. Requires updated skin support and can be accessed from the context menu (F9/Info).</p></li>
+      <li><p>Improved Artwork Downloading, you can configure how many series/season images are downloaded for each type from configuration. Also it will no longer download season images for every season if you dont have a reference to it in the database. Artwork limits will be ignored if a new artwork is higher rated that your existing collection, in this case it will download a new artwork.</p></li>
+      <li><p>Fixed 'Download Blank Banners' not working, also added option for 'Download Text Banners' with both options off by default.</p></li>
+			<li><p>Improved Replacement Rules, filenames containing roman numerals or Pt X of Y will be replaced with season/episode number equivalents.</p></li>
+      <li><p>Watched items on trakt.tv will now be synced to your local collection. Note: this is only for the last 100 watched episodes, the API is being improved to better support syncing.</p></li>
+			<li><p>Series/Episode ratings will now be sent to trakt.tv, ratings 7-10 are set to 'Ninja' and 1-6 as 'Weak Sauce'. Existing Ratings Sync is not yet implemented.</p></li>
+			<li><p>Sending Ratings Online (theTVDB.com) is now done async so will not lock up the GUI anymore, this was particularly bad when the server was not available.</p></li>
+      <li><p>Updated Default Parsing Expression to filter out files in sample directories and also fix files in root folder. Note: Click on reset in Parsing Expressions dialog to get update.</p></li>
+      <li><p>When Episode image is not available or hidden, the currently selected Fanart will now be displayed instead.</p></li>
+      <li><p>Episode Names and Series/Episode overviews will be auto populated if empty e.g Episode 1, "No overview currently available"</p></li>
+      <li><p>Added option to add specials at the end of the season list rather than the beginning e.g. Season 1, Season 2, Specials. This is the new default and can be turned off from configuration.</p></li>
+      <li><p>Fixed playlists not loading if duplicate or removed episodes were found.</p></li>
+      <li><p>Fixed utf-8 encoding of xmls when downloading series details.</p></li>
+      <li><p>Updated Spanish translations, thanks Oscar.</p></li>
+		</ul>
+	</div>
+  
 	<div class="main_title">TVSeries v2.6.9 Maintenance Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
