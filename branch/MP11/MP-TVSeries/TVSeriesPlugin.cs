@@ -43,6 +43,7 @@ using System.Xml;
 using WindowPlugins.GUITVSeries.Subtitles;
 using SubtitleDownloader.Core;
 using Trakt;
+using WindowPlugins.GUITVSeries.GUI;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -217,7 +218,7 @@ namespace WindowPlugins.GUITVSeries
         public static String m_sFormatEpisodeSubtitle = String.Empty;
         public static String m_sFormatEpisodeMain = String.Empty;
 
-        private String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
+        public static String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
         public static int logosHeight = 100;
         public static int logosWidth = 250;
         private Control m_localControlForInvoke;
@@ -345,7 +346,8 @@ namespace WindowPlugins.GUITVSeries
 			resetUserSelections,
 			showFanartChooser,
 			addToPlaylist,
-			viewAddToNewView
+			viewAddToNewView,
+            showActorsGUI
 		}
 
 		enum eContextMenus {
@@ -802,6 +804,13 @@ namespace WindowPlugins.GUITVSeries
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextItems.showFanartChooser;
 							}
+
+                            if (File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.Actors.xml"))
+                            {
+                                pItem = new GUIListItem(Translation.Actors + " ...");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.showActorsGUI;
+                            }
 						}
 
 						if (this.listLevel == Listlevel.Series) {
@@ -1273,6 +1282,13 @@ namespace WindowPlugins.GUITVSeries
 						ShowFanartChooser(m_SelectedSeries[DBOnlineSeries.cID]);
 						break;
 					#endregion
+
+                    #region Actors GUI
+                    case (int)eContextItems.showActorsGUI:
+                        GUIActors.SeriesId = m_SelectedSeries[DBOnlineSeries.cID];
+                        GUIWindowManager.ActivateWindow(9816);
+                        break;
+                    #endregion
 
 					#region Force Online Series Query
 					case (int)eContextItems.forceSeriesQuery: {
@@ -3150,10 +3166,6 @@ namespace WindowPlugins.GUITVSeries
             string sWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedNA.png";
             string sUnWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedNA.png";
 
-            // being downloaded (not yet local, but coming!)
-            string sWatchedDLFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedDL.png";
-            string sUnWatchedDLFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedDL.png";
-
             // return if images dont exists
             if (!(System.IO.File.Exists(sWatchedFilename) &&
                   System.IO.File.Exists(sUnWatchedFilename) &&
@@ -3162,36 +3174,26 @@ namespace WindowPlugins.GUITVSeries
                 return false;
 
             if (bWatched)
-            {
-                if (bDownloading)
+            {                
+                // Load watched flag image
+                if (!bAvailable)
                 {
-                    item.IconImage = sWatchedDLFilename;
+                    // Load alternative image
+                    item.IconImage = sWatchedNAFilename;
                 }
                 else
-                    // Load watched flag image                                
-                    if (!bAvailable)
-                    {
-                        // Load alternative image
-                        item.IconImage = sWatchedNAFilename;
-                    }
-                    else
-                        item.IconImage = sWatchedFilename;
+                    item.IconImage = sWatchedFilename;
             }
             else
-            {
-                if (bDownloading)
+            {               
+                // Load un-watched flag image
+                if (!bAvailable)
                 {
-                    item.IconImage = sUnWatchedDLFilename;
+                    // Load alternative image
+                    item.IconImage = sUnWatchedNAFilename;
                 }
                 else
-                    // Load un-watched flag image                
-                    if (!bAvailable)
-                    {
-                        // Load alternative image
-                        item.IconImage = sUnWatchedNAFilename;
-                    }
-                    else
-                        item.IconImage = sUnWatchedFilename;
+                    item.IconImage = sUnWatchedFilename;
             }
             return true;
         }
@@ -4476,6 +4478,9 @@ namespace WindowPlugins.GUITVSeries
                 // Will display fanart in backdrop or reset to default background                
                 backdrop.Filename = fanart.FanartFilename;
                 
+                // set current fanart property so can be used outside of imageswapper
+                setGUIProperty("#TVSeries.Current.Fanart", backdrop.Filename);
+
                 if (fanart.Found)
                     MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
                 else
