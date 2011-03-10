@@ -57,6 +57,8 @@ Coverflow is supported in Series and Season view and will load the Poster image 
 || *Propterty* || *Description* ||
 || #selectedthumb || Image of Actor, including default image when no image is available ||
 
+ * Note: if no Actor image is displayed then the plugin loads defaultActor.png in skins media folder.
+
 == v2.5 - v2.6 ==
  * A *New* Image (indicating recently added episodes or Unwatched episodes) overlayed on Series WideBanners / Posters Filmstrip, requires a new image in the skins media directory: *tvseries_newlabel.png*. The position of the image can be controlled from TVSeries.SkinSettings.xml with the following code:
 {{{
