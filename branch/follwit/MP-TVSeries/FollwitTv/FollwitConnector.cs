@@ -116,6 +116,11 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
                     // send episodes to server in small groups at a time.
                     foreach (DBEpisode currEpisode in episodes) {
+                        if (!currEpisode.IsAvailableLocally) {
+                            total--;
+                            continue;
+                        }
+
                         // build follwit episode object. clear watched flag if unwatched
                         // to preserve a possible positive watched status on the server
                         FitEpisode fitEpisode = GetFitEpisode(currEpisode);
@@ -148,6 +153,8 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     foreach (XmlRpcStruct currRecord in totalOutput) {
                         DBEpisode ep = episodeLookup[(string)currRecord["SourceId"]];
                         ep[DBOnlineEpisode.cFollwitId] = (string)currRecord["EpisodeId"];
+                        ep[DBOnlineEpisode.cWatched] = (string)currRecord["Watched"];
+                        if ((string)currRecord["Rating"] != "0") ep[DBOnlineEpisode.cMyRating] = (string)currRecord["Rating"];
                         ep.Commit();
                     }
 
@@ -179,7 +186,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         public static void Watch(DBEpisode episode, bool watched, bool showInStream) {
-            if (!Enabled || episode == null) return;
+            if (!Enabled || episode == null || !episode.IsAvailableLocally) return;
             DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
           
             Thread thread = new Thread(new ThreadStart(delegate {
@@ -221,6 +228,8 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     // build list of epsiodes to send 
                     List<FitEpisode> fitEpisodes = new List<FitEpisode>();
                     foreach (DBEpisode currEp in episodes) {
+                        if (!currEp.IsAvailableLocally) continue;
+
                         FitEpisode fitEp = GetFitEpisode(currEp);
                         fitEp.Rating = null;
                         fitEp.Watched = watched;
@@ -245,11 +254,14 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         public static void NowWatching(DBEpisode episode, bool watching) {
-            if (!Enabled || episode == null) return;
+            if (!Enabled || episode == null || !episode.IsAvailableLocally) return;
             DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
 
             Thread thread = new Thread(new ThreadStart(delegate {
                 try {
+                    episode = WaitForSyncedEpisode(episode);
+                    if (episode == null) return;
+
                     // start timer and send request
                     DateTime start = DateTime.Now;
                     if (watching) FollwitApi.WatchingTVEpisode("follwit", episode[DBOnlineEpisode.cFollwitId]);
@@ -279,14 +291,14 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         public static void Rate(DBEpisode episode, int rating) {
-            if (!Enabled || episode == null) return;
+            if (!Enabled || episode == null || !episode.IsAvailableLocally) return;
             DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
 
             Thread thread = new Thread(new ThreadStart(delegate {
                 try {
                     // start timer and send request
                     DateTime start = DateTime.Now;
-                    int fivePointRating = (int)Math.Round(rating / 2.0);
+                    int fivePointRating = (int)Math.Round(rating / 2.0, MidpointRounding.AwayFromZero);
                     FollwitApi.RateTVEpisode("follwit", episode[DBOnlineEpisode.cFollwitId], fivePointRating);
 
                     // log our success
@@ -319,7 +331,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                 try {
                     // start timer and send request
                     DateTime start = DateTime.Now;
-                    int fivePointRating = (int)Math.Round(rating / 2.0);
+                    int fivePointRating = (int)Math.Round(rating / 2.0, MidpointRounding.AwayFromZero);
                     FollwitApi.RateTVSeries("tvdb", series[DBOnlineSeries.cID], fivePointRating);
 
                     // log our success
@@ -341,6 +353,31 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             thread.Start();
         }
 
+        protected static DBEpisode WaitForSyncedEpisode(DBEpisode episode) {
+            if (episode == null) return null;
+            if (episode[DBOnlineEpisode.cFollwitId] != 0) return episode;
+
+            TimeSpan retryDelay = new TimeSpan(0, 0, 30);
+            int limit = 8;
+            int epId = episode[DBOnlineEpisode.cID];
+
+            int tries = 0;
+            while (tries < limit) {
+                // reload the episode from the db to check for changes
+                SQLCondition condition = new SQLCondition();
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, epId, SQLConditionType.Equal);
+                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFollwitId, 0, SQLConditionType.NotEqual);
+                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                
+                if (episodes.Count > 0) return episodes[0];
+                
+                Thread.Sleep(retryDelay);
+                tries++;
+            }
+
+            return null;
+        }
+
         public static FitEpisode GetFitEpisode(DBEpisode mptvEpisode) {
             if (mptvEpisode == null)
                 return null;
@@ -353,7 +390,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             if (!String.IsNullOrEmpty(mptvEpisode[DBOnlineEpisode.cMyRating])) {
                 int value;
                 int.TryParse(mptvEpisode[DBOnlineEpisode.cMyRating], out value);
-                fitEp.Rating = (int)Math.Round(value / 2.0);
+                fitEp.Rating = (int)Math.Round(value / 2.0, MidpointRounding.AwayFromZero);
             }
 
             fitEp.Watched = mptvEpisode[DBOnlineEpisode.cWatched] == 1;
