@@ -41,6 +41,7 @@ using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
 using Trakt;
+using WindowPlugins.GUITVSeries.GUI;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -333,7 +334,8 @@ namespace WindowPlugins.GUITVSeries
             actionRecheckMI,
             showFanartChooser,
             addToPlaylist,
-            viewAddToNewView
+            viewAddToNewView,
+            showActorsGUI
         }
 
         enum eContextMenus
@@ -811,6 +813,14 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.showFanartChooser;
                             }
+
+                            if (File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.Actors.xml"))
+                            {
+                                pItem = new GUIListItem(Translation.Actors + " ...");
+                                dlg.Add(pItem);
+                                pItem.ItemId = (int)eContextItems.showActorsGUI;
+                            }
+
                         }
 
                         if (this.listLevel == Listlevel.Series)
@@ -1229,6 +1239,13 @@ namespace WindowPlugins.GUITVSeries
                     #region Fanart Chooser
                     case (int)eContextItems.showFanartChooser:
                         ShowFanartChooser(m_SelectedSeries[DBOnlineSeries.cID]);
+                        break;
+                    #endregion
+
+                    #region Actors GUI
+                    case (int)eContextItems.showActorsGUI:
+                        GUIActors.SeriesId = m_SelectedSeries[DBOnlineSeries.cID];
+                        GUIWindowManager.ActivateWindow(9816);                        
                         break;
                     #endregion
 
@@ -4388,6 +4405,9 @@ namespace WindowPlugins.GUITVSeries
                 // Assign Fanart filename to Image Loader
                 // Will display fanart in backdrop or reset to default background                
                 backdrop.Filename = fanart.FanartFilename;
+
+                // set current fanart property so can be used outside of imageswapper
+                setGUIProperty("#TVSeries.Current.Fanart", backdrop.Filename);
 
                 if (fanart.Found)
                     MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);

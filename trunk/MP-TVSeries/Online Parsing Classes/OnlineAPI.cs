@@ -204,6 +204,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       return getFromCache(seriesID, "banners.xml");
     }
 
+    static public XmlNode GetActorsList(int seriesID)
+    {
+        return getFromCache(seriesID, "actors.xml");
+    }
+
     static public string DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
     {
         WebClient webClient = new WebClient();
