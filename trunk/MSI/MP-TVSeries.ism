@@ -1354,12 +1354,13 @@
 		<row><td>no.xml</td><td>Languages</td><td>no.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\no.xml</td><td>1</td><td/></row>
 		<row><td>no_nb_.xml</td><td>Languages</td><td>no(nb).xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\no(nb).xml</td><td>1</td><td/></row>
 		<row><td>pl.xml</td><td>Languages</td><td>pl.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pl.xml</td><td>1</td><td/></row>
-		<row><td>pluginconfigloader.exe</td><td>PluginConfigLoader</td><td>PLUGIN~1.EXE|PluginConfigLoader.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;UtilsDir&gt;\pluginconfigloader\pluginconfigloader\bin\release\PluginConfigLoader.exe</td><td>1</td><td/></row>
+		<row><td>pluginconfigloader.exe</td><td>PluginConfigLoader</td><td>PLUGIN~1.EXE|PluginConfigLoader.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\PluginConfigLoader.exe</td><td>1</td><td/></row>
 		<row><td>pt_br.xml</td><td>Languages</td><td>pt-BR.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pt-BR.xml</td><td>1</td><td/></row>
 		<row><td>pt_pt.xml</td><td>Languages</td><td>pt_pt.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\pt_pt.xml</td><td>1</td><td/></row>
 		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>1</td><td/></row>
 		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>1</td><td/></row>
 		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>1</td><td/></row>
+		<row><td>tvseries.actors.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Actors.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Actors.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.coverflow.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Coverflow.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Coverflow.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Dummy.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Dummy.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
@@ -1961,7 +1962,6 @@
 		<row><td>SkinDir</td><td>&lt;TrunkDir&gt;\skin files</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>TrunkDir</td><td>&lt;ISProjectFolder&gt;..\</td><td/><td>2</td></row>
-		<row><td>UtilsDir</td><td>&lt;TrunkDir&gt;\utils</td><td/><td>2</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
 
@@ -1984,7 +1984,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.7.0</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 3.0.0</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -4110,9 +4110,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{088226D9-DC6B-44E0-86B3-2AF407D96DD1}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.7.0</td><td/></row>
-		<row><td>ProductVersion</td><td>2.6.999.1291</td><td/></row>
+		<row><td>ProductCode</td><td>{2F462BFB-51FF-448A-9ABA-B9477C9C8C3D}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 3.0.0</td><td/></row>
+		<row><td>ProductVersion</td><td>3.0.0.1422</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
