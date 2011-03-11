@@ -44,6 +44,7 @@ using WindowPlugins.GUITVSeries.Subtitles;
 using SubtitleDownloader.Core;
 using Trakt;
 using WindowPlugins.GUITVSeries.GUI;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -763,14 +764,14 @@ namespace WindowPlugins.GUITVSeries
 							dlg.Add(pItem);
 							pItem.ItemId = (int)eContextItems.toggleWatched;
 
-							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
+							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled) {
 								pItem = new GUIListItem(Translation.RateEpisode + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;								
 							}
 						}
 						else if (this.listLevel != Listlevel.Group) {
-							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID))) {
+							if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled) {
                                 pItem = new GUIListItem(Translation.RateSeries + " ...");
 								dlg.Add(pItem);
 								pItem.ItemId = (int)eContextMenus.rate;
@@ -1105,14 +1106,18 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     episode[DBOnlineEpisode.cWatched] = !watched;
                                     episode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
-                                    episode.Commit();
+                                    episode.Commit();                                    
                                 }
+
+                                FollwitConnector.Watch(episodes, !watched);
                             }
                             else
                             {
                                 selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
                                 selectedEpisode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
                                 selectedEpisode.Commit();
+
+                                FollwitConnector.Watch(selectedEpisode, !watched, false);
                             }
                             // Update Episode Counts
                             DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
@@ -1151,6 +1156,8 @@ namespace WindowPlugins.GUITVSeries
                             episode[DBOnlineEpisode.cTraktSeen] = 0;
                             episode.Commit();
                         }
+
+                        FollwitConnector.Watch(episodeList, true);
 
                         // Updated Episode Counts
                         if (this.listLevel == Listlevel.Series && selectedSeries != null)
@@ -1195,6 +1202,8 @@ namespace WindowPlugins.GUITVSeries
                             episode[DBOnlineEpisode.cTraktSeen] = 2;
                             episode.Commit();
                         }
+
+                        FollwitConnector.Watch(episodeList, false);
 
                         // Updated Episode Counts
                         if (this.listLevel == Listlevel.Series && selectedSeries != null)
@@ -3424,6 +3433,11 @@ namespace WindowPlugins.GUITVSeries
                 if (Int32.TryParse(tValue, out rating))
 				{
                     Online_Parsing_Classes.OnlineAPI.SubmitRating(tLevel == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
+
+                    if (level == Listlevel.Episode)
+                        FollwitConnector.Rate((DBEpisode)item, rating);
+                    else 
+                        FollwitConnector.Rate((DBSeries)item, rating);
 				}
                 
             })

@@ -55,6 +55,10 @@ namespace WindowPlugins.GUITVSeries
             set { overRide(this, value); }
         }
 
+        public bool IsAvailableLocally {
+            get { return !String.IsNullOrEmpty(this[cFilename]); }
+        }
+
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
         public const int cDBVersion = 8;

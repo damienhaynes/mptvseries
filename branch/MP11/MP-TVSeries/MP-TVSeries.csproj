@@ -131,6 +131,12 @@
     <Compile Include="Configuration\PlaylistSettings.Designer.cs">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\ProgressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProgressDialog.Designer.cs">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\TraktConfiguration.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -156,6 +162,13 @@
     <Compile Include="GUI\GUIActors.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
+    <Compile Include="FollwitTv\FollwitConnector.cs" />
+    <Compile Include="FollwitTv\FollwitSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FollwitTv\FollwitSettingsPanel.Designer.cs">
+      <DependentUpon>FollwitSettingsPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -387,6 +400,9 @@
       <DependentUpon>PinCode.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\ProgressDialog.resx">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ProgressLabel.resx">
       <DependentUpon>ProgressLabel.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -413,6 +429,9 @@
     <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FollwitTv\FollwitSettingsPanel.resx">
+      <DependentUpon>FollwitSettingsPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -542,6 +561,12 @@
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\External\FollwitApi\FollwitApi.csproj">
+      <Project>{75EBA361-8137-4107-A5B5-753CE959983B}</Project>
+      <Name>FollwitApi</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets
@@ -550,7 +575,11 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(ProjectDir)PostBuild.bat" call "$(ProjectDir)PostBuild.bat" "$(ProjectDir)" $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>cd $(TargetDir)
+copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
+copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
+call merge.bat
+if exist $(ProjectDir)PostBuild.bat call $(ProjectDir)PostBuild.bat $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
     <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
   </PropertyGroup>
 </Project>
