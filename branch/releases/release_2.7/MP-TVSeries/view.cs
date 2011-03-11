@@ -136,7 +136,7 @@ namespace WindowPlugins.GUITVSeries
                     return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
             }
             else
-                return ((int)ep[episodeIndex] + ep[seasonIndex] * 100);
+                return (double)ep[episodeIndex] + ep[seasonIndex] * 100;
         }
 
         /*
