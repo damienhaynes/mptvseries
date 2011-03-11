@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 27th Feburary 2011 -->
+<!-- Last Updated: 11th March 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Series</string>
@@ -301,4 +301,8 @@
   
 	<string Field="SummaryNotAvailable" Original="No summary is currently available.">No summary is currently available.</string>
   
+  <string Field="Timeout" Original="Timeout">Timeout</string>
+  <string Field="NoActors" Original="There are no Actors for this series.">There are no Actors for this series.</string>
+  <string Field="GettingActors" Original="Getting Actors from Online">Getting Actors from Online</string>
+ 
 </strings>
