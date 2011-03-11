@@ -208,6 +208,14 @@ namespace WindowPlugins.GUITVSeries
         public const String cTraktUsername = "TraktUsername";
         public const String cTraktPassword = "TraktPassword";
 
+        public const String cFollwitEnabled = "FollwitEnabled";
+        public const String cFollwitBaseUrl = "FollwitBaseUrl";
+        public const String cFollwitUsername = "FollwitUsername";
+        public const String cFollwitHashedPassword = "FollwitHashedPassword";
+        public const String cFollwitUpdateFrequency = "FollwitUpdateFrequency";
+        public const String cFollwitLastUpdated = "FollwitLastUpdated";
+
+
         public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
 
         public const String cActorLayout = "ActorLayout";
@@ -582,7 +590,25 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cTraktUsername) == null)
                     SetOptions(cTraktUsername, string.Empty);
-              
+
+                if (GetOptions(cFollwitEnabled) == null)
+                    SetOptions(cFollwitEnabled, false);
+
+                if (GetOptions(cFollwitBaseUrl) == null)
+                    SetOptions(cFollwitBaseUrl, "http://devtv.follw.it/");
+
+
+                if (GetOptions(cFollwitUsername) == null)
+                    SetOptions(cFollwitUsername, string.Empty);
+
+                if (GetOptions(cFollwitHashedPassword) == null)
+                    SetOptions(cFollwitHashedPassword, string.Empty);
+
+                if (GetOptions(cFollwitUpdateFrequency) == null)
+                    SetOptions(cFollwitUpdateFrequency, 60);
+
+                if (GetOptions(cFollwitLastUpdated) == null)
+                    SetOptions(cFollwitLastUpdated, 1);                
                 if (GetOptions(cSortSpecialSeasonLast) == null)
                     SetOptions(cSortSpecialSeasonLast, true);
 

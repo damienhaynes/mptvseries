@@ -40,6 +40,7 @@ using MediaPortal.Video.Database;
 using WindowPlugins.GUITVSeries;
 using Trakt;
 using Trakt.Show;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -107,6 +108,9 @@ namespace WindowPlugins.GUITVSeries
 
                 // flag to handle trakt scrobble on double episodes
                 TraktMarkedFirstAsWatched = false;
+
+                // asynchronously send now watching info to follwit
+                FollwitConnector.NowWatching(episode, true);
 
                 // Check if file is an Image e.g. ISO
                 string filename = m_currentEpisode[DBEpisode.cFilename];
@@ -664,6 +668,10 @@ namespace WindowPlugins.GUITVSeries
         {
             // cancel trakt watch timer
             if (m_TraktTimer != null) m_TraktTimer.Dispose();
+
+            // if needed, asynchronously notify follw.it we arnt watching the show anymore
+            FollwitConnector.NowWatching(m_currentEpisode, false);
+            if (countAsWatched) FollwitConnector.Watch(m_currentEpisode, true, true);
 
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
