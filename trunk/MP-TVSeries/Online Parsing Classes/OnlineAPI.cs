@@ -9,6 +9,7 @@ using MediaPortal.GUI.Library;
 using MediaPortal.Dialogs;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
@@ -144,6 +145,12 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         string account = DBOption.GetOptions(DBOption.cOnlineUserID);
         if (String.IsNullOrEmpty(account))
         {
+            // if there is no tvdb account identifier, but we are using follwit. dont display the
+            // "please fill in ID" error.
+            if (FollwitConnector.Enabled) {
+                return false;
+            }
+
             string[] lines = new string[] { Translation.TVDB_INFO_ACCOUNTID_1, Translation.TVDB_INFO_ACCOUNTID_2 };
             TVSeriesPlugin.ShowDialogOk(Translation.TVDB_INFO_TITLE, lines);
             MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");

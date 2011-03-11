@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MediaPortal.TagReader;
+using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -194,7 +195,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode ep in episodes)
                 {
                     ep[DBOnlineEpisode.cWatched] = "1";
-                    ep.Commit();   
+                    ep.Commit();
                 }
                 // Update Episode Counts
                 DBSeries series = Helper.getCorrespondingSeries(_episode[DBEpisode.cSeriesID]);
