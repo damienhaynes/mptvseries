@@ -212,6 +212,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cFollwitBaseUrl = "FollwitBaseUrl";
         public const String cFollwitUsername = "FollwitUsername";
         public const String cFollwitHashedPassword = "FollwitHashedPassword";
+        public const String cFollwitUpdateFrequency = "FollwitUpdateFrequency";
+        public const String cFollwitLastUpdated = "FollwitLastUpdated";
+
 
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
@@ -596,7 +599,12 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cFollwitHashedPassword) == null)
                     SetOptions(cFollwitHashedPassword, string.Empty);
-              
+
+                if (GetOptions(cFollwitUpdateFrequency) == null)
+                    SetOptions(cFollwitUpdateFrequency, 60);
+
+                if (GetOptions(cFollwitLastUpdated) == null)
+                    SetOptions(cFollwitLastUpdated, 1);                
             }
             catch (Exception ex)
             {

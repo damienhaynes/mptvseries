@@ -11,6 +11,7 @@ using WindowPlugins.GUITVSeries.Configuration;
 namespace WindowPlugins.GUITVSeries.FollwitTv {
     public class FollwitConnector {
         internal static object follwitApiLock = new Object();
+        internal static Thread updateThread = null;
 
         public static bool Enabled {
             get { return DBOption.GetOptions(DBOption.cFollwitEnabled); }
@@ -65,6 +66,20 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         public static string HashedPassword {
             get { return DBOption.GetOptions(DBOption.cFollwitHashedPassword); }
             internal set { DBOption.SetOptions(DBOption.cFollwitHashedPassword, value); }
+        }
+
+        public static DateTime LastUpdated {
+            get { return new DateTime(DBOption.GetOptions(DBOption.cFollwitLastUpdated)); }
+            internal set { DBOption.SetOptions(DBOption.cFollwitLastUpdated, value.Ticks); }
+        }
+
+        public static TimeSpan UpdateFrequency {
+            get { return new TimeSpan(0, DBOption.GetOptions(DBOption.cFollwitUpdateFrequency), 0); }
+            internal set { DBOption.SetOptions(DBOption.cFollwitHashedPassword, value.TotalMinutes); }
+        }
+
+        static FollwitConnector() {
+            FollwitConnector.InitUpdateThread();
         }
 
         public static void SyncNewEpisodes() {
@@ -154,7 +169,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         DBEpisode ep = episodeLookup[(string)currRecord["SourceId"]];
                         ep[DBOnlineEpisode.cFollwitId] = (string)currRecord["EpisodeId"];
                         ep[DBOnlineEpisode.cWatched] = (string)currRecord["Watched"];
-                        if ((string)currRecord["Rating"] != "0") ep[DBOnlineEpisode.cMyRating] = (string)currRecord["Rating"];
+                        if ((string)currRecord["Rating"] != "0") ep[DBOnlineEpisode.cMyRating] = int.Parse((string)currRecord["Rating"]) * 2;
                         ep.Commit();
                     }
 
@@ -185,6 +200,110 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             thread.Start();
         }
 
+        public static void InitUpdateThread() {
+            if (updateThread != null) {
+                updateThread.Abort();
+                updateThread = null;
+            }
+
+            updateThread = new Thread(new ThreadStart(delegate () {
+                while (true) {
+                    try {
+                        DateTime start = DateTime.Now;
+                        MPTVSeriesLog.Write("[follw.it] Beginning update synchronization.", MPTVSeriesLog.LogLevel.Debug);
+
+                        // grab a list of items to update from the server and process them
+                        DateTime serverTime;
+                        int actionsTaken = 0;
+                        List<TaskListItem> tasks = FollwitApi.GetUserTaskList(LastUpdated, out serverTime);
+                        foreach (TaskListItem task in tasks) {
+                            DBEpisode episode = null;
+                            DBSeries series = null;
+                            
+                            // try to find a cooresponding episode
+                            if (task.EpisodeId != 0) {
+                                SQLCondition condition = new SQLCondition();
+                                condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFollwitId, task.EpisodeId, SQLConditionType.Equal);
+                                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
+                                
+                                if (episodes.Count > 0) {
+                                    episode = episodes[0];
+                                    series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
+                                }
+                            }
+
+                            // try to find a series if we dont have one yet
+                            if (task.Task == TaskItemType.NewSeriesRating) {
+                                if (task.TvdbSeriesId != 0 && series == null)
+                                    series = DBSeries.Get(task.TvdbSeriesId);
+                            }
+
+                            // update local data with retrieved info
+                            switch (task.Task) {
+                                case TaskItemType.NewEpisodeRating:
+                                    if (episode == null) continue;
+                                    episode[DBOnlineEpisode.cMyRating] = task.Rating * 2;
+
+                                    episode.Commit();
+                                    actionsTaken++;
+                                    MPTVSeriesLog.Write("[follw.it] Retrieved rating of {3} for '{0} S{1}E{2}'.",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        episode[DBOnlineEpisode.cCombinedSeason],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
+                                        episode[DBOnlineEpisode.cMyRating]);
+                                    break;
+                                case TaskItemType.NewEpisodeWatchedStatus:
+                                    if (episode == null) continue;
+                                    episode[DBOnlineEpisode.cWatched] = task.Watched;
+
+                                    episode.Commit();
+                                    actionsTaken++;
+                                    MPTVSeriesLog.Write("[follw.it] Retrieved watched status of {3} for '{0:00} S{1}E{2}'.",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        episode[DBOnlineEpisode.cCombinedSeason],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
+                                        episode[DBOnlineEpisode.cWatched] == 1 ? "true" : "false");
+                                    break;
+                                case TaskItemType.NewSeriesRating:
+                                    if (series == null) continue;
+
+                                    series[DBOnlineSeries.cMyRating] = task.Rating * 2;
+
+                                    series.Commit();
+                                    actionsTaken++;
+                                    MPTVSeriesLog.Write("[follw.it] Retrieved rating of {1} for '{0}'.",
+                                        series[DBOnlineSeries.cPrettyName],
+                                        series[DBOnlineSeries.cMyRating]);
+                                    break;
+                            }
+                        }
+
+                        // log final results
+                        MPTVSeriesLog.LogLevel logLevel = actionsTaken == 0 ? MPTVSeriesLog.LogLevel.Debug : MPTVSeriesLog.LogLevel.Normal;
+                        MPTVSeriesLog.Write(string.Format("[follw.it] Finished update synchronization. Acted on {0}/{1} events. ({2})",
+                                            actionsTaken, tasks.Count, DateTime.Now - start), logLevel);
+
+                        LastUpdated = serverTime;
+
+                    }
+                    catch (Exception e) {
+                        MPTVSeriesLog.Write("[follw.it] Failed update synchronization: {0}", e.Message);
+                    }
+
+                    // sleep in 5 second intervals to allow the thread to be aborted as needed.
+                    DateTime lastChecked = DateTime.Now;
+                    while (DateTime.Now - lastChecked < UpdateFrequency) {
+                        Thread.Sleep(5000);
+                    }
+                }
+
+            }));
+
+            updateThread.IsBackground = true;
+            updateThread.Name = "follw.it persistent update thread";
+            updateThread.Start();
+        }
+
         public static void Watch(DBEpisode episode, bool watched, bool showInStream) {
             if (!Enabled || episode == null || !episode.IsAvailableLocally) return;
             DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
@@ -199,7 +318,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     MPTVSeriesLog.Write("[follw.it] Set '{0} S{1}E{2}' watched status to {3}. ({4})",
                                         series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
-                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
                                         watched.ToString().ToLower(),
                                         DateTime.Now - start);
                 }
@@ -208,7 +327,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     MPTVSeriesLog.Write("[follw.it] Failed setting watched status for '{0} S{1}E{2}': {3}",
                                         series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
-                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
                                         e.Message);
                 }
             }));
@@ -272,7 +391,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                                         watching ? "now" : "stopped",
                                         series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
-                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
                                         DateTime.Now - start);
                 }
                 catch (Exception e) {
@@ -280,7 +399,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     MPTVSeriesLog.Write("[follw.it] Failed sending now watching status for '{0} S{1}E{2}': {3}",
                                         series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
-                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
                                         e.Message);
                 }
             }));
@@ -305,7 +424,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     MPTVSeriesLog.Write("[follw.it] Rated '{0} S{1}E{2}' a {3}/5. ({4})",
                                         series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
-                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
                                         fivePointRating,
                                         DateTime.Now - start);
                 }
@@ -314,7 +433,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     MPTVSeriesLog.Write("[follw.it] Failed rating '{0} S{1}E{2}': {3}",
                                         series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
-                                        episode[DBOnlineEpisode.cCombinedEpisodeNumber],
+                                        episode[DBOnlineEpisode.cEpisodeIndex],
                                         e.Message);
                 }
             }));
