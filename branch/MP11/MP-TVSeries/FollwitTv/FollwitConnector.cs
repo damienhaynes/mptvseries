@@ -22,7 +22,10 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                 if (Enabled && _follwitAPI == null) {
                     try {
                         DateTime start = DateTime.Now;
-                        lock (follwitApiLock) _follwitAPI = FollwitApi.Login(Username, HashedPassword, ApiUrl);
+                        lock (follwitApiLock) {
+                            if (_follwitAPI != null) return _follwitAPI;
+                            _follwitAPI = FollwitApi.Login(Username, HashedPassword, ApiUrl);
+                        }
                         
                         if (_follwitAPI == null) {
                             MPTVSeriesLog.Write("[follw.it] Failed to log in: Invalid Username or Password!");
@@ -88,8 +91,16 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             internal set { DBOption.SetOptions(DBOption.cFollwitHashedPassword, value.TotalMinutes); }
         }
 
+        // this method forces the follwit api to initialize on startup
         static FollwitConnector() {
-            FollwitConnector.InitUpdateThread();
+            Thread thread = new Thread(new ThreadStart(delegate {
+                try { if (FollwitApi == null) MPTVSeriesLog.Write("[follw.it] Not connected."); }
+                catch (Exception) { }
+            }));
+
+            thread.IsBackground = true;
+            thread.Name = "follw.it startup check";
+            thread.Start();
         }
 
         public static void SetPrivateProfile(bool value) {

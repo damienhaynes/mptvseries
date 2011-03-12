@@ -68,7 +68,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         private void SwitchWebsite() {
             if (FollwitConnector.BaseUrl.Equals("http://follw.it/")) {
                 DialogResult result = MessageBox.Show("Switch connection to follw.it test server?", "follw.it", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes) FollwitConnector.BaseUrl = "http://devtv.follw.it/";
+                if (result == DialogResult.Yes) FollwitConnector.BaseUrl = "http://dev.follw.it/";
             } else {
                 DialogResult result = MessageBox.Show("Switch connection to follw.it production server?", "follw.it", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes) FollwitConnector.BaseUrl = "http://follw.it/";
