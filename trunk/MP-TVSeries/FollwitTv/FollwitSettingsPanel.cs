@@ -106,17 +106,26 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
                 syncButton.Enabled = true;
 
-                // not implemented. swap when done.
-                //try { publicProfileCheckBox.Checked = ??; }
-                //catch { }
+                publicProfileCheckBox.Enabled = true;
+                try { publicProfileCheckBox.Checked = !FollwitConnector.FollwitApi.User.PrivateProfile; }
+                catch { }                
+                
+                // not implemented yet
                 restrictSyncCheckBox.Enabled = false;
-                publicProfileCheckBox.Enabled = false;
+                
                 
             }
 
             updatingControls = false;
         }
 
+        private void TogglePrivateProfile() {
+            if (updatingControls)
+                return;
+
+            FollwitConnector.SetPrivateProfile(!publicProfileCheckBox.Checked);
+
+        }
 
         private void setupDisconnecButton_Click(object sender, EventArgs e) {
             if (FollwitConnector.Enabled)
@@ -131,7 +140,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         private void privateProfileCheckBox_CheckedChanged(object sender, EventArgs e) {
-
+            TogglePrivateProfile();
         }
 
         private void restrictSyncCheckBox_CheckedChanged(object sender, EventArgs e) {

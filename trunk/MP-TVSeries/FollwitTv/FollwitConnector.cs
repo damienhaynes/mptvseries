@@ -32,6 +32,8 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                             _follwitAPI.RequestEvent += new Follwit.API.FollwitApi.FitAPIRequestDelegate(_follwitAPI_RequestEvent);
                             _follwitAPI.ResponseEvent += new Follwit.API.FollwitApi.FitAPIResponseDelegate(_follwitAPI_ResponseEvent);
 
+                            InitUpdateThread();
+
                             MPTVSeriesLog.Write("[follw.it] Logged in as: {0} ({1})", _follwitAPI.User.Name, DateTime.Now - start);
                         }
                     }
@@ -88,6 +90,34 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
         static FollwitConnector() {
             FollwitConnector.InitUpdateThread();
+        }
+
+        public static void SetPrivateProfile(bool value) {
+            if (!Enabled) return;
+
+            Thread thread = new Thread(new ThreadStart(delegate {
+                try {
+                    // start timer and send request
+                    DateTime start = DateTime.Now;
+                    FollwitConnector.FollwitApi.UpdateUser("", "", value);
+
+                    // log our success
+                    MPTVSeriesLog.Write("[follw.it] Set profile for {0} to {1}. ({2})",
+                                        Username,
+                                        value ? "private" : "public",
+                                        DateTime.Now - start);
+                }
+                catch (Exception e) {
+                    MPTVSeriesLog.Write("[follw.it] Failed to set profile for {0} to {1}: {3}",
+                                        Username,
+                                        value ? "private" : "public",
+                                        e.Message);
+                }
+            }));
+
+            thread.IsBackground = true;
+            thread.Name = "follw.it private profile updater";
+            thread.Start();
         }
 
         public static void SyncNewEpisodes() {
@@ -213,6 +243,8 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                 updateThread = null;
             }
 
+            if (!Enabled) return;
+
             updateThread = new Thread(new ThreadStart(delegate () {
                 while (true) {
                     try {
@@ -280,6 +312,12 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                                     break;
                                 case TaskItemType.NewSeriesRating:
                                     if (series == null) continue;
+
+                                    // if we already have a rating and its within one unit of what we are recieving
+                                    // ignore it.
+                                    if (series[DBOnlineSeries.cMyRating] != "" &&
+                                        Math.Abs((decimal)(series[DBOnlineSeries.cMyRating] - (task.Rating * 2))) <= 1)
+                                        continue;
 
                                     series[DBOnlineSeries.cMyRating] = task.Rating * 2;
 
