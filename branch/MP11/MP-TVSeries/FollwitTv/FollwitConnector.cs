@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Follwit.API;
 using Follwit.API.Data;
-using CookComputing.XmlRpc;
 using System.Threading;
 using WindowPlugins.GUITVSeries.Configuration;
 
@@ -51,16 +50,25 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
         public static string BaseUrl {
             get { return DBOption.GetOptions(DBOption.cFollwitBaseUrl); }
-            internal set { DBOption.SetOptions(DBOption.cFollwitBaseUrl, value); }
+            internal set { 
+                DBOption.SetOptions(DBOption.cFollwitBaseUrl, value);
+                _follwitAPI = null;
+            }
         }
 
         public static string Username {
             get { return DBOption.GetOptions(DBOption.cFollwitUsername); }
-            internal set { DBOption.SetOptions(DBOption.cFollwitUsername, value); }
+            internal set { 
+                DBOption.SetOptions(DBOption.cFollwitUsername, value);
+                _follwitAPI = null;
+            }
         }
 
         internal static string Password {
-            set { DBOption.SetOptions(DBOption.cFollwitHashedPassword, value); }
+            set { 
+                DBOption.SetOptions(DBOption.cFollwitHashedPassword, value);
+                _follwitAPI = null;
+            }
         }
 
         public static string HashedPassword {
@@ -123,7 +131,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     // basic data structures used for our processing loop
                     Dictionary<string, DBEpisode> episodeLookup = new Dictionary<string, DBEpisode>();
                     List<FitEpisode> epsToSend = new List<FitEpisode>();
-                    List<XmlRpcStruct> totalOutput = new List<XmlRpcStruct>();
+                    List<FitEpisode> totalOutput = new List<FitEpisode>();
                    
                     int sent = 0;
                     int total = episodes.Count;
@@ -145,8 +153,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         epsToSend.Add(fitEpisode);
 
                         if (epsToSend.Count > 30) {
-                            object[] output = (object[])FollwitConnector.FollwitApi.BulkAction(epsToSend);
-                            foreach (object currRecord in output) totalOutput.Add((XmlRpcStruct)currRecord);
+                            totalOutput.AddRange(FollwitConnector.FollwitApi.BulkAction(epsToSend));
                             sent += epsToSend.Count;
                             epsToSend.Clear();
 
@@ -160,16 +167,15 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     }
 
                     // send remaining group of episodes
-                    object[] output2 = (object[])FollwitConnector.FollwitApi.BulkAction(epsToSend);
-                    foreach (object currRecord in output2) totalOutput.Add((XmlRpcStruct)currRecord);
+                    totalOutput.AddRange(FollwitConnector.FollwitApi.BulkAction(epsToSend));                    
                     sent += epsToSend.Count;
 
                     // locally store returned data (currently only follwit id)
-                    foreach (XmlRpcStruct currRecord in totalOutput) {
-                        DBEpisode ep = episodeLookup[(string)currRecord["SourceId"]];
-                        ep[DBOnlineEpisode.cFollwitId] = (string)currRecord["EpisodeId"];
-                        ep[DBOnlineEpisode.cWatched] = (string)currRecord["Watched"];
-                        if ((string)currRecord["Rating"] != "0") ep[DBOnlineEpisode.cMyRating] = int.Parse((string)currRecord["Rating"]) * 2;
+                    foreach (FitEpisode fitEp in totalOutput) {
+                        DBEpisode ep = episodeLookup[fitEp.SourceId];
+                        ep[DBOnlineEpisode.cFollwitId] = fitEp.FollwitId;
+                        ep[DBOnlineEpisode.cWatched] = fitEp.Watched;
+                        if (fitEp.Rating != 0) ep[DBOnlineEpisode.cMyRating] = fitEp.Rating * 2;
                         ep.Commit();
                     }
 
@@ -190,7 +196,8 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                     }
                 }
                 catch (Exception e) {
-                    // ah crap.
+                    try { if (progress != null) progress(ProgressDialog.Status.CANCELED, 0); }
+                    catch (Exception) { }
                     MPTVSeriesLog.Write("[follw.it] Failed episode synchronization: {0}", e.Message);
                 }
             }));
@@ -242,12 +249,19 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                             switch (task.Task) {
                                 case TaskItemType.NewEpisodeRating:
                                     if (episode == null) continue;
+
+                                    // if we already have a rating and its within one unit of what we are recieving
+                                    // ignore it.
+                                    if (episode[DBOnlineEpisode.cMyRating] != "" &&
+                                        Math.Abs((decimal)(episode[DBOnlineEpisode.cMyRating] - (task.Rating * 2))) <= 1)
+                                        continue;
+
                                     episode[DBOnlineEpisode.cMyRating] = task.Rating * 2;
 
                                     episode.Commit();
                                     actionsTaken++;
                                     MPTVSeriesLog.Write("[follw.it] Retrieved rating of {3} for '{0} S{1}E{2}'.",
-                                        series[DBOnlineSeries.cPrettyName],
+                                        series == null ? "???" : (string) series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
                                         episode[DBOnlineEpisode.cEpisodeIndex],
                                         episode[DBOnlineEpisode.cMyRating]);
@@ -259,7 +273,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                                     episode.Commit();
                                     actionsTaken++;
                                     MPTVSeriesLog.Write("[follw.it] Retrieved watched status of {3} for '{0:00} S{1}E{2}'.",
-                                        series[DBOnlineSeries.cPrettyName],
+                                        series == null ? "???" : (string) series[DBOnlineSeries.cPrettyName],
                                         episode[DBOnlineEpisode.cCombinedSeason],
                                         episode[DBOnlineEpisode.cEpisodeIndex],
                                         episode[DBOnlineEpisode.cWatched] == 1 ? "true" : "false");

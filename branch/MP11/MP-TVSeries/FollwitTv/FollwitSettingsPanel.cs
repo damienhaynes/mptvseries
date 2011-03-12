@@ -65,6 +65,16 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             Process.Start(processInfo);
         }
 
+        private void SwitchWebsite() {
+            if (FollwitConnector.BaseUrl.Equals("http://follw.it/")) {
+                DialogResult result = MessageBox.Show("Switch connection to follw.it test server?", "follw.it", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes) FollwitConnector.BaseUrl = "http://devtv.follw.it/";
+            } else {
+                DialogResult result = MessageBox.Show("Switch connection to follw.it production server?", "follw.it", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes) FollwitConnector.BaseUrl = "http://follw.it/";
+            }
+        }
+
         private void UpdateControls() {
             if (updatingControls) return;
             updatingControls = true;
@@ -137,7 +147,10 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
         }
 
         private void logoPanel1_Click(object sender, EventArgs e) {
-            OpenMainFollwitPage();
+            if ((ModifierKeys & Keys.Control) == Keys.Control) 
+                SwitchWebsite();
+            else 
+                OpenMainFollwitPage();
         }
 
         private void logoPanel1_MouseEnter(object sender, EventArgs e) {
