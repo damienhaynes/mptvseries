@@ -47,7 +47,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Location = new System.Drawing.Point(3, 66);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(419, 3);
+            this.groupBox1.Size = new System.Drawing.Size(485, 3);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             // 
@@ -119,7 +119,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Location = new System.Drawing.Point(3, 125);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(419, 3);
+            this.groupBox2.Size = new System.Drawing.Size(485, 3);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             // 
@@ -151,9 +151,10 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Location = new System.Drawing.Point(131, 158);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(291, 3);
+            this.groupBox3.Size = new System.Drawing.Size(357, 3);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
+            this.groupBox3.Visible = false;
             // 
             // restrictSyncCheckBox
             // 
@@ -161,10 +162,11 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             this.restrictSyncCheckBox.Enabled = false;
             this.restrictSyncCheckBox.Location = new System.Drawing.Point(136, 167);
             this.restrictSyncCheckBox.Name = "restrictSyncCheckBox";
-            this.restrictSyncCheckBox.Size = new System.Drawing.Size(278, 17);
+            this.restrictSyncCheckBox.Size = new System.Drawing.Size(355, 17);
             this.restrictSyncCheckBox.TabIndex = 9;
-            this.restrictSyncCheckBox.Text = "Restrict which TV shows are synchronized to follw.it.";
+            this.restrictSyncCheckBox.Text = "Restrict which TV shows are synchronized to follw.it. (Coming Soon!)";
             this.restrictSyncCheckBox.UseVisualStyleBackColor = true;
+            this.restrictSyncCheckBox.Visible = false;
             this.restrictSyncCheckBox.CheckedChanged += new System.EventHandler(this.restrictSyncCheckBox_CheckedChanged);
             // 
             // defineSyncedShowsButton
@@ -176,6 +178,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             this.defineSyncedShowsButton.TabIndex = 10;
             this.defineSyncedShowsButton.Text = "Define Synchronized Shows";
             this.defineSyncedShowsButton.UseVisualStyleBackColor = true;
+            this.defineSyncedShowsButton.Visible = false;
             this.defineSyncedShowsButton.Click += new System.EventHandler(this.defineSyncedShowsButton_Click);
             // 
             // logoPanel1
@@ -206,7 +209,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
             this.Controls.Add(this.logoPanel1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "FollwitSettingsPanel";
-            this.Size = new System.Drawing.Size(425, 224);
+            this.Size = new System.Drawing.Size(491, 224);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
