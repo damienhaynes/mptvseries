@@ -358,10 +358,14 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
         public static void Watch(DBEpisode episode, bool watched, bool showInStream) {
             if (!Enabled || episode == null || !episode.IsAvailableLocally) return;
+
             DBSeries series = DBSeries.Get(episode[DBEpisode.cSeriesID]);
           
             Thread thread = new Thread(new ThreadStart(delegate {
                 try {
+                    episode = WaitForSyncedEpisode(episode);
+                    if (episode == null) return;
+
                     // start timer and send request
                     DateTime start = DateTime.Now;
                     FollwitApi.WatchedTVEpisode("follwit", episode[DBOnlineEpisode.cFollwitId], watched, showInStream);
@@ -467,6 +471,9 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
             Thread thread = new Thread(new ThreadStart(delegate {
                 try {
+                    episode = WaitForSyncedEpisode(episode);
+                    if (episode == null) return;
+
                     // start timer and send request
                     DateTime start = DateTime.Now;
                     int fivePointRating = (int)Math.Round(rating / 2.0, MidpointRounding.AwayFromZero);
