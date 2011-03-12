@@ -595,7 +595,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cFollwitEnabled, false);
 
                 if (GetOptions(cFollwitBaseUrl) == null)
-                    SetOptions(cFollwitBaseUrl, "http://devtv.follw.it/");
+                    SetOptions(cFollwitBaseUrl, "http://follw.it/");
 
 
                 if (GetOptions(cFollwitUsername) == null)
