@@ -199,9 +199,8 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        /// <summary>
-        /// Gets the 100 Most Recently Watched on Trakt and 
-        /// syncs the watched state locally
+        /// <summary>        
+        /// syncs the watched state locally from trakt.tv
         /// </summary>
         public static void SyncTraktWatchedState()
         {
@@ -210,26 +209,36 @@ namespace WindowPlugins.GUITVSeries
 
             // Get all local unwatched episodes
             SQLCondition conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal);
-            List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
+            List<DBEpisode> episodes = DBEpisode.Get(conditions, false);           
 
-            MPTVSeriesLog.Write("Getting Most Recently Watched from Trakt:");
-            
-            foreach (var watchedItem in TraktAPI.GetUserWatchedHistory(TraktAPI.Username))
-            {         
-                string seriesID = watchedItem.Show.SeriesID;
-                string seasonIdx = watchedItem.Episode.SeasonIndex;
-                string episodeIdx = watchedItem.Episode.EpisodeIndex;
+            var watchedItems = TraktAPI.GetUserWatched(TraktAPI.Username);
 
-                foreach(DBEpisode episode in episodes.Where(e => e[DBEpisode.cSeriesID] == seriesID &&
-                                                                 e[DBEpisode.cSeasonIndex] == seasonIdx &&
-                                                                 e[DBEpisode.cEpisodeIndex] == episodeIdx)) {
-                    // commit watched state
+            MPTVSeriesLog.Write("Trakt: Syncronizing Watched/Seen from trakt.tv");
+
+            // go through all unwatched episodes and check if watched online            
+            foreach (DBEpisode episode in episodes)
+            {
+                // if the episode exists on server response 
+                // then we mark as watched locally
+                if (HasEpisode(watchedItems, episode))
+                {
+                    MPTVSeriesLog.Write("Trakt: Marking '{0}' as watched", episode.ToString());
                     episode[DBOnlineEpisode.cWatched] = true;
+                    episode[DBOnlineEpisode.cTraktSeen] = true;
                     episode.Commit();
                 }
             }
-            MPTVSeriesLog.Write("Finished Syncing Watched state from Trakt");
 
+            MPTVSeriesLog.Write("Finished Syncronizing Watched/Seen state from trakt.tv");
+
+        }
+
+        static bool HasEpisode(IEnumerable<TraktWatchedShows> watchedItems, DBEpisode episode)
+        {
+            IEnumerable<TraktWatchedShows> items = watchedItems.Where(s => s.SeriesId == episode[DBOnlineEpisode.cSeriesID] &&
+                                        s.Seasons.Where(e => e.Season == episode[DBOnlineEpisode.cSeasonIndex] &&
+                                                             e.Episodes.Contains(episode[DBOnlineEpisode.cEpisodeIndex])).Count() == 1);
+            return items.Count() == 1;
         }
 
         public static void RateEpisode(DBEpisode episode)

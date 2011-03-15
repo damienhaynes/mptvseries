@@ -67,7 +67,8 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Utils">
+    <Reference Include="Common.Utils, Version=1.1.6.27644, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Common.Utils.dll</HintPath>
     </Reference>
     <Reference Include="CookComputing.XmlRpcV2, Version=2.4.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
@@ -162,7 +163,7 @@
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
     <Compile Include="DB Classes\DBActor.cs" />
     <Compile Include="GUI\GUIActors.cs" />
-    <Compile Include="GUI\GUIConnector.cs" />    
+    <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
     <Compile Include="FollwitTv\FollwitConnector.cs" />
     <Compile Include="FollwitTv\FollwitSettingsPanel.cs">
@@ -324,6 +325,7 @@
     <Compile Include="Trakt\TraktURIs.cs" />
     <Compile Include="Trakt\User\TraktUserCalendar.cs" />
     <Compile Include="Trakt\User\TraktUserProfile.cs" />
+    <Compile Include="Trakt\User\TraktWatchedShows.cs" />
     <Compile Include="Trakt\User\TraktWatchedEpisodeHistory.cs" />
     <Compile Include="Trakt\User\TraktWatchedMovieHistory.cs" />
     <Compile Include="Translation.cs" />

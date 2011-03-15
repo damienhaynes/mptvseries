@@ -139,10 +139,22 @@ namespace Trakt
         /// <param name="user">username of person to retrieve watched items</param>
         public static IEnumerable<TraktWatchedEpisodeHistory> GetUserWatchedHistory(string user)
         {
-            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, user), GetUserAuthentication());
+            string userWatchedHistory = Transmit(string.Format(TraktURIs.UserMostRecentWatchedEpisodes, user), GetUserAuthentication());
 
             // get list of objects from json array
             return userWatchedHistory.FromJSONArray<TraktWatchedEpisodeHistory>();
+        }
+
+        /// <summary>
+        /// Returns a list of all watched/seen items on trakt.tv        
+        /// </summary>
+        /// <param name="user">username of person to retrieve watched items</param>
+        public static IEnumerable<TraktWatchedShows> GetUserWatched(string user)
+        {
+            string userWatched = Transmit(string.Format(TraktURIs.UserWatchedEpisodes, user), GetUserAuthentication());
+
+            // get list of objects from json array
+            return userWatched.FromJSONArray<TraktWatchedShows>();
         }
 
         /// <summary>
