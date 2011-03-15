@@ -108,35 +108,9 @@ namespace WindowPlugins.GUITVSeries
             if (m_steps[stepIndex].inLineSpecials && currentStepSelection[currentStepSelection.Length - 1] != "0")
             {
                 if (m_steps[stepIndex].inLineSpecialsAsc) eps = Helper.inverseList<DBEpisode>(eps);
-                Comparison<DBEpisode> inlineSorting = delegate(DBEpisode e1, DBEpisode e2)
-                    {
-                        return getRelSortingIndexOfEp(e1).CompareTo(getRelSortingIndexOfEp(e2));
-                    };
-                eps.Sort(inlineSorting);
+                eps.Sort();
             }
             return eps;
-        }
-
-        double getRelSortingIndexOfEp(DBEpisode ep)
-        {
-            // consider episode sort order when sorting
-            DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
-            bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
-
-            string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
-            string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
-
-            if (ep[seasonIndex] == 0)
-            {
-                if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
-                {
-                    return 9999 + ep[episodeIndex];
-                }
-                else
-                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
-            }
-            else
-                return (double)ep[episodeIndex] + ep[seasonIndex] * 100;
         }
 
         /*

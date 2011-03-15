@@ -440,7 +440,7 @@ namespace WindowPlugins.GUITVSeries
                         if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable && updates != null && !DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
-                            UpdateFanart(false, updates.UpdatedFanart);
+                            UpdateFanart(true, updates.UpdatedFanart);
                         break;
 
                     case ParsingAction.GetNewBanners:
@@ -454,8 +454,7 @@ namespace WindowPlugins.GUITVSeries
                         if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
-                            UpdateFanart(true, null);// updates ALL series for fanart - todo: only scan for series with missing fanart since we got new ones from thetvdb.com above...
-                                                     //                                       mirror how banners does it.
+                            UpdateFanart(false, null);
                         break;
 
                     case ParsingAction.UpdateEpisodeThumbNails:
@@ -1436,64 +1435,83 @@ namespace WindowPlugins.GUITVSeries
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, seriesList.Count));
         }
 
-        private void UpdateFanart(bool bUpdateNewSeries, List<DBValue> updatedSeries)
+        /// <summary>
+        /// Gets Fanart From Online
+        /// </summary>
+        /// <param name="updatesOnly">set to true when processing online updates</param>
+        /// <param name="updatedSeries">list of series that have had updates online, set to null if updatesOnly is false</param>
+        private void UpdateFanart(bool updatesOnly, List<DBValue> updatedSeries)
         {
+            // exit if we dont want to automatically download fanart
             if (!DBOption.GetOptions(DBOption.cAutoDownloadFanart))
                 return;
 
-            if (bUpdateNewSeries && !DBOption.GetOptions(DBOption.cAutoUpdateAllFanart)) return;
-
+            // get all series in database
             SQLCondition condition = new SQLCondition();
             condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
             condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
-
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
-            if (!bUpdateNewSeries && seriesList.Count > 0)
+            
+            // process updates on series we have locally
+            // remove series not of interest
+            if (updatesOnly)
             {
-                MPTVSeriesLog.Write(bigLogMessage("Checking for new Fanart"));
-                // let's check which of these we have any interest in
-                for (int i = 0; i < seriesList.Count; i++)
-                    if (!updatedSeries.Contains(seriesList[i][DBSeries.cID]))
-                    {
-                        seriesList.RemoveAt(i--);
-                    }
+                MPTVSeriesLog.Write(bigLogMessage("Processing Fanart from Online Updates"));
+                seriesList.RemoveAll(s => !updatedSeries.Contains(s[DBSeries.cID])); 
             }
-            else
+
+            // updating fanart for all series
+            if (!updatesOnly)
             {
-                MPTVSeriesLog.Write(bigLogMessage("Updating Fanart"));
+                MPTVSeriesLog.Write(bigLogMessage("Downloading new and missing Fanart for Series"));
+
+                // just process the ones with missing fanart
+                if (!DBOption.GetOptions(DBOption.cAutoUpdateAllFanart))
+                {
+                    List<int> seriesids = DBFanart.GetSeriesWithFanart();
+                    seriesList.RemoveAll(s => seriesids.Contains(s[DBSeries.cID]));
+                }
             }
+
             int nIndex = 0;
             foreach (DBSeries series in seriesList)
             {
-                MPTVSeriesLog.Write("Retrieving Fanart for: " + Helper.getCorrespondingSeries(series[DBSeries.cID]), MPTVSeriesLog.LogLevel.Debug);
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
-                try {
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series.ToString(), ++nIndex, seriesList.Count, series, null));
+
+                try
+                {
+                    // get available banners and add to database
                     GetFanart gf = new GetFanart(series[DBSeries.cID]);
                     foreach (DBFanart f in gf.Fanart)
+                    {
                         f.Commit();
+                    }
 
-                    // Get List of Fanarts to auto download
+                    // get list of fanarts to auto download
                     DBFanart fanart = new DBFanart();
                     List<DBFanart> fanarts = fanart.FanartsToDownload(series[DBSeries.cID]);
 
-                    // Download Fanart
-                    foreach (DBFanart toDownload in fanarts) {
-                        string onlineFilename = toDownload[DBFanart.cBannerPath];
+                    // download fanart
+                    foreach (DBFanart download in fanarts)
+                    {
+                        string onlineFilename = download[DBFanart.cBannerPath];
                         string localFilename = onlineFilename.Replace("/", @"\");
-
-                        MPTVSeriesLog.Write(string.Format("New Fanart found for \"{0}\": {1}", Helper.getCorrespondingSeries(series[DBSeries.cID]), onlineFilename), MPTVSeriesLog.LogLevel.Debug);
+                        
                         string result = Online_Parsing_Classes.OnlineAPI.DownloadBanner(onlineFilename, Settings.Path.fanart, localFilename);
 
-                        if (result != null) {
-                            // Update Fanart DB
-                            toDownload[DBFanart.cLocalPath] = localFilename;
-                            toDownload.Commit();
+                        if (result != null)
+                        {
+                            // commit to database
+                            download[DBFanart.cLocalPath] = localFilename;
+                            download.Commit();
 
-                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename)), nIndex, seriesList.Count, series, result));
+                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, string.Format("{0} - {1}", series.ToString(), Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename)), nIndex, seriesList.Count, series, result));
                         }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     MPTVSeriesLog.Write("Failed to update Fanart: " + ex.Message);
                 }
             }
