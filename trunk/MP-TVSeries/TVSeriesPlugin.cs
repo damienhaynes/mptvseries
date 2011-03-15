@@ -5463,6 +5463,8 @@ namespace WindowPlugins.GUITVSeries
             }
 
             episodes = DBEpisode.Get(condition, false);
+            episodes.Sort();
+
             foreach (DBEpisode episode in episodes)
             {
                 PlayListItem playlistItem = new PlayListItem(episode);
