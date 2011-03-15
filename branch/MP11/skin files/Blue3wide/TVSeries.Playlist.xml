@@ -411,9 +411,9 @@
 		</control>
 				
 		<control>
-			<description>Season Label Shadow</description>
+			<description>Season/Episode Label Shadow</description>
             <type>label</type>
-            <label>#TVSeries.Episode.SeasonLabel</label>
+            <label>#TVSeries.Episode.SeasonLabel, #TVSeries.Translation.Episode.Label #TVSeries.Episode.EpisodeIndex</label>
             <id>0</id>
             <posX>402</posX>
             <posY>251</posY>
@@ -426,7 +426,7 @@
         <control>
 			<description>Season Label</description>
             <type>label</type>
-            <label>#TVSeries.Episode.SeasonLabel</label>
+            <label>#TVSeries.Episode.SeasonLabel, #TVSeries.Translation.Episode.Label #TVSeries.Episode.EpisodeIndex</label>
             <id>0</id>
             <posX>400</posX>
             <posY>249</posY>

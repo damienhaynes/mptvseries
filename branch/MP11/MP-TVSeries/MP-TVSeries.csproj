@@ -323,6 +323,7 @@
     <Compile Include="Trakt\TraktURIs.cs" />
     <Compile Include="Trakt\User\TraktUserCalendar.cs" />
     <Compile Include="Trakt\User\TraktUserProfile.cs" />
+    <Compile Include="Trakt\User\TraktWatchedShows.cs" />
     <Compile Include="Trakt\User\TraktWatchedEpisodeHistory.cs" />
     <Compile Include="Trakt\User\TraktWatchedMovieHistory.cs" />
     <Compile Include="Translation.cs" />
