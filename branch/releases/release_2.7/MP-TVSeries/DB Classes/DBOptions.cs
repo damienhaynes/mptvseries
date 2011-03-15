@@ -481,7 +481,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cAutoUpdateEpisodeRatings, true);
 
                 if (GetOptions(cAutoUpdateAllFanart) == null)
-                    SetOptions(cAutoUpdateAllFanart, true);
+                    SetOptions(cAutoUpdateAllFanart, false);
 
                 if (GetOptions(cAutoDownloadFanart) == null)
                     SetOptions(cAutoDownloadFanart, true);
