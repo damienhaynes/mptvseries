@@ -6,6 +6,7 @@ using System.Threading;
 using Trakt;
 using Trakt.Show;
 using Trakt.Rate;
+using Trakt.User;
 
 namespace WindowPlugins.GUITVSeries
 {
