@@ -42,7 +42,7 @@ namespace WindowPlugins.GUITVSeries
         Created
     }
 
-    public class DBEpisode : DBTable, ICacheable<DBEpisode>, IEquatable<DBEpisode>
+    public class DBEpisode : DBTable, ICacheable<DBEpisode>, IEquatable<DBEpisode>, IComparable<DBEpisode>
     {
         public static void overRide(DBEpisode old, DBEpisode newObject)
         {
@@ -1622,7 +1622,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        #region IEquatable<Vector> Members
+        #region IEquatable<DBEpisode> Members
 
         public bool Equals(DBEpisode other)
         {
@@ -1634,6 +1634,37 @@ namespace WindowPlugins.GUITVSeries
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region IComparable<DBEpisode> Members
+
+        public int CompareTo(DBEpisode other)
+        {
+            return getRelSortingIndexOfEp(this).CompareTo(getRelSortingIndexOfEp(other));
+        }
+
+        double getRelSortingIndexOfEp(DBEpisode ep)
+        {
+            // consider episode sort order when sorting
+            DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
+            bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+
+            string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+            string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+
+            if (ep[seasonIndex] == 0)
+            {
+                if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
+                {
+                    return 9999 + ep[episodeIndex];
+                }
+                else
+                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
+            }
+            else
+                return (double)ep[episodeIndex] + ep[seasonIndex] * 100;
         }
 
         #endregion
