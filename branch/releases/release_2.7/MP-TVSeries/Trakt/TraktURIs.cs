@@ -9,7 +9,8 @@ namespace Trakt
     {
         public const string ScrobbleShow = @"http://api.trakt.tv/show/{0}/<apiKey>";
         public const string ScrobbleMovie = @"http://api.trakt.tv/movie/{0}/<apiKey>";
-        public const string UserWatchedEpisodes = @"http://api.trakt.tv/user/watched/episodes.json/<apiKey>/{0}";
+        public const string UserMostRecentWatchedEpisodes = @"http://api.trakt.tv/user/watched/episodes.json/<apiKey>/{0}";
+        public const string UserWatchedEpisodes = @"http://api.trakt.tv/user/library/shows/watched.json/<apiKey>/{0}";
         public const string UserWatchedMovies = @"http://api.trakt.tv/user/watched/movies.json/<apiKey>/{0}";
         public const string UserProfile = @"http://api.trakt.tv/user/profile.json/<apiKey>/{0}";
         public const string SeriesOverview = @"http://api.trakt.tv/show/summary.json/<apiKey>/{0}";
