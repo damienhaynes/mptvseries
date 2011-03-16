@@ -420,7 +420,7 @@
             <width>300</width>
             <font>font12</font>                      
             <textcolor>#shadow.dark</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!string.equals(#TVSeries.Episode.EpisodeIndex,)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
         <control>
@@ -433,7 +433,7 @@
             <width>300</width>
             <font>font12</font>
             <textcolor>ffa9d0f7</textcolor>
-            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]</visible>
+            <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!string.equals(#TVSeries.Episode.EpisodeIndex,)</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
         </control>
 
@@ -463,7 +463,7 @@
             <id>0</id>
             <posX>400</posX>
             <posY>268</posY>
-            <width>325</width>
+            <width>500</width>
             <height>100</height>
             <font>font14</font>
             <textcolor>ffffffff</textcolor>
