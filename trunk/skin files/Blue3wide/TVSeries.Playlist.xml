@@ -417,7 +417,7 @@
             <id>0</id>
             <posX>402</posX>
             <posY>251</posY>
-            <width>300</width>
+            <width>400</width>
             <font>font12</font>                      
             <textcolor>#shadow.dark</textcolor>
             <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!string.equals(#TVSeries.Episode.EpisodeIndex,)</visible>
@@ -430,7 +430,7 @@
             <id>0</id>
             <posX>400</posX>
             <posY>249</posY>
-            <width>300</width>
+            <width>400</width>
             <font>font12</font>
             <textcolor>ffa9d0f7</textcolor>
             <visible>[facadeview.list|facadeview.playlist|facadeview.filmstrip]+!string.equals(#TVSeries.Episode.EpisodeIndex,)</visible>
@@ -463,7 +463,7 @@
             <id>0</id>
             <posX>400</posX>
             <posY>268</posY>
-            <width>500</width>
+            <width>325</width>
             <height>100</height>
             <font>font14</font>
             <textcolor>ffffffff</textcolor>
