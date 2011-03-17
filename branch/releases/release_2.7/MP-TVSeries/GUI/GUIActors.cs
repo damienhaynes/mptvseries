@@ -387,9 +387,14 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             if (string.IsNullOrEmpty(imageFilePath)) return;
 
-            ThumbnailImage = imageFilePath;
-            IconImage = imageFilePath;
-            IconImageBig = imageFilePath;
+            string texture = GetTextureFromFile(imageFilePath);
+
+            if (GUITextureManager.LoadFromMemory(ImageFast.FromFile(imageFilePath), texture, 0, 0, 0) > 0)
+            {
+                ThumbnailImage = texture;
+                IconImage = texture;
+                IconImageBig = texture;
+            }
 
             // if selected and GUIActors is current window force an update of thumbnail
             GUIActors actorWindow = GUIWindowManager.GetWindow(GUIWindowManager.ActiveWindow) as GUIActors;
@@ -402,6 +407,12 @@ namespace WindowPlugins.GUITVSeries.GUI
                 }
             }
         }
+
+        private string GetTextureFromFile(string filename)
+        {
+            return "[TVSeries:" + filename.GetHashCode() + "]";
+        }
+
         #endregion
     }
 }
