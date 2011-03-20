@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- English (US) r1240 vs francais-->
-<!-- Last Updated: 05 octobre 2010 -->
+<!-- English (US) r1434 vs francais-->
+<!-- Last Updated: 11 mars 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages  -->
 <strings>
   <string Field="Series" Original="Series">Séries</string>
@@ -11,13 +11,13 @@
   <string Field="Episode" Original="Episode">Episode</string>
   <string Field="Episodes" Original="Episodes">Episodes</string>
   <string Field="Toggle_watched_flag" Original="Toggle watched flag">Permuter vu/non vu</string>
-  <string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Rechercher le sous-titre</string>
+  <string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Rechercher un sous-titre</string>
   <string Field="Load_via_Torrent" Original="Load via Torrent">Télécharger via Torrent</string>
   <string Field="Mark_all_as_watched" Original="Mark all as watched">Marquer la totalité comme vue</string>
   <string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Marquer la totalité comme non vue</string>
   <string Field="Hide" Original="Hide">Cacher</string>
   <string Field="Delete" Original="Delete">Supprimer</string>
-  <string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Retirer la série des favoris</string>
+  <string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Retirer la série aux favoris</string>
   <string Field="Add_series_to_Favourites" Original="Add series to Favourites">Ajouter cette série aux favoris</string>
   <string Field="Force_Local_Scan" Original="Force Local Scan ">Réaliser un scan local </string>
   <string Field="Force_Online_Refresh" Original="Force Online Refresh ">Réaliser la mise à jour en ligne</string>
@@ -50,12 +50,12 @@
   <string Field="Download" Original="Download">Télécharger</string>
   <string Field="Actions" Original="Actions">Actions</string>
   <string Field="Options" Original="Options">Options</string>
-  <string Field="Genres" Original="Genres">Genres</string>
-  <string Field="All" Original="All">La totalité des épisodes</string>
-  <string Field="Latest" Original="Latest">Uniquement les derniers épisodes</string>
+  <string Field="Genres" Original="Genres">Par genres</string>
+  <string Field="All" Original="All">Tous les épisodes</string>
+  <string Field="Latest" Original="Latest">Les derniers épisodes</string>
   <string Field="Channels" Original="Channels">Par chaines</string>
-  <string Field="Unwatched" Original="Unwatched">Uniquement les épisodes non vus</string>
-  <string Field="Favourites" Original="Favourites">Par favoris</string>
+  <string Field="Unwatched" Original="Unwatched">Episodes non vus</string>
+  <string Field="Favourites" Original="Favourites">Favoris</string>
   <string Field="updateMI" Original="Update Mediainfo of local file">Mettre à jour les infos média</string>
   <string Field="RateSeries" Original="Rate this Series">Noter cette série</string>
   <string Field="RateEpisode" Original="Rate this Episode">Noter cet épisode</string>
@@ -64,7 +64,7 @@
   <string Field="DontAskToRate" Original="Don't ask me to rate again">Ne pas noter les épisodes</string>
   <string Field="RatingStar" Original="Star">Etoile</string>
   <string Field="RatingStars" Original="Stars">Etoiles</string>
-  <string Field="ChangeView" Original="Change View">Changer le type d'affichage</string>
+  <string Field="ChangeView" Original="Change View">Type d'affichage</string>
   <string Field="ChangeViewFast" Original="Immediatly Change Views">Changement immédiat de l'affichage</string>
   <string Field="FanArt" Original="Fanart">Gestion des Fanarts (fond d'écran)</string>
   <string Field="FanListAll" Original="List all Fanart for this Series">Liste de tous les Fanarts pour cette série</string>
@@ -91,10 +91,10 @@
   <string Field="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Choisir l'épisode désiré</string>
   <string Field="CFS_Local_Episode_Index" Original="Local Episiode index:">Episode:</string>
   <string Field="CFS_Available_Episode_List" Original="Available Episode list:">liste des épisodes disponibles: </string>
-  <string Field="CFS_Choose_Search_Site" Original="Choose search site:">Choisir le site de recherche: </string>
+  <string Field="CFS_Choose_Search_Site" Original="Choose search site:">Choisir un site de recherche: </string>
   <string Field="CFS_List_Search_Site" Original="List of search sites:">liste des sites de recherche: </string>
   <string Field="CFS_Found_Torrents" Original="Found torrents:">Torrents trouvés : </string>
-  <string Field="CFS_Looking_For" Original="Looking for:">Recherche par l'intermédiaire de: </string>
+  <string Field="CFS_Looking_For" Original="Looking for:">Rechercher par l'intermédiaire de: </string>
   <string Field="CFS_Choose_Correct_Season" Original="Choose correct season">Choisir la saison</string>
   <string Field="CFS_Local_Season_Index" Original="Local Season index:">Liste des saisons présentes sur vos disques durs: </string>
   <string Field="CFS_Available_Seasons" Original="Available Seasons list:">Liste des saisons disponibles: </string>
@@ -109,7 +109,7 @@
   <string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Montrer les Fanarts dans la vue Séries</string>
   <string Field="ChangeLayout" Original="Change Layout">Changer la mise en page</string>
   <string Field="UseOnlineFavourites" Original="Use Online Favourites"> Utilisez Favoris en ligne </string>
-  <string Field="AddToPlaylist" Original="Add To Playlist">Ajouter à la liste de lecture</string>
+  <string Field="AddToPlaylist" Original="Add To Playlist">Ajouter à la Playlist</string>
   <string Field="FanartDisableLabel" Original="Disabled">Désactivé</string>
   <string Field="FanartMenuEnable" Original="Enable">Activer le Fanart</string>
   <string Field="FanartMenuDisable" Original="Disable">Désactiver le Fanart</string>
@@ -122,7 +122,7 @@
   <string Field="LayoutSmallIcons" Original="Small Icons">Petites Icones</string>
   <string Field="ButtonAutoPlay" Original="Auto Play">Lecture automatique</string>
   <string Field="ButtonSwitchView" Original="Switch View">Type d'affichage</string>
-  <string Field="ButtonRunImport" Original="Run Import">Lancer mise à jour</string>
+  <string Field="ButtonRunImport" Original="Run Import">Mise à jour</string>
   <string Field="ButtonChangeLayout" Original="Change Layout">Type de mise en page</string>
   <string Field="ButtonOptions" Original="Options">Options</string>
   <string Field="FanArtFilter" Original="Filter">Filtre</string>
@@ -131,7 +131,7 @@
   <string Field="LabelResolution" Original="Resolution">Résolution</string>
   <string Field="LabelChosen" Original="Chosen">Default</string>
   <string Field="LabelDisabled" Original="Disabled">Désactivé</string>
-  <string Field="ResetUserSelections" Original="Reset User Selections">Réinitialiser la sélection utilisateur</string>
+  <string Field="ResetUserSelections" Original="Reset User Selections">Configuration par dèfault</string>
   <string Field="DeleteFromDisk" Original="Delete from Disk">Effacer du disque </string>
   <string Field="DeleteFromDatabase" Original="Delete from Database">Effacer de la base de données</string>
   <string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Effacer du disque et de la base de données</string>
@@ -156,7 +156,7 @@
   <string Field="RateTenStarNine" Original="Superb">Excellent</string>
   <string Field="RateTenStarTen" Original="Perfect">Parfait</string>
 
-  <string Field="ContentRating" Original="Content Rating">Classement du contenu</string>
+  <string Field="ContentRating" Original="Content Rating">Par âge</string>
   <string Field="ViewTags" Original="View Tags">Voir les infos</string>
   <string Field="AddViewTag" Original="Add Series to View Tag">Ajouter cette série à l'affichage</string>
   <string Field="RemoveViewTag" Original="Remove Series from View Tag">Retirer cette série de l'affichage</string>
@@ -191,7 +191,7 @@
   <string Field="Subtitles" Original="Subtitles">Sous-titre</string>
   <string Field="MultiAudio" Original="Multiple Audio Tracks">Plusieurs Pistes Audio</string>
   <string Field="OnlineFavourites" Original="Online Favourites">Favoris en ligne</string>
-  <string Field="Actors" Original="Actors">Acteurs</string>
+  <string Field="Actors" Original="Actors">Par acteur</string>
   <string Field="RemovableMedia" Original="Removable Media">Média Amovible</string>
   <string Field="LocalMedia" Original="Local Media">Média Local</string>
   <string Field="AdultSeries" Original="Adult Series">Séries pour Adultes</string>
@@ -273,7 +273,7 @@
 
   <string Field="SortBy" Original="Sort By">Trier</string>
   <string Field="DVDOrder" Original="DVD Order">Dans l'ordre du DVD</string>
-  <string Field="AiredOrder" Original="Aired Order">Dans l'ordre de la diffusion</string>
+  <string Field="AiredOrder" Original="Aired Order">Par date de diffusion</string>
   <string Field="AbsoluteOrder" Original="Absolute Order">Dans l'ordre</string>
   <string Field="Title" Original="Title">Titre</string>
   <string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Changer la méthode de recherche d'appariement en ligne</string>
@@ -293,5 +293,18 @@
   <string Field="AvailableMedia" Original="Available Media">Média disponible</string>
 
   <string Field="Votes" Original="votes">votes</string>
+  
+  <string Field="LayoutCoveflow" Original="Coveflow">Coveflow</string>
+  
+  <string Field="TraktError" Original="Trakt Error">Chercher les erreurs</string>
+  <string Field="TraktNotEnoughInfo" Original="Not enough information to send to server.">Trop peu de renseignements pour le serveur.</string>
+
+  <string Field="ResumeEpisode" Original="Resume episode from last time?">Resume episode from last time?</string>
+		
+  <string Field="SummaryNotAvailable" Original="No summary is currently available.">Aucun résumé n'est actuellement disponible.</string>
+		
+  <string Field="Timeout" Original="Timeout">Pause</string>
+  <string Field="NoActors" Original="There are no Actors for this series.">Il n'y a pas d'acteurs pour cette série.</string>
+  <string Field="GettingActors" Original="Getting Actors from Online">Obtenir des acteurs à partir du web</string>
 
 </strings>
