@@ -116,6 +116,30 @@ namespace WindowPlugins.GUITVSeries
         
         #endregion
 
+        #region Static Events
+        /// <summary>
+        /// Event gets triggered when an Episode has finished being watched and considered watched
+        /// </summary>
+        /// <param name="episode">Episode object just watched</param>
+        public delegate void EpisodeWatchedDelegate(DBEpisode episode);
+
+        /// <summary>
+        /// Event gets triggered when an episode has been started
+        /// </summary>
+        /// <param name="episode">Episode object being watched</param>
+        public delegate void EpisodeStartedDelegate(DBEpisode episode);
+
+        /// <summary>
+        /// Event gets triggered when an episode has stopped but not considered watched
+        /// </summary>
+        /// <param name="episode">Episode object just watched</param>
+        public delegate void EpisodeStoppedDelegate(DBEpisode episode);
+
+        public static event EpisodeWatchedDelegate EpisodeWatched;
+        public static event EpisodeStartedDelegate EpisodeStarted;
+        public static event EpisodeStoppedDelegate EpisodeStopped;
+        #endregion
+
         int _entriesNotFound = 0;
         int _currentItem = -1;
         PlayListType _currentPlayList = PlayListType.PLAYLIST_NONE;
@@ -168,6 +192,10 @@ namespace WindowPlugins.GUITVSeries
                     PlayListItem item = GetCurrentItem();
                     if (item != null)
                     {
+                        // notify listeners
+                        if( EpisodeStopped != null)
+                            EpisodeStopped(item.Episode);
+
                         // cancel trakt watch timer
                         if (m_TraktTimer != null) m_TraktTimer.Dispose();
 
@@ -496,6 +524,10 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (g_Player.HasVideo)
                         {
+                            // tell any listeners that we are starting playback
+                            if (EpisodeStarted != null)
+                                EpisodeStarted(item.Episode);
+
                             g_Player.ShowFullScreenWindow();
                             Thread.Sleep(2000);
                             SetProperties(item, false);
@@ -694,6 +726,9 @@ namespace WindowPlugins.GUITVSeries
             PlayListItem item = GetCurrentItem();
             if (item == null)
                 return;
+
+            // notify listeners
+            if (EpisodeWatched != null) EpisodeWatched(item.Episode);
 
             item.Watched = true;
         }

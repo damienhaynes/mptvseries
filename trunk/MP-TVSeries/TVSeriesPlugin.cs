@@ -230,6 +230,13 @@ namespace WindowPlugins.GUITVSeries
         private bool LoadWithParameterSupported = false;
         #endregion
 
+        #region Events
+        public static event RatingEventDelegate RateItem;
+        public static event ToggleWatchedEventDelegate ToggleWatched;
+        public delegate void RatingEventDelegate(DBTable item, string rating);
+        public delegate void ToggleWatchedEventDelegate(DBSeries series, List<DBEpisode> episodes, bool watched);
+        #endregion
+
         #region Skin Variables
         [SkinControlAttribute(2)]
         protected GUIButtonControl viewMenuButton = null;
@@ -1097,30 +1104,23 @@ namespace WindowPlugins.GUITVSeries
                         if (selectedEpisode != null)
                         {
                             bool watched = selectedEpisode[DBOnlineEpisode.cWatched];
-                            if (selectedEpisode[DBEpisode.cFilename].ToString().Length > 0)
-                            {
-                                conditions = new SQLCondition();
-                                conditions.Add(new DBEpisode(), DBEpisode.cFilename, selectedEpisode[DBEpisode.cFilename], SQLConditionType.Equal);
-                                List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
-                                foreach (DBEpisode episode in episodes)
-                                {
-                                    episode[DBOnlineEpisode.cWatched] = !watched;
-                                    episode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
-                                    episode.Commit();                                    
-                                }
+                            
+                            selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
+                            selectedEpisode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
+                            selectedEpisode.Commit();
 
-                                FollwitConnector.Watch(episodes, !watched);
-                            }
-                            else
-                            {
-                                selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
-                                selectedEpisode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
-                                selectedEpisode.Commit();
-
-                                FollwitConnector.Watch(selectedEpisode, !watched, false);
-                            }
+                            FollwitConnector.Watch(selectedEpisode, !watched, false);
+                           
                             // Update Episode Counts
                             DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
+
+                            // notify any listeners that user toggled watched
+                            if (ToggleWatched != null)
+                            {
+                                List<DBEpisode> eps = new List<DBEpisode>();
+                                eps.Add(selectedEpisode);
+                                ToggleWatched(m_SelectedSeries, eps, watched);
+                            }
 
                             // Update Trakt
                             m_TraktSyncTimer.Change(10000, Timeout.Infinite);
@@ -1158,6 +1158,9 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         FollwitConnector.Watch(episodeList, true);
+
+                        if (ToggleWatched != null)
+                            ToggleWatched(selectedSeries, episodeList, true);
 
                         // Updated Episode Counts
                         if (this.listLevel == Listlevel.Series && selectedSeries != null)
@@ -1204,6 +1207,9 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         FollwitConnector.Watch(episodeList, false);
+
+                        if (ToggleWatched != null)
+                            ToggleWatched(selectedSeries, episodeList, false);
 
                         // Updated Episode Counts
                         if (this.listLevel == Listlevel.Series && selectedSeries != null)
@@ -3359,6 +3365,10 @@ namespace WindowPlugins.GUITVSeries
                 TraktHandler.RateEpisode(item as DBEpisode);
             else
                 TraktHandler.RateSeries(item as DBSeries);
+
+            // tell any listeners that user rated episode/series
+            if (RateItem != null)
+                RateItem(item, value);
 
             item.Commit();
         }
