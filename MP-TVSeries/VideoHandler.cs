@@ -48,14 +48,12 @@ namespace WindowPlugins.GUITVSeries
     {
         #region Vars
         static MediaPortal.Playlists.PlayListPlayer playlistPlayer;
-        DBEpisode m_currentEpisode;
+        public static DBEpisode m_currentEpisode;
         DBEpisode m_previousEpisode;
         BackgroundWorker PlayPropertyUpdater = new BackgroundWorker();
         BackgroundWorker TraktScrobbleUpdater = new BackgroundWorker();
-        public delegate void rateRequest(DBEpisode episode);
-        public delegate void EpisodeWatchedDelegate(DBEpisode episode);
-        public event rateRequest RateRequestOccured;
-        public static event EpisodeWatchedDelegate EpisodeWatched;
+        public delegate void rateRequest(DBEpisode episode);        
+        public event rateRequest RateRequestOccured;        
         private bool m_bIsExternalPlayer = false;
         private bool m_bIsExternalDVDPlayer = false;
         private bool m_bIsImageFile = false;
@@ -63,6 +61,30 @@ namespace WindowPlugins.GUITVSeries
         private Timer m_TraktTimer = null;
         private TimerCallback m_timerDelegate = null;
         private bool TraktMarkedFirstAsWatched = false;
+        #endregion
+
+        #region Static Events
+        /// <summary>
+        /// Event gets triggered when an Episode has finished being watched and considered watched
+        /// </summary>
+        /// <param name="episode">Episode object just watched</param>
+        public delegate void EpisodeWatchedDelegate(DBEpisode episode);
+        
+        /// <summary>
+        /// Event gets triggered when an episode has been started
+        /// </summary>
+        /// <param name="episode">Episode object being watched</param>
+        public delegate void EpisodeStartedDelegate(DBEpisode episode);
+
+        /// <summary>
+        /// Event gets triggered when an episode has stopped but not considered watched
+        /// </summary>
+        /// <param name="episode">Episode object just watched</param>
+        public delegate void EpisodeStoppedDelegate(DBEpisode episode);
+
+        public static event EpisodeWatchedDelegate EpisodeWatched;
+        public static event EpisodeStartedDelegate EpisodeStarted;
+        public static event EpisodeStoppedDelegate EpisodeStopped;
         #endregion
 
         #region Constructor
@@ -487,6 +509,10 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write(string.Format("#TVSeries.Extended.Title: {0}/{1}/{2}/{3}", seriesName, seasonID, episodeID, episodeName));
                 #endregion
 
+                // tell any listeners that we are starting playback
+                if (EpisodeStarted != null)
+                    EpisodeStarted(m_currentEpisode);
+
                 // Play File
                 result = g_Player.Play(filename, g_Player.MediaType.Video);
                 
@@ -673,12 +699,16 @@ namespace WindowPlugins.GUITVSeries
             FollwitConnector.NowWatching(m_currentEpisode, false);
             if (countAsWatched) FollwitConnector.Watch(m_currentEpisode, true, true);
 
+            // notify listeners
+            if (!countAsWatched && EpisodeStopped != null) EpisodeStopped(m_currentEpisode);
+
             if (countAsWatched || m_currentEpisode[DBOnlineEpisode.cWatched])
             {
                 MPTVSeriesLog.Write("This episode counts as watched");
                 if (countAsWatched)
                 {
                     MarkEpisodeAsWatched(m_currentEpisode);
+                    // notify listeners
                     if (EpisodeWatched != null) EpisodeWatched(m_currentEpisode);
 
                     #region Trakt

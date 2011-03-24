@@ -210,9 +210,9 @@ namespace WindowPlugins.GUITVSeries
 
         /// <summary>
         /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
-        /// </summary>
-        public static event OnlineParsingProgressHandler OnlineParsingProgress;
+        /// </summary>        
         public static event OnlineParsingCompletedHandler OnlineParsingCompleted;
+        public static event OnlineParsingProgressHandler OnlineParsingProgress;
 
         public OnlineParsing(IFeedback feedback)
         {
