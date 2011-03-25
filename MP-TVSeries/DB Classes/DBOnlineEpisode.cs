@@ -65,9 +65,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cLanguage = "Language";
         public const String cProductionCode = "ProductionCode";
         public const String cAbsoluteNumber = "absolute_number";
-        public const String cSeasonID = "seasonid";
-        public const String cTraktSeen = "TraktSeen";
-        public const String cTraktLibrary = "TraktLibrary";
+        public const String cSeasonID = "seasonid";        
         public const String cFollwitId = "follwit_id";
         #endregion
 
@@ -154,8 +152,6 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));            
             base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBField.cTypeString));
-            base.AddColumn(cTraktSeen, new DBField(DBField.cTypeInt));
-            base.AddColumn(cTraktLibrary, new DBField(DBField.cTypeInt));
             base.AddColumn(cFollwitId, new DBField(DBField.cTypeInt));         
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)

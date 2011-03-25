@@ -232,11 +232,11 @@ namespace WindowPlugins.GUITVSeries
             this.label54 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
-            this.tabTrakt = new System.Windows.Forms.TabPage();
-            this.traktConfiguration = new WindowPlugins.GUITVSeries.Configuration.TraktConfiguration();
             this.tabFollwit = new System.Windows.Forms.TabPage();
+            this.follwitSettingsPanel1 = new WindowPlugins.GUITVSeries.FollwitTv.FollwitSettingsPanel();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dbOptionCheckBox3 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.lblRecentAddedDays = new System.Windows.Forms.Label();
             this.cbNewEpisodeThumbIndicator = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -301,8 +301,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.dbOptionCheckBox3 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.follwitSettingsPanel1 = new WindowPlugins.GUITVSeries.FollwitTv.FollwitSettingsPanel();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
@@ -339,7 +337,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinMaxFanarts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
-            this.tabTrakt.SuspendLayout();
             this.tabFollwit.SuspendLayout();
             this.tabPage_MP_DisplayControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -1618,7 +1615,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details.Controls.Add(this.tabPage_Details);
             this.tabControl_Details.Controls.Add(this.tabPage_Import);
             this.tabControl_Details.Controls.Add(this.tabOnlineData);
-            this.tabControl_Details.Controls.Add(this.tabTrakt);
             this.tabControl_Details.Controls.Add(this.tabFollwit);
             this.tabControl_Details.Controls.Add(this.tabPage_MP_DisplayControl);
             this.tabControl_Details.Controls.Add(this.tab_view);
@@ -2491,27 +2487,6 @@ namespace WindowPlugins.GUITVSeries
             this.label26.Text = "&Language:";
             this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // tabTrakt
-            // 
-            this.tabTrakt.Controls.Add(this.traktConfiguration);
-            this.tabTrakt.ImageKey = "trakt.png";
-            this.tabTrakt.Location = new System.Drawing.Point(4, 31);
-            this.tabTrakt.Name = "tabTrakt";
-            this.tabTrakt.Size = new System.Drawing.Size(873, 643);
-            this.tabTrakt.TabIndex = 13;
-            this.tabTrakt.Text = "Trakt";
-            this.tabTrakt.UseVisualStyleBackColor = true;
-            // 
-            // traktConfiguration
-            // 
-            this.traktConfiguration.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.traktConfiguration.Location = new System.Drawing.Point(3, 3);
-            this.traktConfiguration.Name = "traktConfiguration";
-            this.traktConfiguration.Size = new System.Drawing.Size(785, 637);
-            this.traktConfiguration.TabIndex = 0;
-            // 
             // tabFollwit
             // 
             this.tabFollwit.Controls.Add(this.follwitSettingsPanel1);
@@ -2522,6 +2497,17 @@ namespace WindowPlugins.GUITVSeries
             this.tabFollwit.TabIndex = 14;
             this.tabFollwit.Text = "follw.it";
             this.tabFollwit.UseVisualStyleBackColor = true;
+            // 
+            // follwitSettingsPanel1
+            // 
+            this.follwitSettingsPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.follwitSettingsPanel1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.follwitSettingsPanel1.Location = new System.Drawing.Point(8, 6);
+            this.follwitSettingsPanel1.Name = "follwitSettingsPanel1";
+            this.follwitSettingsPanel1.Size = new System.Drawing.Size(857, 631);
+            this.follwitSettingsPanel1.TabIndex = 0;
             // 
             // tabPage_MP_DisplayControl
             // 
@@ -2592,6 +2578,21 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // dbOptionCheckBox3
+            // 
+            this.dbOptionCheckBox3.AutoSize = true;
+            this.dbOptionCheckBox3.Checked = true;
+            this.dbOptionCheckBox3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptionCheckBox3.Location = new System.Drawing.Point(404, 146);
+            this.dbOptionCheckBox3.Name = "dbOptionCheckBox3";
+            this.dbOptionCheckBox3.Option = "SortSpecialSeasonLast";
+            this.dbOptionCheckBox3.Size = new System.Drawing.Size(188, 17);
+            this.dbOptionCheckBox3.TabIndex = 35;
+            this.dbOptionCheckBox3.Text = "Sort Specials at end of season list.";
+            this.dbOptionCheckBox3.ToolTip = "Enable this option to sort specials at end of season list rather than first item." +
+                "";
+            this.dbOptionCheckBox3.UseVisualStyleBackColor = true;
             // 
             // lblRecentAddedDays
             // 
@@ -3333,31 +3334,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(130, 26);
             this.listBox_Log.TabIndex = 5;
             // 
-            // dbOptionCheckBox3
-            // 
-            this.dbOptionCheckBox3.AutoSize = true;
-            this.dbOptionCheckBox3.Checked = true;
-            this.dbOptionCheckBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBox3.Location = new System.Drawing.Point(404, 146);
-            this.dbOptionCheckBox3.Name = "dbOptionCheckBox3";
-            this.dbOptionCheckBox3.Option = "SortSpecialSeasonLast";
-            this.dbOptionCheckBox3.Size = new System.Drawing.Size(186, 17);
-            this.dbOptionCheckBox3.TabIndex = 35;
-            this.dbOptionCheckBox3.Text = "Sort Specials at end of season list.";
-            this.dbOptionCheckBox3.ToolTip = "Enable this option to sort specials at end of season list rather than first item.";
-            this.dbOptionCheckBox3.UseVisualStyleBackColor = true;
-            // 
-            // follwitSettingsPanel1
-            // 
-            this.follwitSettingsPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.follwitSettingsPanel1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.follwitSettingsPanel1.Location = new System.Drawing.Point(8, 6);
-            this.follwitSettingsPanel1.Name = "follwitSettingsPanel1";
-            this.follwitSettingsPanel1.Size = new System.Drawing.Size(857, 631);
-            this.follwitSettingsPanel1.TabIndex = 0;
-            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3411,7 +3387,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinMaxFanarts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
-            this.tabTrakt.ResumeLayout(false);
             this.tabFollwit.ResumeLayout(false);
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -3668,8 +3643,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabPage tabAbout;
         private About aboutScreen;
-        private System.Windows.Forms.TabPage tabTrakt;
-        private Configuration.TraktConfiguration traktConfiguration;
         private Configuration.DBOptionCheckBox dbOptionCheckBox3;
         private System.Windows.Forms.TabPage tabFollwit;
         private FollwitTv.FollwitSettingsPanel follwitSettingsPanel1;
