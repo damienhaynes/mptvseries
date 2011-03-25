@@ -129,7 +129,6 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            traktConfiguration.CancelSynchronization();
             base.OnClosing(e);
         }
 
@@ -1249,8 +1248,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void buttonStartImport_Click(object sender, EventArgs e)
         {
-            traktConfiguration.EnableSyncButtonState(false);
-
             if (m_parser != null)
             {
                 AbortImport();
@@ -1342,7 +1339,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (reqAction == UserFinishedRequestedAction.Cancel)
             {
-                traktConfiguration.EnableSyncButtonState(true);
+                
             }
         }
 
@@ -1397,7 +1394,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (requestAction == UserFinishedRequestedAction.Cancel)
             {
-                traktConfiguration.EnableSyncButtonState(true);
+                
             }
         }
 
@@ -1420,8 +1417,7 @@ namespace WindowPlugins.GUITVSeries
             switch (requestAction)
             {
                 case UserFinishedRequestedAction.Cancel:                   
-                    ParsingWizardProgress.DeInit();
-                    traktConfiguration.EnableSyncButtonState(true);
+                    ParsingWizardProgress.DeInit();                    
                     break;
 
                 case UserFinishedRequestedAction.Next:
@@ -1448,9 +1444,6 @@ namespace WindowPlugins.GUITVSeries
             // user clicked finished (can only do this after import wizard is complete)
             ParsingWizardProgress.DeInit();
             this.tabPage_Import.Controls.Remove(ParsingWizardHost);
-            
-            // allow user to manually sync on trakt            
-            traktConfiguration.EnableSyncButtonState(true);
         }
         #endregion
 
@@ -1616,8 +1609,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cAbsoluteNumber:
                                 case DBEpisode.cIsAvailable:
                                 case DBOnlineEpisode.cRatingCount:
-                                case DBOnlineEpisode.cTraktLibrary:
-                                case DBOnlineEpisode.cTraktSeen:
                                 case DBOnlineEpisode.cFollwitId:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
@@ -2558,7 +2549,6 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBEpisode ep in episodeList)
                         {
                             ep[DBOnlineEpisode.cWatched] = watched;
-                            ep[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
                             ep.Commit();
                         }
 
@@ -2622,7 +2612,6 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBEpisode ep in episodeList)
                         {
                             ep[DBOnlineEpisode.cWatched] = watched;
-                            ep[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
                             ep.Commit();
                         }
 
@@ -2670,7 +2659,6 @@ namespace WindowPlugins.GUITVSeries
                         episode = (DBEpisode)nodeWatched.Tag;
 
                         episode[DBOnlineEpisode.cWatched] = watched;
-                        episode[DBOnlineEpisode.cTraktSeen] = watched == 1 ? 0 : 2;
                         episode.Commit();
 
                         FollwitConnector.Watch(episode, watched == 1, false);

@@ -40,7 +40,6 @@ using WindowPlugins.GUITVSeries.Feedback;
 using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
-using Trakt;
 using WindowPlugins.GUITVSeries.GUI;
 using WindowPlugins.GUITVSeries.FollwitTv;
 
@@ -176,8 +175,7 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
-        private System.Threading.Timer m_FanartTimer = null;
-        private System.Threading.Timer m_TraktSyncTimer = null;
+        private System.Threading.Timer m_FanartTimer = null;        
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
@@ -505,15 +503,6 @@ namespace WindowPlugins.GUITVSeries
             InitImporter();
             #endregion
 
-            #region Trakt
-            TraktAPI.Username = DBOption.GetOptions(DBOption.cTraktUsername);
-            TraktAPI.Password = DBOption.GetOptions(DBOption.cTraktPassword);
-            TraktAPI.UserAgent = Settings.UserAgent;
-
-            // Timer to process episodes to send to trakt, will also be called after new episodes are added to library
-            m_TraktSyncTimer = new System.Threading.Timer(new TimerCallback(TraktSynchronize), null, 15000, Timeout.Infinite);
-            #endregion
-
             #region Skin Settings / Load
             InitSkinSettings();
 
@@ -650,7 +639,7 @@ namespace WindowPlugins.GUITVSeries
             if (OptionsMenuButton != null)
                 OptionsMenuButton.Label = Translation.ButtonOptions;
 
-            setProcessAnimationStatus(m_parserUpdaterWorking || TraktHandler.SyncInProgress);
+            setProcessAnimationStatus(m_parserUpdaterWorking);
 
             if (m_Logos_Image != null)
             {
@@ -1105,8 +1094,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             bool watched = selectedEpisode[DBOnlineEpisode.cWatched];
                             
-                            selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
-                            selectedEpisode[DBOnlineEpisode.cTraktSeen] = watched ? 2 : 0;
+                            selectedEpisode[DBOnlineEpisode.cWatched] = !watched;                            
                             selectedEpisode.Commit();
 
                             FollwitConnector.Watch(selectedEpisode, !watched, false);
@@ -1121,9 +1109,6 @@ namespace WindowPlugins.GUITVSeries
                                 eps.Add(selectedEpisode);
                                 ToggleWatched(m_SelectedSeries, eps, watched);
                             }
-
-                            // Update Trakt
-                            m_TraktSyncTimer.Change(10000, Timeout.Infinite);
 
                             LoadFacade();
                         }
@@ -1147,13 +1132,11 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         episodeList = DBEpisode.Get(conditions, true);
-
-                        // reset traktSeen flag for later synchronization 
+                        
                         // and set watched state
                         foreach (DBEpisode episode in episodeList)
                         {
-                            episode[DBOnlineEpisode.cWatched] = 1;
-                            episode[DBOnlineEpisode.cTraktSeen] = 0;
+                            episode[DBOnlineEpisode.cWatched] = 1;                            
                             episode.Commit();
                         }
 
@@ -1173,9 +1156,6 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         cache.dump();
-
-                        // sync to trakt
-                        m_TraktSyncTimer.Change(10000, Timeout.Infinite);
 
                         // refresh facade
                         LoadFacade();
@@ -1197,12 +1177,9 @@ namespace WindowPlugins.GUITVSeries
 
                         episodeList = DBEpisode.Get(conditions, true);
 
-                        // set traktSeen flag and watched state
-                        // when traktSeen = 2, the seen flag will be removed from trakt
                         foreach (DBEpisode episode in episodeList)
                         {
-                            episode[DBOnlineEpisode.cWatched] = 0;
-                            episode[DBOnlineEpisode.cTraktSeen] = 2;
+                            episode[DBOnlineEpisode.cWatched] = 0;                            
                             episode.Commit();
                         }
 
@@ -1222,9 +1199,6 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         cache.dump();
-
-                        // sync to trakt
-                        m_TraktSyncTimer.Change(10000, Timeout.Infinite);
 
                         // refresh facade
                         LoadFacade();
@@ -3360,12 +3334,6 @@ namespace WindowPlugins.GUITVSeries
             if (item["Rating"] == "")
                 item["Rating"] = value;
 
-            // Send to trakt
-            if (level == Listlevel.Episode)
-                TraktHandler.RateEpisode(item as DBEpisode);
-            else
-                TraktHandler.RateSeries(item as DBSeries);
-
             // tell any listeners that user rated episode/series
             if (RateItem != null)
                 RateItem(item, value);
@@ -4596,7 +4564,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void ImporterQueueMonitor(Object stateInfo)
         {
-            if (!m_parserUpdaterWorking && !TraktHandler.SyncInProgress)
+            if (!m_parserUpdaterWorking)
             {
                 // need to not be doing something yet (we don't want to accumulate parser objects !)
                 bool bUpdateScanNeeded = false;
@@ -4649,16 +4617,6 @@ namespace WindowPlugins.GUITVSeries
             if (bDataUpdated)
             {
                 if (m_Facade != null) LoadFacade();
-
-                if (!TraktHandler.SyncInProgress)
-                {
-                    m_TraktSyncTimer.Change(0, Timeout.Infinite);
-                }
-                else
-                {
-                    // sync may still be in progress e.g. inital sync can take a while
-                    m_TraktSyncTimer.Change(3600000, Timeout.Infinite);
-                }
             }
         }
 
@@ -4670,45 +4628,6 @@ namespace WindowPlugins.GUITVSeries
             // update the facade when progress has reached 30 (arbitrary point where local media has been scanned)
             if (nProgress == 30 && m_Facade != null) LoadFacade();
         }
-
-        #region Trakt
-        private void TraktSynchronize(Object stateInfo)
-        {
-            if (string.IsNullOrEmpty(TraktAPI.Username) || string.IsNullOrEmpty(TraktAPI.Password))
-                return;
-
-            // Handle one sync at a time, can be scheduled on next timer interval
-            // or if an import is currently running we can wait till after import is finished
-            if (TraktHandler.SyncInProgress || m_parserUpdaterWorking) return;
-
-            setProcessAnimationStatus(true);
-
-            MPTVSeriesLog.Write("Trakt: Synchronize Start");
-            TraktHandler.SyncInProgress = true;
-
-            List<DBEpisode> episodesUnSeen = TraktHandler.GetEpisodesToSync(TraktSyncModes.unseen);
-            List<DBEpisode> episodesLibrary = TraktHandler.GetEpisodesToSync(TraktSyncModes.library);
-            List<DBEpisode> episodesSeen = TraktHandler.GetEpisodesToSync(TraktSyncModes.seen);
-
-            // remove any seen episodes from library episode list as 'seen' counts as being part of the library
-            // dont want to hit the server unnecessarily
-            episodesLibrary.RemoveAll(e => episodesSeen.Contains(e));
-
-            // sync UnSeen
-            TraktHandler.SynchronizeLibrary(episodesUnSeen, TraktSyncModes.unseen);
-
-            // sync library
-            TraktHandler.SynchronizeLibrary(episodesLibrary, TraktSyncModes.library);
-
-            // sync Seen
-            TraktHandler.SynchronizeLibrary(episodesSeen, TraktSyncModes.seen);
-
-            setProcessAnimationStatus(false);
-
-            MPTVSeriesLog.Write("Trakt: Synchronize Complete");
-            TraktHandler.SyncInProgress = false;
-        }
-        #endregion
 
         #region Facade Item Selected
         // triggered when a selection change was made on the facade
