@@ -36,8 +36,6 @@ using MediaPortal.Player;
 using MediaPortal.Playlists;
 using MediaPortal.Profile;
 using MediaPortal.Configuration;
-using Trakt;
-using Trakt.Show;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -116,6 +114,30 @@ namespace WindowPlugins.GUITVSeries
         
         #endregion
 
+        #region Static Events
+        /// <summary>
+        /// Event gets triggered when an Episode has finished being watched and considered watched
+        /// </summary>
+        /// <param name="episode">Episode object just watched</param>
+        public delegate void EpisodeWatchedDelegate(DBEpisode episode);
+
+        /// <summary>
+        /// Event gets triggered when an episode has been started
+        /// </summary>
+        /// <param name="episode">Episode object being watched</param>
+        public delegate void EpisodeStartedDelegate(DBEpisode episode);
+
+        /// <summary>
+        /// Event gets triggered when an episode has stopped but not considered watched
+        /// </summary>
+        /// <param name="episode">Episode object just watched</param>
+        public delegate void EpisodeStoppedDelegate(DBEpisode episode);
+
+        public static event EpisodeWatchedDelegate EpisodeWatched;
+        public static event EpisodeStartedDelegate EpisodeStarted;
+        public static event EpisodeStoppedDelegate EpisodeStopped;
+        #endregion
+
         int _entriesNotFound = 0;
         int _currentItem = -1;
         PlayListType _currentPlayList = PlayListType.PLAYLIST_NONE;
@@ -126,11 +148,7 @@ namespace WindowPlugins.GUITVSeries
 		bool _playlistAutoShuffle = DBOption.GetOptions(DBOption.cPlaylistAutoShuffle);
         string _currentPlaylistName = string.Empty;		
 		private bool listenToExternalPlayerEvents = false;
-        private Timer m_TraktTimer = null;
-        private TimerCallback m_timerDelegate = null;
-        BackgroundWorker TraktScrobbleUpdater = new BackgroundWorker();
-        private bool TraktMarkedFirstAsWatched = false;
-
+       
         public PlayListPlayer()
         {
             Init();
@@ -153,10 +171,6 @@ namespace WindowPlugins.GUITVSeries
 			// external player handlers
 			Utils.OnStartExternal += new Utils.UtilEventHandler(onStartExternal);
 			Utils.OnStopExternal += new Utils.UtilEventHandler(onStopExternal);
-
-            // trakt scrobble background thread
-            TraktScrobbleUpdater.WorkerSupportsCancellation = true;
-            TraktScrobbleUpdater.DoWork += new DoWorkEventHandler(TraktScrobble_DoWork);
         }
 
         public void OnMessage(GUIMessage message)
@@ -168,8 +182,9 @@ namespace WindowPlugins.GUITVSeries
                     PlayListItem item = GetCurrentItem();
                     if (item != null)
                     {
-                        // cancel trakt watch timer
-                        if (m_TraktTimer != null) m_TraktTimer.Dispose();
+                        // notify listeners
+                        if( EpisodeStopped != null)
+                            EpisodeStopped(item.Episode);
 
                         Reset();
                          _currentPlayList = PlayListType.PLAYLIST_NONE;
@@ -182,31 +197,6 @@ namespace WindowPlugins.GUITVSeries
 
                 case GUIMessage.MessageType.GUI_MSG_PLAYBACK_ENDED:
                 {
-                    #region Trakt
-                    // submit watched state to trakt API
-                    // could be a double episode so set both episodes as watched
-                    PlayListItem item = GetCurrentItem();
-
-                    if (item != null)
-                    {
-                        if (item.Episode != null)
-                        {
-                            if (item.Episode[DBEpisode.cEpisodeIndex2] > 0)
-                            {
-                                // only set 2nd episode as watched here
-                                SQLCondition condition = new SQLCondition();
-                                condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
-                                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-                                TraktScrobbleUpdater.RunWorkerAsync(episodes[1]);
-                            }
-                            else
-                            {
-                                TraktScrobbleUpdater.RunWorkerAsync(item.Episode);
-                            }
-                        }
-                    }
-                    #endregion
-
                     SetAsWatched();
                     PlayNext();
                     if (!g_Player.Playing)
@@ -332,10 +322,7 @@ namespace WindowPlugins.GUITVSeries
         public void PlayNext()
         {
             if (_currentPlayList == PlayListType.PLAYLIST_NONE) return;
-
-            // cancel trakt watch timer
-            if (m_TraktTimer != null) m_TraktTimer.Dispose();
-
+            
             PlayList playlist = GetPlaylist(_currentPlayList);
             if (playlist.Count <= 0) return;
             int iItem = _currentItem;
@@ -364,10 +351,7 @@ namespace WindowPlugins.GUITVSeries
         {            
             if (_currentPlayList == PlayListType.PLAYLIST_NONE)
                 return;
-
-            // cancel trakt watch timer
-            if (m_TraktTimer != null) m_TraktTimer.Dispose();
-
+            
             PlayList playlist = GetPlaylist(_currentPlayList);
             if (playlist.Count <= 0) return;
             int iItem = _currentItem;
@@ -496,102 +480,19 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (g_Player.HasVideo)
                         {
+                            // tell any listeners that we are starting playback
+                            if (EpisodeStarted != null)
+                                EpisodeStarted(item.Episode);
+
                             g_Player.ShowFullScreenWindow();
                             Thread.Sleep(2000);
                             SetProperties(item, false);
-                            // timer for trakt watcher status every 15mins
-                            if (m_timerDelegate == null) m_timerDelegate = new TimerCallback(TraktUpdater);
-                            m_TraktTimer = new Timer(m_timerDelegate, item, 3000, 900000);
-
-                            TraktMarkedFirstAsWatched = false;
                         }
                     }
                 }
             }
             while (skipmissing);
             return g_Player.Playing;
-        }
-
-        /// <summary>
-        /// Update Trakt status of episode being watched on Timer Interval
-        /// </summary>
-        private void TraktUpdater(Object stateInfo)
-        {
-            PlayListItem item = (PlayListItem)stateInfo;
-
-            // duration in minutes
-            double duration = item.Duration / 60000;
-            double progress = 0.0;
-
-            // get current progress of player (in seconds) to work out percent complete
-            if (duration > 0.0)
-                progress = ((g_Player.CurrentPosition / 60.0) / duration) * 100.0;
-
-            TraktEpisodeScrobble scrobbleData = null;
-
-            // check if double episode has passed halfway mark and set as watched
-            if (item.Episode[DBEpisode.cEpisodeIndex2] > 0 && progress > 50.0)
-            {
-                SQLCondition condition = new SQLCondition();
-                condition.Add(new DBEpisode(), DBEpisode.cFilename, item.FileName, SQLConditionType.Equal);
-                List<DBEpisode> episodes = DBEpisode.Get(condition, false);
-
-                if (!TraktMarkedFirstAsWatched)
-                {
-                    // send scrobble Watched status of first episode
-                    TraktScrobbleUpdater.RunWorkerAsync(item.Episode);
-                    TraktMarkedFirstAsWatched = true;
-                    Thread.Sleep(5000);
-                }
-
-                // we are now watching 2nd part of episode
-                scrobbleData = TraktHandler.CreateScrobbleData(episodes[1]);
-            }
-            else
-            {
-                // we are watched single episode or 1st part of double episode
-                scrobbleData = TraktHandler.CreateScrobbleData(item.Episode);
-            }
-
-            if (scrobbleData == null) return;
-
-            // set duration/progress in scrobble data
-            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
-            scrobbleData.Progress = Convert.ToInt32(progress).ToString();
-
-            // set watching status on trakt
-            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktScrobbleStates.watching);
-            if (response == null) return;
-            TraktHandler.CheckTraktErrorAndNotify(response, true);
-        }
-
-        /// <summary>
-        /// Update trakt status on playback finish
-        /// </summary>
-        private void TraktScrobble_DoWork(object sender, DoWorkEventArgs e)
-        {
-            DBEpisode episode = (DBEpisode)e.Argument;
-      
-            double duration = episode[DBEpisode.cLocalPlaytime] / 60000;
-
-            // get scrobble data to send to api
-            TraktEpisodeScrobble scrobbleData = TraktHandler.CreateScrobbleData(episode);
-            if (scrobbleData == null) return;
-            
-            // set duration/progress in scrobble data
-            scrobbleData.Duration = Convert.ToInt32(duration).ToString();
-            scrobbleData.Progress = "100";
-
-            TraktResponse response = TraktAPI.ScrobbleShowState(scrobbleData, TraktScrobbleStates.scrobble);
-            if (response == null) return;
-            TraktHandler.CheckTraktErrorAndNotify(response, true);
-
-            if (response.Status == "success")
-            {
-                // set trakt flags so we dont waste time syncing later
-                episode[DBOnlineEpisode.cTraktLibrary] = 1;
-                episode[DBOnlineEpisode.cTraktSeen] = 1;
-            }
         }
 
         /// <summary>        
@@ -694,6 +595,9 @@ namespace WindowPlugins.GUITVSeries
             PlayListItem item = GetCurrentItem();
             if (item == null)
                 return;
+
+            // notify listeners
+            if (EpisodeWatched != null) EpisodeWatched(item.Episode);
 
             item.Watched = true;
         }

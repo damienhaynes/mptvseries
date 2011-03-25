@@ -242,8 +242,6 @@ namespace WindowPlugins.GUITVSeries
             this.label54 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
-            this.tabTrakt = new System.Windows.Forms.TabPage();
-            this.traktConfiguration = new WindowPlugins.GUITVSeries.Configuration.TraktConfiguration();
             this.tabFollwit = new System.Windows.Forms.TabPage();
             this.follwitSettingsPanel1 = new WindowPlugins.GUITVSeries.FollwitTv.FollwitSettingsPanel();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
@@ -352,7 +350,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinMaxFanarts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).BeginInit();
-            this.tabTrakt.SuspendLayout();
             this.tabFollwit.SuspendLayout();
             this.tabPage_MP_DisplayControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -1733,7 +1730,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabControl_Details.Controls.Add(this.tabPage_Details);
             this.tabControl_Details.Controls.Add(this.tabPage_Import);
             this.tabControl_Details.Controls.Add(this.tabOnlineData);
-            this.tabControl_Details.Controls.Add(this.tabTrakt);
             this.tabControl_Details.Controls.Add(this.tabFollwit);
             this.tabControl_Details.Controls.Add(this.tabPage_MP_DisplayControl);
             this.tabControl_Details.Controls.Add(this.tab_view);
@@ -2605,28 +2601,7 @@ namespace WindowPlugins.GUITVSeries
             this.label26.Size = new System.Drawing.Size(76, 13);
             this.label26.TabIndex = 8;
             this.label26.Text = "&Language:";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tabTrakt
-            // 
-            this.tabTrakt.Controls.Add(this.traktConfiguration);
-            this.tabTrakt.ImageIndex = 11;
-            this.tabTrakt.Location = new System.Drawing.Point(4, 31);
-            this.tabTrakt.Name = "tabTrakt";
-            this.tabTrakt.Size = new System.Drawing.Size(873, 643);
-            this.tabTrakt.TabIndex = 13;
-            this.tabTrakt.Text = "Trakt";
-            this.tabTrakt.UseVisualStyleBackColor = true;
-            // 
-            // traktConfiguration
-            // 
-            this.traktConfiguration.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.traktConfiguration.Location = new System.Drawing.Point(3, 3);
-            this.traktConfiguration.Name = "traktConfiguration";
-            this.traktConfiguration.Size = new System.Drawing.Size(862, 637);
-            this.traktConfiguration.TabIndex = 0;
+            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;            
             // 
             // tabFollwit
             // 
@@ -3569,7 +3544,6 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinMaxFanarts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_AutoOnlineDataRefresh)).EndInit();
-            this.tabTrakt.ResumeLayout(false);
             this.tabFollwit.ResumeLayout(false);
             this.tabPage_MP_DisplayControl.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -3838,8 +3812,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_SubDownloadOnPlay;
         private System.Windows.Forms.Label lblRecentAddedDays;
         private System.Windows.Forms.NumericUpDown nudRecentlyAddedDays;
-        private System.Windows.Forms.TabPage tabTrakt;
-        private Configuration.TraktConfiguration traktConfiguration;
         private System.Windows.Forms.Button buttonArtworkDownloadLimits;
         private Configuration.DBOptionCheckBox dbOptCheckBoxGetTextBanners;
         private System.Windows.Forms.Label label18;

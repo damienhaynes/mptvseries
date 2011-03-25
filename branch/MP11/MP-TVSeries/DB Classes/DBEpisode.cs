@@ -242,8 +242,8 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 7:
-                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, new SQLCondition());
-                        DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, new SQLCondition());
+                        //DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, new SQLCondition());
+                        //DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, new SQLCondition());
                         nUpgradeDBVersion++;
                         break;
 

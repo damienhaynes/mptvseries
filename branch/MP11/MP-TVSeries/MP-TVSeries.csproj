@@ -137,12 +137,6 @@
     <Compile Include="Configuration\ProgressDialog.Designer.cs">
       <DependentUpon>ProgressDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\TraktConfiguration.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configuration\TraktConfiguration.Designer.cs">
-      <DependentUpon>TraktConfiguration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,27 +299,6 @@
     </Compile>
     <Compile Include="settings.cs" />
     <Compile Include="Subtitle Retrievers Classes\SubtitleRetriever.cs" />
-    <Compile Include="TraktHandler.cs" />
-    <Compile Include="Trakt\Movie\TraktMovieScrobble.cs" />
-    <Compile Include="Trakt\Common\TraktEpisode.cs" />
-    <Compile Include="Trakt\Rate\TraktRateEpisode.cs" />
-    <Compile Include="Trakt\Rate\TraktRateResponse.cs" />
-    <Compile Include="Trakt\Rate\TraktRateSeries.cs" />
-    <Compile Include="Trakt\Show\TraktSync.cs" />
-    <Compile Include="Trakt\TraktAPI.cs" />
-    <Compile Include="Trakt\TraktAuthentication.cs" />
-    <Compile Include="Trakt\TraktExtensions.cs" />
-    <Compile Include="Trakt\TraktResponse.cs" />
-    <Compile Include="Trakt\User\TraktLibraryMovies.cs" />
-    <Compile Include="Trakt\User\TraktLibraryShows.cs" />
-    <Compile Include="Trakt\Show\TraktEpisodeScrobble.cs" />
-    <Compile Include="Trakt\Show\TraktSeriesOverview.cs" />
-    <Compile Include="Trakt\TraktURIs.cs" />
-    <Compile Include="Trakt\User\TraktUserCalendar.cs" />
-    <Compile Include="Trakt\User\TraktUserProfile.cs" />
-    <Compile Include="Trakt\User\TraktWatchedShows.cs" />
-    <Compile Include="Trakt\User\TraktWatchedEpisodeHistory.cs" />
-    <Compile Include="Trakt\User\TraktWatchedMovieHistory.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
@@ -411,9 +384,6 @@
     <EmbeddedResource Include="Configuration\AddImportPathPopup.resx">
       <DependentUpon>AddImportPathPopup.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\TraktConfiguration.resx">
-      <DependentUpon>TraktConfiguration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\ViewsConfiguration.resx">
       <DependentUpon>ViewsConfiguration.cs</DependentUpon>
@@ -576,11 +546,11 @@
   <Target Name="AfterBuild">
   </Target>-->
   <PropertyGroup>
-    <PostBuildEvent>cd $(TargetDir)
+    <PostBuildEvent>cd "$(TargetDir)"
 copy "$(ProjectDir)..\External\merge.bat" "$(TargetDir)" /Y
 copy "$(ProjectDir)..\External\ilmerge.exe" "$(TargetDir)" /Y
 call merge.bat
-if exist $(ProjectDir)PostBuild.bat call $(ProjectDir)PostBuild.bat $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
+if exist "$(ProjectDir)PostBuild.bat" call "$(ProjectDir)PostBuild.bat" "$(ProjectDir)" $(ConfigurationName)</PostBuildEvent>
     <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
   </PropertyGroup>
 </Project>
