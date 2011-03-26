@@ -2,7 +2,7 @@
 <!-- MP-TV-Series translation file -->
 <!-- Russian(RU) -->
 <!-- Contributed by Undel -->
-<!-- Last Updated: 10 Jan 2011 -->
+<!-- Last Updated: 27 Mar 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 
 <strings>
@@ -107,16 +107,13 @@
 	<string Field="TVDB_ERROR_TITLE" Original="theTVDB Error">ошибка theTVDB</string>
 	<string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
 	<string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Не установлен идентификатор аккаунта</string>
-	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Ввведите в настройках ваш онлайновый идентификатор пользователя</string>
-	
-<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com сейчас недоступен,</string>
-        <string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">попробуйте позднее</string>
-        <string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Подключение к сети недоступно,</string>
-        <string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">проверьте соединение и попробуйте снова</string>
-
- <string Field="Playlist" Original="Playlist">Плейлист</string>
-        <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Последние обновление онлайн</string>
-
+	<string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Ввведите в настройках ваш онлайновый идентификатор пользователя</string>	
+	<string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com сейчас недоступен,</string>
+	<string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">попробуйте позднее</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Подключение к сети недоступно,</string>
+	<string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">проверьте соединение и попробуйте снова</string>
+	<string Field="Playlist" Original="Playlist">Плейлист</string>
+  <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Последние обновление онлайн</string>
 	<string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Отображать фанарт при просмотре сериалов</string>
 	<string Field="ChangeLayout" Original="Change Layout">Изменить представление</string>
 	<string Field="UseOnlineFavourites" Original="Use Online Favourites">Использовать избранное онлайн</string>
@@ -207,38 +204,38 @@
 	<string Field="KidsSeries" Original="Kids Series">Детский сериал</string>
 	<string Field="ClearFanartCache" Original="Clear Fanart Cache">Очистить кэш фанарта</string>
 	<string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Удалить скриншоты</string>
-        <string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Вы бы хотели также удалить и загрузить снова?</string>
-        <string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">все скриншоты эпизода?</string>
-        <string Field="RateDialog" Original="Rate Dialog">Оценка</string>
-        <string Field="PinCodeDialog" Original="Pin Code Dialog">Ввод PIN-кода</string>
-        <string Field="Aired" Original="Aired">Дата показа</string>
-    <string Field="AiredStatusContinuing" Original="Continuing">Продолжается</string>
-    <string Field="AiredStatusEnded" Original="Ended">Закончился</string>
-    <string Field="AirsDay" Original="Airs Day">День показов</string>
-    <string Field="AirsTime" Original="Airs Time">Время показов</string>
-    <string Field="Certification" Original="Certification">Сертификация</string>    
-    <string Field="Director" Original="Director">Режиссер</string>
-    <string Field="Directors" Original="Directors">Режиссеры</string>    
-    <string Field="File Size" Original="File Size">Размер файла</string>
-    <string Field="FirstAired" Original="First Aired">Первый показ</string>
-    <string Field="Genre" Original="Genre">Жанр</string>
-    <string Field="Group" Original="Groups">Группа</string>
-    <string Field="Groups" Original="Groups">Группы</string>
-    <string Field="GuestStar" Original="Guest Star">Приглашенная звезда</string>
-    <string Field="GuestStars" Original="Guest Stars">Приглашенные звезды</string>
-    <string Field="MediaInfo" Original="Media Info">Медиаинформация</string>
-    <string Field="Minutes" Original="Minutes">Минуты</string>
-        <string Field="MyRating" Original="My Rating">Мой рейтинг</string>
-    <string Field="Network" Original="Network">Сеть</string>
-    <string Field="Rated" Original="Rated">Оценен</string>
-    <string Field="Rating" Original="Rating">Рейтинг</string>
-    <string Field="Runtime" Original="Runtime">Время</string>
-    <string Field="SeriesDetails" Original="Series Details">Данные о сериале</string>
-        <string Field="SeriesStatus" Original="Series Status">Статус сериала</string>
-    <string Field="Watched" Original="Watched">Просмотрен</string>
-        <string Field="Writer" Original="Writer">Сценарист</string>
-    <string Field="Writers" Original="Writers">Сценаристы</string>
-<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Сброс игнорирования загруженных файлов</string>
+	<string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Вы бы хотели также удалить и загрузить снова?</string>
+	<string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">все скриншоты эпизода?</string>
+	<string Field="RateDialog" Original="Rate Dialog">Оценка</string>
+	<string Field="PinCodeDialog" Original="Pin Code Dialog">Ввод PIN-кода</string>
+	<string Field="Aired" Original="Aired">Дата показа</string>
+	<string Field="AiredStatusContinuing" Original="Continuing">Продолжается</string>
+	<string Field="AiredStatusEnded" Original="Ended">Закончился</string>
+	<string Field="AirsDay" Original="Airs Day">День показов</string>
+	<string Field="AirsTime" Original="Airs Time">Время показов</string>
+	<string Field="Certification" Original="Certification">Сертификация</string>    
+	<string Field="Director" Original="Director">Режиссер</string>
+	<string Field="Directors" Original="Directors">Режиссеры</string>    
+	<string Field="File Size" Original="File Size">Размер файла</string>
+	<string Field="FirstAired" Original="First Aired">Первый показ</string>
+	<string Field="Genre" Original="Genre">Жанр</string>
+	<string Field="Group" Original="Groups">Группа</string>
+	<string Field="Groups" Original="Groups">Группы</string>
+	<string Field="GuestStar" Original="Guest Star">Приглашенная звезда</string>
+	<string Field="GuestStars" Original="Guest Stars">Приглашенные звезды</string>
+	<string Field="MediaInfo" Original="Media Info">Медиаинформация</string>
+	<string Field="Minutes" Original="Minutes">Минуты</string>
+  <string Field="MyRating" Original="My Rating">Мой рейтинг</string>
+	<string Field="Network" Original="Network">Сеть</string>
+	<string Field="Rated" Original="Rated">Оценен</string>
+	<string Field="Rating" Original="Rating">Рейтинг</string>
+	<string Field="Runtime" Original="Runtime">Время</string>
+	<string Field="SeriesDetails" Original="Series Details">Данные о сериале</string>
+	<string Field="SeriesStatus" Original="Series Status">Статус сериала</string>
+  <string Field="Watched" Original="Watched">Просмотрен</string>
+  <string Field="Writer" Original="Writer">Сценарист</string>
+  <string Field="Writers" Original="Writers">Сценаристы</string>
+	<string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">Сброс игнорирования загруженных файлов</string>
   <string Field="GetSubtitlesFrom" Original="Get subtitles from?">Откуда загружать субтитры?</string>
   <string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Включены сайты субтитров:</string>
   <string Field="PlayNow" Original="Play Now">Воспроизвести</string>
@@ -281,5 +278,9 @@
   <string Field="LayoutCoveflow" Original="Coveflow">Отображение обложками</string>
   <string Field="TraktError" Original="Trakt Error">Ошибка тракта</string>
   <string Field="TraktNotEnoughInfo" Original="Not enough information to send to server.">Недостаточно информации для отправки запроса.</string>
-
+  <string Field="ResumeEpisode" Original="Resume episode from last time?">Продолжить эпизод с прошлого раза?</string>
+  <string Field="SummaryNotAvailable" Original="No summary is currently available.">Краткого описания пока нет.</string>
+  <string Field="Timeout" Original="Timeout">Время истекло</string>
+  <string Field="NoActors" Original="There are no Actors for this series.">Актеров для данного сериала нет.</string>
+  <string Field="GettingActors" Original="Getting Actors from Online">Загрзка данных об актерах из Интернета</string>
 </strings>
