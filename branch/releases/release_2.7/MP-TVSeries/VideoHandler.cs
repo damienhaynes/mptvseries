@@ -293,7 +293,7 @@ namespace WindowPlugins.GUITVSeries
         {
             DBEpisode episode = (DBEpisode)e.Argument;
 
-            double duration = m_currentEpisode[DBEpisode.cLocalPlaytime] / 60000;
+            double duration = episode[DBEpisode.cLocalPlaytime] / 60000;
 
             // get scrobble data to send to api
             TraktEpisodeScrobble scrobbleData = TraktHandler.CreateScrobbleData(episode);
