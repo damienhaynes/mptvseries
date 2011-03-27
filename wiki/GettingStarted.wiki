@@ -24,12 +24,6 @@ In this example I have chosen a Folder on my local hard drive.
  * Press *OK* to save
  * Ensure that the *Enabled* checkbox is checked for each path you want added.
 
-If your Media is stored on a Removable Drive, then enable the checkbox *Removable*. Here is a table of recommended settings for different media storage types:
-|| *Type* || *Removable)* ||
-|| DVD DRIVE|| YES ||
-|| USB HDD|| YES ||
-|| LOCAL HDD || NO ||
-|| NETWORK SHARE || NO ||
 
 ==Parsing==
 Once you have setup your import paths, check that your episodes were picked up by the plugins parsing engine. This is illustrated in the following image:
