@@ -10,7 +10,7 @@ Before you launch MediaPortal, the plugin needs to be configured. This is handle
  * Launch MediaPortal Configuration from your desktop shortcut if not already open
  * Select *Plugins* from the tree list.
  * Right Click on the *MP-TVSeries* icon.
- http://mptvseries.googlecode.com/svn/wiki/Images/MediaPortalPluginConfigurationMenu.jpg
+ http://mptvseries.googlecode.com/svn/wiki/Images/MediaPortalPluginConfigurationMenu2-8-1.jpg
  * Select *Configuration* from the menu.
 
 ==Import Paths==
