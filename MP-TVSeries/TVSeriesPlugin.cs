@@ -1107,7 +1107,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 List<DBEpisode> eps = new List<DBEpisode>();
                                 eps.Add(selectedEpisode);
-                                ToggleWatched(m_SelectedSeries, eps, watched);
+                                ToggleWatched(m_SelectedSeries, eps, !watched);
                             }
 
                             LoadFacade();
