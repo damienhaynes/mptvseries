@@ -336,6 +336,7 @@
 		<row><td>skinBlue3WideMedia</td><td>{7A68FBFD-F363-4E93-91A6-7438C8A024A3}</td><td>MEDIA1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td>tvseries.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3XML</td><td>{092B6B62-8CFA-4A87-B026-C7AF7336A60A}</td><td>BLUE3</td><td>8</td><td/><td>tvseries.xml1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>trakt</td><td>{81DC22DD-06EB-47E8-B4F8-9A219ABB18ED}</td><td>PROCESS</td><td>8</td><td/><td>traktplugin.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -604,6 +605,7 @@
 		<row><td>MP_TVSERIES1</td><td>MEDIAPORTAL1</td><td>MP-TVS~1|MP-TVSeries</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>PLUGINS</td><td>MEDIAPORTAL</td><td>plugins</td><td/><td>0</td><td/></row>
+		<row><td>PROCESS</td><td>INSTALLDIR</td><td>process</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
@@ -1302,7 +1304,8 @@
 		<row><td>Blue3</td><td>Skins</td><td>##ID_STRING10##</td><td>##ID_STRING13##</td><td>4</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 		<row><td>Blue3Wide</td><td>Skins</td><td>##ID_STRING11##</td><td>##ID_STRING14##</td><td>8</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td>##ID_STRING8##</td><td>##ID_STRING7##</td><td>2</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
-		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>14</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>16</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Trakt</td><td/><td>##ID_STRING32##</td><td>##ID_STRING33##</td><td>14</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
@@ -1321,6 +1324,7 @@
 		<row><td>Main</td><td>PluginConfigLoader</td></row>
 		<row><td>Main</td><td>Updates</td></row>
 		<row><td>Main</td><td>Wiki</td></row>
+		<row><td>Trakt</td><td>trakt</td></row>
 	</table>
 
 	<table name="File">
@@ -1360,6 +1364,7 @@
 		<row><td>ru.xml</td><td>Languages</td><td>ru.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru.xml</td><td>1</td><td/></row>
 		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>1</td><td/></row>
 		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>1</td><td/></row>
+		<row><td>traktplugin.dll</td><td>trakt</td><td>TRAKTP~1.DLL|TraktPlugin.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\TraktPlugin.dll</td><td>1</td><td/></row>
 		<row><td>tvseries.actors.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Actors.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Actors.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.coverflow.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Coverflow.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Coverflow.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Dummy.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Dummy.xml</td><td>1</td><td/></row>
@@ -1649,6 +1654,7 @@
 		<row><td>skinBlue3WideMedia</td><td/><td/><td>_9731C4B7_32CE_4ECA_945D_A300288D0959_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3WideXML</td><td/><td/><td>_69B87E1A_652B_44E9_8735_18332E35DB31_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3XML</td><td/><td/><td>_009771E6_5FEF_4464_99DA_B17AB2A46804_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>trakt</td><td/><td/><td>_4C945872_0FBF_41D4_9094_8C37DDADC780_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -1728,6 +1734,7 @@
 		<row><td>Blue3Wide</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Skins</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>Trakt</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -2262,10 +2269,12 @@
 		<row><td>Complete</td><td>Blue3Wide</td></row>
 		<row><td>Complete</td><td>Main</td></row>
 		<row><td>Complete</td><td>Skins</td></row>
+		<row><td>Complete</td><td>Trakt</td></row>
 		<row><td>Custom</td><td>Blue3</td></row>
 		<row><td>Custom</td><td>Blue3Wide</td></row>
 		<row><td>Custom</td><td>Main</td></row>
 		<row><td>Custom</td><td>Skins</td></row>
+		<row><td>Custom</td><td>Trakt</td></row>
 	</table>
 
 	<table name="ISStorages">
@@ -3504,6 +3513,8 @@
 		<row><td>ID_STRING3</td><td>1033</td><td>http://code.google.com/p/mptvseries/</td><td>0</td><td/><td>463326637</td></row>
 		<row><td>ID_STRING30</td><td>1033</td><td>Languages</td><td>0</td><td/><td>-526476692</td></row>
 		<row><td>ID_STRING31</td><td>1033</td><td>Translations used by the plugin to present data in the GUI. This can optionally be installed if you wish to customise your own translations.</td><td>0</td><td/><td>-526482804</td></row>
+		<row><td>ID_STRING32</td><td>1033</td><td>Trakt</td><td>0</td><td/><td>-509660435</td></row>
+		<row><td>ID_STRING33</td><td>1033</td><td>Trakt actively keeps a record of what TV shows and movies you are watching. Based on your favorites, your friends, and the community, trakt recommends other TV shows and movies.</td><td>0</td><td/><td>-509642003</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://forum.team-mediaportal.com/my-tvseries-162/</td><td>0</td><td/><td>463295949</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>MediaPortal Forums</td><td>0</td><td/><td>463306189</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>http://code.google.com/p/mptvseries/downloads/list</td><td>0</td><td/><td>463326669</td></row>
