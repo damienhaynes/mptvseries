@@ -36,7 +36,7 @@ If the plugin fails to parse any of your episodes they will be highlighted and m
 
 We can see that _Alias.avi_ does not contain a *Season No.* and an *Episode No*. This can easily be modified by editing the file to include these items e.g. _Alias s01e01.avi_. Here is an illustration of how you can store your Media and be confident that they will parse correctly:
  http://mptvseries.googlecode.com/svn/wiki/Images/BestPracticesPathStructure.jpg
-
+ 
 Note: there are many ways in which you can organize your media, this is just one example. To find out more and receive help you can visit the [http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/ Parsing Expressions] topic in the TVSeries forums.
 
  * Click on the *Online Data* tab, to configure online settings
@@ -62,16 +62,56 @@ Use General Settings to configure behaviour of the plugin when browsing your col
  * Click on the *Import* tab, to get ready to import data from online.
 
 ==Import==
-The Import Tab is used to initially download all the data from online for your series collection. 
+The Import Tab is used to initially download all the data from online for your series collection. In this example, we will import the following files
+ * NOTE The Series 'Alias' is named correctly, series 'Star Trek TNG' which is not named exactly as shown at thetvdb.com
 
- * Click the *arrow* at the bottom of the tab to expand the log window, this will allow you to see the progress of the Import.
- * Click the *Start Import* button
- * If a series can not be matching online, the _Unable to find matching series_ dialog appears:
- http://mptvseries.googlecode.com/svn/wiki/Images/UnableToFindMatchDialog.jpg 
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportDemoFiles.jpg
+
+ * *Click on the Import Tab*
+ * Click the *arrow* at the bottom of the tab to expand or retract the log window, this will allow you to see the progress of the Import.
+ * Add your Import Paths, in this example its D:\TV
+ * Click the Parsing Check
+ * Click the *Start Import Wizard* button
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStartWizard.jpg
+
+ * *Step 1 of 4 - Review and Change the local File Information*
+You may make changes to the results below, and/or add files. Click Next
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep1.jpg
+
+ * *Step 2 of 4 - Identifying Series*
+In the  below example, Alias was Identified, Star Trek TNG was not, as the filenames Star Trek TNG 1x1.avi needs be Star Trek The Next Generation 1x1.avi to gain a automatic match. However we can manually choose the correct series
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep2.jpg
+
+ * Type the Series name, click Search
  * If a match does not appear in the menu you can type in a new search string and search again.
- * When Series matching has finished, the importer will download the information for each series, you may be prompted to choose the Order for the series. Its recommended in most cases to choose *Aired* unless you know for sure that the *DVD* order is correct online and matches your collection.
- http://mptvseries.googlecode.com/svn/wiki/Images/MultipleOrdering.jpg 
- *  The Importing is complete when the Progress Bar is 100% and the Log window reports *Completed*. The initial import process can take anywhere between a couple of minutes to an hour, it highly depends on the number of series and episodes in your collection.
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep2-1CustomSearch.jpg
+
+ * After your shows are all identitied correctly, click the next button:
+TIP: you can click _Show only series requiring manual selection_ to hide all the correctly identified shows so you can focus on those which are an issue
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep2-2Approve.jpg
+
+ * *Step 3 of 4 - Identifying Episodes*
+In this screen, you can check the identitifed episodes match those online episodes, if you click _Show Only Episodes requiring manual selection_ this is a faster way to see what needs help. The Main reason you might see episodes needing manual selection, is if the episode numbers in your files do not match what is stored at thetvdb.com
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep3.jpg
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep3-2ManualSelection.jpg
+
+For each series, You may select a prefered ordering option from this screen. Its recommended in most cases to choose *Aired* unless you know for sure that the *DVD* order is correct online and matches your collection.
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep3-1Ordering.jpg
+
+ * *Step 4 of 4 - Download*
+The importer will download the information for each series & episode you have correctly identified in the previous steps
+
+The Importing is complete when a Tick is beside each process and the Log window reports *Completed*. The initial import process can take anywhere between a couple of minutes to an hour, it highly depends on the number of series and episodes in your collection.
+ http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep4Finish.jpg 
+
  * Click on the *Views/Filters* tab, to configure the available views.
 
 ==View/Filters==
