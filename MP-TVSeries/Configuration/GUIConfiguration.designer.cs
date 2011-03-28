@@ -2863,7 +2863,7 @@ namespace WindowPlugins.GUITVSeries
             this.playlistSettings.AutoScroll = true;
             this.playlistSettings.Location = new System.Drawing.Point(-1, 353);
             this.playlistSettings.Name = "playlistSettings";
-            this.playlistSettings.Size = new System.Drawing.Size(791, 196);
+            this.playlistSettings.Size = new System.Drawing.Size(866, 196);
             this.playlistSettings.TabIndex = 1;
             // 
             // groupBox8
@@ -3320,7 +3320,7 @@ namespace WindowPlugins.GUITVSeries
             this.aboutScreen.BackColor = System.Drawing.Color.White;
             this.aboutScreen.Location = new System.Drawing.Point(2, 3);
             this.aboutScreen.Name = "aboutScreen";
-            this.aboutScreen.Size = new System.Drawing.Size(794, 640);
+            this.aboutScreen.Size = new System.Drawing.Size(871, 640);
             this.aboutScreen.TabIndex = 0;
             // 
             // listBox_Log
