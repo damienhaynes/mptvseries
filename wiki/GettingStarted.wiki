@@ -63,7 +63,7 @@ Use General Settings to configure behaviour of the plugin when browsing your col
 
 ==Import==
 The Import Tab is used to initially download all the data from online for your series collection. In this example, we will import the following files
- * NOTE The Series 'Alias' is named correctly, series 'Star Trek TNG' which is not named exactly as shown at thetvdb.com
+ * NOTE The Series 'Alias' is named correctly, series 'Star Trek TNG' is not named exactly as shown at thetvdb.com
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportDemoFiles.jpg
 
@@ -90,8 +90,8 @@ In the  below example, Alias was Identified, Star Trek TNG was not, as the filen
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep2-1CustomSearch.jpg
 
- * After your shows are all identitied correctly, click the next button:
-TIP: you can click _Show only series requiring manual selection_ to hide all the correctly identified shows so you can focus on those which are an issue
+ * After your shows are all identified correctly, click the next button:
+TIP: you can click _Show only Series requiring manual Selection_ to hide all the correctly identified shows so you can focus on those which are an issue
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep2-2Approve.jpg
 
