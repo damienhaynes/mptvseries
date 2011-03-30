@@ -3,15 +3,15 @@
 <wiki:toc max_depth="2" />
 = Introduction =
 
-This guide is intended to guide you through the installation process of the MP-TVSeries plugin. It is assumed !MediaPortal v1.0.2 or higher is installed and the user has a general knowledge of the Windows Operating system.
+This guide is intended to guide you through the installation process of the MP-TVSeries plugin. It is assumed !MediaPortal v1.1.x or higher is installed and the user has a general knowledge of the Windows Operating system.
 
 = Pre-Requisites =
 Below is a list of pre-requisites that must be met before you can proceed to install the plugin.
 
 == Software ==
- * !MediaPortal v1.0.2 or MediaPortal 1.1.0 Alpha
+ * !MediaPortal v1.1.x or MediaPortal 1.2 Alpha
  * Winzip/[http://www.rarlab.com/download.htm WinRAR] (for manual install)
- * Windows XP SP2+, Windows Vista SP1+, Windows 2003 SP2+, Windows 7 RC1+
+ * Windows XP SP2+, Windows Vista SP1+, Windows 2003 SP2+, Windows 7
 
 MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
 
