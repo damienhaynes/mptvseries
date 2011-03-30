@@ -33,6 +33,7 @@ You can use either or both of the sites at the same time.
  * Load Mediaportal Configuration, Plugins.
  * Load _Trakt_ which is under 'Process Plugins'
  * Type in your trakt.tv username and password
+ * Check the box for MP-TVSeries
  * Click OK
  http://mptvseries.googlecode.com/svn/wiki/Images/TraktConfig.jpg
 
@@ -52,10 +53,8 @@ Specials need to be labeled as Season 0, Lets take Top Gear Polar Special for ex
  * Top Gear - S00E49 - Polar Special
 
  ==Auto Renaming of Files==
-MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer] and [http://www.tvrename.com Tv Rename] which can do that for you. 
+MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer] and [http://www.tvrename.com Tv Rename] 
 
  ==Folder Structure==
-There are many variations you could use, below is a way i recommend as it works well with the renaming tools above. 
+There are many variations you could use, below is a way that works well with the renaming tools above. 
  * TV  --> Series Name  --> Season # ---> Alias 1x1.avi
-
-The reason i have shown the structure above is it works well for the autorename tools mentioned above
