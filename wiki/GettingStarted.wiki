@@ -41,7 +41,7 @@ Note: there are many ways in which you can organize your media, this is just one
 
  * Click on the *Online Data* tab, to configure online settings
 ==Online Data Settings==
-The Online Data tab allows you configure the plugins behaviour when communicating to the [http://thetvdb.com/ Online Database]. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
+The Online Data tab allows you configure the plugins behaviour when communicating to the [http://www.thetvdb.com TheTVDB.com]. Here is a list of recommended settings (not mandatory) that you may wish to change before continuing:
 
  * Add in your unique Account Identifier into the Account ID text field, this allows you to download/upload your favourite series and series/episode ratings. The Account Identifier can be found in your users [http://thetvdb.com/?tab=userinfo Account] page.
  http://mptvseries.googlecode.com/svn/wiki/Images/theTVDBAccountIdentifier.jpg
@@ -62,8 +62,8 @@ Use General Settings to configure behaviour of the plugin when browsing your col
  * Click on the *Import* tab, to get ready to import data from online.
 
 ==Import==
-The Import Tab is used to initially download the series/season/episode data from [http://www.thetvdb.com thetvdb.com] 
- * In this example, we will import 'Alias' (named correctly) & 'Star Trek TNG' (named incorrecly)
+The Import Tab is used to initially download the series/season/episode data from [http://www.thetvdb.com TheTVDB.com] 
+ * In this example, we will import 'Alias' (named correctly) & 'Star Trek TNG' (named incorrectly)
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportDemoFiles.jpg
 
