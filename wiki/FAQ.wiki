@@ -17,6 +17,7 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
  ==Submitting Useful Log Files==
 
  * Make sure MP-TVSeries logging is set to _Debug_ Level
+   http://mptvseries.googlecode.com/svn/wiki/Images/DebugLogLevel.jpg
  * Open Mediaportal, Reproduce the issue, Close Mediaportal
  * Zip and or attach all log files from the log directory
 
