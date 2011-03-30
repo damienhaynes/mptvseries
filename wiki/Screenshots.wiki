@@ -5,11 +5,13 @@
 All of the following screen shots are taken from MP-TVSeries using Blue3wide skin & [http://www.team-mediaportal.com/extensions/widescreen/streamedmp StreamedMP] skin. All pieces of promotional artwork are copyrighted by their respective owners. 
 
 
+
 == Series Filmstrip Layout ==
 ----
 
 http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg
 http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg
+
 
 
 == Series Wide Banners Layout ==
@@ -19,11 +21,13 @@ http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jp
 http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg
 
 
+
 == Series List Posters Layout ==
 ----
 
 http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg
 http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg
+
 
 
 == Season List Layout ==
@@ -33,11 +37,13 @@ http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg
 http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg
 
 
+
 == Episode View ==
 ----
 
 http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg
 http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg
+
 
 
 == Fanart Chooser ==
