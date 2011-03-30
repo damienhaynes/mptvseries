@@ -1,4 +1,5 @@
 #summary Frequently Asked Questions.
+<wiki:toc max_depth="3" />
 
 =Integration with Social Media Websites =
 
@@ -8,7 +9,7 @@ One of the advantages to connecting to one or both of the sites is the syncronis
 
 You can use either or both of the sites at the same time.
 
-==FOLLW.IT==
+==Follw.it==
 
  * From version 2.8.0+, you can configure follw.it from within the Plugin Configuration for MP-TVSeries, Select the follw.it tab, enter the login and password you created from the follw.it website.
 
@@ -21,7 +22,7 @@ You can use either or both of the sites at the same time.
  http://mptvseries.googlecode.com/svn/wiki/Images/FollwitConfig.jpg
    
 
-==TRAKT.TV==
+==Trakt.tv==
 
  * From version 2.8.1+, the Trakt.tv supprt will be moved to its own process plugin called [http://forum.team-mediaportal.com/mediaportal-plugins-47/0-9-2-0-trakt-mediaportal-94872/ Trakt for Mediaportal]. This plugin will be included with the MP-TVSeries installer should you wish to install it.
 
