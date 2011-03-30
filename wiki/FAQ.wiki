@@ -37,7 +37,7 @@ You can use either or both of the sites at the same time.
  http://mptvseries.googlecode.com/svn/wiki/Images/TraktConfig.jpg
 
 =File Naming Conventions=
-MP-TVSeries supports various naming conventions, if you want a perfect match without any user interaction, its best to name and name the series as it is shown on thetvdb.com. 
+MP-TVSeries supports various naming conventions, if you want a perfect match without any user interaction, its best to name the Series as it is shown on thetvdb.com. If the Show contains a : such as CSI: Miami you could use CSI Miami or CSI- Miami
 
  ==Examples of Supported Filenames==
 Here are a few random examples which will parse.
@@ -61,5 +61,3 @@ There are many variations you could use, below is a way i reccomend as it works 
 ---> Season # (where # is the season number as shown at thetvdb)
 
 The reason i have shown the structure above is it works well for the autorename tools mentioned above
-
-
