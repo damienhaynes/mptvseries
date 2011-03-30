@@ -1,6 +1,29 @@
 #summary Frequently Asked Questions.
 <wiki:toc max_depth="3" />
 
+=Questions, Suggestions & Bug Reports=
+
+There are 3 ways you can receive support for the plugin, Submitting log files and or Screenshots is recommended
+
+ ==Mediaportal Forum==
+ MP-TVSeries has a dedicated [http://forum.team-mediaportal.com/my-tvseries-162/ sub-forum], try searching as you question may have been answered, if not please create a new thread
+
+ ==Issue Tracker==
+ MP-TVSeries has a issue tracker [http://code.google.com/p/mptvseries/issues/list here]. Recommended if you have a re-producable bug or enhancement request 
+
+ ==IRC==
+ Join the #mp-tvseries IRC channel on Freenode
+
+ ==Submitting Useful Log Files==
+
+ * Make sure MP-TVSeries logging is set to _Debug_ Level
+ * Open Mediaportal, Reproduce the issue, Close Mediaportal
+ * Zip and or attach all log files from the log directory
+
+  ===Location of Log Files===
+  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\log
+  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log 
+
 
 =Integration with Social Media Websites =
 
