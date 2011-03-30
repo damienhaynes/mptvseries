@@ -62,16 +62,16 @@ Use General Settings to configure behaviour of the plugin when browsing your col
  * Click on the *Import* tab, to get ready to import data from online.
 
 ==Import==
-The Import Tab is used to initially download all the data from online for your series collection. In this example, we will import the following files
- * NOTE The Series 'Alias' is named correctly, series 'Star Trek TNG' is not named exactly as shown at thetvdb.com
+The Import Tab is used to initially download the series/season/episode data from [http://www.thetvdb.com thetvdb.com] 
+ * In this example, we will import 'Alias' (named correctly) & 'Star Trek TNG' (named incorrecly)
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportDemoFiles.jpg
 
- * *Click on the Import Tab*
- * Click the *arrow* at the bottom of the tab to expand or retract the log window, this will allow you to see the progress of the Import.
- * Add your Import Paths, in this example its D:\TV
+===Initial Configuration===
+ * Click on the Import Tab
+ * Add Import Paths, in this example 'D:\TV'
  * Click the Parsing Check
- * Click the *Start Import Wizard* button
+ * Click the Start Import Wizard button
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportStartWizard.jpg
 
