@@ -14,4 +14,4 @@ A [http://forum.team-mediaportal.com/my-tvseries-162 sub-forum] is located on th
 
 == Getting Involved ==
 
-If you are interesting in contributing to this project, please send an email to one of the Project owners and they can talk about how you can help out. Feel free to post bugs and feature request. If you think a log file or picture is relevant, please make sure you attach it to your post.
+If you are interesting in contributing to this project, please send an email to one of the Project owners, or log onto irc via Freenode and join the channel #mp-tvseries and they can talk about how you can help out. Feel free to post bugs and feature request on the [http://forum.team-mediaportal.com/my-tvseries-162 sub-forum] or on the [http://code.google.com/p/mptvseries/issues/list issue-tracker]. Debug log files and screenshots if relevant are helpful, please make sure you attach it to your post.
