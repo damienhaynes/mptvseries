@@ -18,7 +18,7 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
 
  * Make sure MP-TVSeries logging is set to _Debug_ Level
    http://mptvseries.googlecode.com/svn/wiki/Images/DebugLogLevel.jpg
- * Use the _MediaPortal Debug_ shortcut from your Windows Start Menu (Team MediaPortal/MediaPortal) to start MediaPortal using the WatchDog Debug tool.
+ * Launch *MediaPortal Debug-Mode* shortcut from your Windows Start Menu (Team MediaPortal/MediaPortal)
  * Select the second option _Report a bug to a Plugin Developer or a Skin Designer_ 
    http://mptvseries.googlecode.com/svn/wiki/Images/DebugMode.jpg
  * Reproduce the issue then close MediaPortal
