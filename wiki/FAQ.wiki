@@ -89,6 +89,15 @@ If you have a series which has been re-imagined, lets take Battlestar Galatica f
  * Battlestar Galactica (1980) - S01E01.avi  this will match as the 1980's Series
  * Battlestar Galactica (2003) - S01E01.avi  this will match as the 2003 version.
 
+ ==Double Triple Quadruple Episodes==
+If you have 1 video file, which contains multiple episodes. MP-TVSeries can support 2 Episodes in 1 File. 3 and above is not supported. Some examples are below
+
+ * Alias.1x01.1x02.avi
+ * Alias S01E01-E02.avi 
+ * Alias S01E01 + S01E02.avi
+ * Alias - s01e01 - s01e02 - bar
+ * Alias #1.01 + #1.02.avi
+
  ==Auto Renaming of Files==
 MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer] and [http://www.tvrename.com Tv Rename] 
 
