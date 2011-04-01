@@ -25,12 +25,6 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
  *  A *MediaPortalLogs_Date_Time.zip* file will be automatically created on your desktop. Attach this file to your thread/post
 
 
-
-  ===Location of Log Files===
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\log
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log 
-
-
 =Integration with Social Media Websites =
 
 MP-TVSeries optionally integrates with the [http://follw.it follw.it] and [http://trakt.tv trakt.tv] websites, which are built around sharing with your friends what shows and movies you are into.
@@ -108,3 +102,27 @@ MP-TVSeries does not currently support the auto renaming of your files. However 
  ==Folder Structure==
 There are many variations you could use, below is a way that works well with the renaming tools above. 
  * TV  --> Series Name  --> Season # ---> Alias 1x1.avi
+
+=MP-TVSeries File Locations=
+
+Following the location of the files used my TVSeries, should you need to backup / restore or just have a look around
+
+ ==MP-TVSeries.dll==
+ This is the plugin itself which is used by Mediaportal, located in
+  * *x86*  C:\Program Files \Team MediaPortal\MediaPortal\plugins\Windows
+  * *x64*  C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows
+
+ ==TVSeriesDatabase4.db3==
+ This is the database file, where your MP-TVSeries data is stored. its recommended to backup this file incase you experience database corruption. 
+  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database
+  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\database
+
+ ==MPTVSeriesBanners and Fan Art Folders==
+ These folders are where the artwork is stored 
+  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\thumbs
+  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\thumbs
+
+ ===MP-TVSeries.log==
+ This file contains a log of activities in the MP-TVSeries plugin, which is useful for diagnostic purposes
+  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\log
+  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log
