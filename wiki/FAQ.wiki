@@ -158,7 +158,7 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
  * SQLiteClient:  cmd:sqlite3_finalize err:CORRUPT detailed:database disk image is malformed query
 
  ==Causes==
- * If you are using Mediaportal/MP-TVSeries in multi-seat mode, this will likely lead to database corruption if multiple clients write to the database at the same time
+ * If you are using Mediaportal/MP-TVSeries in (unsupported and not recommended) [http://wiki.team-mediaportal.com/UserGuides/CentralisedDatabases multi-seat mode], this will likely lead to database corruption if multiple clients write to the database at the same time
  * Hard Shutdown of PC while MP-TVSeries is preforming a database operation, (i.e Power Loss)
  * Your just unlucky!
 
