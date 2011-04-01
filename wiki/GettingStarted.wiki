@@ -102,7 +102,7 @@ In this screen, you can check the identitifed episodes match those online episod
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep3-2ManualSelection.jpg
 
-For each series, You may select a prefered ordering option from this screen. Its recommended in most cases to choose *Aired* unless you know for sure that the *DVD* order is correct online and matches your collection.
+For each series, You may select a prefered ordering option from this screen. Its recommended in most cases to choose *Aired* unless you know for sure that the *DVD* order is correct online and matches your collection. For a more detailed description of these options, see the [http://code.google.com/p/mptvseries/wiki/FAQ#Episode_Ordering_-_Online_Matching FAQ]
 
  http://mptvseries.googlecode.com/svn/wiki/Images/ImportStep3-1Ordering.jpg
 
