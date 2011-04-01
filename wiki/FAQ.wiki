@@ -158,6 +158,7 @@ To download all the available information for your Series, including Episodes yo
  * OnlineData Tab
  * Check the box _'Download Episode Information for Whole Series'_
  * The next import may take a while as it downloads all the avaible information for all your imported Series
+ http://mptvseries.googlecode.com/svn/wiki/Images/DownloadEpisodeInfoAll.jpg
 
  ==Showing / Hiding==
  * in Mediaporal, MP-TVSeries Plugin
