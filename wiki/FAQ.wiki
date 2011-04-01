@@ -73,7 +73,7 @@ Here are a few random examples which will parse.
 
  ==Series with Specials==
 Specials need to be labeled as Season 0, Lets take Top Gear Polar Special for example, Find Top Gear on thetvdb and click on [http://www.thetvdb.com/?tab=season&seriesid=74608&seasonid=22070&lid=7 Specials]. We can see in the Specials list, its labeled as Episode 49, so a filename for that could be
- * Top Gear - S00E49 - Polar Special
+ * Top Gear - S00E49 - Polar Special.avi
  * Top Gear - 0x49.mkv
  
  ==Re-imagined Series==
