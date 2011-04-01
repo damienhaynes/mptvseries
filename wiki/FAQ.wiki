@@ -105,8 +105,8 @@ See examples below
 
 If you start playback on 1x01 from "Alias - S01E01-E02.avi", then both episodes will be played, the end result is both episode 1 and 2 will be marked as watched. You can still start playback on 1x02, but it will start at the beginning of the file (but this is what one would expect anyway). If you start 1x01, but stop at the halfway point where 1x02 begins, then both 1x01+02 show as unwatched and when you try to restart playback you will get the "resume from" dialog
 
- ==Single Episode over Multiple Files==
-MP-TVSeries is not currently able to combine multiple files into 1 episode, It will show those files as duplicates in the episode list
+ ==Single Episode - Multiple Files==
+MP-TVSeries is does not currently support combining multiple files into a single episode, It will show those files as duplicates in the episode list
 
 We recommend in this scenario to join the files together, Click the following links for example programs for [http://www.alexander-noe.com/video/amg/ AVI files] and [http://www.bunkus.org/videotools/mkvtoolnix/ MKV files]
 
