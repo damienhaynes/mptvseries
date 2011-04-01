@@ -100,6 +100,10 @@ Some examples are below
  * Alias - s01e01 - s01e02 - bar
  * Alias #1.01 + #1.02.avi
 
+ ==Episodes with Air Date==
+MP-TVSeries does not currently support filenames that only contain the Air Date, example 'The Daily Show with Jon Stewart - 2010-12-16.avi'
+There is a open enhancement request [http://code.google.com/p/mptvseries/issues/detail?id=127 here], which you may like to Star.
+
  ==Auto Renaming of Files==
 MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer] and [http://www.tvrename.com Tv Rename] 
 
