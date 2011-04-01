@@ -139,7 +139,7 @@ MP-TVSeries has options to change the episode ordering for a series, you will on
 This may be useful for specials which keep on getting re-ordered online.
 
  ==Absolute Order==
- This option can only be selected on a Series, not a Season. Some series, like Anime may not be broken in Seasons. In order to accommodate this alternate numbering scheme an additional field Absolute Number is available. 
+ This option can only be selected on a Series, not a Season. Some series, like Anime may not be broken in Seasons. In order to accommodate this Absolute Order can be used
 
  ==Changing Matching Method==
  You can initially select these options on your inital import, see here, or you can change it inside Mediaportal
