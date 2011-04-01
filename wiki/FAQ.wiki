@@ -87,18 +87,18 @@ If you have a series which has been rebooted, lets take Battlestar Galatica for 
 If a series was already imported incorrectly in Mediaportal, press F9 or Info on remote, then press 'Force new online lookup for series'.
 This will prompt you to select a series or manually enter a search term.
 
- ==Double Triple Quadruple Episodes==
-If you have 1 video file, which contains multiple episodes. MP-TVSeries can support 2 Episodes in 1 File. 3 and above is not supported in a single file. 
+ ==Single File - Double Episode==
+MP-TVSeries can support 2 episodes in a single file. More than 2 is currently not supported
 
-If you start playback on 1x01 from "Alias - S01E01-E02", then both episodes will be played, and the end result is that 1x01 and 1x02 will be marked as watched. You can still start playback on 1x02, but it will start at the beginning of the file (but this is what one would expect anyway). If you start 1x01, but stop at the halfway point where 1x02 begins, then both 1x01+02 show as unwatched and when you try to restart playback you will get the "resume from" dialog
-
-Some examples are below
+See examples below
 
  * Alias.1x01.1x02.avi
  * Alias S01E01-E02.avi 
  * Alias S01E01 + S01E02.avi
  * Alias - s01e01 - s01e02 - bar
  * Alias #1.01 + #1.02.avi
+
+If you start playback on 1x01 from "Alias - S01E01-E02.avi", then both episodes will be played, and the end result is that 1x01 and 1x02 will be marked as watched. You can still start playback on 1x02, but it will start at the beginning of the file (but this is what one would expect anyway). If you start 1x01, but stop at the halfway point where 1x02 begins, then both 1x01+02 show as unwatched and when you try to restart playback you will get the "resume from" dialog
 
  ==Episodes with Air Date==
 MP-TVSeries does not currently support filenames that only contain the Air Date, example 'The Daily Show with Jon Stewart - 2010-12-16.avi'
