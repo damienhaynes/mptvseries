@@ -125,6 +125,30 @@ There are many variations you could use, below is a way that works well with the
 
 ----
 
+=Episode Ordering - Online Matching=
+MP-TVSeries has options to change the episode ordering for a series, you will only see options available if its applicable to that series
+
+ ==Air Date=
+ This is the default option, shows will be ordered by the date they were aired
+
+ ==DVD Order==
+ Choose this option to have your episodes listed in the order they were released on DVD
+
+ ==Title==
+ This matches episode by title.  Example. firefly - 1x01 - Serenity.mkv
+In this case will be parsed as 'Serenity' and will attempt to find an online match with episodes that have that title.
+This may be useful for specials which keep on getting re-ordered online.
+
+ ==Absolute Order==
+ Some series, especially Anime dont break a Series into seasons and go from episode 1 to whatever the final episode is, often into the hundreds. Most western broadcasters however do break these shows into seasons, so in order to accommodate this alternate numbering scheme an additional field Absolute Number is available. 
+
+ ==Changing Matching Method==
+ You can initially select these options on your inital import, see here, or you can change it inside Mediaportal
+ * In Mediaportal - Select the Series or Season
+ * Press F9 on keyboard or INFO on MCE Remote
+ * Choose ACTIONS
+ * Choose CHANGE ONLINE MATCHING METHOD
+
 =MP-TVSeries File Locations=
 The following are the locations of the files and folders used by MP-TVSeries, should you need to backup / restore or just have a look around
 
