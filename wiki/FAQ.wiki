@@ -135,8 +135,7 @@ MP-TVSeries has options to change the episode ordering for a series, you will on
  Choose this option to have your episodes listed in the order they were released on DVD, DVD ordering if often used to correct minor, sometimes major changes in episode ordering that was initially aired on TV
 
  ==Title==
- This matches episode by title.  Example. firefly - 1x01 - Serenity.mkv
-In this case will be parsed as 'Serenity' and will attempt to find an online match with episodes that have that title.
+ This matches episode by title.  Example. firefly - 1x01 - Serenity.mkv In this case will be parsed as 'Serenity' and will attempt to find an online match with episodes that have that title.
 This may be useful for specials which keep on getting re-ordered online.
 
  ==Absolute Order==
@@ -148,6 +147,8 @@ This may be useful for specials which keep on getting re-ordered online.
  * Press F9 on keyboard or INFO on MCE Remote
  * Choose ACTIONS
  * Choose CHANGE ONLINE MATCHING METHOD
+
+----
 
 =MP-TVSeries File Locations=
 The following are the locations of the files and folders used by MP-TVSeries, should you need to backup / restore or just have a look around
