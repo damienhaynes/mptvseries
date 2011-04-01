@@ -100,6 +100,11 @@ See examples below
 
 If you start playback on 1x01 from "Alias - S01E01-E02.avi", then both episodes will be played, and the end result is that 1x01 and 1x02 will be marked as watched. You can still start playback on 1x02, but it will start at the beginning of the file (but this is what one would expect anyway). If you start 1x01, but stop at the halfway point where 1x02 begins, then both 1x01+02 show as unwatched and when you try to restart playback you will get the "resume from" dialog
 
+ ==Single Episode over Multiple Files==
+MP-TVSeries is not currently able to combine multiple files into 1 episode, It will show those files as duplicates in the episode list
+
+We recommend in this scenario to [http://www.alexander-noe.com/video/amg/ combine/join] those files together into one physcial file.
+
  ==Episodes with Air Date==
 MP-TVSeries does not currently support filenames that only contain the Air Date, example 'The Daily Show with Jon Stewart - 2010-12-16.avi'
 There is a open enhancement request [http://code.google.com/p/mptvseries/issues/detail?id=127 here], which you may like to Star.
