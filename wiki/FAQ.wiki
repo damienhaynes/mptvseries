@@ -23,7 +23,7 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
  * Launch *MediaPortal Debug-Mode* shortcut from your Windows Start Menu (Team MediaPortal/MediaPortal)
  * Select the second option _Report a bug to a Plugin Developer or a Skin Designer_ 
    http://mptvseries.googlecode.com/svn/wiki/Images/DebugMode.jpg
- * Reproduce the issue then close MediaPortal
+ * Click _Proceed_, Reproduce the issue, Close MediaPortal
  *  A *MediaPortalLogs_Date_Time.zip* file will be automatically created on your desktop. Attach this file to your thread/post
 
 ----
