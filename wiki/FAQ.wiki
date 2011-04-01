@@ -24,6 +24,7 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
  * Reproduce the issue then close MediaPortal
  *  A *MediaPortalLogs_Date_Time.zip* file will be automatically created on your desktop. Attach this file to your thread/post
 
+----
 
 =Integration with Social Media Websites =
 
@@ -59,6 +60,8 @@ You can use either or both of the sites at the same time.
  * Check the box for MP-TVSeries
  * Click OK
  http://mptvseries.googlecode.com/svn/wiki/Images/TraktConfig.jpg
+
+----
 
 =File Naming Conventions=
 MP-TVSeries supports various naming conventions, if you want a perfect match without any user interaction, its best to name the Series as it is shown on thetvdb.com. If the Show contains a : such as CSI: Miami you could use CSI Miami or CSI- Miami
@@ -115,6 +118,8 @@ MP-TVSeries does not currently support the auto renaming of your files. However 
  ==Folder Structure==
 There are many variations you could use, below is a way that works well with the renaming tools above. 
  * TV  --> Series Name  --> Season # ---> Alias 1x1.avi
+
+----
 
 =MP-TVSeries File Locations=
 
