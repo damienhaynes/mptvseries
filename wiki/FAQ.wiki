@@ -126,8 +126,7 @@ There are many variations you could use, below is a way that works well with the
 ----
 
 =MP-TVSeries File Locations=
-
-Following the location of the files used my TVSeries, should you need to backup / restore or just have a look around
+The following are the locations of the files and folders used by MP-TVSeries, should you need to backup / restore or just have a look around
 
  ==MP-TVSeries.dll==
  This is the plugin itself which is used by Mediaportal, located in
