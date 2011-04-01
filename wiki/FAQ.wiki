@@ -150,6 +150,25 @@ MP-TVSeries has options to change the episode ordering for a series, you will on
 
 ----
 
+=Download Episode Information for Whole Series==
+To download all the available information for your Series, including Episodes you may not have, Episodes that have not aired yet, and display these episodes inside Mediaportal, do the following:
+
+ ==Settings==
+ * Load MP-TVSeries Plugin Configuration
+ * OnlineData Tab
+ * Check the box _'Download Episode Information for Whole Series'_
+ * The next import may take a while as it downloads all the avaible information for all your imported Series
+
+ ==Showing / Hiding==
+ * in Mediaporal, MP-TVSeries Plugin
+ * Press F9 on keyboard or INFO on MCE Remote
+ * Click OPTIONS
+ * Change 'ONLY SHOW LOCAL EPISODES' to OFF
+ 
+ You will now see all episodes for a Series, if you dont have the episode, Its colour will be orange. If a Series currently airing only shows a partial amount of all the expected episodes for the latest season, then those episodes havent all been added yet on thetvdb.com. 
+
+----
+
 =MP-TVSeries File Locations=
 The following are the locations of the files and folders used by MP-TVSeries, should you need to backup / restore or just have a look around
 
