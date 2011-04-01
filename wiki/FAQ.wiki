@@ -149,3 +149,23 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log
 
 ----
+=Database Corruption=
+ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become damaged in some fashion. The MP-TVSeries plugin in Mediaportal may not function correctly, such as your Series/Episodes are missing etc.
+
+ ==Identify Corruption==
+ The MP-TVSeries.log file will usually contain multiple events like the following:
+ * Commit failed on this command:
+ * SQLiteClient:  cmd:sqlite3_finalize err:CORRUPT detailed:database disk image is malformed query
+
+ ==Causes==
+ * If you are using Mediaportal/MP-TVSeries in multi-seat mode, this will likely lead to database corruption if multiple clients write to the database at the same time
+ * Hard Shutdown of PC while MP-TVSeries is preforming a database operation, (i.e Power Loss)
+ * Your just unlucky!
+
+ ==Solution==
+ * Export your watch flags from the MP-TVSeries plugin configuration     
+ * Delete your database TVSeriesDatabase4.db3 file 
+ * TVSeriesDatabase4.db3 will be re-created next time mediportal or the MP-TVSeries plugin configuration executes
+ * Reimport your shows
+ * Import your watch flags after import is complete
+----
