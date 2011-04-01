@@ -76,7 +76,7 @@ Specials need to be labeled as Season 0, Lets take Top Gear Polar Special for ex
  * Top Gear - S00E49 - Polar Special.avi
  * Top Gear - 0x49.mkv
  
- ==Original Series vs. ReMakes==
+ ==Original Series & ReMakes==
 If you have a series which has been rebooted, lets take Battlestar Galatica for example, there is the Original, a 1980's version and a 2003 version, How do you name these? go to [http://www.thetvdb.com thetvdb.com], search Battlestar Galatica. We need to name our files the same way. note each series has a different show id comfirming they are all different series
  http://mptvseries.googlecode.com/svn/wiki/Images/TvdbBSGExample.jpg
 
