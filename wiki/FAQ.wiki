@@ -90,7 +90,11 @@ If you have a series which has been re-imagined, lets take Battlestar Galatica f
  * Battlestar Galactica (2003) - S01E01.avi  this will match as the 2003 version.
 
  ==Double Triple Quadruple Episodes==
-If you have 1 video file, which contains multiple episodes. MP-TVSeries can support 2 Episodes in 1 File. 3 and above is not supported. Some examples are below
+If you have 1 video file, which contains multiple episodes. MP-TVSeries can support 2 Episodes in 1 File. 3 and above is not supported in a single file. 
+
+If you start playback on 1x01 from "Alias - S01E01-E02", then both episodes will be played, and the end result is that 1x01 and 1x02 will be marked as watched. You can still start playback on 1x02, but it will start at the beginning of the file (but this is what one would expect anyway). If you start 1x01, but stop at the halfway point where 1x02 begins, then both 1x01+02 show as unwatched and when you try to restart playback you will get the "resume from" dialog
+
+Some examples are below
 
  * Alias.1x01.1x02.avi
  * Alias S01E01-E02.avi 
