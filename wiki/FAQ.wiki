@@ -84,6 +84,9 @@ If you have a series which has been re-imagined, lets take Battlestar Galatica f
  * Battlestar Galactica (1980) - S01E01.avi  this will match as the 1980's Series
  * Battlestar Galactica (2003) - S01E01.avi  this will match as the 2003 version.
 
+If a series was already imported incorrectly in Mediaportal, press F9 or Info on remote, then press 'Force new online lookup for series'.
+This will prompt you to select a series or manually enter a search term.
+
  ==Double Triple Quadruple Episodes==
 If you have 1 video file, which contains multiple episodes. MP-TVSeries can support 2 Episodes in 1 File. 3 and above is not supported in a single file. 
 
