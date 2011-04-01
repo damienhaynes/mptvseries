@@ -138,8 +138,8 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
   * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\database
 
- ==MPTVSeriesBanners and Fan Art Folders==
- These folders are where the artwork is stored 
+ ==MPTVSeriesBanners and Fan Art (Folders)==
+ These two folders inside the thumbs folder are where the artwork is stored. 
   * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\thumbs
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\thumbs
 
@@ -147,3 +147,5 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
  This file contains a log of activities in the MP-TVSeries plugin, which is useful for diagnostic purposes
   * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\log
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log
+
+----
