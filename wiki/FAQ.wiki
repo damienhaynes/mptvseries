@@ -103,7 +103,7 @@ If you start playback on 1x01 from "Alias - S01E01-E02.avi", then both episodes 
  ==Single Episode over Multiple Files==
 MP-TVSeries is not currently able to combine multiple files into 1 episode, It will show those files as duplicates in the episode list
 
-We recommend in this scenario to [http://www.alexander-noe.com/video/amg/ combine/join] those files together into one physcial file.
+We recommend in this scenario to join the files together, Click the following links for example programs for [http://www.alexander-noe.com/video/amg/ AVI files] and [http://www.bunkus.org/videotools/mkvtoolnix/ MKV files]
 
  ==Episodes with Air Date==
 MP-TVSeries does not currently support filenames that only contain the Air Date, example 'The Daily Show with Jon Stewart - 2010-12-16.avi'
