@@ -118,7 +118,7 @@ MP-TVSeries does not currently support the auto renaming of your files. However 
  ==Folder Structure==
 There are many variations you could use, below is a way that works well with the renaming tools above. 
  * TV  --> Series Name  --> Season # ---> 30 Rock - S01E01 - Pilot.avi
-http://mptvseries.googlecode.com/svn/wiki/Images/FolderStructureExample.jpg
+ http://mptvseries.googlecode.com/svn/wiki/Images/FolderStructureExample.jpg
 
 
 ----
