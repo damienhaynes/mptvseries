@@ -226,11 +226,15 @@ Mediaportal 1 does not have native support for sharing its databases across mult
  * Every new episode added after you copied the database/thumbs will be imported on every additional HTPC, so this will use additional internet traffic
  * Changes you make on one HTPC, e.g. disabling fanart, changing views, adding/removing favourites are not replicaed to the other HTPCs. (Until you copy the database again)
 
+----
 
+=Edit Database=
+
+If you need to edit the MP-TVSeries database directly,you can download a SQLite tool, such as [http://sqlitebrowser.sourceforge.net/development.html sqlitebrowser] and edit the http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3] file.
 
 ----
 =Database Corruption=
- Its sometimes reported that the database file TVSeriesDatabase4.db3 has become damaged in some fashion. The MP-TVSeries plugin in Mediaportal may not function correctly, such as your Series/Episodes are missing etc.
+Its sometimes reported that the database file TVSeriesDatabase4.db3 has become damaged in some fashion. The MP-TVSeries plugin in Mediaportal may not function correctly, such as your Series/Episodes are missing etc.
 
  ==Identify Corruption==
  The MP-TVSeries.log file will usually contain multiple events like the following:
