@@ -247,10 +247,21 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
  * Your just unlucky!
 
  ==Solution==
- * (Optional) To retain your watch flags, and your NOT currently synced with [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv], _Export Watched Flags.._ from the MP-TVSeries plugin configuration, General Tab
- http://mptvseries.googlecode.com/svn/wiki/Images/ExportImportWatchFlags.jpg 
- * Delete your database file [http://code.google.com/p/mptvseries/wiki/FAQ?ts=1301645826&updated=FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]  
- * TVSeriesDatabase4.db3 will be re-created next time mediportal or the MP-TVSeries plugin configuration executes
- * Reimport your shows
- * (Optional) _Import Watched Flags_ after import is complete, or resetup your [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv] account.
+There are 2 options, restore from a backup file, or start clean
+
+  ===Option 1 - Restore from Backup File===
+  If you installed MP-TVSeries from the installer, it would have made a backup database in the following locations. You could take the backup file from this location and overwrite the corrupt [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]
+
+  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database\TVSeries_Backup
+  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\database\TVSeries_Backup
+
+
+  ===Option 2 - New Database===
+ 
+  * (Optional) To retain your watch flags, and your NOT currently synced with [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv], _Export Watched Flags.._ from the MP-TVSeries plugin configuration, General Tab
+  http://mptvseries.googlecode.com/svn/wiki/Images/ExportImportWatchFlags.jpg 
+  * Delete your database file [http://code.google.com/p/mptvseries/wiki/FAQ?ts=1301645826&updated=FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]  
+  * TVSeriesDatabase4.db3 will be re-created next time mediportal or the MP-TVSeries plugin configuration executes
+  * Reimport your shows
+  * (Optional) _Import Watched Flags_ after import is complete, or resetup your [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv] account.
 ----
