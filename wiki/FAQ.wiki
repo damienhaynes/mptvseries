@@ -195,7 +195,7 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
 
 ----
 
-==Multiple HTPCs and MP-TVSeries==
+=Multiple HTPCs and MP-TVSeries=
 
 Mediaportal 1 does not have native support for sharing its databases across multiple clients, this is something scheduled for Mediaportal 2. There are options, the first, is the [http://wiki.team-mediaportal.com/UserGuides/CentralisedDatabases multi-seat] Approach (not recommended/supported). The Second option, is below
 
