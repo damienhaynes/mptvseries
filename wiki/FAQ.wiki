@@ -166,7 +166,7 @@ To download all the available information for your Series, including Episodes yo
  * Click OPTIONS
  * Change 'ONLY SHOW LOCAL EPISODES' to OFF
  
- You will now see all episodes for a Series, if you dont have the episode, Its colour will be orange. If a Series currently airing only shows a partial amount of all the expected episodes for the latest season, then those episodes havent all been added yet on thetvdb.com. 
+ You will now see all episodes for a Series, Depending on Skin, those episodes may show in a different colour, e.g. Orange in Bluw3Wide *& StreamedMP. If a Season only shows a partial amount of all the expected episodes, then those episodes havent been added yet on thetvdb.com. 
 
 ----
 
