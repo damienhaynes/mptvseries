@@ -194,6 +194,41 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log
 
 ----
+
+==Multiple HTPCs and MP-TVSeries==
+
+Mediaportal 1 does not have native support for sharing its databases across multiple clients, this is something scheduled for Mediaportal 2. There are options, the first, is the [http://wiki.team-mediaportal.com/UserGuides/CentralisedDatabases multi-seat] Approach (not recommended/supported). The Second option, is below
+
+ ==Main HTPC==
+
+ * Make sure all paths are using UNC paths, no local paths, mapped drives are not recommended
+ * Configure your first HTPC with all the options/settings you prefer
+ * Check your main HTPC is synced follw.it and or trakt
+ * Run a Full Import
+ * Close Mediaportal
+
+ ==Additional HTPCs==
+
+ Its recommeded to have the same version of the MP-TVSeries plugin as your Main HTPC
+
+ * Close Mediaporal
+ * From the main HTPC, copy its [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3] to your additional HTPCs, overwriting.
+ * From the main HTPC, copy its [http://code.google.com/p/mptvseries/wiki/FAQ#MPTVSeriesBanners_and_Fan_Art_(Folders) MPTVSeriesBanners and Fan Art (Folders)] to your additional HTPCs, overwriting. Note you could just copy the entire thumbs folder (recommened), especially if you are doing the same process with MovingPictures etc.
+ * Open Mediaportal and you should have a working MP-TVSeries. When a show is watched on 1 HTPC it will be replicated to the others when it next syncs with Follw.it or Trakt.tv
+
+ ===Pros over Multiseat===
+
+ * You can use all HTPCs at the same time
+ * No greater risk of Database Corruption
+
+ ===Cons over Multiseat===
+
+ * Every new episode added after you copied the database/thumbs will be imported on every additional HTPC, so this will use additional internet traffic
+ * Changes you make on one HTPC, e.g. disabling fanart, changing views, adding/removing favourites are not replicaed to the other HTPCs. (Until you copy the database again)
+
+
+
+----
 =Database Corruption=
  Its sometimes reported that the database file TVSeriesDatabase4.db3 has become damaged in some fashion. The MP-TVSeries plugin in Mediaportal may not function correctly, such as your Series/Episodes are missing etc.
 
