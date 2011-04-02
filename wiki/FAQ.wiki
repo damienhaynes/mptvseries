@@ -208,9 +208,9 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
  * Your just unlucky!
 
  ==Solution==
- * Export your watch flags from the MP-TVSeries plugin configuration     
+ * (Optional) To retain your watch flags, and your NOT synced with [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv], _Export Watched Flags.._ from the MP-TVSeries plugin configuration, General Tab     
  * Delete your database file [http://code.google.com/p/mptvseries/wiki/FAQ?ts=1301645826&updated=FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]  
  * TVSeriesDatabase4.db3 will be re-created next time mediportal or the MP-TVSeries plugin configuration executes
  * Reimport your shows
- * Import your watch flags after import is complete
+ * (Optional) _Import Watched Flags_ after import is complete, or resetup your [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv] account.
 ----
