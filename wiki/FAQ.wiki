@@ -230,7 +230,7 @@ Mediaportal 1 does not have native support for sharing its databases across mult
 
 =Edit Database=
 
-If you need to edit the MP-TVSeries database directly,you can download a SQLite tool, such as [http://sqlitebrowser.sourceforge.net/development.html sqlitebrowser] and edit the http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3] file.
+ If you need to edit the MP-TVSeries database directly,you can download a SQLite tool, such as [http://sqlitebrowser.sourceforge.net/development.html sqlitebrowser] and edit the [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3] file.
 
 ----
 =Database Corruption=
