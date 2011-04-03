@@ -32,7 +32,7 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
 
 MP-TVSeries optionally integrates with the [http://follw.it follw.it] and [http://trakt.tv trakt.tv] websites, which are built around sharing with your friends what shows and movies you are into.
 
-One of the advantages to connecting to one or both of the sites is the syncronisation of your watch flags and ratings. This is useful if you have multiple htpcs, or if you need to start your tv series database from scratch.
+One of the advantages to connecting to one or both of the sites is the syncronisation of your watch flags and ratings, which we recommend. This is very useful if you have multiple htpcs, or if you need to start your tv series database from scratch.
 
 You can use either or both of the sites at the same time.
 
