@@ -85,9 +85,9 @@ Specials need to be labeled as Season 0, Lets take Top Gear Polar Special for ex
 If you have a series which has been rebooted, lets take Battlestar Galatica for example, there is the Original, a 1980's version and a 2003 version, How do you name these? go to [http://www.thetvdb.com thetvdb.com], search Battlestar Galatica. We need to name our files the same way. note each series has a different show id comfirming they are all different series
  http://mptvseries.googlecode.com/svn/wiki/Images/TvdbBSGExample.jpg
 
- * Battlestar Galactica  - S01E01.avi  this will match as the original series
- * Battlestar Galactica (1980) - S01E01.avi  this will match as the 1980's Series
- * Battlestar Galactica (2003) - S01E01.avi  this will match as the 2003 version.
+ * Battlestar Galactica  - S01E01.avi  (match as original series)
+ * Battlestar Galactica (1980) - S01E01.avi  (match as 1980's series)
+ * Battlestar Galactica (2003) - S01E01.avi  (match as 2003 series)
 
 If a series was already imported incorrectly in Mediaportal, highlight the series, press F9 or Info on remote, then press 'Force new online lookup for series'.
 This will prompt you to select a series or manually enter a search term.
