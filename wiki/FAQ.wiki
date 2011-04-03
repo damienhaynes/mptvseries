@@ -194,7 +194,7 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log
 
  ==Language.XML (Files)==
- This directory contains all the translated languages that can be used in MP-TVSeries
+ This directory contains all the language files, in XML format that can be used in MP-TVSeries
   * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\language\MP-TVSeries\
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\Mediaportal\language\MP-TVSeries\
 
