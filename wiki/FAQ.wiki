@@ -233,6 +233,27 @@ Mediaportal 1 does not have native support for sharing its databases across mult
 
 ----
 
+=Language Support=
+MP-TVSeries supports multiple languages, and you are welcome to contribute by updating or adding a new language.
+
+ ==Configuration==
+ * Lauch the MP-TVSeries Plugin Configuration
+ * Click _General_ Tab
+ * Drop down the Language box, choose your language
+ * Close MediaPortal
+
+ ==Update a Language==
+ If you find a language has incorrect spelling, or missing some translation fields, you can update the appropiate .xml file in the 
+[http://code.google.com/p/mptvseries/wiki/FAQ#Language.XML_(Files) Language Folder]. Please submit the updated file on the [http://forum.team-mediaportal.com/my-tvseries-162/ forum]
+
+ ==Add a new Language==
+ * Download the latest English XML [http://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Languages/en(us).xml here]
+ * Rename en(us).xml to yourlanguage.xml
+ * Update All Fields Possible
+ * Submit the new xml to the [http://forum.team-mediaportal.com/my-tvseries-162/ forum] to be included in an upcoming build
+
+----
+
 =Edit Database=
 
  If you need to edit the MP-TVSeries database directly,you can download a SQLite tool, such as [http://sqlitebrowser.sourceforge.net/development.html sqlitebrowser] and edit the [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3] file.
