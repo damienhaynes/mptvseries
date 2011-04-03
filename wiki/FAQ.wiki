@@ -221,15 +221,13 @@ Mediaportal 1 does not have native support for sharing its databases across mult
  * From the main HTPC, copy its [http://code.google.com/p/mptvseries/wiki/FAQ#MPTVSeriesBanners_and_Fan_Art_(Folders) MPTVSeriesBanners and Fan Art (Folders)] to your additional HTPCs, overwriting. Note you could just copy the entire thumbs folder (recommend), especially if you are doing the same process with MovingPictures etc.
  * Open Mediaportal and you should have a working MP-TVSeries. When a show is watched on 1 HTPC it will be replicated to the others when it next syncs with Follw.it or Trakt.tv
 
- ===Advantages===
+  ===Advantages===
+  * You can use all HTPCs at the same time
+  * No greater risk of Database Corruption
 
- * You can use all HTPCs at the same time
- * No greater risk of Database Corruption
-
- ===Disadvantages===
-
- * Every new episode added after you copied the database/thumbs will be imported on every additional HTPC, so this will use additional internet traffic
- * Changes you make on one HTPC, e.g. disabling fanart, changing views, adding/removing favourites are not replicated to the other HTPCs. (Until you copy the database again)
+  ===Disadvantages===
+  * Every new episode added after you copied the database/thumbs will be imported on every additional HTPC, so this will use additional internet traffic
+  * Changes you make on one HTPC, e.g. disabling fanart, changing views, adding/removing favourites are not replicated to the other HTPCs. (Until you copy the database again)
 
 ----
 
