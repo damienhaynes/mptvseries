@@ -252,7 +252,7 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
  * Your just unlucky!
 
  ==Solution==
-There are 2 options, restore from a backup file, or start clean
+ There are 2 options, restore from a backup file, start a new database. Note: Artwork that has already been downloaded will be automatically re-used and not re-downloaded
 
   ===Option 1 - Restore from Backup File===
   If you installed MP-TVSeries from the installer, it would have made a backup database in the following location. You could take the backup file from this location and overwrite the corrupt [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]. If the backups are extremely old, it may be wiser to use Option 2
