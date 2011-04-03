@@ -243,7 +243,7 @@ MP-TVSeries supports multiple languages, and you are welcome to contribute by up
  * Close MediaPortal
 
  ==Update a Language==
- If you find a language has incorrect spelling, or missing some translation fields, you can update the appropiate .xml file in the http://code.google.com/p/mptvseries/wiki/FAQ#Language.XML_(Files) Language Folder]. Please submit the updated file on the [http://forum.team-mediaportal.com/my-tvseries-162/ forum]
+ If you find a language has incorrect spelling, or missing some translation fields, you can update the appropiate .xml file in the [http://code.google.com/p/mptvseries/wiki/FAQ#Language.XML_(Files) Language Folder]. Please submit the updated file on the [http://forum.team-mediaportal.com/my-tvseries-162/ forum]
 
  ==Add a new Language==
  * Download the latest English XML [http://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Languages/en(us).xml here]
