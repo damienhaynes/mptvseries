@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TVSeries translation file -->
 <!-- Spanish (es) -->
-<!-- Last Updated: 08th Mar 2011 -->
+<!-- Last Updated: 22nd Mar 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Serie</string>
@@ -279,4 +279,7 @@
   <string Field="TraktNotEnoughInfo">No hay información suficiente para enviar al servidor.</string>
   <string Field="ResumeEpisode">¿Reanudar episodio desde la última posición?</string>
   <string Field="SummaryNotAvailable">No hay resumen disponible.</string>
+  <string Field="Timeout">Tiempo Excedido</string>
+  <string Field="NoActors">No hay actores para estas series</string>
+  <string Field="GettingActors">Obteniendo actores Online</string>
 </strings>
