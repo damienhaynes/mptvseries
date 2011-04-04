@@ -1054,6 +1054,16 @@ namespace WindowPlugins.GUITVSeries
                                 retVal = base[cEpisodeName];
                             return retVal;
 
+                        case cEpisodeName + cUserEditPostFix:
+                            retVal = m_onlineEpisode[DBOnlineEpisode.cEpisodeName + cUserEditPostFix];
+                            if (String.IsNullOrEmpty(retVal))
+                            {
+                                retVal = m_onlineEpisode[DBOnlineEpisode.cEpisodeName];
+                                if (String.IsNullOrEmpty(retVal))
+                                    retVal = base[cEpisodeName];
+                            }
+                            return retVal;
+
                         default:
                             retVal = m_onlineEpisode[fieldName];
                             if (String.IsNullOrEmpty(retVal))
