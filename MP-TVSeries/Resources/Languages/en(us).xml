@@ -21,8 +21,7 @@
   <string Field="Add_series_to_Favourites" Original="Add series to Favourites">Add to Favourites</string>
   <string Field="Force_Local_Scan" Original="Force Local Scan ">Force Local Scan </string>
   <string Field="Force_Online_Refresh" Original="Force Online Refresh ">Force Online Refresh </string>
-  <string Field="In_Progress_with_Barracks" Original="(In Progress)">(In Progress)</string>
-  <string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Only show local episodes</string>
+  <string Field="In_Progress_with_Barracks" Original="(In Progress)">(In Progress)</string>  
   <string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Hide Spoliers</string>
   <string Field="on" Original="on">on</string>
   <string Field="off" Original="off">off</string>
@@ -306,5 +305,7 @@
   <string Field="Timeout" Original="Timeout">Timeout</string>
   <string Field="NoActors" Original="There are no Actors for this series.">There are no Actors for this series.</string>
   <string Field="GettingActors" Original="Getting Actors from Online">Getting Actors from Online</string>
- 
+
+  <string Field="ShowAllEpisodes" Original="Show all Episodes">Show all Episodes</string>
+  
 </strings>
