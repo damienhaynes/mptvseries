@@ -337,8 +337,8 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 			
-            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? " " : m_currentEpisode.onlineEpisode.CompleteTitle);            
-            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? " " : (string)m_currentEpisode[DBOnlineEpisode.cFirstAired]);                        
+            GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? " " : m_currentEpisode.onlineEpisode.CompleteTitle);
+            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? " " : FieldGetter.resolveDynString("<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cFirstAired + ">", m_currentEpisode, false));
             GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? " " : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeSubtitle, m_currentEpisode));
         }
 

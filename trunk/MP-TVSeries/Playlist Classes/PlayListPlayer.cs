@@ -572,7 +572,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             GUIPropertyManager.SetProperty("#Play.Current.Title", clear ? "" : title);
-            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : item.FirstAired);
+            GUIPropertyManager.SetProperty("#Play.Current.Year", clear ? "" : FieldGetter.resolveDynString("<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cFirstAired + ">", item.Episode, false));
             GUIPropertyManager.SetProperty("#Play.Current.Genre", clear ? "" : FieldGetter.resolveDynString(TVSeriesPlugin.m_sFormatEpisodeSubtitle, item.Episode));
         }
 
