@@ -784,8 +784,8 @@ Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abd
 Use can enter '\n' to create newlines between fields</value>
   </data>
   <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
-    <value>Enable this option to only display episodes in Media Portal that are found locally in import folders.
-Disable to show all seasons and episodes for series.
+    <value>Enable this option to display all episodes in Media Portal GUI including files without any file reference.
+Disable to only show episodes that have a local file reference.
 
 This setting can also be changed from within Media Portal</value>
   </data>

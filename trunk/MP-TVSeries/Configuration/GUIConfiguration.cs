@@ -202,7 +202,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
             checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);            
-            checkBox_Episode_OnlyShowLocalFiles.Checked = DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
+            checkBox_Episode_OnlyShowLocalFiles.Checked = !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
             checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
             checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
             checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImport_FolderWatch);
@@ -3902,7 +3902,7 @@ namespace WindowPlugins.GUITVSeries
     
         private void checkBox_Episode_OnlyShowLocalFiles_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);
+            DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !checkBox_Episode_OnlyShowLocalFiles.Checked);
         }
 
         private void optionAsk2Rate_CheckedChanged(object sender, EventArgs e)
