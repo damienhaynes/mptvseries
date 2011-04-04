@@ -61,8 +61,7 @@ namespace WindowPlugins.GUITVSeries
         UpdateEpisodeThumbNails,
         UpdateUserFavourites,
 
-        UpdateRecentlyAdded,
-        BroadcastRecentlyAdded,
+        UpdateRecentlyAdded        
     }
 
     public class ParsingProgress
@@ -110,9 +109,8 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.GetNewFanArt, 
             ParsingAction.UpdateEpisodeThumbNails, 
             ParsingAction.UpdateUserFavourites,
-			ParsingAction.UpdateEpisodeCounts,
-            ParsingAction.BroadcastRecentlyAdded,
-            ParsingAction.UpdateRecentlyAdded
+            ParsingAction.UpdateRecentlyAdded,
+			ParsingAction.UpdateEpisodeCounts
 		};
 
         public List<ParsingAction> m_actions = new List<ParsingAction>();
@@ -149,8 +147,7 @@ namespace WindowPlugins.GUITVSeries
                 m_actions.Add(ParsingAction.MediaInfo);
                 m_actions.Add(ParsingAction.IdentifyNewSeries);
                 m_actions.Add(ParsingAction.IdentifyNewEpisodes);
-                m_actions.Add(ParsingAction.UpdateEpisodeCounts);
-                m_actions.Add(ParsingAction.BroadcastRecentlyAdded);
+                m_actions.Add(ParsingAction.UpdateEpisodeCounts);                
             }
             
             if (action == ParsingAction.List_Remove)
@@ -477,13 +474,6 @@ namespace WindowPlugins.GUITVSeries
                         UpdateEpisodeCounts(tEpisodeCounts);
                         break;
 
-                    case ParsingAction.BroadcastRecentlyAdded:
-                        // Broadcast Recently Added to Infoservice plugin
-                        if (!Settings.isConfig) {
-                            BroadcastRecentlyAdded();
-                        }
-                        break;
-
                     case ParsingAction.UpdateRecentlyAdded:
                         // set hasnewepisodes field on series record
                         UpdateRecentlyAdded();
@@ -510,56 +500,6 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("***************************************************************************");
             MPTVSeriesLog.Write("*******************            Completed           ************************");
             MPTVSeriesLog.Write("***************************************************************************");
-        }
-
-        private void BroadcastRecentlyAdded()
-        {            
-            MPTVSeriesLog.Write(bigLogMessage("Broadcasting Recently Added Episodes"));
-
-            // Calculate date for querying database
-            DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            dt = dt.Subtract(new TimeSpan(7,0,0,0,0));
-            string date = dt.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
-
-            // Get a list of the most recently added episodes in the database
-            SQLCondition conditions = new SQLCondition();
-            conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);
-            conditions.AddOrderItem(DBEpisode.Q(DBEpisode.cFileDateCreated), SQLCondition.orderType.Descending);
-            List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
-
-            if (episodes != null)
-            {
-                MPTVSeriesLog.Write("Sending most Recently Added episodes to InfoService plugin", MPTVSeriesLog.LogLevel.Debug);
-
-                // Infoservice only supports 3 most recent episodes
-                if (episodes.Count > 3) episodes.RemoveRange(3, episodes.Count - 3);                
-                
-                episodes.Reverse();
-
-                foreach (DBEpisode episode in episodes)
-                {
-                    // Get Episode Details and send to InfoService plugin
-                    DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
-                    if (series != null)
-                    {
-                        string episodeTitle = episode[DBEpisode.cEpisodeName];
-                        string seasonIdx = episode[DBEpisode.cSeasonIndex];
-                        string episodeIdx = episode[DBEpisode.cEpisodeIndex];
-                        string seriesTitle = series.ToString();
-                        string thumb = ImageAllocator.GetSeriesPosterAsFilename(series);
-                        string fanart = Fanart.getFanart(episode[DBEpisode.cSeriesID]).FanartFilename;
-                        string sendTitle = string.Format("{0}/{1}/{2}/{3}", seriesTitle, seasonIdx, episodeIdx, episodeTitle);
-
-                        string[] episodeDetails = new string[] { "Series", sendTitle, thumb, fanart };
-                        MPTVSeriesLog.Write(string.Format("InfoService: {0}, {1}, {2}, {3}", episodeDetails[0], episodeDetails[1], episodeDetails[2], episodeDetails[3]));
-
-                        // Send message to InfoService plugin
-                        GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_USER, 16000, 9811, 0, 0, 0, episodeDetails);
-                        GUIGraphicsContext.SendMessage(msg);
-                        GUIWindowManager.Process();
-                    }
-                }
-            }
         }
 
         private void UpdateRecentlyAdded()
