@@ -1764,6 +1764,41 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (this.m_Facade.SelectedListItem == null || this.m_Facade.SelectedListItem.TVTag == null)
                     return;
+                
+                #region Parental Control Check for Tagged Views
+                if (this.listLevel == Listlevel.Group && logicalView.IsLocked)
+                {
+                    string viewName = this.m_Facade.SelectedListItem.Label;
+                    DBView[] views = DBView.getTaggedViews();
+                    foreach (DBView view in views)
+                    {
+                        if (view[DBView.cTransToken] == viewName || view[DBView.cPrettyName] == viewName)
+                        {
+                            // check if we are entering a protected view
+                            if (view[DBView.cParentalControl])
+                            {
+                                GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
+                                pinCodeDlg.Reset();
+
+                                pinCodeDlg.MasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+                                pinCodeDlg.EnteredPinCode = string.Empty;
+                                pinCodeDlg.SetHeading(Translation.PinCode);
+                                pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, viewName));
+                                pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
+                                pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
+                                pinCodeDlg.DoModal(GUIWindowManager.ActiveWindow);
+                                if (!pinCodeDlg.IsCorrect)
+                                {
+                                    MPTVSeriesLog.Write("PinCode entered was incorrect, showing Views Menu");
+                                    return;
+                                }
+                                else
+                                    logicalView.IsLocked = false;
+                            }
+                        }
+                    }
+                } 
+                #endregion
 
                 m_back_up_select_this = null;
                 switch (this.listLevel)
