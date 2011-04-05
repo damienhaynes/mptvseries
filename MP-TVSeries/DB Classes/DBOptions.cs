@@ -621,6 +621,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cParentalControlResetInterval) == null)
                     SetOptions(cParentalControlResetInterval, 60);
 
+                if (GetOptions(cShowDeleteMenu) == null)
+                    SetOptions(cShowDeleteMenu, true);
+
             }
             catch (Exception ex)
             {
