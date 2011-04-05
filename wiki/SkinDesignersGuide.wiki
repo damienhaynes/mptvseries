@@ -34,6 +34,21 @@ Coverflow is supported in Series and Season view and will load the Poster image 
     <episodethumbs>90</episodethumbs>
 </graphicsquality>
 }}}
+== v2.7 - v2.8 ==
+* New Skin Settings *
+
+The plugin can now load simple settings by looking in a new *defines* node. This version introduces a few settings to control the visibility of fanart per layout (list, icons, filmstrip) and per view level (series, seasons, episodes):
+{{{
+<defines>
+    <property key="fanart.seriesview">true</property>
+    <property key="fanart.seasonview">true</property>
+    <property key="fanart.episodeview">true</property>
+    <property key="fanart.listlayout">true</property>
+    <property key="fanart.iconslayout">true</property>
+    <property key="fanart.filmstriplayout">true</property>
+    <property key="fanart.coverflowlayout">true</property>
+</defines>
+}}}
 == v2.6 - v2.7 ==
 * New Skin Properties
 || *Propterty* || *Description* ||
