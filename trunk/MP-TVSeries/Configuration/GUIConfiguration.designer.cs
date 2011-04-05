@@ -143,6 +143,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoDown = new System.Windows.Forms.Button();
             this.btnlogoUp = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.nudParentalControlTimeout = new System.Windows.Forms.NumericUpDown();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.richTextBox_seriesFormat_Col1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox_seriesFormat_Title = new System.Windows.Forms.RichTextBox();
@@ -261,6 +262,7 @@ namespace WindowPlugins.GUITVSeries
             this.tab_view = new System.Windows.Forms.TabPage();
             this.playlistSettings = new WindowPlugins.GUITVSeries.Configuration.PlaylistSettings();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.buttonPinCode = new System.Windows.Forms.Button();
             this.buttonEditView = new System.Windows.Forms.Button();
             this.checkBoxParentalControl = new System.Windows.Forms.CheckBox();
@@ -305,6 +307,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecentlyAddedDays)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudParentalControlTimeout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownImportDelay)).BeginInit();
             this.splitMain_Log.Panel1.SuspendLayout();
             this.splitMain_Log.Panel2.SuspendLayout();
@@ -1196,6 +1199,31 @@ namespace WindowPlugins.GUITVSeries
                     "ing progress of Import");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // nudParentalControlTimeout
+            // 
+            this.nudParentalControlTimeout.Location = new System.Drawing.Point(450, 255);
+            this.nudParentalControlTimeout.Maximum = new decimal(new int[] {
+            3600,
+            0,
+            0,
+            0});
+            this.nudParentalControlTimeout.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudParentalControlTimeout.Name = "nudParentalControlTimeout";
+            this.nudParentalControlTimeout.Size = new System.Drawing.Size(54, 20);
+            this.nudParentalControlTimeout.TabIndex = 11;
+            this.toolTip_Help.SetToolTip(this.nudParentalControlTimeout, "Set number of minutes for Parental Control Lock to re-enable.\r\nNext time you ente" +
+                    "r the view, Pin Code will be requested.");
+            this.nudParentalControlTimeout.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudParentalControlTimeout.ValueChanged += new System.EventHandler(this.nudParentalControlTimeout_ValueChanged);
             // 
             // toolTip_InfoHelp
             // 
@@ -2857,6 +2885,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox8.Controls.Add(this.nudParentalControlTimeout);
+            this.groupBox8.Controls.Add(this.label19);
             this.groupBox8.Controls.Add(this.buttonViewTemplates);
             this.groupBox8.Controls.Add(this.buttonPinCode);
             this.groupBox8.Controls.Add(this.buttonEditView);
@@ -2876,6 +2906,15 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Customize Views";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(257, 259);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(175, 13);
+            this.label19.TabIndex = 10;
+            this.label19.Text = "Parental Control Auto-Lock Interval:";
             // 
             // buttonPinCode
             // 
@@ -3338,6 +3377,7 @@ namespace WindowPlugins.GUITVSeries
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecentlyAddedDays)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudParentalControlTimeout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownImportDelay)).EndInit();
             this.splitMain_Log.Panel1.ResumeLayout(false);
             this.splitMain_Log.Panel2.ResumeLayout(false);
@@ -3632,5 +3672,7 @@ namespace WindowPlugins.GUITVSeries
         private Configuration.DBOptionCheckBox dbOptionCheckBox3;
         private System.Windows.Forms.TabPage tabFollwit;
         private FollwitTv.FollwitSettingsPanel follwitSettingsPanel1;
+        private System.Windows.Forms.NumericUpDown nudParentalControlTimeout;
+        private System.Windows.Forms.Label label19;
     }
 }
