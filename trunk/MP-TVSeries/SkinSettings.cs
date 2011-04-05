@@ -61,6 +61,25 @@ namespace WindowPlugins.GUITVSeries {
             }
         } private static Dictionary<string, string> _videoPlayImages = new Dictionary<string, string>();
 
+        public static Dictionary<string, string> Defines
+        {
+            get { return _defines; }
+            set { _defines = value; }
+        } 
+        private static Dictionary<string,string> _defines = new Dictionary<string, string>();
+
+        #endregion
+
+        #region Public Constants
+
+        public const string cfanartlistlayout = "fanart.listlayout";
+        public const string cfanarticonslayout = "fanart.iconslayout";
+        public const string cfanartfilmstriplayout = "fanart.filmstriplayout";
+        public const string cfanartcoverflowlayout = "fanart.coverflowlayout";
+        public const string cfanartseriesview = "fanart.seriesview";
+        public const string cfanartseasonview = "fanart.seasonview";
+        public const string cfanartepisodeview = "fanart.episodeview";
+
         #endregion
 
         #region Public Methods
@@ -95,6 +114,7 @@ namespace WindowPlugins.GUITVSeries {
             GetVideoOSDImages(doc);
             GetVideoPlayImages(doc);
             GetThumbNewStampPositions(doc);
+            GetDefines(doc);
         }
 
         /// <summary>
@@ -708,6 +728,8 @@ namespace WindowPlugins.GUITVSeries {
         /// <param name="doc"></param>
         private static void GetThumbNewStampPositions(XmlDocument doc)
         {
+            MPTVSeriesLog.Write("Loading Settings for Thumbs NewStamp positions", MPTVSeriesLog.LogLevel.Normal);
+
             int posx = 0;
             int posy = 0;
 
@@ -737,6 +759,37 @@ namespace WindowPlugins.GUITVSeries {
                 int.TryParse(node.InnerText, out posy);
                 PosterNewStampPosY = posy;
             }           
+        }
+
+        private static void GetDefines(XmlDocument doc)
+        {
+            MPTVSeriesLog.Write("Loading Skin Defines", MPTVSeriesLog.LogLevel.Normal);
+
+            // clear defines
+            Defines.Clear();
+
+            XmlNode node = null;
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartlistlayout));
+            if (node != null) Defines.Add(cfanartlistlayout, node.InnerText);
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanarticonslayout));
+            if (node != null) Defines.Add(cfanarticonslayout, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartfilmstriplayout));
+            if (node != null) Defines.Add(cfanartfilmstriplayout, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartcoverflowlayout));
+            if (node != null) Defines.Add(cfanartcoverflowlayout, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartseriesview));
+            if (node != null) Defines.Add(cfanartseriesview, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartseasonview));
+            if (node != null) Defines.Add(cfanartseasonview, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartepisodeview));
+            if (node != null) Defines.Add(cfanartepisodeview, node.InnerText.ToLowerInvariant());
+
         }
         #endregion
     }

@@ -254,7 +254,6 @@ namespace WindowPlugins.GUITVSeries
             this.numericUpDownBackdropDelay = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.comboLogLevel = new System.Windows.Forms.ComboBox();
-            this.chkShowSeriesFanart = new System.Windows.Forms.CheckBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
@@ -669,7 +668,7 @@ namespace WindowPlugins.GUITVSeries
             // chkAllowDeletes
             // 
             this.chkAllowDeletes.AutoSize = true;
-            this.chkAllowDeletes.Location = new System.Drawing.Point(404, 284);
+            this.chkAllowDeletes.Location = new System.Drawing.Point(404, 261);
             this.chkAllowDeletes.Name = "chkAllowDeletes";
             this.chkAllowDeletes.Size = new System.Drawing.Size(269, 17);
             this.chkAllowDeletes.TabIndex = 41;
@@ -1476,7 +1475,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_OnlyShowLocalFiles.AutoSize = true;
             this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(404, 192);
             this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_OnlyShowLocalFiles";
-            this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(266, 17);
+            this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(256, 17);
             this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 37;
             this.checkBox_Episode_OnlyShowLocalFiles.Text = "&Show all episodes in local database when in GUI";
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, resources.GetString("checkBox_Episode_OnlyShowLocalFiles.ToolTip"));
@@ -1542,7 +1541,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
             this.dbOptChkBoxCountEmptyFutureEps.Checked = true;
             this.dbOptChkBoxCountEmptyFutureEps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 332);
+            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 309);
             this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
             this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
             this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
@@ -1559,7 +1558,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Checked = true;
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 238);
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 215);
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
@@ -2560,7 +2559,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.checkBox_Episode_HideUnwatchedSummary);
             this.groupBox1.Controls.Add(this.checkBox_Episode_HideUnwatchedThumbnail);
             this.groupBox1.Controls.Add(this.checkBox_Episode_OnlyShowLocalFiles);
-            this.groupBox1.Controls.Add(this.chkShowSeriesFanart);
             this.groupBox1.Controls.Add(this.checkBox_Series_UseSortName);
             this.groupBox1.Controls.Add(this.optionAsk2Rate);
             this.groupBox1.Controls.Add(this.chkUseRegionalDateFormatString);
@@ -2670,7 +2668,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox2.AutoSize = true;
             this.dbOptionCheckBox2.Checked = true;
             this.dbOptionCheckBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBox2.Location = new System.Drawing.Point(404, 261);
+            this.dbOptionCheckBox2.Location = new System.Drawing.Point(404, 238);
             this.dbOptionCheckBox2.Name = "dbOptionCheckBox2";
             this.dbOptionCheckBox2.Option = "SkipSeasonViewOnSingleSeason";
             this.dbOptionCheckBox2.Size = new System.Drawing.Size(234, 17);
@@ -2682,7 +2680,7 @@ namespace WindowPlugins.GUITVSeries
             // dbOptionCheckBoxSubstituteMissingArtwork
             // 
             this.dbOptionCheckBoxSubstituteMissingArtwork.AutoSize = true;
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(404, 307);
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(404, 284);
             this.dbOptionCheckBoxSubstituteMissingArtwork.Name = "dbOptionCheckBoxSubstituteMissingArtwork";
             this.dbOptionCheckBoxSubstituteMissingArtwork.Option = "SubstituteMissingArtwork";
             this.dbOptionCheckBoxSubstituteMissingArtwork.Size = new System.Drawing.Size(280, 17);
@@ -2794,17 +2792,6 @@ namespace WindowPlugins.GUITVSeries
             this.comboLogLevel.Size = new System.Drawing.Size(119, 21);
             this.comboLogLevel.TabIndex = 31;
             this.comboLogLevel.SelectedIndexChanged += new System.EventHandler(this.comboLogLevel_SelectedIndexChanged);
-            // 
-            // chkShowSeriesFanart
-            // 
-            this.chkShowSeriesFanart.AutoSize = true;
-            this.chkShowSeriesFanart.Location = new System.Drawing.Point(404, 215);
-            this.chkShowSeriesFanart.Name = "chkShowSeriesFanart";
-            this.chkShowSeriesFanart.Size = new System.Drawing.Size(154, 17);
-            this.chkShowSeriesFanart.TabIndex = 38;
-            this.chkShowSeriesFanart.Text = "&Show Fanart in Series view";
-            this.chkShowSeriesFanart.UseVisualStyleBackColor = true;
-            this.chkShowSeriesFanart.CheckedChanged += new System.EventHandler(this.chkShowSeriesFanart_CheckedChanged);
             // 
             // label39
             // 
@@ -3562,7 +3549,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.CheckBox checkBox_Episode_HideUnwatchedSummary;
         private System.Windows.Forms.CheckBox checkBox_Episode_HideUnwatchedThumbnail;
         private System.Windows.Forms.CheckBox checkBox_Episode_OnlyShowLocalFiles;
-        private System.Windows.Forms.CheckBox chkShowSeriesFanart;
         private System.Windows.Forms.CheckBox checkBox_Series_UseSortName;
         private Configuration.DBOptionCheckBox optionAsk2Rate;
         private System.Windows.Forms.CheckBox chkUseRegionalDateFormatString;

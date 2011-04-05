@@ -262,9 +262,7 @@ namespace WindowPlugins.GUITVSeries
             spinMaxFanarts.Value = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
             checkboxAutoDownloadFanartSeriesName.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
 
-            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);            
-            
-            chkShowSeriesFanart.Checked = DBOption.GetOptions(DBOption.cShowSeriesFanart);
+            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);                        
             
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
             richTextBox_seriesFormat_Col1.Enabled = !SkinSettings.ImportViews;
@@ -3878,11 +3876,6 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_AutoChooseOrder_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAutoChooseOrder, checkBox_AutoChooseOrder.Checked);
-        }
-
-        private void chkShowSeriesFanart_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cShowSeriesFanart, chkShowSeriesFanart.Checked);
         }
 
         private void comboBox_PosterSelection_SelectedIndexChanged(object sender, EventArgs e)
