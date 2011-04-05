@@ -517,7 +517,7 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             #region Skin Settings / Load
-            InitSkinSettings();
+            SkinSettings.Init();
             
             // listen to this event to detect skin changes in GUI
             GUIWindowManager.OnDeActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnDeActivateWindow);
@@ -1996,7 +1996,7 @@ namespace WindowPlugins.GUITVSeries
                 if (SkinSettings.CurrentSkin != SkinSettings.PreviousSkin)
                 {
                     MPTVSeriesLog.Write("Skin Change detected in GUI, reloading skin settings");
-                    InitSkinSettings();
+                    SkinSettings.Init();
                 }
             }
         }
@@ -2211,14 +2211,13 @@ namespace WindowPlugins.GUITVSeries
 
                 switch (this.listLevel)
                 {
-                    case Listlevel.Series:						
-						// Check if series fanart is enabled                       
-                        if (!DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
-                            DisableFanart();
-                        }                        
-                        break;     
-            
+                    case Listlevel.Series:
+                    case Listlevel.Episode:
+                        if (!CheckSkinFanartSettings()) DisableFanart();
+                        break;
+
                     case Listlevel.Season:
+                        if (!CheckSkinFanartSettings()) DisableFanart();
                         clearFieldsForskin("Season");
                         clearFieldsForskin("Episode");
                         break;
@@ -2451,6 +2450,8 @@ namespace WindowPlugins.GUITVSeries
            
             if (m_Facade == null)
                 return;
+
+            if (!CheckSkinFanartSettings()) DisableFanart();
 
             m_Facade.Focus = true;
             
@@ -3666,10 +3667,6 @@ namespace WindowPlugins.GUITVSeries
                 pItem = new GUIListItem(Translation.FanArtRandom + " (" + (DBOption.GetOptions(DBOption.cFanartRandom) ? Translation.on : Translation.off) + ")");
                 dlg.Add(pItem);
                 pItem.ItemId = (int)eContextItems.optionsFanartRandom;
-
-                pItem = new GUIListItem(Translation.ShowSeriesFanart + " (" + (DBOption.GetOptions(DBOption.cShowSeriesFanart) ? Translation.on : Translation.off) + ")");
-                dlg.Add(pItem);
-                pItem.ItemId = (int)eContextItems.optionsSeriesFanart;
             }
 
             //pItem = new GUIListItem(Translation.UseOnlineFavourites + " (" + (DBOption.GetOptions(DBOption.cOnlineFavourites) ? Translation.on : Translation.off) + ")");
@@ -3731,39 +3728,6 @@ namespace WindowPlugins.GUITVSeries
                         // Update Fanart Displayed - may need to restore default artwork
                         Series_OnItemSelected(m_Facade.SelectedListItem);
                         break;
-
-                    case (int)eContextItems.optionsSeriesFanart:
-                        DBOption.SetOptions(DBOption.cShowSeriesFanart, !DBOption.GetOptions(DBOption.cShowSeriesFanart));
-                        if (this.listLevel == Listlevel.Series)
-                        {
-                            if (DBOption.GetOptions(DBOption.cShowSeriesFanart))
-                            {
-                                Series_OnItemSelected(m_Facade.SelectedListItem);
-                            }
-                            else
-                                DisableFanart();
-                        }
-                        break;
-                    /*case (int)eContextItems.optionsUseOnlineFavourites:
-                        DBOption.SetOptions(DBOption.cOnlineFavourites, !DBOption.GetOptions(DBOption.cOnlineFavourites));
-                        // Update Views                        
-                        DBView view = new DBView(1);
-                        if (!DBOption.GetOptions(DBOption.cOnlineFavourites))
-                        {
-                            view[DBView.cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
-                                                "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                                "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                        }
-                        else
-                        {
-                            view[DBView.cViewConfig] = @"series<;><Series.isOnlineFavourite>;=;1<;><;>" +
-                                                "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                                "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-                        }
-                        view.Commit();
-                        LoadFacade();
-                        break;
-                     */
                 }
             }
 		}
@@ -4463,16 +4427,24 @@ namespace WindowPlugins.GUITVSeries
                 fanart.ForceNewPick();
                 currSeriesFanart = fanart;
 
+                // set current fanart property so can be used outside of imageswapper
+                string fanartFile = fanart.FanartFilename;
+                setGUIProperty("#TVSeries.Current.Fanart", fanartFile);
+
+                // disable fanart if the skin tells us so
+                if (!CheckSkinFanartSettings())
+                {
+                    DisableFanart();
+                    return false;
+                }
+
                 // Activate Backdrop in Image Swapper                
                 if (!backdrop.Active) backdrop.Active = true;
 
                 // Assign Fanart filename to Image Loader
-                // Will display fanart in backdrop or reset to default background                
-                backdrop.Filename = fanart.FanartFilename;
+                // Will display fanart in backdrop or reset to default background
+                backdrop.Filename = fanartFile;
                 
-                // set current fanart property so can be used outside of imageswapper
-                setGUIProperty("#TVSeries.Current.Fanart", backdrop.Filename);
-
                 if (fanart.Found)
                     MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
                 else
@@ -4518,6 +4490,50 @@ namespace WindowPlugins.GUITVSeries
             m_bFanartTimerDisabled = false;
 		}
 
+        private bool CheckSkinFanartSettings()
+        {
+            string value = string.Empty;
+
+            // check layout / view visibility
+            switch (this.listLevel)
+            {
+                case Listlevel.Series:
+                    SkinSettings.Defines.TryGetValue(SkinSettings.cfanartseriesview, out value);
+                    break;
+
+                case Listlevel.Season:
+                    SkinSettings.Defines.TryGetValue(SkinSettings.cfanartseasonview, out value);
+                    break;
+
+                case Listlevel.Episode:
+                    SkinSettings.Defines.TryGetValue(SkinSettings.cfanartepisodeview, out value);
+                    break;
+
+                case Listlevel.Group:
+                    break;
+            }
+            if (value == "false") return false;
+
+            if (m_Facade != null)
+            {
+                switch (m_Facade.View)
+                {
+                    case GUIFacadeControl.ViewMode.List:
+                        SkinSettings.Defines.TryGetValue(SkinSettings.cfanartlistlayout, out value);
+                        break;
+
+                    case GUIFacadeControl.ViewMode.LargeIcons:
+                        SkinSettings.Defines.TryGetValue(SkinSettings.cfanarticonslayout, out value);
+                        break;
+
+                    case GUIFacadeControl.ViewMode.Filmstrip:
+                        SkinSettings.Defines.TryGetValue(SkinSettings.cfanartfilmstriplayout, out value);
+                        break;
+                }
+            }
+            return (value != "false");
+        }
+
         private void DisableFanart()
         {
             // Disable Random Fanart Timer
@@ -4541,6 +4557,7 @@ namespace WindowPlugins.GUITVSeries
             fanartSet = false;
             if (backdrop.Active) backdrop.Active = false;
             backdrop.Filename = "";
+            m_prevSeriesID = string.Empty;
 
             // Reset Dummy controls
             if (this.dummyIsFanartLoaded != null)
@@ -4556,48 +4573,6 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty("FanArt.Colors.LightAccent", string.Empty);
             setGUIProperty("FanArt.Colors.DarkAccent", string.Empty);
             setGUIProperty("FanArt.Colors.NeutralMidtone", string.Empty);
-        }
-
-        private void InitSkinSettings()
-        {
-            // Import Skin Settings
-            string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
-            SkinSettings.Load(xmlSkinSettings);
-
-            #region Display Format Strings
-            m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
-            m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
-            m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cView_Series_Col3);
-            m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cView_Series_Title);
-            m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cView_Series_Subtitle);
-            m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cView_Series_Main);
-
-            m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cView_Season_Col1);
-            m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cView_Season_Col2);
-            m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cView_Season_Col3);
-            m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cView_Season_Title);
-            m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cView_Season_Subtitle);
-            m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cView_Season_Main);
-
-            m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cView_Episode_Col1);
-            m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cView_Episode_Col2);
-            m_sFormatEpisodeCol3 = DBOption.GetOptions(DBOption.cView_Episode_Col3);
-            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
-            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
-            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
-            #endregion
-
-            // Load all Skin Fields being used
-            string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
-            foreach (string skinFile in skinFiles)
-            {
-                MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
-                SkinSettings.GetSkinProperties(skinFile);
-            }
-            SkinSettings.LogSkinProperties();
-
-            // Remember last skin used incase we need to reload
-            SkinSettings.PreviousSkin = SkinSettings.CurrentSkin;
         }
 
         private void InitImporter()
@@ -4852,19 +4827,18 @@ namespace WindowPlugins.GUITVSeries
 
             pushFieldsToSkin(m_SelectedSeries, "Series");
 
-			// Load Fanart
-			if (DBOption.GetOptions(DBOption.cShowSeriesFanart)) {
-				// Re-initialize timer for random fanart
-				m_FanartItem = m_SelectedSeries;
-                if (DBOption.GetOptions(DBOption.cFanartRandom)) {
-                    // We should update fanart as soon as new series is selected or
-                    // if timer was disabled (e.g. fullscreen playback)
-                    if (m_SelectedSeries[DBSeries.cID].ToString() != m_prevSeriesID || m_bFanartTimerDisabled)
-                        m_FanartTimer.Change(0, DBOption.GetOptions(DBOption.cRandomFanartInterval));
-                }
-                else
-                    loadFanart(m_FanartItem);
-			}
+            // Load Fanart
+            // Re-initialize timer for random fanart
+            m_FanartItem = m_SelectedSeries;
+            if (DBOption.GetOptions(DBOption.cFanartRandom))
+            {
+                // We should update fanart as soon as new series is selected or
+                // if timer was disabled (e.g. fullscreen playback)
+                if (m_SelectedSeries[DBSeries.cID].ToString() != m_prevSeriesID || m_bFanartTimerDisabled)
+                    m_FanartTimer.Change(0, DBOption.GetOptions(DBOption.cRandomFanartInterval));
+            }
+            else
+                loadFanart(m_FanartItem);
 
             // Remember last series, so we dont re-initialize random fanart timer
             m_prevSeriesID = m_SelectedSeries[DBSeries.cID];

@@ -141,8 +141,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cQualityEpisodeImages = "QualityEpisodeImages";
         public const String cQualitySeriesPosters = "QualityPosterImages";
 
-        public const String cGetSeriesPosters = "getSeriesPosters";
-        public const String cShowSeriesFanart = "showSeriesFanart";
+        public const String cGetSeriesPosters = "getSeriesPosters";        
 
         public const String cFanartRandom = "FanartRandom";        
 
@@ -457,9 +456,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);
-
-                if (GetOptions(cShowSeriesFanart) == null)
-                    SetOptions(cShowSeriesFanart, true);
 
                 if (GetOptions(cFanartRandom) == null)
                     SetOptions(cFanartRandom, true);

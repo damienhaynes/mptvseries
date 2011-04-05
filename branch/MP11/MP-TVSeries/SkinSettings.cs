@@ -61,9 +61,70 @@ namespace WindowPlugins.GUITVSeries {
             }
         } private static Dictionary<string, string> _videoPlayImages = new Dictionary<string, string>();
 
+        public static Dictionary<string, string> Defines
+        {
+            get { return _defines; }
+            set { _defines = value; }
+        } 
+        private static Dictionary<string,string> _defines = new Dictionary<string, string>();
+
+        #endregion
+
+        #region Public Constants
+
+        public const string cfanartlistlayout = "fanart.listlayout";
+        public const string cfanarticonslayout = "fanart.iconslayout";
+        public const string cfanartfilmstriplayout = "fanart.filmstriplayout";
+        public const string cfanartcoverflowlayout = "fanart.coverflowlayout";
+        public const string cfanartseriesview = "fanart.seriesview";
+        public const string cfanartseasonview = "fanart.seasonview";
+        public const string cfanartepisodeview = "fanart.episodeview";
+
         #endregion
 
         #region Public Methods
+        public static void Init()
+        {
+            // Import Skin Settings
+            string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
+            Load(xmlSkinSettings);
+
+            #region Display Format Strings
+            TVSeriesPlugin.m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
+            TVSeriesPlugin.m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
+            TVSeriesPlugin.m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cView_Series_Col3);
+            TVSeriesPlugin.m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cView_Series_Title);
+            TVSeriesPlugin.m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cView_Series_Subtitle);
+            TVSeriesPlugin.m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cView_Series_Main);
+
+            TVSeriesPlugin.m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cView_Season_Col1);
+            TVSeriesPlugin.m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cView_Season_Col2);
+            TVSeriesPlugin.m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cView_Season_Col3);
+            TVSeriesPlugin.m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cView_Season_Title);
+            TVSeriesPlugin.m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cView_Season_Subtitle);
+            TVSeriesPlugin.m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cView_Season_Main);
+
+            TVSeriesPlugin.m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cView_Episode_Col1);
+            TVSeriesPlugin.m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cView_Episode_Col2);
+            TVSeriesPlugin.m_sFormatEpisodeCol3 = DBOption.GetOptions(DBOption.cView_Episode_Col3);
+            TVSeriesPlugin.m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
+            TVSeriesPlugin.m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
+            TVSeriesPlugin.m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+            #endregion
+
+            // Load all Skin Fields being used
+            string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
+            foreach (string skinFile in skinFiles)
+            {
+                MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
+                GetSkinProperties(skinFile);
+            }
+            LogSkinProperties();
+
+            // Remember last skin used incase we need to reload
+            PreviousSkin = CurrentSkin;
+        }
+
         /// <summary>
         /// Reads all Skin Settings and Imports into Database
         /// </summary>
@@ -95,6 +156,7 @@ namespace WindowPlugins.GUITVSeries {
             GetVideoOSDImages(doc);
             GetVideoPlayImages(doc);
             GetThumbNewStampPositions(doc);
+            GetDefines(doc);
         }
 
         /// <summary>
@@ -131,39 +193,49 @@ namespace WindowPlugins.GUITVSeries {
             return count;
         }
         
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Gets all properties used by this plugin     
         /// </summary>
         /// <param name="skinfile"></param>
-        public static void GetSkinProperties(string filename) {
+        static void GetSkinProperties(string filename)
+        {
             string content = string.Empty;
-            
+
             StreamReader r = new StreamReader(filename);
             content = r.ReadToEnd();
 
             Regex reg = new Regex(@"(#TVSeries\.\w+(?:\.\w+)*)");
             MatchCollection matches = reg.Matches(content);
             MPTVSeriesLog.Write("Skin uses " + matches.Count.ToString() + " fields", MPTVSeriesLog.LogLevel.Debug);
-            
-            for (int i = 0; i < matches.Count; i++) {
+
+            for (int i = 0; i < matches.Count; i++)
+            {
                 string pre = string.Empty;
                 string remove = string.Empty;
-                
+
                 if (matches[i].Value.Contains((remove = "#TVSeries.Episode.")))
                     pre = "Episode";
                 else if (matches[i].Value.Contains((remove = "#TVSeries.Season.")))
                     pre = "Season";
                 else if (matches[i].Value.Contains((remove = "#TVSeries.Series.")))
                     pre = "Series";
-                
-                string value = matches[i].Value.Trim().Replace(remove, string.Empty);                
-                if (pre.Length > 0) {                    
-                    if (SkinProperties.ContainsKey(pre)) {
-                        if (!SkinProperties[pre].Contains(value)) {                            
+
+                string value = matches[i].Value.Trim().Replace(remove, string.Empty);
+                if (pre.Length > 0)
+                {
+                    if (SkinProperties.ContainsKey(pre))
+                    {
+                        if (!SkinProperties[pre].Contains(value))
+                        {
                             SkinProperties[pre].Add(value);
                         }
                     }
-                    else {
+                    else
+                    {
                         List<string> v = new List<string>();
                         v.Add(value);
                         SkinProperties.Add(pre, v);
@@ -175,34 +247,38 @@ namespace WindowPlugins.GUITVSeries {
         /// <summary>
         /// Logs all Skin Properties used
         /// </summary>
-        public static void LogSkinProperties() {
+        static void LogSkinProperties()
+        {
             MPTVSeriesLog.Write("Skin uses the following properties:");
 
-            if (SkinSettings.SkinProperties.ContainsKey("Series")) {
+            if (SkinSettings.SkinProperties.ContainsKey("Series"))
+            {
                 List<string> seriesProperties = SkinSettings.SkinProperties["Series"];
-                foreach (string property in seriesProperties) {
+                foreach (string property in seriesProperties)
+                {
                     MPTVSeriesLog.Write("#TVSeries.Series." + property);
                 }
             }
 
-            if (SkinSettings.SkinProperties.ContainsKey("Season")) {
+            if (SkinSettings.SkinProperties.ContainsKey("Season"))
+            {
                 List<string> seasonProperties = SkinSettings.SkinProperties["Season"];
-                foreach (string property in seasonProperties) {
+                foreach (string property in seasonProperties)
+                {
                     MPTVSeriesLog.Write("#TVSeries.Season." + property);
                 }
             }
 
-            if (SkinSettings.SkinProperties.ContainsKey("Episode")) {
+            if (SkinSettings.SkinProperties.ContainsKey("Episode"))
+            {
                 List<string> episodeProperties = SkinSettings.SkinProperties["Episode"];
-                foreach (string property in episodeProperties) {
+                foreach (string property in episodeProperties)
+                {
                     MPTVSeriesLog.Write("#TVSeries.Episode." + property);
                 }
-            }            
+            }
         }
 
-        #endregion
-
-        #region Private Methods
         /// <summary>
         /// Get Skin Settings Version
         /// </summary>
@@ -690,6 +766,8 @@ namespace WindowPlugins.GUITVSeries {
         /// <param name="doc"></param>
         private static void GetThumbNewStampPositions(XmlDocument doc)
         {
+            MPTVSeriesLog.Write("Loading Settings for Thumbs NewStamp positions", MPTVSeriesLog.LogLevel.Normal);
+
             int posx = 0;
             int posy = 0;
 
@@ -719,6 +797,37 @@ namespace WindowPlugins.GUITVSeries {
                 int.TryParse(node.InnerText, out posy);
                 PosterNewStampPosY = posy;
             }           
+        }
+
+        private static void GetDefines(XmlDocument doc)
+        {
+            MPTVSeriesLog.Write("Loading Skin Defines", MPTVSeriesLog.LogLevel.Normal);
+
+            // clear defines
+            Defines.Clear();
+
+            XmlNode node = null;
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartlistlayout));
+            if (node != null) Defines.Add(cfanartlistlayout, node.InnerText);
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanarticonslayout));
+            if (node != null) Defines.Add(cfanarticonslayout, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartfilmstriplayout));
+            if (node != null) Defines.Add(cfanartfilmstriplayout, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartcoverflowlayout));
+            if (node != null) Defines.Add(cfanartcoverflowlayout, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartseriesview));
+            if (node != null) Defines.Add(cfanartseriesview, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartseasonview));
+            if (node != null) Defines.Add(cfanartseasonview, node.InnerText.ToLowerInvariant());
+
+            node = doc.DocumentElement.SelectSingleNode(string.Format("/settings/defines//property[@key='{0}']", cfanartepisodeview));
+            if (node != null) Defines.Add(cfanartepisodeview, node.InnerText.ToLowerInvariant());
+
         }
         #endregion
     }

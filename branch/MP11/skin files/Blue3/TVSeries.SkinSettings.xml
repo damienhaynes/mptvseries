@@ -11,31 +11,19 @@
 	-->
 	
 	<!-- version may be useful for logging purposes and/or future upgrades -->
-	<version>1.1.0.0</version>
+	<version>1.5.0.0</version>
 	
-	<!-- 
-		Possible Layout Types supported by the plugin, the defined layout will be what is loaded by default for the corresponding view:	
-		
-		AppendImageToList attribute is a setting that the plugin reads to determine if Episode/Season/Series images should be added to the List control
-		Enabling this will take a hit in performance, enable it only if your skin specifically requires it.
-		
-			Groups:
-				layout="List"
-				layout="SmallIcons"
-			Series:
-				layout="ListPosters"
-				layout="ListBanners" 
-				layout="Filmstrip"
-				layout="WideBanners"
-			Season:
-				layout="List"
-				layout="Filmstrip" 
-			Episode:
-				layout="List" 				
-		
-		Only the layouts defined below are currently supported for this skin: Blue3
-	-->
-	
+  <!-- Skin Defines -->
+	<defines>
+    <!-- fanart can be disabled per layout and/or per view by setting to false -->
+    <property key="fanart.seriesview">true</property>
+    <property key="fanart.seasonview">true</property>
+    <property key="fanart.episodeview">true</property>
+    <property key="fanart.listlayout">true</property>
+    <property key="fanart.iconslayout">true</property>
+    <property key="fanart.filmstriplayout">true</property>
+  </defines>
+  
 	<!-- Position of 'NEW' stamp in thumb views -->
 	<thumbstamp>
 		<widebanners>
@@ -77,7 +65,30 @@
 		</property>
 		<!-- You can define multiple properties -->
 	</videoplayimages>
-
+  
+	<!-- 
+		Possible Layout Types supported by the plugin, the defined layout will be what is loaded by default for the corresponding view:	
+		
+		AppendImageToList attribute is a setting that the plugin reads to determine if Episode/Season/Series images should be added to the List control
+		Enabling this will take a hit in performance, enable it only if your skin specifically requires it.
+		
+			Groups:
+				layout="List"
+				layout="SmallIcons"
+			Series:
+				layout="ListPosters"
+				layout="ListBanners" 
+				layout="Filmstrip"
+				layout="WideBanners"
+        layout="Coverflow"
+			Season:
+				layout="List"
+				layout="Filmstrip" 
+			Episode:
+				layout="List" 				
+		
+		Only the layouts defined below are currently supported for this skin: Blue3
+	-->
 	<layouts>
 		<group List="true" SmallIcons="true" />
 		<series ListPosters="true" ListBanners="true" Filmstrip="true" WideBanners="true" />

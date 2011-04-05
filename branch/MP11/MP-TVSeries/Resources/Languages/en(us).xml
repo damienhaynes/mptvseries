@@ -105,7 +105,6 @@
   <string Field="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
   <string Field="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Account Identifier is not set</string>
   <string Field="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Enter your online account ID in Configuration</string>
-  <string Field="ShowSeriesFanart" Original="Show Fanart in Series View">Show Fanart in Series View</string>
   <string Field="ChangeLayout" Original="Change Layout">Change Layout</string>
   <string Field="UseOnlineFavourites" Original="Use Online Favourites">Use Online Favourites</string>
   <string Field="AddToPlaylist" Original="Add To Playlist">Add To Playlist</string>
