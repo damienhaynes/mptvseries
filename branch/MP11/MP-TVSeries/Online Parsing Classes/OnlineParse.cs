@@ -564,12 +564,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void UpdateRecentlyAdded()
         {
-            // Clear setting for all series
-            DBSeries.GlobalSet(DBOnlineSeries.cHasNewEpisodes, "0");
+            // Clear setting for all series            
+            DBSeries.GlobalSet(DBOnlineSeries.cHasNewEpisodes, (DBValue)"0");
 
             // Calculate date for querying database
             DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            dt = dt.Subtract(new TimeSpan(7, 0, 0, 0, 0));
+            dt = dt.Subtract(new TimeSpan(DBOption.GetOptions(DBOption.cNewEpisodeRecentDays), 0, 0, 0, 0));
             string date = dt.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
            
             SQLCondition conditions = new SQLCondition();
@@ -577,9 +577,9 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
             
             // set series 'HasNewEpisodes' field if it contains new episodes
-            foreach (DBEpisode episode in episodes)
+            foreach (var seriesID in episodes.Select(e=>e[DBOnlineEpisode.cSeriesID]).Distinct().ToList())
             {
-                DBSeries series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                DBSeries series = Helper.getCorrespondingSeries(seriesID);
                 if (series != null)
                 {
                     series[DBOnlineSeries.cHasNewEpisodes] = "1";

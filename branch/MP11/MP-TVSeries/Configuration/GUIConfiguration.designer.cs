@@ -1355,7 +1355,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_OnlyShowLocalFiles";
             this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(266, 17);
             this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 37;
-            this.checkBox_Episode_OnlyShowLocalFiles.Text = "&Only show episodes that are available on computer";
+            this.checkBox_Episode_OnlyShowLocalFiles.Text = "Show all episodes in local database when in GUI";
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, resources.GetString("checkBox_Episode_OnlyShowLocalFiles.ToolTip"));
             this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
             this.checkBox_Episode_OnlyShowLocalFiles.CheckedChanged += new System.EventHandler(this.checkBox_Episode_OnlyShowLocalFiles_CheckedChanged);

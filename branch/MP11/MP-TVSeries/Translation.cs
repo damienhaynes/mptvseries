@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Force_Local_Scan = "Force Local Scan ";
         public static string Force_Online_Refresh = "Force Online Refresh ";
         public static string In_Progress_with_Barracks = "(In Progress)";
-        public static string Only_show_episodes_with_a_local_file = "Only Show Local Episodes";
+        public static string ShowAllEpisodes = "Show all Episodes";
         public static string ShowHiddenItems = "Show Hidden Items";
         public static string Hide_summary_on_unwatched = "Hide Spoilers";
         public static string Hide_thumbnail_on_unwatched = "Hide Spoiler Thumbnails";

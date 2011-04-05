@@ -3638,7 +3638,7 @@ namespace WindowPlugins.GUITVSeries
             dlg.Reset();
             dlg.SetHeading(Translation.Options);
 
-            GUIListItem pItem = new GUIListItem(Translation.Only_show_episodes_with_a_local_file + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.on : Translation.off) + ")");
+            GUIListItem pItem = new GUIListItem(Translation.ShowAllEpisodes + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.off : Translation.on) + ")");
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
 
