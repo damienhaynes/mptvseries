@@ -175,7 +175,8 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bUpdateBanner = false;
         private TimerCallback m_timerDelegate = null;
         private System.Threading.Timer m_scanTimer = null;
-        private System.Threading.Timer m_FanartTimer = null;        
+        private System.Threading.Timer m_FanartTimer = null;
+        private System.Threading.Timer m_ParentalControlTimer = null;
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
         private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
@@ -475,6 +476,12 @@ namespace WindowPlugins.GUITVSeries
 
             // Lock for Parental Control
             logicalView.IsLocked = true;
+            // Timer to reset Locked Status
+            if (!string.IsNullOrEmpty(DBOption.GetOptions(DBOption.cParentalControlPinCode)))
+            {
+                long interval = DBOption.GetOptions(DBOption.cParentalControlResetInterval) * 60 * 1000;
+                m_ParentalControlTimer = new System.Threading.Timer(new TimerCallback(ParentalControlTimerEvent), null, 0, interval);
+            }
 
             // Check if MediaPortal will Show TVSeries Plugin when restarting
             // We need to do this because we may need to show a modal dialog e.g. PinCode and we can't do this if MediaPortal window is not yet ready            
@@ -4451,6 +4458,12 @@ namespace WindowPlugins.GUITVSeries
         {
             loadFanart(m_FanartItem);
             m_bFanartTimerDisabled = false;
+        }
+
+        private void ParentalControlTimerEvent(object state)
+        {
+            MPTVSeriesLog.Write("Resetting Parental Control Lock");
+            logicalView.IsLocked = true;
         }
 
         private bool CheckSkinFanartSettings()

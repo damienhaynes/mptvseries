@@ -367,6 +367,8 @@ namespace WindowPlugins.GUITVSeries
 			if (_availViews.Items.Count > 0)
 				_availViews.SelectedIndex = 0;
 
+            this.nudParentalControlTimeout.Value = DBOption.GetOptions(DBOption.cParentalControlResetInterval);
+
             txtMainMirror.Text = DBOption.GetOptions(DBOption.cMainMirror);
 
             MPTVSeriesLog.pauseAutoWriteDB = false;
@@ -4372,6 +4374,16 @@ namespace WindowPlugins.GUITVSeries
         {
             ArtworkDownloadLimits artworkLimitDlg = new ArtworkDownloadLimits();
             artworkLimitDlg.ShowDialog(this);
+        }
+
+        private void nudParentalControlTimeout_ValueChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cParentalControlResetInterval, (int)nudParentalControlTimeout.Value);
+        }
+
+        private void nupParentalControlTimeout_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
     

@@ -221,6 +221,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cAutoGenerateEpisodeTitles = "AutoGenerateEpisodeTitles";
 
+        public const String cParentalControlResetInterval = "ParentalControlResetInterval";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -615,6 +617,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cAutoGenerateEpisodeTitles) == null)
                     SetOptions(cAutoGenerateEpisodeTitles, true);
+
+                if (GetOptions(cParentalControlResetInterval) == null)
+                    SetOptions(cParentalControlResetInterval, 60);
 
             }
             catch (Exception ex)
