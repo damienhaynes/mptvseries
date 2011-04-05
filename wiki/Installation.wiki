@@ -78,4 +78,4 @@ To continue un-installing, click the *Yes* button. The setup wizard then starts 
  http://mptvseries.googlecode.com/svn/wiki/Images/MediaPortalPluginConfigurationMenu.jpg
  * Ensure that *Enabled* is checked
  * Optionally enable *Listed in Home* for plugin to appear in the Home menu when you open !MediaPortal
- * Select *Configuration* to configure and [http://mptvseries.googlecode.com/svn/wiki/GettingStarted#GettingStarted Get Started]
+ * Select *Configuration* to configure then follow the [http://code.google.com/p/mptvseries/wiki/GettingStarted GettingStarted] Wiki
