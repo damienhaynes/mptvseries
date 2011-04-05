@@ -230,7 +230,7 @@ namespace WindowPlugins.GUITVSeries
                     
                     case cEpisodeName:
                         DBValue title = base[cEpisodeName];
-                        if (string.IsNullOrEmpty(title))
+                        if (string.IsNullOrEmpty(title) && DBOption.GetOptions(DBOption.cAutoGenerateEpisodeTitles))
                             title = string.Format("{0} {1}", Translation.Episode, base[cEpisodeIndex]);
                         return title;
 

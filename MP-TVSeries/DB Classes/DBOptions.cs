@@ -219,7 +219,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
 
         public const String cActorLayout = "ActorLayout";
-        
+
+        public const String cAutoGenerateEpisodeTitles = "AutoGenerateEpisodeTitles";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
@@ -614,6 +616,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cActorLayout) == null)
                     SetOptions(cActorLayout, 0);
+
+                if (GetOptions(cAutoGenerateEpisodeTitles) == null)
+                    SetOptions(cAutoGenerateEpisodeTitles, true);
 
             }
             catch (Exception ex)
