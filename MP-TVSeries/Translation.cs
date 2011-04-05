@@ -194,7 +194,6 @@ namespace WindowPlugins.GUITVSeries
         public static string FanartDisableLabel = "Disabled";
         public static string FanartMenuEnable = "Enable Fanart";
         public static string FanartMenuDisable = "Disable Fanart";
-        public static string ShowSeriesFanart = "Show Fanart in Series View";
         public static string FanartRandomInterval = "Fanart Timer Interval";
         public static string ClearFanartCache = "Clear Fanart Cache";
         
