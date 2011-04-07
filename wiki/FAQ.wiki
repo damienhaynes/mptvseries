@@ -170,6 +170,22 @@ To download all the available information for your Series, including Episodes yo
 
 ----
 
+=Subtitle Support=
+Newer versions of MP-TVSeries will now be using the [http://forum.team-mediaportal.com/showthread.php?t=85545&referrerid=104898 SubCentral] Plugin, while support for Subtitle Downloader will be retired.
+
+ ==Installation==
+ * [http://www.team-mediaportal.com/extensions/movies-videos/subcentral Download] the SubCentral Plugin
+ * Check SubCentral Plugin is enabled in MP Configuration, Plugins
+ * in MP-TVSeries Configuration, Click Extras tab
+ * Tick “Enable SubCentral” check box. 
+ * Tick “Use SubCentral for episode 'HasSubtitles query' if you also want SubCentral for MediaInfo subtitles check (more through search).
+ * Disable SubtitleDownloader if enabled.
+
+ ==Usage==
+ COMING
+
+----
+
 =MP-TVSeries File Locations=
 The following are the locations of the files and folders used by MP-TVSeries, should you need to backup / restore or just have a look around
 
