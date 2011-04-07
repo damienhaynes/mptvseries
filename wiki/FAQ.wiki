@@ -196,6 +196,9 @@ Newer versions of MP-TVSeries will now be using the [http://forum.team-mediaport
  * Highlight 'ENABLED' and press OK
  * Return to episode, press Back on MCE Remote or ESC on keyboard
 
+ ==Tips==
+ * Press Yellow on MCE remote to switch subtitles on or off
+
 ----
 
 =MP-TVSeries File Locations=
