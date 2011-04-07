@@ -56,7 +56,8 @@
 #define RES_TEXT_PASSWORD				1313
 #define RES_CHECK_TVSERIES				1309
 #define RES_CHECK_MOVPICS				1310
-#define RES_CHECK_MYVIDEOS				1311   
+#define RES_CHECK_MYVIDEOS				1311  
+#define RES_LINK_TRAKTWEB				1312 
    
 // Custom Dialogs
 #define RES_DLG_RELEASENOTES			14000			// Release Notes dialog
@@ -901,11 +902,12 @@ begin
 end;
      
 function NUMBER LaunchBrowser(szSite)
-	STRING szKey, szDir;
+	/*STRING szKey, szDir;
 	STRING svValue, svReturnString1, svReturnString2;
-	NUMBER nvType, nvSize;
+	NUMBER nvType, nvSize;*/
+	OBJECT web;
 begin
-    RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
+    /*RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
     
 	// Find the value in the registry under "HKey_Classes_Root\.htm" file,
 	// to see where the browser address is kept.
@@ -939,7 +941,15 @@ begin
 		return -1;
 	else
 		return 0;
-	endif;
+	endif;*/
+	
+	try
+		set web = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "Setup.Web" );
+		web.LaunchBrowser(szSite);
+		set web = NOTHING;
+	catch
+		MessageBox("Unable to show website: " + szSite, INFORMATION);
+	endcatch;
 	
 end;
 
@@ -1322,7 +1332,10 @@ Dlg_Wait:
 				if (g_sTraktMyVideos != "-1") then
 					CtrlSetState(szDialogName, RES_CHECK_MYVIDEOS, BUTTON_CHECKED);
 				endif;
-	  		        	
+	  		 
+	  		case RES_LINK_TRAKTWEB:	  			
+	  			LaunchBrowser("http://trakt.tv");
+	  			       	
 			case RES_PBUT_BACK:
 				bDone = TRUE;	 	        
 	   	        	   	        	   	        
