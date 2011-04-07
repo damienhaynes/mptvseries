@@ -181,7 +181,7 @@ Newer versions of MP-TVSeries will now be using the [http://forum.team-mediaport
  * Tick “Use SubCentral for episode 'HasSubtitles query' if you also want SubCentral for MediaInfo subtitles check (more through search).
  * Disable SubtitleDownloader if enabled.
 
- ==Download a Subtitle==  (WORK IN PROGRESS)
+ ==Download a Subtitle==
  * In the Episode list, highlight the episode you want to download a subtitle
  * Press F9 on keyboard or INFO on MCE Remote
  * Select 'DOWNLOAD'
