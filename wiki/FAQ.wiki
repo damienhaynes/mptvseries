@@ -54,7 +54,7 @@ You can use either or both of the sites at the same time.
  * From version 2.8.1+, the Trakt.tv support will be moved to its own process plugin called [http://forum.team-mediaportal.com/mediaportal-plugins-47/0-9-3-0-trakt-mediaportal-94872/ Trakt for Mediaportal]. This plugin will be included with the MP-TVSeries installer should you wish to install it.
 
    ===Installation===
-   You can install the Trakt process plugin from the MP-TVSeries installation program, a guide is available here [http://code.google.com/p/mptvseries/wiki/Installation?ts=1302228665&updated=Installation# Installation]. Optionally you can download the TraktPlugin.dll manually and copy it into \Team MediaPortal\MediaPortal\plugins\process
+   You can install the Trakt process plugin from the MP-TVSeries installation program, a installation wiki is available [http://code.google.com/p/mptvseries/wiki/Installation?ts=1302228665&updated=Installation# here]. Optionally you can download the TraktPlugin.dll manually and copy it into \Team MediaPortal\MediaPortal\plugins\process
 
    ===Configuration During Install===
 
