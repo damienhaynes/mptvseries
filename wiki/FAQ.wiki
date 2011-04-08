@@ -344,4 +344,10 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Enable 'Use regional settings to display dates' in the general tab, in MP-TVSeries Plugin Configuration
    * You can further tweak this by changing the Short Date syntax settings in Control Panel, Regional settings. 
 
- 
+ ==Use "String Replacements" to resolve weird filenames==
+   You might have made a typo in the filenames, are using cryptic/acronym based filenames or using a different language then what thetvdb.com uses to identify the TV Show.
+
+   Instead of renaming a lot of files, you can simply use the 'String Replacements' system to fix these problems. You can find this in the 'Import' tab in MP-TVSeries plugin configuration
+
+   
+---- 
