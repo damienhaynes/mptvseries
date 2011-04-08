@@ -331,3 +331,10 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
   * Reimport your shows
   * (Optional) _Import Watched Flags_ after import is complete, or resetup your [http://code.google.com/p/mptvseries/wiki/FAQ#Follw.it follw.it] or [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv trakt.tv] account.
 ----
+
+=Tips and Tricks=
+
+ = Delete From Database, Database and Disk =
+ This lets you delete files or just entries from the database so the can be rescanned
+ * Enable 'Allow user to delete files from context menu' in the general tab, in MP-TVSeries Plugin Configuration
+ * Select a Series Season or Episode, press 0 on remote or keyboard and select the option
