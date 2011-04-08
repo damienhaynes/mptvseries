@@ -23,16 +23,24 @@ To Start the Installation, open or double click on the setup.exe (Setup requires
 The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupInstallStart.jpg
 
- * Click the *Next* button to continue. The Feature Select Dialog screen is shown.
- http://mptvseries.googlecode.com/svn/wiki/Images/SetupFeatureSelect.jpg
+ * Click the *Next* button to continue. The Change log Dialog screen is shown.
+ http://mptvseries.googlecode.com/svn/wiki/Images/setupInstallReady.jpg 
+ * Click the *Next* button to Continue
 
 The *Feature Select* screen is used to select the different features and components you want to install.
  
  * Click to select or de-select any features you want to install
+ * The Trakt Feature is Optional
  * Click the *Next* button to continue. The Begin Installation screen is shown.
- http://mptvseries.googlecode.com/svn/wiki/Images/setupInstallReady.jpg
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupFeatureSelect.jpg 
 
-The *Begin Installation* screen allows you to click Back to review settings or Proceed with installation.
+The *Trakt Configuration* screen will appear if you enabled the 'Trakt' feature on previous screen. 
+
+This allows you enter your [http://trakt.tv/ trakt] login and password, and select which plugins you would like it to optionally interact with, Tick MP-TVSeries. You can also select Moving Pictures and My Videos.
+
+ You can set this up later by following the [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv Trakt FAQ] if needed
+ http://mptvseries.googlecode.com/svn/wiki/Images/SetupTrakt.jpg 
+ 
 
  * If you want to change any settings, click the *Back* button.
  * If you want the setup wizard to start the installation, click the *Install* button to continue.
