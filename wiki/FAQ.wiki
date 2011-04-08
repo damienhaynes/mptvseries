@@ -112,8 +112,8 @@ The Solution is to check the Mini-Series on [http://thetvdb.com thetvdb.com], ma
  * Frank Herbert's Dune - S01E01.avi
  * Frank Herbert's Dune - S01E02.avi
  * Frank Herbert's Dune - S01E03.avi
- * Battlestar Galactica (2003) - S0*0*E01 - MiniSeries(1).avi
- * Battlestar Galactica (2003) - S0*0*E02 - MiniSeries(2).avi
+ * Battlestar Galactica (2003) - S00E01 - MiniSeries(1).avi
+ * Battlestar Galactica (2003) - S00E02 - MiniSeries(2).avi
 
  ==Single File - Double Episode==
 MP-TVSeries can support 2 episodes in a single file. More than 2 is not currently supported
