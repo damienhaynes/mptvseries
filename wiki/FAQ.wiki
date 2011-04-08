@@ -347,5 +347,10 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
  ==Use "String Replacements" to resolve weird filenames==
    You might have made a typo in the filenames, are using cryptic/acronym based filenames or using a different language then what thetvdb.com uses to identify the TV Show. Instead of renaming a lot of files, you can simply use the 'String Replacements' system to fix these problems. You can find this in the 'Import' tab in MP-TVSeries plugin configuration
 
-   
+ ==View, Disable, Download New FanArt==
+   * Select a Series/Season/Episode
+   * Press Info on Remote or F9 on keyboard and Select FanArt
+   * Click on a Fanart tagged Local to toggle between Disabled/Enabled
+   * Click on a Fanart tagged Remote to Download that Fanart
+
 ----
