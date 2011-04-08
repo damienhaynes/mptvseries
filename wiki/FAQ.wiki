@@ -334,7 +334,7 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
 
 =Tips and Tricks=
 
- = Delete From Database, Database and Disk =
+ ==Delete From Disk, Database, Disk & Database==
  This lets you delete files or just entries from the database so the can be rescanned
  * Enable 'Allow user to delete files from context menu' in the general tab, in MP-TVSeries Plugin Configuration
  * Select a Series Season or Episode, press 0 on remote or keyboard and select the option
