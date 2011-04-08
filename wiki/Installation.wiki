@@ -27,6 +27,8 @@ The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
  http://mptvseries.googlecode.com/svn/wiki/Images/setupInstallReady.jpg 
  * Click the *Next* button to Continue
 
+  ==Feature Select==
+
 The *Feature Select* screen is used to select the different features and components you want to install.
  
  * Click to select or de-select any features you want to install
