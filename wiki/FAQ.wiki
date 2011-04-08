@@ -344,7 +344,7 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Enable 'Use regional settings to display dates' in the general tab, in MP-TVSeries Plugin Configuration
    * You can further tweak this by changing the Short Date syntax settings in Control Panel, Regional settings. 
 
- ==Use "String Replacements" to resolve weird filenames==
+ ==Use "String Replacements" To Resolve Weird filenames==
    You might have made a typo in the filenames, are using cryptic/acronym based filenames or using a different language then what thetvdb.com uses to identify the TV Show. Instead of renaming a lot of files, you can simply use the 'String Replacements' system to fix these problems. You can find this in the 'Import' tab in MP-TVSeries plugin configuration
 
  ==Fan Art - View Disable Download==
@@ -353,4 +353,12 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Click on a Fanart tagged Local to toggle between Default (only used if Random FanArt is off)
    * Click on a Fanart tagged Remote to Download that Fanart
    * Press F9 on Keyboard, INFO on remote to Delete a FanArt
+
+ ==Modify 'Recently Added' 'Latest' Views To Show Unwatched==
+   To change these views so it only shows episodes currently unwatched, you can [http://code.google.com/p/mptvseries/wiki/FAQ#Edit_Database edit] the database, and modify the query to below
+   * Latest Unwatched  
+   {{{episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><cond><Episode.Watched>;=;0<;><Episode.FirstAired>;desc<;>}}}
+   * Recently Added UnWatched 
+   {{{episode<;><Episode.FileDateCreated>;>=;<today-7><cond><Episode.Watched>;=;0<;><Episode.FileDateCreated>;desc<;>}}}
+   
 ----
