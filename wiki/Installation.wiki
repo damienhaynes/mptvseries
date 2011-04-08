@@ -60,7 +60,7 @@ After MP-TVSeries is installed, if the setup.exe is run again or MP-TVSeries is 
 Select one of the following radio buttons:
  * *Modify*: To change the current setup selections e.g. add or remove different features
  * *Repair*: To re-install the current setup features. You cannot change the setup features here.
- * *Uninstall*: To uninstall the MP-TVSeries plugin and components. 
+ * *Remove*: To uninstall the MP-TVSeries plugin and components. 
 
 Click the *Next* button to continue. Depending on what you have selected in the previous step, see the corresponding section below.
 
@@ -70,7 +70,7 @@ If Modify is selected, you can go through the setup process again. It shows you 
 == Repair ==
 Repair should be used when MP-TVSeries is not working due to missing files. This can be caused by files that have been deleted or corrupted accidentally. Repair makes sure files and registry settings are copied and set correctly again. However, it does not allow you select or change features of the install. It will use the default setup settings initially and may reset installation parameters, a Modify should be run afterwards to re-configure the plugin.
 
-== Uninstall ==
+== Remove ==
 When you select the Remove option, the setup wizard will prompt to confirm that you want to un-install:
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupRemovePrompt.jpg
 
