@@ -41,8 +41,8 @@
 #define MPTVSERIES_HOMEPAGE_URL			"http://code.google.com/p/mptvseries/"
 
 // Version Defines
-#define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.6.0"
-#define MEDIAPORTAL_MIN_VERSION				"1.1.6.0" // Use at your own risk, for most part should work
+#define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.6.27644"
+#define MEDIAPORTAL_MIN_VERSION				"1.1.6.27644"
 
 // Common Dialog Controls
 #define RES_PBUT_NEXT         			1   			// ID of Next button
@@ -51,9 +51,25 @@
 #define RES_PBUT_BACK        			12   			// ID of Back button
 
 #define RES_TEXT_RELEASENOTES			1301 			// Placeholder text label to load release notes
-
+   
+#define RES_TEXT_USERNAME				1306
+#define RES_TEXT_PASSWORD				1313
+#define RES_CHECK_TVSERIES				1309
+#define RES_CHECK_MOVPICS				1310
+#define RES_CHECK_MYVIDEOS				1311  
+#define RES_LINK_TRAKTWEB				1312 
+   
+// Custom Dialogs
 #define RES_DLG_RELEASENOTES			14000			// Release Notes dialog
+#define RES_DLG_TRAKTCONFIG				14001			// trakt.tv dialog
 
+// XML Entries
+#define XML_TRAKT_USERNAME				"Username"
+#define XML_TRAKT_PASSWORD				"Password"
+#define XML_TRAKT_MOVPICS				"MovingPictures"
+#define XML_TRAKT_TVSERIES				"TVSeries"
+#define XML_TRAKT_MYVIDEOS				"MyVideos"
+       
 // CSIDL values
 #ifndef CSIDL_PROFILE
 	#define CSIDL_PROFILE          		0x0028      
@@ -76,15 +92,18 @@ prototype NUMBER 	SHFolder.SHGetFolderPathA(HWND,NUMBER,NUMBER,NUMBER,BYREF STRI
 prototype BOOL 		GetInstalledVersion(STRING,BYREF STRING);
 prototype VOID		SetInstallationDirectories();
 prototype NUMBER	SetMPXMLProperty(STRING,STRING,STRING);
-prototype VOID 		UpdateSettings();
 prototype VOID		BackupDatabase(STRING);
 prototype STRING	GetMPTVSeriesDBPath();
 prototype VOID		CheckFilesInUse();    
 prototype VOID		VerifyPluginCount();
 prototype VOID		RemoveNonMSIPlugin();
+prototype VOID		GetTraktSettings();
+prototype VOID		SetTraktSettings();
+prototype STRING	ToSHA1Hash(STRING);
 
 // Custom Dialogs
 prototype NUMBER 	ShowReleaseNotesDlg();
+prototype NUMBER 	ShowTraktConfigDlg();
 
 // Global Variables
 BOOL g_bMajorUpgrade;
@@ -103,6 +122,12 @@ STRING g_sLogsDir;
 STRING g_sTVSeriesPluginFileName;
 STRING g_sSubCentralPluginFileName; 
  
+STRING g_sTraktUserName;
+STRING g_sTraktPassword;
+STRING g_sTraktTVSeries;
+STRING g_sTraktMovingPictures;
+STRING g_sTraktMyVideos;
+
 //---------------------------------------------------------------------------
 // OnBegin
 //
@@ -212,6 +237,20 @@ begin
 	
 	// Set Installation Directories
 	SetInstallationDirectories();
+	
+	// Set Trakt Defaults
+	// Settings will be read from config file later
+	g_sTraktUserName = "";
+	g_sTraktPassword = "";
+	g_sTraktMyVideos = "-1";
+	g_sTraktTVSeries = "0";
+	if (Is(FILE_EXISTS, g_sPluginsDir ^ "Windows\\MovingPictures.dll")) then
+		g_sTraktMovingPictures = "1";
+	else
+		g_sTraktMovingPictures = "-1";
+	endif;
+	
+	GetTraktSettings();
 	
 	// Read Defaults 
 	RegDBSetDefaultRoot(HKEY_LOCAL_MACHINE);
@@ -421,9 +460,9 @@ end;
 // the end user to specify installation parameters.
 //---------------------------------------------------------------------------
 function OnFirstUIBefore()
-    NUMBER nResult, nSetupType, nvSize, nUser;
+    NUMBER nResult, nSetupType, nvSize, nUser, nvResult;
     STRING szTitle, szMsg, szQuestion, svName, svCompany, szFile, szFileName;
-    STRING szLicenseFile;
+    STRING szLicenseFile, svResult;
 	BOOL bCustom, bIgnore1, bIgnore2;
 begin	   			   
 
@@ -468,7 +507,14 @@ Dlg_SdFeatureTree:
 			if (nResult = BACK) goto Dlg_ReleaseNotes;  
 	    endif;
 	endif;
-
+        
+Dlg_TraktConfig:
+    FeatureGetData( MEDIA, "Trakt", FEATURE_FIELD_SELECTED, nvResult, svResult );
+    if (nvResult = TRUE) then    
+		nResult = ShowTraktConfigDlg();
+	endif;
+	if (nResult = BACK) goto Dlg_SdFeatureTree;
+	
 Dlg_SdStartCopy:
     szTitle = "";
     szMsg   = "";
@@ -476,7 +522,7 @@ Dlg_SdStartCopy:
     	nResult = SdStartCopy2( szTitle, szMsg );    
 	    	
 		if (nResult = BACK) then
-	    	goto Dlg_SdFeatureTree;
+	    	goto Dlg_TraktConfig;
 	    endif;
 	endif;
 	
@@ -507,7 +553,7 @@ end;
 // installed features or uninstall the application.
 //---------------------------------------------------------------------------
 function OnMaintUIBefore()
-	NUMBER nResult, nType;
+	NUMBER nResult, nType, nvResult;
 	STRING szTitle, szMsg, svDir, svResult, szCaption;
 begin
 	
@@ -561,6 +607,16 @@ Dlg_SdFeatureTree:
 			if (nResult = BACK) goto Dlg_Start;
 		endif;
 	endif;
+    
+            
+Dlg_TraktConfig:
+	if (nType = MODIFY) then
+	    FeatureGetData( MEDIA, "Trakt", FEATURE_FIELD_SELECTED, nvResult, svResult );
+	    if (nvResult = TRUE) then    
+			nResult = ShowTraktConfigDlg();
+		endif;
+		if (nResult = BACK) goto Dlg_SdFeatureTree;
+	endif;
 
 	switch(nType)
         case REMOVEALL:         
@@ -608,7 +664,7 @@ begin
     endif;
     
     // Update Settings
-	UpdateSettings();
+	SetTraktSettings();
 	
 	// Confirm only one running instance of plugin
  	VerifyPluginCount();
@@ -665,7 +721,7 @@ function OnMaintUIAfter()
 begin
 	    
     if ( !REMOVEALLMODE ) then    	    
-    	UpdateSettings();
+    	SetTraktSettings();
     	
     	// Confirm only one running instance of plugin
  		VerifyPluginCount();
@@ -846,11 +902,12 @@ begin
 end;
      
 function NUMBER LaunchBrowser(szSite)
-	STRING szKey, szDir;
+	/*STRING szKey, szDir;
 	STRING svValue, svReturnString1, svReturnString2;
-	NUMBER nvType, nvSize;
+	NUMBER nvType, nvSize;*/
+	OBJECT web;
 begin
-    RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
+    /*RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
     
 	// Find the value in the registry under "HKey_Classes_Root\.htm" file,
 	// to see where the browser address is kept.
@@ -884,84 +941,15 @@ begin
 		return -1;
 	else
 		return 0;
-	endif;
+	endif;*/
 	
-end;
-
-function NUMBER SetMPXMLProperty(sSectionAttribute,sEntryAttribute, sValue)
-	STRING sFile, sNode, svString;
-	OBJECT oXMLdoc, oNodeListRoot, oNodeListElements;
-	INT i, j;
-begin
-   	
-   	sFile = g_sConfigDir^"MediaPortal.xml";        	 
-    Disable(LOGGING);
-    
-    try
-	    // Prepare XML parser object
-	    set oXMLdoc = CreateObject("Microsoft.XMLDOM");
-	    
-		oXMLdoc.async = FALSE;
-		oXMLdoc.preserveWhiteSpace = TRUE;
-	    
-	    // Load the document 	    
-		oXMLdoc.Load (sFile);
-		
-		sNode = "/profile/section";	    
-	    set oNodeListRoot = oXMLdoc.DocumentElement.SelectNodes(sNode); 	    	    
-	    
-	    // Traverse all section elements in xml until 
-	    // we reach the the required configuration section    
-	    for i=0 to oNodeListRoot.length - 1
-		
-			if oNodeListRoot(i).Attributes(0).Text = sSectionAttribute then                
-                // retrieve the list of configurable elements for the section
-            	set oNodeListElements = oNodeListRoot(i).childNodes;
-            
-            	for j = 0 to oNodeListElements.length - 1
-                    
-                    // we are only interested in the 'entry' elements
-	                if oNodeListElements(j).baseName = "entry" then
-	                    
-	                    if oNodeListElements(j).Attributes(0).Text = sEntryAttribute then
-	                		// set the MediaPortal property
-	                        oNodeListElements(j).Text = sValue;	                       
-	                    endif;
-                
-                	endif;	                               
-                	
-            	endfor;	       
-            	
-	        endif;
-		
-		endfor;   		    
-	    
-	    // save the xml	    
-	    oXMLdoc.Save (sFile);
-	    
-	    // release objects used
-	    set oXMLdoc = NOTHING;
-	    set oNodeListRoot = NOTHING;
-	    set oNodeListElements = NOTHING;	    	    
-	    
-	catch                  
-		
-	    return -1;    
-	    
-	endcatch;	       
-
-    Enable(LOGGING);         
-    return 0;
-    
-end;
-
-function VOID UpdateSettings()		
-begin
-	
-	// Enable Animations & Transistions, this is required for the plugin to work in skin 
-	// Dont need to worry about 1st time installs of mediaportal with XML
-	// as this is setting is enabled by default for MediaPortal
-	SetMPXMLProperty("general","animations","yes");	
+	try
+		set web = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "Setup.Web" );
+		web.LaunchBrowser(szSite);
+		set web = NOTHING;
+	catch
+		MessageBox("Unable to show website: " + szSite, INFORMATION);
+	endcatch;
 	
 end;
 
@@ -1296,4 +1284,238 @@ Dlg_Wait:
     ReleaseDialog (szDialogName);
         
    	return nCmdValue;
+end;         
+
+function number ShowTraktConfigDlg()
+	STRING szDialogName, szFileName, svText;
+	NUMBER nCmdValue;
+	BOOL bDone;	
+begin
+    
+    if (MODE = SILENTMODE) then 
+    	GetTraktSettings();
+    	return RES_PBUT_NEXT;
+    endif;
+    
+	szDialogName = "TraktConfig";
+   	bDone = FALSE;
+      	                         	                     
+    EzDefineDialog(szDialogName,"","",RES_DLG_TRAKTCONFIG);
+
+Dlg_Wait:  
+    // Loop unitl done
+    repeat
+    	nCmdValue = WaitOnDialog(szDialogName);
+
+	    switch (nCmdValue)
+	    	
+	    	case DLG_CLOSE:
+	            // The user clicked the window's close button.
+	            Do (EXIT);
+	            
+	        case DLG_ERR:
+	            MessageBox ("Unable to display Trakt Config dialog. Setup canceled.", SEVERE);
+	            abort;
+	            
+	        case DLG_INIT:	               
+				CtrlSetText(szDialogName, RES_TEXT_USERNAME, g_sTraktUserName);	                             
+				CtrlSetText(szDialogName, RES_TEXT_PASSWORD, g_sTraktPassword);
+				
+				if (g_sTraktTVSeries != "-1") then
+					CtrlSetState(szDialogName, RES_CHECK_TVSERIES, BUTTON_CHECKED);
+				endif;
+				
+				if (g_sTraktMovingPictures != "-1") then
+					CtrlSetState(szDialogName, RES_CHECK_MOVPICS, BUTTON_CHECKED);
+				endif;
+				
+				if (g_sTraktMyVideos != "-1") then
+					CtrlSetState(szDialogName, RES_CHECK_MYVIDEOS, BUTTON_CHECKED);
+				endif;
+	  		 
+	  		case RES_LINK_TRAKTWEB:	  			
+	  			LaunchBrowser("http://trakt.tv");
+	  			       	
+			case RES_PBUT_BACK:
+				bDone = TRUE;	 	        
+	   	        	   	        	   	        
+	        case RES_PBUT_NEXT:
+	            bDone = TRUE;	        
+	        
+	        case RES_PBUT_CANCEL:
+	        	Do (EXIT);
+	        	
+	        case RES_PBUT_CLOSE:
+	        	Do (EXIT);
+	        	
+	     endswitch;
+    
+    until bDone;       
+		
+	bDone = FALSE;	
+	
+	// Save States
+	svText = "";	
+	CtrlGetText(szDialogName, RES_TEXT_USERNAME, svText);
+	g_sTraktUserName = svText;
+	
+	svText = "";
+	CtrlGetText(szDialogName, RES_TEXT_PASSWORD, svText);
+	if (svText != g_sTraktPassword) then
+		if (svText = "") then
+			g_sTraktPassword = "";
+		else
+			g_sTraktPassword = ToSHA1Hash(svText);	
+		endif;
+	endif;
+	
+	if (CtrlGetState(szDialogName, RES_CHECK_TVSERIES) = BUTTON_UNCHECKED) then
+		g_sTraktTVSeries = "-1";
+	else    
+		// preserve sort order
+	    if (g_sTraktTVSeries = "-1") then
+	    	g_sTraktTVSeries = "0";
+	    endif;	
+	endif;
+	
+	if (CtrlGetState(szDialogName, RES_CHECK_MOVPICS) = BUTTON_UNCHECKED) then
+		g_sTraktMovingPictures = "-1";
+	else    
+		// preserve sort order
+	    if (g_sTraktMovingPictures = "-1") then
+	    	g_sTraktMovingPictures = "1";
+	    endif;	
+	endif;
+	
+	if (CtrlGetState(szDialogName, RES_CHECK_MYVIDEOS) = BUTTON_UNCHECKED) then
+		g_sTraktMyVideos = "-1";
+	else    
+		// preserve sort order
+	    if (g_sTraktMyVideos = "-1") then
+	    	g_sTraktMyVideos = "2";
+	    endif;	
+	endif;
+		
+    EndDialog (szDialogName);
+    ReleaseDialog (szDialogName);
+        
+   	return nCmdValue;
+end;
+
+function void SetTraktSettings()
+	OBJECT xmlWriter;
+	STRING sFile;
+begin        
+	
+	sFile = g_sConfigDir ^ "MediaPortal.xml";
+    
+    try 
+	    set xmlWriter = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "MediaPortal.XmlWriter" );
+	    
+	    // check if MediaPortal.xml exists, otherwise create it
+	    // this could happen if we install TVSeries directly after 
+	    // MediaPortal without loading and saving configuration
+	    if (!Is(FILE_EXISTS, sFile)) then
+	    	// Create it
+	    	xmlWriter.CreateXmlConfigFile(sFile);
+	    endif;
+       
+       	// Load Document
+       	xmlWriter.Load(sFile);
+         
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_USERNAME, g_sTraktUserName);
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_PASSWORD, g_sTraktPassword);
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_TVSERIES, g_sTraktTVSeries);  
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_MOVPICS, g_sTraktMovingPictures);  
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_MYVIDEOS, g_sTraktMyVideos);    
+        
+        // Save Document
+        xmlWriter.Save(sFile);
+           
+     	set xmlWriter = NOTHING;
+     catch
+     	if (MODE != SILENTMODE) then
+     		MessageBox("Error writing Trakt settings!",INFORMATION);
+     	endif;
+     endcatch;
+    
+end;
+
+function void GetTraktSettings()
+	OBJECT xmlReader, db;
+	STRING sFile, sResult;	
+begin
+	try
+		set xmlReader = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "MediaPortal.XmlReader" );
+		
+		sFile = g_sConfigDir ^ "MediaPortal.xml";
+		
+		// Load MediaPortal XML file
+		xmlReader.Load(sFile);
+		
+		// Read Settings
+		g_sTraktUserName = xmlReader.GetEntry("Trakt", XML_TRAKT_USERNAME);
+		g_sTraktPassword = xmlReader.GetEntry("Trakt", XML_TRAKT_PASSWORD);
+		
+		sResult = xmlReader.GetEntry("Trakt", XML_TRAKT_TVSERIES);
+		if (sResult != "") then
+			g_sTraktTVSeries = sResult;
+		endif;
+		
+		sResult = xmlReader.GetEntry("Trakt", XML_TRAKT_MOVPICS);
+		if (sResult != "") then
+			g_sTraktMovingPictures = sResult;
+		endif; 
+		
+		sResult = xmlReader.GetEntry("Trakt", XML_TRAKT_MYVIDEOS);
+		if (sResult != "") then
+			g_sTraktMyVideos = sResult;
+		endif;
+						
+		if (g_sTraktUserName = "" && g_sTraktPassword = "") then 
+			
+			// Try load setting from TVSeries database
+			set db = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "TVSeries.Database" );
+			
+			sFile = g_sDatabaseDir ^ "TVSeriesDatabase4.db3";			 
+			if db.Open(sFile) then		
+				// Upgrade settings from tvseries database
+				g_sTraktUserName = db.GetOption("TraktUsername");
+				g_sTraktPassword = db.GetOption("TraktPassword");
+				
+				// Clear settings in TVSeries database now that we have upgraded
+				db.SetOption("TraktUsername", "");
+				db.SetOption("TraktPassword", "");
+			endif;	
+						 
+			set db = NOTHING;
+			 			 
+		endif;
+				
+		// Destroy Object
+	    set xmlReader = NOTHING;
+	catch
+		if (MODE != SILENTMODE) then
+	 		MessageBox("Error reading Trakt settings!",INFORMATION);
+	 	endif;
+	endcatch;	      
+end;
+
+function STRING ToSHA1Hash(password)
+	OBJECT stringHelper;
+	STRING result;
+begin 
+	result = "";
+
+    try		
+		set stringHelper = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "Setup.StringHelper" );				
+		result = stringHelper.ToSHA1Hash(password);
+		
+		// Destroy Object
+		set stringHelper = NOTHING;
+	catch
+		MessageBox("Failed to Hash password!", INFORMATION);
+	endcatch;
+	
+	return result;
 end;
