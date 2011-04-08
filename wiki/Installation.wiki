@@ -38,7 +38,8 @@ The *Trakt Configuration* screen will appear if you enabled the 'Trakt' feature 
 
 This allows you enter your [http://trakt.tv/ trakt] login and password, and select which plugins you would like it to optionally interact with, Tick MP-TVSeries. You can also select Moving Pictures and My Videos.
 
- You can set this up later by following the [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv Trakt FAQ] if needed
+You can configure these details later by following the [http://code.google.com/p/mptvseries/wiki/FAQ#Trakt.tv Trakt FAQ]
+
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupTrakt.jpg 
  
 
