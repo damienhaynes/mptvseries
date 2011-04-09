@@ -306,6 +306,8 @@ MP-TVSeries supports multiple languages, and you are welcome to contribute by up
 =Edit Database=
 
  If you need to edit the MP-TVSeries database directly,you can download a SQLite tool, such as [http://sqlitebrowser.sourceforge.net/development.html sqlitebrowser] and open the [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3] file.
+ 
+ http://mptvseries.googlecode.com/svn/wiki/Images/SQLiteOpen.jpg
 
 ----
 =Database Corruption=
