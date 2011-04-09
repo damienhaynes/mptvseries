@@ -348,8 +348,8 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Enable 'Allow user to delete files from context menu' in the general tab, in MP-TVSeries Plugin Configuration
    * Select a Series Season or Episode, press 0 on remote or keyboard and select the option
 
- ==Show Dates in your Regions format==
-   MP-TVSeries by default shows date in YYYY-MM-DD format. To change this to use your regional settings
+ ==Show Date In Regional Format==
+   MP-TVSeries by default shows episode dates in YYYY-MM-DD format. To change this to use your regional settings
    * Enable 'Use regional settings to display dates' in the general tab, in MP-TVSeries Plugin Configuration
    * You can further tweak this by changing the Short Date syntax settings in Control Panel, Regional settings. 
 
