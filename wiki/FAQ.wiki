@@ -105,7 +105,7 @@ If a series was already imported incorrectly in Mediaportal, highlight the serie
 This will prompt you to select a series or manually enter a search term.
 
  ==Mini-Series==
-A standalone Mini Series, like Dune, will usually have the part 1, part 2 etc listed at Season 1, Episode 1, Episode 2 etc on thetvdb. If for example, the Mini Series lead to a TV Show, such as BattleStar Galactica (2003) that Mini Series maybe be listed in Specials / Season 0. 
+A standalone Mini Series, like Dune, will usually have the part 1, part 2 etc listed at Season 1, Episode 1, Episode 2 etc on thetvdb. If for example, the Mini Series lead to a TV Show, such as BattleStar Galactica (2003) that Mini Series may be listed in Specials / Season 0. 
 
 The Solution is to check the Mini-Series on [http://thetvdb.com thetvdb.com], match your files names to their syntax. Examples:
 
