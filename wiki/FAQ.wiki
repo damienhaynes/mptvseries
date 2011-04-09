@@ -218,9 +218,7 @@ Newer versions of MP-TVSeries will now be using the [http://forum.team-mediaport
  * Choose the language of subitle if available
  * Highlight 'ENABLED' and press OK
  * Return to episode, press Back on MCE Remote or ESC on keyboard
-
- ==Tips==
- * Press Yellow on MCE remote to switch subtitles on or off
+ * TIP: Press Yellow on MCE remote to toggle subtitles on / off
 
 ----
 
