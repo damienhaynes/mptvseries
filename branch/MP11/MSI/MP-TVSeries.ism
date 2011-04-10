@@ -366,7 +366,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="S72">Binary_</col>
 		<row><td>DialogId_12006</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12006_ControlId_1##</td><td>ControlId_9</td><td/><td>131072</td><td>1</td><td/><td/></row>
-		<row><td>DialogId_12006</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>1</td><td/><td>##IDS__DialogId_12006_ControlId_12##</td><td>ControlId_710</td><td/><td>0</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12006</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>1</td><td/><td>##IDS__DialogId_12006_ControlId_12##</td><td>ControlId_710</td><td/><td>0</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12006</td><td>ControlId_1300</td><td>Line</td><td>0</td><td>227</td><td>374</td><td>2</td><td>3</td><td/><td/><td>ControlId_551</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12006</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>275</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__DialogId_12006_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
 		<row><td>DialogId_12006</td><td>ControlId_50</td><td>Text</td><td>143</td><td>24</td><td>208</td><td>34</td><td>196611</td><td/><td>##IDS__DialogId_12006_ControlId_50##</td><td>Text1</td><td/><td>131072</td><td>50</td><td/><td/></row>
@@ -376,7 +376,7 @@
 		<row><td>DialogId_12006</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12006_ControlId_9##</td><td>ControlId_12</td><td/><td>0</td><td>9</td><td/><td/></row>
 		<row><td>DialogId_12006</td><td>Text1</td><td>Text</td><td>143</td><td>63</td><td>208</td><td>52</td><td>65539</td><td/><td>##NEW_STRING1##</td><td>ControlId_1</td><td/><td>0</td><td>1301</td><td/><td/></row>
 		<row><td>DialogId_12031</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12031_ControlId_1##</td><td>ControlId_9</td><td/><td>0</td><td>1</td><td/><td/></row>
-		<row><td>DialogId_12031</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12031_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12031</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12031_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12031</td><td>ControlId_1300</td><td>Line</td><td>0</td><td>227</td><td>374</td><td>2</td><td>3</td><td/><td/><td>ControlId_551</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12031</td><td>ControlId_50</td><td>Text</td><td>132</td><td>22</td><td>223</td><td>20</td><td>65539</td><td/><td>##IDS__DialogId_12031_ControlId_50##</td><td>ControlId_1300</td><td/><td>131072</td><td>50</td><td/><td/></row>
 		<row><td>DialogId_12031</td><td>ControlId_502</td><td>RadioButtonGroup</td><td>132</td><td>102</td><td>223</td><td>41</td><td>3</td><td>Yes__I_want_to_restart_my_computer_now.</td><td/><td>ControlId_12</td><td/><td>131072</td><td>502</td><td/><td/></row>
@@ -386,7 +386,7 @@
 		<row><td>DialogId_12031</td><td>ControlId_712</td><td>Text</td><td>132</td><td>158</td><td>222</td><td>59</td><td>131075</td><td/><td>##IDS__DialogId_12031_ControlId_712##</td><td>ControlId_50</td><td/><td>131072</td><td>712</td><td/><td/></row>
 		<row><td>DialogId_12031</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>1</td><td/><td>##IDS__DialogId_12031_ControlId_9##</td><td>ControlId_711</td><td/><td>0</td><td>9</td><td/><td/></row>
 		<row><td>DialogId_12032</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12032_ControlId_1##</td><td>ControlId_9</td><td/><td>0</td><td>1</td><td/><td/></row>
-		<row><td>DialogId_12032</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12032_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12032</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12032_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12032</td><td>ControlId_1300</td><td>Line</td><td>0</td><td>227</td><td>374</td><td>2</td><td>3</td><td/><td/><td>ControlId_551</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12032</td><td>ControlId_50</td><td>Text</td><td>132</td><td>13</td><td>223</td><td>20</td><td>65539</td><td/><td>##IDS__DialogId_12032_ControlId_50##</td><td>ControlId_1300</td><td/><td>131072</td><td>50</td><td/><td/></row>
 		<row><td>DialogId_12032</td><td>ControlId_501</td><td>CheckBox</td><td>132</td><td>93</td><td>223</td><td>15</td><td>3</td><td>Yes__I_want_to_view_the_ReadMe_file.</td><td>##IDS__DialogId_12032_ControlId_501##</td><td>ControlId_502</td><td/><td>131075</td><td>501</td><td/><td/></row>
@@ -399,7 +399,7 @@
 		<row><td>DialogId_12052</td><td>Bitmap1</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1048577</td><td/><td/><td>ControlId_1000</td><td/><td>0</td><td>1302</td><td/><td>NewBinary2</td></row>
 		<row><td>DialogId_12052</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12052_ControlId_1##</td><td>ControlId_9</td><td/><td>0</td><td>1</td><td/><td/></row>
 		<row><td>DialogId_12052</td><td>ControlId_1000</td><td>SelectionTree</td><td>19</td><td>73</td><td>203</td><td>121</td><td>16777219</td><td/><td>##IDS__DialogId_12052_ControlId_1000##</td><td>ControlId_12</td><td/><td>1350635527</td><td>1000</td><td/><td/></row>
-		<row><td>DialogId_12052</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12052_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12052</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12052_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12052</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td>ControlId_7</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12052</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>2</td><td>3</td><td/><td/><td>Bitmap1</td><td/><td>131088</td><td>1301</td><td/><td/></row>
 		<row><td>DialogId_12052</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>275</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__DialogId_12052_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
@@ -417,7 +417,7 @@
 		<row><td>DialogId_12053</td><td>ControlId_1001</td><td>Icon</td><td>35</td><td>88</td><td>23</td><td>25</td><td>524291</td><td/><td/><td>ControlId_1002</td><td/><td>0</td><td>1001</td><td/><td>NewBinary3</td></row>
 		<row><td>DialogId_12053</td><td>ControlId_1002</td><td>Icon</td><td>35</td><td>142</td><td>23</td><td>25</td><td>524291</td><td/><td/><td>ControlId_1003</td><td/><td>0</td><td>1002</td><td/><td>NewBinary4</td></row>
 		<row><td>DialogId_12053</td><td>ControlId_1003</td><td>Icon</td><td>35</td><td>195</td><td>23</td><td>25</td><td>524291</td><td/><td/><td>ControlId_1</td><td/><td>0</td><td>1003</td><td/><td>NewBinary5</td></row>
-		<row><td>DialogId_12053</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12053_ControlId_12##</td><td>ControlId_50</td><td/><td>0</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12053</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12053_ControlId_12##</td><td>ControlId_50</td><td/><td>0</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12053</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td>ControlId_7</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12053</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>2</td><td>3</td><td/><td/><td>Bitmap1</td><td/><td>131088</td><td>1301</td><td/><td/></row>
 		<row><td>DialogId_12053</td><td>ControlId_2</td><td>PushButton</td><td>180</td><td>312</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__DialogId_12053_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
@@ -435,7 +435,7 @@
 		<row><td>DialogId_12058</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td>ControlId_1301</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12058</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>2</td><td>3</td><td/><td/><td>Bitmap1</td><td/><td>131088</td><td>1301</td><td/><td/></row>
 		<row><td>DialogId_12058</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>275</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__DialogId_12058_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
-		<row><td>DialogId_12058</td><td>ControlId_4</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12058_ControlId_4##</td><td>ControlId_5</td><td/><td>131072</td><td>4</td><td/><td/></row>
+		<row><td>DialogId_12058</td><td>ControlId_4</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12058_ControlId_4##</td><td>ControlId_5</td><td/><td>131072</td><td>4</td><td/><td/></row>
 		<row><td>DialogId_12058</td><td>ControlId_5</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12058_ControlId_5##</td><td>ControlId_9</td><td/><td>0</td><td>5</td><td/><td/></row>
 		<row><td>DialogId_12058</td><td>ControlId_50</td><td>Text</td><td>12</td><td>4</td><td>248</td><td>10</td><td>65539</td><td/><td>##IDS__DialogId_12058_ControlId_50##</td><td>ControlId_51</td><td/><td>131072</td><td>50</td><td/><td/></row>
 		<row><td>DialogId_12058</td><td>ControlId_51</td><td>Text</td><td>19</td><td>19</td><td>240</td><td>24</td><td>196611</td><td/><td>##IDS__DialogId_12058_ControlId_51##</td><td>ControlId_4</td><td/><td>131072</td><td>51</td><td/><td/></row>
@@ -443,7 +443,7 @@
 		<row><td>DialogId_12058</td><td>ControlId_710</td><td>Text</td><td>19</td><td>49</td><td>333</td><td>36</td><td>131075</td><td/><td>##IDS__DialogId_12058_ControlId_710##</td><td>ControlId_50</td><td/><td>131072</td><td>710</td><td/><td/></row>
 		<row><td>DialogId_12058</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12058_ControlId_9##</td><td>ControlId_7</td><td/><td>0</td><td>9</td><td/><td/></row>
 		<row><td>DialogId_12060</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12060_ControlId_1##</td><td>ControlId_9</td><td/><td>0</td><td>1</td><td/><td/></row>
-		<row><td>DialogId_12060</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12060_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12060</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12060_ControlId_12##</td><td>ControlId_1</td><td/><td>131072</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12060</td><td>ControlId_1300</td><td>Line</td><td>0</td><td>227</td><td>374</td><td>2</td><td>3</td><td/><td/><td>ControlId_551</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12060</td><td>ControlId_50</td><td>Text</td><td>132</td><td>13</td><td>223</td><td>20</td><td>65539</td><td/><td>##IDS__DialogId_12060_ControlId_50##</td><td>ControlId_1300</td><td/><td>131072</td><td>50</td><td/><td/></row>
 		<row><td>DialogId_12060</td><td>ControlId_52</td><td>Text</td><td>124</td><td>0</td><td>249</td><td>226</td><td>3</td><td/><td/><td>ControlId_712</td><td/><td>131072</td><td>52</td><td/><td/></row>
@@ -453,7 +453,7 @@
 		<row><td>DialogId_12060</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>1</td><td/><td>##IDS__DialogId_12060_ControlId_9##</td><td>ControlId_711</td><td/><td>0</td><td>9</td><td/><td/></row>
 		<row><td>DialogId_12068</td><td>Bitmap1</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1048577</td><td/><td/><td>ControlId_1</td><td/><td>0</td><td>1302</td><td/><td>NewBinary2</td></row>
 		<row><td>DialogId_12068</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12068_ControlId_1##</td><td>ControlId_9</td><td/><td>0</td><td>1</td><td/><td/></row>
-		<row><td>DialogId_12068</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12068_ControlId_12##</td><td>ControlId_711</td><td/><td>131072</td><td>12</td><td/><td/></row>
+		<row><td>DialogId_12068</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12068_ControlId_12##</td><td>ControlId_711</td><td/><td>131072</td><td>12</td><td/><td/></row>
 		<row><td>DialogId_12068</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td>ControlId_7</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>DialogId_12068</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>2</td><td>3</td><td/><td/><td>Bitmap1</td><td/><td>131088</td><td>1301</td><td/><td/></row>
 		<row><td>DialogId_12068</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>275</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__DialogId_12068_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
@@ -475,7 +475,7 @@
 		<row><td>DialogId_12071</td><td>ControlId_710</td><td>Text</td><td>19</td><td>49</td><td>333</td><td>31</td><td>131075</td><td/><td>##IDS__DialogId_12071_ControlId_710##</td><td>ControlId_1003</td><td/><td>131072</td><td>710</td><td/><td/></row>
 		<row><td>DialogId_12071</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__DialogId_12071_ControlId_9##</td><td>ControlId_1</td><td/><td>0</td><td>9</td><td/><td/></row>
 		<row><td>ReleaseNotes</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_1##</td><td>ControlId_9</td><td/><td>131072</td><td>1</td><td/><td/></row>
-		<row><td>ReleaseNotes</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_12##</td><td>ControlId_1300</td><td/><td>0</td><td>12</td><td/><td/></row>
+		<row><td>ReleaseNotes</td><td>ControlId_12</td><td>PushButton</td><td>185</td><td>239</td><td>57</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_12##</td><td>ControlId_1300</td><td/><td>0</td><td>12</td><td/><td/></row>
 		<row><td>ReleaseNotes</td><td>ControlId_1300</td><td>Line</td><td>48</td><td>227</td><td>325</td><td>2</td><td>3</td><td/><td/><td>ControlId_7</td><td/><td>131079</td><td>1300</td><td/><td/></row>
 		<row><td>ReleaseNotes</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>275</td><td>57</td><td>17</td><td>2</td><td/><td>##IDS__NewDialog_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
 		<row><td>ReleaseNotes</td><td>ControlId_7</td><td>Text</td><td>3</td><td>222</td><td>45</td><td>13</td><td>2</td><td/><td/><td>Text1</td><td/><td>131072</td><td>7</td><td/><td/></row>
@@ -4181,9 +4181,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{C6A01F20-9C34-4D22-8C72-F30CE865C75A}</td><td/></row>
-		<row><td>ProductName</td><td>MP-TVSeries 2.8.2 Beta</td><td/></row>
-		<row><td>ProductVersion</td><td>2.8.3.1615</td><td/></row>
+		<row><td>ProductCode</td><td>{A6C4DCED-F55D-4099-9161-4F1571DAEA64}</td><td/></row>
+		<row><td>ProductName</td><td>MP-TVSeries 2.8.3</td><td/></row>
+		<row><td>ProductVersion</td><td>2.8.3.1660</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
