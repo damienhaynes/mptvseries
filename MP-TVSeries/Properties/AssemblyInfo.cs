@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using MediaPortal.Common.Utils;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -16,7 +15,7 @@ using MediaPortal.Common.Utils;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
-[assembly: AssemblyCopyright("Copyright © 2011")]
+[assembly: AssemblyCopyright("Copyright © 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -27,18 +26,6 @@ using MediaPortal.Common.Utils;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("3d458ab7-d9b7-4cd2-a3f9-d679eba55abb")]
-
-// Version Compatibility
-// http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
-[assembly: CompatibleVersion("1.1.6.27644")]
-//[assembly: UsesSubsystem("MP.SkinEngine")]
-//[assembly: UsesSubsystem("MP.Config")]
-//[assembly: UsesSubsystem("MP.Input.Keyboard")]
-//[assembly: UsesSubsystem("MP.Players.DVD")]
-//[assembly: UsesSubsystem("MP.Players.Video")]
-//[assembly: UsesSubsystem("MP.Externals.SQLite")]
-//[assembly: UsesSubsystem("MP.Externals.MediaInfo")]
-//[assembly: UsesSubsystem("MP.Externals.ICSharpCode.SharpZipLib")]
 
 // Version information for an assembly consists of the following four values:
 //

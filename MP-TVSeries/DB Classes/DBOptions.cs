@@ -41,9 +41,13 @@ namespace WindowPlugins.GUITVSeries
         public const String cDBSeriesLastLocalID = "DBSeriesLasLocalID";
         public const String cDBSeasonVersion = "DBSeasonVersion";
         public const String cDBEpisodesVersion = "DBEpisodesVersion";
-        public const String cDBExpressionsVersion = "DBExpressionsVersion";        
+        public const String cDBExpressionsVersion = "DBExpressionsVersion";
+        public const String cDBNewzbinVersion = "DBNewzbinVersion";
+        public const String cDBTorrentVersion = "dbTorrentVersion";
         public const String cDBViewsVersion = "DBViewsVersion";
-        public const String cDBReplacementsVersion = "DBReplacementsVersion";                
+        public const String cDBReplacementsVersion = "DBReplacementsVersion";
+        public const String cDBUserSelectionsVersion = "DBUserSelectionsVersion";
+        public const String cDBIgnoredDownloadedFilesVersion = "DBIgnoredDownloadedFilesVersion";
 
         public const String cShowHiddenItems = "ShowHiddenItems";
         public const String cOnlineParseEnabled = "OnlineParseEnabled";
@@ -60,6 +64,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cImport_AutoUpdateOnlineDataLapse = "AutoUpdateOnlineDataLapse";
         public const String cImport_DontClearMissingLocalFiles = "DontClearMissingLocalFiles";        
         public const String cImport_OnlineUpdateScanLastTime = "UpdateScanLastTime";
+
+        public const String cPlay_SubtitleDownloadOnPlay = "SubtitleDownloadOnPlay";
 
         public const String cView_PluginName = "View_PluginName";
         public const String cView_Episode_OnlyShowLocalFiles = "View_Episode_OnlyShowLocalFiles";
@@ -91,7 +97,16 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Title = "View_Episode_Title";
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
-        
+
+        public const String cUTorrentPath = "uTorrentPath";
+        public const String cUTorrentDownloadPath = "uTorrentDownloadPath";
+        public const String cTorrentSearch = "TorrentSearch_Current";
+
+        public const String cNewsLeecherPath = "NewsLeecherPath";
+        public const String cNewsLeecherDownloadPath = "NewsLeecherDownloadPath";
+
+        public const String cDownloadMonitor_RenameFiles = "DownloadMonitor_RenameFiles";
+
         public const String cRandomBanner = "randomBanner";
         public const String cLanguage = "lang";
 
@@ -123,10 +138,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cQualitySeriesBanners = "QualitySeriesBanners";
         public const String cQualitySeasonBanners = "QualitySeasonBanners";
-        public const String cQualitySeasonCoverflow = "QualitySeasonCoverflow";
         public const String cQualityEpisodeImages = "QualityEpisodeImages";
         public const String cQualitySeriesPosters = "QualityPosterImages";
-        public const String cQualitySeriesCoverflow = "QualitySeriesCoverflow";
 
         public const String cGetSeriesPosters = "getSeriesPosters";        
 
@@ -162,9 +175,14 @@ namespace WindowPlugins.GUITVSeries
         public const String cBackdropLoadingDelay = "BackdropLoadingDelay";
         public const String cArtworkLoadingDelay = "ArtworkLoadingDelay";
         public const String cRandomFanartInterval = "RandomFanartInterval";
-        public const String cParentalControlPinCode = "ParentalControlPinCode";		
+        public const String cParentalControlPinCode = "ParentalControlPinCode";
+		public const String cKeyboardStyle = "KeyboardStyle";
 		public const String cMarkRatedEpisodeAsWatched = "MarkRatedEpisodeAsWatched";
-        
+
+        public const String cSubtitleDownloaderEnabled = "SubtitleDownloaderEnabled";
+        public const String cSubtitleDownloaderLanguages = "SubtitleDownloaderLanguages";
+        public const String cSubtitleDownloadersEnabled = "SubtitleDownloadersEnabled";
+
         public const String cSubstituteMissingArtwork = "SubstituteMissingArtwork";
 
         public const String cSkipSeasonViewOnSingleSeason = "SkipSeasonViewOnSingleSeason";
@@ -185,9 +203,11 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cLogLevel = "logLevel";
 
-        public const String cSubCentralEnabled = "SubCentral_Enabled";
-        public const String cSubCentralEnabledForEpisodes = "SubCentral_EnabledForEpisodes";
-        public const String cSubCentralSubtitleDownloadOnPlay = "SubCentral_SubtitleDownloadOnPlay";
+        public const String cSubCentralEnabled = "SubCentralEnabled";
+
+        public const String cSubCentralEnabledForEpisodes = "SubCentralEnabledForEpisodes";
+
+        public const String cUseFullNameInSubDialog = "UseFullNameInSubDialog";
 
         public const String cConfigSizeHeight = "configSizeHeight";
         public const String cConfigSizeWidth = "configSizeWidth";
@@ -200,10 +220,6 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cSetHiddenSeriesAsScanIgnore = "SetHiddenSeriesAsScanIgnore";
 
-        public const String cArtworkLimitSeriesWideBanners = "ArtworkLimitSeriesWideBanners";
-        public const String cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
-        public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
-
         public const String cTraktUsername = "TraktUsername";
         public const String cTraktPassword = "TraktPassword";
 
@@ -214,6 +230,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cFollwitUpdateFrequency = "FollwitUpdateFrequency";
         public const String cFollwitLastUpdated = "FollwitLastUpdated";
 
+
+        public const String cArtworkLimitSeriesWideBanners = "ArtworkLimitSeriesWideBanners";
+ 	    public const String cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
+ 	    public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
 
         public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
 
@@ -292,13 +312,25 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cImport_DontClearMissingLocalFiles) == null)
                     SetOptions(cImport_DontClearMissingLocalFiles, 0);
-                
+
+                if (GetOptions(cPlay_SubtitleDownloadOnPlay) == null)
+                    SetOptions(cPlay_SubtitleDownloadOnPlay, false);
+
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
 
                 if (GetOptions(cViewAutoHeight) == null)
                     SetOptions(cViewAutoHeight, true);
-                
+
+                if (GetOptions(cSubtitleDownloaderEnabled) == null)
+                    SetOptions(cSubtitleDownloaderEnabled, false);
+
+                if (GetOptions(cSubtitleDownloaderLanguages) == null)
+                    SetOptions(cSubtitleDownloaderLanguages, "");
+
+                if (GetOptions(cSubtitleDownloadersEnabled) == null)
+                    SetOptions(cSubtitleDownloadersEnabled, "");
+
                 if (GetOptions(cView_Series_ListFormat) == null)
                     SetOptions(cView_Series_ListFormat, "WideBanners"); // Old Classic look by default
                 else
@@ -380,11 +412,23 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cView_Episode_Main) == null)
                     SetOptions(cView_Episode_Main, "<" + DBEpisode.cOutName + "." + DBOnlineEpisode.cEpisodeSummary + ">");
 
+                if (GetOptions(cTorrentSearch) == null)
+                    SetOptions(cTorrentSearch, String.Empty);
+
+                if (GetOptions(cUTorrentPath) == null)
+                    SetOptions(cUTorrentPath, String.Empty);
+
+                if (GetOptions(cNewsLeecherPath) == null)
+                    SetOptions(cNewsLeecherPath, String.Empty);
+
                 if (GetOptions(cRandomBanner) == null)
                     SetOptions(cRandomBanner, 0);
 
                 if (GetOptions(cWatchedAfter) == null)
                     SetOptions(cWatchedAfter, 95); //-- 95% by default
+
+                if (GetOptions(cDownloadMonitor_RenameFiles) == null)
+                    SetOptions(cDownloadMonitor_RenameFiles, 0); //do not rename by default
 
                 // this is the default main mirrors
                 if (GetOptions(DBOption.cMainMirror) == null || GetOptions(DBOption.cMainMirror) == "http://thetvdb.com/interfaces")
@@ -409,14 +453,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cQualitySeriesPosters) == null)
                     SetOptions(cQualitySeriesPosters, 50);
 
-                if (GetOptions(cQualitySeriesCoverflow) == null)
-                    SetOptions(cQualitySeriesCoverflow, 50);
-
                 if (GetOptions(cQualitySeasonBanners) == null)
                     SetOptions(cQualitySeasonBanners, 75);
-
-                if (GetOptions(cQualitySeasonCoverflow) == null)
-                    SetOptions(cQualitySeasonCoverflow, 90);
 
                 if (GetOptions(cQualityEpisodeImages) == null)
                     SetOptions(cQualityEpisodeImages, 100);
@@ -495,6 +533,9 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cParentalControlPinCode) == null)
                     SetOptions(cParentalControlPinCode, string.Empty);
 
+				if (GetOptions(cKeyboardStyle) == null)
+					SetOptions(cKeyboardStyle, 0); // NORMAL KEYBOARD
+
 				if (GetOptions(cMarkRatedEpisodeAsWatched) == null)
 					SetOptions(cMarkRatedEpisodeAsWatched, 1);
 
@@ -549,8 +590,8 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cSubCentralEnabledForEpisodes) == null)
                     SetOptions(cSubCentralEnabledForEpisodes, true);
 
-                if (GetOptions(cSubCentralSubtitleDownloadOnPlay) == null)
-                    SetOptions(cSubCentralSubtitleDownloadOnPlay, false);
+                if (GetOptions(cUseFullNameInSubDialog) == null)
+                    SetOptions(cUseFullNameInSubDialog, false);
 
                 if (GetOptions(cPlaylistUnwatchedOnly) == null)
                     SetOptions(cPlaylistUnwatchedOnly, false);
@@ -569,21 +610,6 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cSetHiddenSeriesAsScanIgnore) == null)
                     SetOptions(cSetHiddenSeriesAsScanIgnore, true);
-
-                if (GetOptions(cGetBlankBanners) == null)
-                    SetOptions(cGetBlankBanners, false);
-
-                if (GetOptions(cGetTextBanners) == null)
-                    SetOptions(cGetTextBanners, false);
-
-                if (GetOptions(cArtworkLimitSeriesWideBanners) == null)
-                    SetOptions(cArtworkLimitSeriesWideBanners, 3);
-
-                if (GetOptions(cArtworkLimitSeriesPosters) == null)
-                    SetOptions(cArtworkLimitSeriesPosters, 3);
-
-                if (GetOptions(cArtworkLimitSeasonPosters) == null)
-                    SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
 
                 if (GetOptions(cTraktPassword) == null)
                     SetOptions(cTraktPassword, string.Empty);
@@ -609,6 +635,22 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cFollwitLastUpdated) == null)
                     SetOptions(cFollwitLastUpdated, 1);                
+
+                if (GetOptions(cGetBlankBanners) == null)
+                    SetOptions(cGetBlankBanners, false);
+ 
+ 	            if (GetOptions(cGetTextBanners) == null)
+ 	                SetOptions(cGetTextBanners, false);
+ 
+ 	            if (GetOptions(cArtworkLimitSeriesWideBanners) == null) 
+ 	                SetOptions(cArtworkLimitSeriesWideBanners, 3);
+ 
+ 	            if (GetOptions(cArtworkLimitSeriesPosters) == null) 
+ 	                SetOptions(cArtworkLimitSeriesPosters, 3);
+ 
+ 	            if (GetOptions(cArtworkLimitSeasonPosters) == null)
+ 	                SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
+              
                 if (GetOptions(cSortSpecialSeasonLast) == null)
                     SetOptions(cSortSpecialSeasonLast, true);
 
@@ -706,7 +748,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static void LogOptions() {
-            foreach (string key in optionsCache.Keys) 
+            foreach (string key in optionsCache.Keys)
             {
                 // dont log private options
                 if (!key.Equals(DBOption.cTraktPassword) && !key.Equals(DBOption.cOnlineUserID))

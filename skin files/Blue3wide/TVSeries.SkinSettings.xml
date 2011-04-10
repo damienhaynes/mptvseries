@@ -20,7 +20,6 @@
     <property key="fanart.listlayout">true</property>
     <property key="fanart.iconslayout">true</property>
     <property key="fanart.filmstriplayout">true</property>
-    <property key="fanart.coverflowlayout">true</property>
   </defines>
 	
 	<!-- Position of 'NEW' stamp in thumb views -->
@@ -91,8 +90,8 @@
   
 	<layouts>
 		<group List="true" SmallIcons="true"/>
-		<series ListPosters="true" ListBanners="false" Filmstrip="true" WideBanners="true" Coverflow="true"/>
-		<season List="true" Filmstrip="true" Coverflow="true"/>
+		<series ListPosters="true" ListBanners="false" Filmstrip="true" WideBanners="true"/>
+		<season List="true" Filmstrip="true"/>
 		<episode List="true"/>
 	</layouts>
 	
@@ -198,9 +197,7 @@ skin\Blue3wide\Media\TVSeries\Logos\Certification\<Series.ContentRating>.png;-;;
 	<graphicsquality import="true">
 		<seriesbanners>50</seriesbanners>
 		<seriesposters>30</seriesposters>
-		<seriescoverflow>40</seriescoverflow>
 		<seasonbanners>85</seasonbanners>
-		<seasoncoverflow>90</seasoncoverflow>
 		<episodethumbs>90</episodethumbs>
 	</graphicsquality>
 </settings>

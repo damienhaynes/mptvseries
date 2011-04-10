@@ -22,7 +22,6 @@
     <property key="fanart.listlayout">true</property>
     <property key="fanart.iconslayout">true</property>
     <property key="fanart.filmstriplayout">true</property>
-    <property key="fanart.coverflowlayout">true</property>
   </defines>
   
 	<!-- Position of 'NEW' stamp in thumb views -->
