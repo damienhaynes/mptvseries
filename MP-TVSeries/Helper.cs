@@ -324,7 +324,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception e)
             {
-                MPTVSeriesLog.Write("Failed to save user ratings to cache: {0}", filename);
+                MPTVSeriesLog.Write("Failed to save xml to cache: {0}", filename);
                 MPTVSeriesLog.Write("Exception: {0}", e.Message);
             }
         }
