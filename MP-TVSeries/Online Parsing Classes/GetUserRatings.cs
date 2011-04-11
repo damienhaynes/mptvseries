@@ -26,135 +26,151 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Xml;
+using System.IO;
 
 namespace WindowPlugins.GUITVSeries
 {
     class GetUserRatings
     {
-        /*public class Ratings {
-            public string CommunityRating { get; set; }                
+        public class Ratings
+        {
+            public string CommunityRating { get; set; }
             public string UserRating { get; set; }
 
-            public Ratings(string userRating, string communityRating) {
+            public Ratings(string userRating, string communityRating)
+            {
                 UserRating = userRating;
                 CommunityRating = communityRating;
             }
-        }*/
+        }
     
-        # region properties
-             
-        public Dictionary<string, string> EpisodeCommunityRatings {
-            get {
-                return _episodeCommunityRatings;
-            }
-            set {
-                _episodeCommunityRatings = value;
-            }
-        } private Dictionary<string, string> _episodeCommunityRatings = new Dictionary<string, string>();
+        #region public properties
 
-        public Dictionary<string, string> EpisodeUserRatings {
-            get {
-                return _episodeUserRatings;
-            }
-            set {
-                _episodeUserRatings = value;
-            }
-        } private Dictionary<string, string> _episodeUserRatings = new Dictionary<string, string>();
+        public string SeriesCommunityRating { get; set; }
+        public string SeriesUserRating { get; set; }
 
-        /*public Dictionary<string, Ratings> EpisodeRatings {
+        public Dictionary<string, Ratings> EpisodeRatings {
             get {
                 return _episodeRatings;
             }
             set {
                 _episodeRatings = value;
             }
-        } private Dictionary<string, Ratings> _episodeRatings = new Dictionary<string, Ratings>();*/
+        } private Dictionary<string, Ratings> _episodeRatings = new Dictionary<string, Ratings>();
 
-        public string SeriesCommunityRating { get; set; }            
-        public string SeriesUserRating { get; set; }
-
-        public Dictionary<string, string> AllSeriesUserRatings {
+        public Dictionary<string, string> SeriesUserRatings {
             get {
-                return _allSeriesUserRatings;
+                return _SeriesUserRatings;
             }
             set {
-                _allSeriesUserRatings = value;
+                _SeriesUserRatings = value;
             }
-        } private Dictionary<string, string> _allSeriesUserRatings = new Dictionary<string, string>();
+        } private Dictionary<string, string> _SeriesUserRatings = new Dictionary<string, string>();
 
-        public Dictionary<string, string> AllSeriesCommunityRatings {
+        public Dictionary<string, string> SeriesCommunityRatings {
             get {
-                return _allSeriesCommunityRatings;
+                return _SeriesCommunityRatings;
             }
             set {
-                _allSeriesCommunityRatings = value;
+                _SeriesCommunityRatings = value;
             }
-        } private Dictionary<string, string> _allSeriesCommunityRatings = new Dictionary<string, string>();
+        } private Dictionary<string, string> _SeriesCommunityRatings = new Dictionary<string, string>();
 
-        # endregion properties
+        #endregion properties
+
+        #region constructor
 
         public GetUserRatings(string sSeriesID, string sAccountID)
         {
             doWork(sSeriesID, sAccountID);
-        }        
-        
-        public void doWork(String sSeriesID, string sAccountID)
-        {            
-            XmlNode node = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID);        
+        }
 
-            if (node != null)
+        #endregion
+
+        #region private methods
+
+        void doWork(String sSeriesID, string sAccountID)
+        {
+            XmlNode node = null;
+            string filename = string.Empty;
+                        
+            if (sSeriesID != null)
             {
-                if (sSeriesID != null) {
-                    foreach (XmlNode itemNode in node.ChildNodes) {
-                        if (itemNode.Name == "Episode") {
-                            string id = string.Empty;
-                            string userRating = string.Empty;
-                            string communityRating = string.Empty;
+                filename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}\ratings.xml", sSeriesID));
 
-                            foreach (XmlNode episodeNode in itemNode) {
-                                if (episodeNode.Name == "id")
-                                    id = episodeNode.InnerText;
-                                if (episodeNode.Name == "UserRating")
-                                    userRating = episodeNode.InnerText;
-                                if (episodeNode.Name == "CommunityRating")
-                                    communityRating = episodeNode.InnerText;
-                            }
-                            EpisodeUserRatings.Add(id, userRating);
-                            EpisodeCommunityRatings.Add(id, communityRating);
-                            //EpisodeRatings.Add(id, new Ratings(userRating, communityRating));
-                        }
-                        else if (itemNode.Name == "Series") {
-                            foreach (XmlNode seriesNode in itemNode) {
-                                if (seriesNode.Name == "UserRating")
-                                    SeriesUserRating = seriesNode.InnerText;
-                                if (seriesNode.Name == "CommunityRating")
-                                    SeriesCommunityRating = seriesNode.InnerText;
-                            }
-                        }
-                    }
+                // check if we have user rating in cache
+                node = Helper.LoadXmlCache(filename);
+            }
+
+            // download ratings
+            if (node == null)
+            {
+                node = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID);
+
+                if (node == null) return;
+
+                // check if there is any user ratings
+                if (node.SelectSingleNode("/Data/Error") != null)
+                {
+                    MPTVSeriesLog.Write("User Ratings: " + node.SelectSingleNode("/Data/Error").InnerText, MPTVSeriesLog.LogLevel.Debug);
+                    return;
                 }
-                else {
-                    //only update series ratings, not individual episode ratings (quicker b/c we can pull them all in one query
-                    foreach (XmlNode itemNode in node.ChildNodes) {
-                        if (itemNode.Name == "Series") {
-                            string id = string.Empty;
-                            string userRating = string.Empty;
-                            string communityRating = string.Empty;
 
-                            foreach (XmlNode seriesNode in itemNode) {
-                                if (seriesNode.Name == "seriesid")
-                                    id = seriesNode.InnerText;
-                                if (seriesNode.Name == "UserRating")
-                                    userRating = seriesNode.InnerText;
-                                if (seriesNode.Name == "CommunityRating")
-                                    communityRating = seriesNode.InnerText;
-                            }
-                            AllSeriesUserRatings.Add(id, userRating);
-                            AllSeriesCommunityRatings.Add(id, communityRating);
-                        }
-                    }
+                // save to file cache
+                if (sSeriesID != null)
+                {
+                    Helper.SaveXmlCache(filename, node);
                 }
             }
+
+            try
+            {
+                if (sSeriesID != null)
+                {
+                    // download all series and episode ratings
+                    GetSeriesAndEpisodeRatings(node);
+                }
+                else
+                {
+                    // only update series ratings, not individual episode ratings
+                    // quicker b/c we can pull them all in one query
+                    GetSeriesRatings(node);
+                }
+            }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("Error getting User Ratings: {0}", e.Message);
+            }
         }
+
+        void GetSeriesAndEpisodeRatings(XmlNode node)
+        {
+            // Get Series Rating
+            SeriesUserRating = node.SelectSingleNode("/Data/Series/UserRating").InnerText;
+            SeriesCommunityRating = node.SelectSingleNode("/Data/Series/CommunityRating").InnerText;
+
+            // Get Episode Ratings
+            foreach (XmlNode episodeNode in node.SelectNodes("/Data/Episode"))
+            {
+                string episodeid = episodeNode.SelectSingleNode("id").InnerText;
+                string userRating = episodeNode.SelectSingleNode("UserRating").InnerText;
+                string communityRating = episodeNode.SelectSingleNode("CommunityRating").InnerText;
+                EpisodeRatings.Add(episodeid, new Ratings(userRating, communityRating));
+            }
+        }
+
+        void GetSeriesRatings(XmlNode node)
+        {
+            foreach (XmlNode seriesNode in node.SelectNodes("/Data/Series"))
+            {
+                string seriesid = seriesNode.SelectSingleNode("seriesid").InnerText;
+                string userRating = seriesNode.SelectSingleNode("UserRating").InnerText;
+                string communityRating = seriesNode.SelectSingleNode("CommunityRating").InnerText;
+                SeriesUserRatings.Add(seriesid, userRating);
+                SeriesCommunityRatings.Add(seriesid, communityRating);
+            }
+        }
+
+        #endregion
     }
 }

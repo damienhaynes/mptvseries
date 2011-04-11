@@ -349,47 +349,36 @@ namespace WindowPlugins.GUITVSeries
         public GetFanart(int SeriesID)
         {
             XmlNode node = OnlineAPI.getBannerList(SeriesID);
-            if (node != null)
-            {
-                foreach (XmlNode topNode in node.ChildNodes)
-                {
-                    foreach (XmlNode itemNode in topNode.ChildNodes)
-                    {                        
-                        if (itemNode.Name == "Banner")
-                        {
-                            bool isFanart = false;
-                            DBFanart dbf = new DBFanart();
-                            foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                            {
-                                try
-                                {
-                                    dbf[propertyNode.Name] = propertyNode.InnerText;                                    
-                                }
-                                catch (Exception ex)
-                                { MPTVSeriesLog.Write("Error adding Fanart Property to DBEntry: " + propertyNode.Name + " - " + ex.Message); }
+            if (node == null) return;
 
-                                if (propertyNode.Name == "BannerType"
-                                    && propertyNode.InnerText.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))
-                                    isFanart = true;
-                            }
-                            if (isFanart)
-                            {                                                              
-                                // Sync local files with database     
-                                string localPath = dbf[DBFanart.cBannerPath];
-                                localPath = localPath.Replace("/", @"\");
-                                string fanart = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localPath);
-                                if (File.Exists(fanart))
-                                    dbf[DBFanart.cLocalPath] = localPath;
-                                else
-                                    dbf[DBFanart.cLocalPath] = string.Empty;
-                                                                                        
-                                dbf[DBFanart.cSeriesID] = SeriesID;                                
-                                _fanart.Add(dbf);
-                            }
-                        }
+            foreach (XmlNode fanartNode in node.SelectNodes("/Banners/Banner[BannerType='fanart']"))
+            {
+                DBFanart dbf = new DBFanart();
+                foreach (XmlNode propertyNode in fanartNode.ChildNodes)
+                {
+                    try
+                    {
+                        dbf[propertyNode.Name] = propertyNode.InnerText;
+                    }
+                    catch (Exception ex)
+                    { 
+                        MPTVSeriesLog.Write("Error adding Fanart Property to DBEntry: " + propertyNode.Name + " - " + ex.Message);
                     }
                 }
-            }
+
+                // Sync local files with database
+                string localPath = dbf[DBFanart.cBannerPath];
+                localPath = localPath.Replace("/", @"\");
+                string fanart = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localPath);
+                if (File.Exists(fanart))
+                    dbf[DBFanart.cLocalPath] = localPath;
+                else
+                    dbf[DBFanart.cLocalPath] = string.Empty;
+
+                dbf[DBFanart.cSeriesID] = SeriesID;
+                _fanart.Add(dbf);
+                
+            }            
         }
     }    
 }

@@ -8,24 +8,24 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     class GetUpdates
     {
         long timestamp;
-        List<DBValue> series = null;
-        List<DBValue> episodes = null;
-        List<DBValue> banners = null;
-        List<DBValue> fanart = null;
+        Dictionary<DBValue, long> series = null;
+        Dictionary<DBValue, long> episodes = null;
+        Dictionary<DBValue, long> banners = null;
+        Dictionary<DBValue, long> fanart = null;
 
         public long OnlineTimeStamp
         { get { return timestamp; } }
 
-        public List<DBValue> UpdatedSeries
+        public Dictionary<DBValue, long> UpdatedSeries
         { get { return series; } }
 
-        public List<DBValue> UpdatedEpisodes
+        public Dictionary<DBValue, long> UpdatedEpisodes
         { get { return episodes; } }
 
-        public List<DBValue> UpdatedBanners
+        public Dictionary<DBValue, long> UpdatedBanners
         { get { return banners; } }
 
-        public List<DBValue> UpdatedFanart
+        public Dictionary<DBValue, long> UpdatedFanart
         { get { return fanart; } }
 
         public GetUpdates(OnlineAPI.UpdateType type)
@@ -41,50 +41,68 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
        
             long.TryParse(updates.Attributes["time"].Value, out this.timestamp);
 
-            //get all the series ids
-            series = new List<DBValue>();
-            foreach (XmlNode node in updates.SelectNodes("/Data/Series/id")) {
-                this.series.Add(node.InnerText);
+            // get all the series ids
+            series = new Dictionary<DBValue, long>();
+            foreach (XmlNode node in updates.SelectNodes("/Data/Series"))
+            {
+                long time;
+                long.TryParse(node.SelectSingleNode("time").InnerText, out time);
+                this.series.Add(node.SelectSingleNode("id").InnerText, time);
             }
 
-            //get all the episode ids
-            episodes = new List<DBValue>();
-            foreach (XmlNode node in updates.SelectNodes("/Data/Episode/id")) {
-                this.episodes.Add(node.InnerText);
+            // get all the episode ids
+            episodes = new Dictionary<DBValue, long>();
+            foreach (XmlNode node in updates.SelectNodes("/Data/Episode"))
+            {
+                long time;
+                long.TryParse(node.SelectSingleNode("time").InnerText, out time);
+                this.episodes.Add(node.SelectSingleNode("id").InnerText, time);
             }
             
-            //get all the season banners
-            banners = new List<DBValue>();
+            // get all the season banners
+            banners = new Dictionary<DBValue, long>();
             string id = string.Empty;
+            long value;
 
-            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='season']")) {
+            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='season']"))
+            {
+                long time;
+                long.TryParse(node.SelectSingleNode("time").InnerText, out time);
                 id = node.SelectSingleNode("Series").InnerText;
-                if (!this.banners.Contains(id))
-                    this.banners.Add(id);
+                if (!this.banners.TryGetValue(id, out value))
+                    this.banners.Add(id, time);
             }
 
             //get all the series banners
-            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='series']")) {
+            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='series']"))
+            {
+                long time;
+                long.TryParse(node.SelectSingleNode("time").InnerText, out time);
                 id = node.SelectSingleNode("Series").InnerText;
-                if (!this.banners.Contains(id))
-                    this.banners.Add(id);
+                if (!this.banners.TryGetValue(id, out value))
+                    this.banners.Add(id, time);
             }
 
             //get all the poster banners
-            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='poster']")) {
+            foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='poster']"))
+            {
+                long time;
+                long.TryParse(node.SelectSingleNode("time").InnerText, out time);
                 id = node.SelectSingleNode("Series").InnerText;
-                if (!this.banners.Contains(id))
-                    this.banners.Add(id);
+                if (!this.banners.TryGetValue(id, out value))
+                    this.banners.Add(id, time);
             }
 
             //get all the fanart banners
-            fanart = new List<DBValue>();
+            fanart = new Dictionary<DBValue, long>();
             id = string.Empty;
             foreach (XmlNode node in updates.SelectNodes("/Data/Banner[type='fanart']"))
             {
+                long time;
+                long.TryParse(node.SelectSingleNode("time").InnerText, out time);
                 id = node.SelectSingleNode("Series").InnerText;
-                if (!this.fanart.Contains(id))
-                    this.fanart.Add(id);
+                if (!this.fanart.TryGetValue(id, out value))
+                    this.fanart.Add(id, time);
             }
 
         }
