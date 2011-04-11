@@ -180,14 +180,14 @@ To download all the available information for your Series, including Episodes yo
  * Load MP-TVSeries Plugin Configuration
  * OnlineData Tab
  * Check the box _'Download Episode Information for the whole Series'_
- * The next import may take a while as it downloads all the avaible information for all your imported Series
+ * The next import may take a while as it downloads all the available information for all your imported Series
  http://mptvseries.googlecode.com/svn/wiki/Images/DownloadEpisodeInfoAll.jpg
 
  ==Show / Hide==
  * in Mediaporal, MP-TVSeries Plugin
  * Press F9 on keyboard or INFO on MCE Remote
  * Click OPTIONS
- * Change 'ONLY SHOW LOCAL EPISODES' to OFF
+ * Change 'SHOW ALL EPISODES' to ON
  
  You will now see all episodes for a Series, Depending on Skin, those episodes may show in a different colour, e.g. Orange in Blue3Wide & StreamedMP. If a Season only shows a partial amount of all the expected episodes, then those episodes havent been added yet on thetvdb.com. 
 
