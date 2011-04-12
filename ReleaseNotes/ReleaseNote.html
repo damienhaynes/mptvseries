@@ -59,7 +59,79 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
-  <div class="main_title">TVSeries v2.7.1 Maintenance Release</div>
+	<div class="main_title">TVSeries v3.0.0 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added support for MediaPortal's new Default and DefaultWide skins.</p></li>
+			<li><p>Improved Import process, data is now cached to disk and results in faster imports. Cached series are only removed if the online api reports newer information is available.</p></li>
+			<li><p>Added support for Coverflow layout, only available on supported skins.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.3 Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added Trakt Upgrade to Installer, so settings previously entered in TVSeries will automatically be moved across to new Trakt Plugin.</p></li>
+			<li><p>Fixed Parental Controls not being respected if entering a protected view from ViewTags group view.</p></li>
+			<li><p>Added Expiration to Parental Control Lock, default is 60 minutes. Next time you attempt to enter a view that is protected you will be prompted for pin code again. Lock is still reset when restarting/resuming and when manually setting lock from Actions menu.</p></li>
+			<li><p>[API] Added external access to re-init Skin Settings. This could be useful if a skin wants to edit skinsettings.xml directly from a skin configuration plugin. Call SkinSettings.Init() and skin settings reflect with what changes have been done in xml without having to restart.</p></li>
+			<li><p>Added Skin Settings to disable Fanart from being displayed on a per Layout (list, icons, filmstrip, coverflow) and a per View Level (series, seasons, episodes)</p></li>
+			<li><p>Updated Trakt Plugin to v0.9.3.0.</p></li>
+			<li><p>Added option to disable 'Auto Generation of Episode Titles when Online Data does not Exist', this is hidden in the DBOptions table and is not exposed in UI.</p></li>
+			<li><p>Fixed 'New Episode Indicator' not being correctly set after import.</p></li>
+			<li><p>Renamed option 'Show Only Local Files' to 'Show All Episodes', new translation string is needed.</p></li>
+			<li><p>Updated Spanish translations.</p></li>
+			<li><p>Fixed date format not respecting regional settings in Video OSD if setting was enabled.</p></li>
+			<li><p>Fixed user edited Episode Names not showing in GUI.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.2 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Updated Trakt Plugin to v0.9.2.0.</p></li>
+			<li><p>[API] Fixed Toggled Watched event from the Episode view level.</p></li>
+			<li><p>Fix feature reference to Trakt Plugin in the installer.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.1 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>trakt.tv support is now handled in a seperate process plugin and is no longer configured in tvseries configuration. The installer has been updated to optionally include this feature, after installation be sure to re-enter your username and password in trakt configuration.</p></li>
+			<li><p>Updated French translations, thanks ubela64.</p></li>
+			<li><p>Updated Russian translations, thanks Undel.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.0 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added support for follw.it, a social media website allowing you to share with your friends what you have been watching and what you love. If enabled, follw.it will also automatically synchronize rating and watched flags between multiple mp-tvseries installations.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.7.1 Maintenance Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
 		<div class="tab_img"></div>
@@ -76,6 +148,7 @@ ul {
       <li><p>Updated translations file with recently added strings. Translators please add new strings from en.xml.</p></li>
 		</ul>
 	</div>
+	
   <div class="main_title">TVSeries v2.7.0 Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
