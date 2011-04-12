@@ -41,7 +41,7 @@
 #define MPTVSERIES_HOMEPAGE_URL			"http://code.google.com/p/mptvseries/"
 
 // Version Defines
-#define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.6.27644"
+#define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.6.27796"
 #define MEDIAPORTAL_MIN_VERSION				"1.1.6.27644"
 
 // Common Dialog Controls
