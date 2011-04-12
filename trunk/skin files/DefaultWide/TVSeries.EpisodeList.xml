@@ -288,7 +288,7 @@
 			<posX>30</posX>
 			<posY>475</posY>
 			<width>670</width>
-			<height>175</height>			
+			<height>150</height>			
 			<font>font11</font>
 			<label>#TVSeries.Episode.Summary</label>
 			<scrollStartDelaySec>10</scrollStartDelaySec>
@@ -302,7 +302,7 @@
 			<type>image</type>
 			<id>66</id>
 			<posX>28</posX>
-			<posY>660</posY>
+			<posY>650</posY>
 			<width>900</width>
 			<height>50</height>
 			<texture flipY="true" diffuse="Thumb_Mask.png">#TVSeries.Logos</texture>
