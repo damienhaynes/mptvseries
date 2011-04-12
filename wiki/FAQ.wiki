@@ -252,6 +252,16 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
 
 ----
 
+=Backup and Migration=
+
+If you want to backup your MP-TVSeries data, or migrate it to a new computer you need to backup/restore the following.
+
+ * Backup [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]
+ * Backup [http://code.google.com/p/mptvseries/wiki/FAQ#MPTVSeriesBanners_and_Fan_Art_(Folders) MPTVSeriesBanners and Fan Art (Folders)]. Note you could just copy the entire 'thumbs' folder (recommend), especially if you have ClearART etc are doing the same process with MovingPictures.
+
+
+----
+
 =Multiple HTPCs and MP-TVSeries=
 
 Mediaportal 1 does not have native support for sharing its databases across multiple clients, this is something scheduled for Mediaportal 2. There are options, the first, is the [http://wiki.team-mediaportal.com/UserGuides/CentralisedDatabases multi-seat] Approach (not recommended/supported). The Second option, is below
