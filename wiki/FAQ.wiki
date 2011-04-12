@@ -398,4 +398,11 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Right Click an Old Series
    * Select 'Ignore on Scan'
 
+ ==Speed Up Series Browsing - Change Layout==
+   In Mediaportal, if you find browsing the Series list is slow or not smooth when scrolling, you may have older HTPC hardware for example, try switching the Series layouts to 'LIST POSTERS' or 'LIST BANNERS'
+   * In Mediportal, go into MP-TVSeries and browse your entire Series.
+   * Press F9 or INFO on MCE Remote
+   * Choose 'CHANGE LAYOUT'
+   * Select 'LIST POSTERS' or 'LIST BANNERS'
+
 ----
