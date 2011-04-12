@@ -133,77 +133,7 @@
 			<font>font11</font>
 			<textcolor>ffFFFFFF</textcolor>
 			<label>#TVSeries.FanArt.DownloadingStatus</label>
-		</control>
-			
-		<!--      :: HIDDEN MENU ::      -->
-		<control>
-			<type>actiongroup</type>
-			<description>action menu</description>
-			<defaultcontrol>2</defaultcontrol>
-			<onexit>50</onexit>
-			<buttonX>0</buttonX>
-			<buttonY>-130</buttonY>
-			<buttonwidth>106</buttonwidth>
-      <buttonheight>720</buttonheight>
-      <textureFocus>-</textureFocus>
-      <textureNoFocus>Action_nofocus.png</textureNoFocus>
-			<width>568</width>
-			<height>900</height>
-			<dimColor>00ffffff</dimColor>
-			<control>
-				<type>image</type>
-				<posX>26</posX>
-				<posY>49</posY>
-				<width>367</width>
-				<height>591</height>
-				<texture>Backslide.png</texture>
-				<colorDiffuse>fffffffff</colorDiffuse>
-				<visible>!Control.HasFocus(50)</visible>
-				<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
-        <animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
-			</control>
-			<control>
-				<description>group element</description>
-				<type>group</type>
-				<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
-        <animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
-				<visible>!Control.HasFocus(50)</visible>         
-				<control>
-					<description>button group</description>
-					<type>group</type>					
-					<posX>71</posX>
-					<posY>121</posY>
-					<layout>StackLayout</layout>
-					<visible>!Control.HasFocus(50)</visible>
-					<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
-					<animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
-					<control>
-						<description>Change Layout</description>
-						<type>button</type>
-						<id>2</id>
-						<label>Change Layout</label>
-						<onleft>50</onleft>
-						<onright>50</onright>
-					</control>
-					<control>
-						<description>Resolution Filter</description>
-						<type>button</type>
-						<id>12</id>
-						<label>Filter</label>
-						<onleft>50</onleft>
-						<onright>50</onright>
-					</control>		
-					<control>
-						<description>Random Fanart</description>
-						<type>togglebutton</type>
-						<id>13</id>
-						<label>Random Fanart</label>
-						<onleft>50</onleft>
-						<onright>50</onright>
-					</control>
-				</control>
-			</control>
-		</control>	
+		</control>			
 			
 		<!-- Selected Facade Item -->
 		<control>
@@ -423,6 +353,78 @@
 				</control>
 			</control>
 		</control>
+		
+		
+		<!--      :: HIDDEN MENU ::      -->
+		<control>
+			<type>actiongroup</type>
+			<description>action menu</description>
+			<defaultcontrol>2</defaultcontrol>
+			<onexit>50</onexit>
+			<buttonX>0</buttonX>
+			<buttonY>-130</buttonY>
+			<buttonwidth>106</buttonwidth>
+      <buttonheight>720</buttonheight>
+      <textureFocus>-</textureFocus>
+      <textureNoFocus>Action_nofocus.png</textureNoFocus>
+			<width>568</width>
+			<height>900</height>
+			<dimColor>00ffffff</dimColor>
+			<control>
+				<type>image</type>
+				<posX>26</posX>
+				<posY>49</posY>
+				<width>367</width>
+				<height>591</height>
+				<texture>Backslide.png</texture>
+				<colorDiffuse>fffffffff</colorDiffuse>
+				<visible>!Control.HasFocus(50)</visible>
+				<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
+        <animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
+			</control>
+			<control>
+				<description>group element</description>
+				<type>group</type>
+				<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
+        <animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
+				<visible>!Control.HasFocus(50)</visible>         
+				<control>
+					<description>button group</description>
+					<type>group</type>					
+					<posX>71</posX>
+					<posY>121</posY>
+					<layout>StackLayout</layout>
+					<visible>!Control.HasFocus(50)</visible>
+					<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
+					<animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
+					<control>
+						<description>Change Layout</description>
+						<type>button</type>
+						<id>2</id>
+						<label>Change Layout</label>
+						<onleft>50</onleft>
+						<onright>50</onright>
+					</control>
+					<control>
+						<description>Resolution Filter</description>
+						<type>button</type>
+						<id>12</id>
+						<label>Filter</label>
+						<onleft>50</onleft>
+						<onright>50</onright>
+					</control>		
+					<control>
+						<description>Random Fanart</description>
+						<type>togglebutton</type>
+						<id>13</id>
+						<label>Random Fanart</label>
+						<onleft>50</onleft>
+						<onright>50</onright>
+					</control>
+				</control>
+			</control>
+		</control>	
+		
 		<import>TVSeries.Overlay.xml</import>
   </controls>
 </window>
