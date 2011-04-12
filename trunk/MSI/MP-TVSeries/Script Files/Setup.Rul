@@ -656,11 +656,11 @@ function OnFirstUIAfter()
 begin
 
 	// Clean Cache Folder, old skin may conflict with new changes
-	if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
-    	CleanCache("Blue3");
+	if FeatureIsItemSelected ( MEDIA, "Skins\\Default" ) then
+    	CleanCache("Default");
     endif;
-    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
-    	CleanCache("Blue3Wide");
+    if FeatureIsItemSelected ( MEDIA, "Skins\\DefaultWide" ) then
+    	CleanCache("DefaultWide");
     endif;
     
     // Update Settings
@@ -727,11 +727,11 @@ begin
  		VerifyPluginCount();
         
         // Clean Cache Folder, old skin may conflict with new changes
-		if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3" ) then
-	    	CleanCache("Blue3");
+		if FeatureIsItemSelected ( MEDIA, "Skins\\Default" ) then
+	    	CleanCache("Default");
 	    endif;
-	    if FeatureIsItemSelected ( MEDIA, "Skins\\Blue3Wide" ) then
-	    	CleanCache("Blue3Wide");
+	    if FeatureIsItemSelected ( MEDIA, "Skins\\DefaultWide" ) then
+	    	CleanCache("DefaultWide");
 	    endif;
     
     endif;
@@ -901,54 +901,16 @@ begin
     
 end;
      
-function NUMBER LaunchBrowser(szSite)
-	/*STRING szKey, szDir;
-	STRING svValue, svReturnString1, svReturnString2;
-	NUMBER nvType, nvSize;*/
+function NUMBER LaunchBrowser(szSite)	
 	OBJECT web;
 begin
-    /*RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
     
-	// Find the value in the registry under "HKey_Classes_Root\.htm" file,
-	// to see where the browser address is kept.
-	RegDBGetKeyValueEx(".htm", "", nvType, svValue, nvSize);
-	
-	// Append the return value to Shell\open\command
-	// to get the path to executable of the browser
-	szKey = svValue+"\\shell\\open\\command";
-	RegDBGetKeyValueEx(szKey, "", nvType, svValue, nvSize);
-	
-	// Because the value in the command usually has %1 or other placeholders,
-	// we parse the path to get the directory first and then the file name
-	// (this way all the characters after the file name including the placeholder are removed)
-	ParsePath(svReturnString1, svValue, PATH);
-	ParsePath(svReturnString2, svValue, FILENAME_ONLY);
-	
-	// Now append the .exe extension to the file name.
-	// If the browser is IE, the path contains an extra quote("").
-	// By removing the placeholder, we also removed the ending close quote("),
-	// but it still has the beginning opening quote ("),
-	// so you have to put and ending quote (" to make if a correct path.
-	// Netscape does not have the extra "" in the path.
-	szDir=svReturnString1^svReturnString2+".exe";
-	if ( svReturnString2 = "iexplore" ) then
-		szDir=svReturnString1^svReturnString2+".exe\"";
-	endif;
-	
-	// Now the path to the browser is available.
-	// You can launch the browser and pass your .htm file as a parameter to it.
-	if LaunchAppAndWait(szDir, szSite, NOWAIT) < 0 then
-		return -1;
-	else
-		return 0;
-	endif;*/
-	
 	try
 		set web = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "Setup.Web" );
 		web.LaunchBrowser(szSite);
 		set web = NOTHING;
 	catch
-		MessageBox("Unable to show website: " + szSite, INFORMATION);
+		//MessageBox("Unable to show website: " + szSite, INFORMATION);
 	endcatch;
 	
 end;
@@ -1217,10 +1179,10 @@ begin
     endif;
     
     // Delete skin file(s) if they exist (no shared pacakges for these)
-    szFiles = g_sSkinsDir ^ "Blue3\\TVSeries*.xml";
+    szFiles = g_sSkinsDir ^ "Default\\TVSeries*.xml";
     DeleteFile(szFiles);
     
-    szFiles = g_sSkinsDir ^ "Blue3Wide\\TVSeries*.xml";
+    szFiles = g_sSkinsDir ^ "DefaultWide\\TVSeries*.xml";
     DeleteFile(szFiles);
     
     Enable(LOGGING);
