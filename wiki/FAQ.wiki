@@ -252,10 +252,10 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
   * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\language\MP-TVSeries\
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\Mediaportal\language\MP-TVSeries\
 
-==Series Cache (Files)==
-From MP-TVSeries v3.0+, there will be caching to speed up your import time. These cached files are stored in
+ ==Series Cache (Files)==
+ From MP-TVSeries v3.0+, there will be caching to speed up your import time. These cached files are stored in
   
-  *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\MP-TVSeries\Cache
+  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\MP-TVSeries\Cache
   * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\Mediaportal\MP-TVSeries\Cache
 
 
