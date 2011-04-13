@@ -416,6 +416,9 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Right Click an Old Series
    * Select 'Ignore on Scan'
 
+ ==Speed Up Import - Upgrade to MP-TVSeries 3.x==
+   MP-TVSeries 3.x which runs on Mediaportal 1.2Beta+ has significantly faster import times compared to MP-TVSeries 2.x due to a new [http://code.google.com/p/mptvseries/wiki/FAQ#Series_Cache_%28Files%29 Caching] feature. If you have a large collection, this is highly recommended.
+
  ==Speed Up Series Browsing - Change Layout==
    In Mediaportal, if you find browsing the Series list is slow or not smooth when scrolling, you may have older HTPC hardware for example, try switching the Series layouts to 'LIST POSTERS' or 'LIST BANNERS'
    * In Mediportal, go into MP-TVSeries and browse your entire Series.
