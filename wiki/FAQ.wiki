@@ -205,6 +205,27 @@ To download all the available information for your Series, including Episodes yo
  * Press F9 on keyboard, or INFO on MCE remote
  * Click ACTIONS
  * Click UPDATE
+
+ ==Importing Videos Not At TheTVDB==
+ MP-TVSeries is not intended for this scenario, but there is a solution you can use. If you have videos that you want to show in MP-TVSeries, and its not appropiate to create it at thetvdb.com, such as personal movies recorded on video cameras stc, you can try the following - Requires MP-TVSeries 3.0.1+
+
+ * Create proper filenames with season and episode syntax e.g.
+   My Trip to Fiji - S01E01.avi
+   My Trip to Fiji - S01E02.avi
+   My Trip to Fiji - S01E03.avi
+   My Trip to Fiji - S01E04.avi
+
+ * Load Media Portal Configuration, MP-TVSeries plugin.
+ * Start the Import Wizard, and select Skip when no match is found for the 'My Trip to Fiji'
+ * Finish Import
+ * Select 'Details' tab.
+ * Find your Series, Enter Series and Episode info (This will create USEREDIT fields in database)
+ * Right Click on series and select 'Ignore on Scan' so we dont prompt to match series everytime.
+ * Enter GUI and select series, then play!
+
+ Note: Adding manual artwork, at time of writing you need to edit the database directly...
+
+
 ----
 
 =Subtitle Support=
