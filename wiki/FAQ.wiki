@@ -194,6 +194,18 @@ To download all the available information for your Series, including Episodes yo
  You will now see all episodes for a Series, Depending on Skin, those episodes may show in a different colour, e.g. Orange in Blue3Wide & StreamedMP. If a Season only shows a partial amount of all the expected episodes, then those episodes havent been added yet on thetvdb.com. 
 
 ----
+=Importing=
+
+ ==Imported Episode Image is Incorrect==
+ If you find a episode which has a incorrect episode image, it may be been incorrectly uploaded at thetvdb. When the image is replaced with a correct version, MP-TVSeries will not automatically download this, however you can do this manually
+
+ Note: MP-TVSeries v2.7+ will show a FanArt episode image if there is no episode image available, which will be updated automatically, and not to be confused with an Incorrect Episode Image
+
+ * In Mediaportal, Select the Episode
+ * Press F9 on keyboard, or INFO on MCE remote
+ * Click ACTIONS
+ * Click UPDATE
+----
 
 =Subtitle Support=
 Newer versions of MP-TVSeries will now be supporting the [http://forum.team-mediaportal.com/showthread.php?t=85545&referrerid=104898 SubCentral] Plugin, 'Subtitle Downloader' will be retired.
