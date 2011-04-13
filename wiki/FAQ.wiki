@@ -219,6 +219,7 @@ To download all the available information for your Series, including Episodes yo
  * Start the Import Wizard, and select Skip when no match is found for the 'My Trip to Fiji'
  * Finish Import
  * Select 'Details' tab.
+ * Click 'Show Hidden Items'
  * Find your Series, Enter Series and Episode info (This will create USEREDIT fields in database)
  * Right Click on series and select 'Ignore on Scan' so we dont prompt to match series everytime.
  * Enter GUI and select series, then play!
