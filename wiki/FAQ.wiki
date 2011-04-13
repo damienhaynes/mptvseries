@@ -433,20 +433,20 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
 
    * Load Mediaportal Configuration
    * Click General,  Keys and Sounds
-   * Select the 'Window' node
+   * Select the 'WINDOWS' node
    * Click 'ADD' button
-   * for Description field type 'MP-TVSeries specific' or similar
-   * Action field, enter in 9811 (the window id of MP-TVSeries)
+   * In Description field type 'MP-TVSeries specific' or similar
+   * In Action field, enter '9811' (the window id of MP-TVSeries)
    * Click 'ADD'
 
    This will allow you to map the actions
 
-   * Click  'new action node...'
-   * Enter in description e.g. 'cycle artwork'
-   * from the list of actions, choose ACTION_NEXT_PICTURE or ACTION_PREV_PICTURE.
-   * enter in a KEY that you want to map :)
-   * Then Click OK
-   * Repeat these steps if you want to bind both NEXT AND PREV
+   * Click  '<New Action>' node
+   * Enter in description e.g. 'Cycle Artwork Next'
+   * In actions, choose 'ACTION_NEXT_PICTURE'
+   * Click on Key: and press keyboard character
+   * Click OK
+   * Repeat these steps if you want to bind ACTION_PREV_PICTURE
 
    Load Mediaportal, TVSeries plugin, and press the KEY you set to change the artwork
 
