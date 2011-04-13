@@ -426,8 +426,8 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
  ==Fast Cycling of Artwork via Keyboard or Remote==
    There is a way to bind a key in Mediaportal for the purpose of having a quick way to change the artwork without having to do into the menu. This need to be linked with the either or both MP actions.
 
-   * ACTION_PREV_PICTURE
-   * ACTION_NEXT_PICTURE
+  * ACTION_PREV_PICTURE
+  * ACTION_NEXT_PICTURE
 
    To map a keyboard button to these actions:
 
