@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
 <!-- English (US) -->
-<!-- Last Updated: 11th March 2011 -->
+<!-- Last Updated: 16th April 2011 -->
 <!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Series</string>
@@ -51,7 +51,7 @@
   <string Field="Options" Original="Options">Options</string>
   <string Field="Genres" Original="Genres">Genres</string>
   <string Field="All" Original="All">All</string>
-  <string Field="Latest" Original="Latest">Latest</string>
+  <string Field="Latest" Original="Latest Aired">Latest Aired</string>
   <string Field="Channels" Original="Channels">Channels</string>
   <string Field="Unwatched" Original="Unwatched">Unwatched</string>
   <string Field="Favourites" Original="Favourites">Favourites</string>

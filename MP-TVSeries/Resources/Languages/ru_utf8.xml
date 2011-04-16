@@ -55,7 +55,7 @@
 	<string Field="Options" Original="Options">Опции</string>
 	<string Field="Genres" Original="Genres">Жанры</string>
 	<string Field="All" Original="All">Все</string>
-	<string Field="Latest" Original="Latest">Последние</string>
+	<string Field="Latest" Original="Latest Aired">Последние</string>
 	<string Field="Channels" Original="Channels">Каналы</string>
 	<string Field="Unwatched" Original="Unwatched">непросмотренное</string>
 	<string Field="Favourites" Original="Favourites">Избранное</string>

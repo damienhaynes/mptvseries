@@ -54,7 +54,7 @@
 	<string Field="Options" Original="Options">Inställningar</string>
 	<string Field="Genres" Original="Genres">Genrer</string>
 	<string Field="All" Original="All">Samtliga</string>
-	<string Field="Latest" Original="Latest">Senaste</string>
+	<string Field="Latest" Original="Latest Aired">Senaste</string>
 	<string Field="Channels" Original="Channels">Kanaler</string>
 	<string Field="Unwatched" Original="Unwatched">Ej sedda</string>
 	<string Field="Favourites" Original="Favourites">Favouriter</string>

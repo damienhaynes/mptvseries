@@ -53,7 +53,7 @@
   <string Field="Options" Original="Options">Valg</string> 
   <string Field="Genres" Original="Genres">Genrer</string> 
   <string Field="All" Original="All">Alle</string> 
-  <string Field="Latest" Original="Latest">Siste</string> 
+  <string Field="Latest" Original="Latest Aired">Siste</string> 
   <string Field="Channels" Original="Channels">Kanaler</string> 
   <string Field="Unwatched" Original="Unwatched">Usett</string> 
   <string Field="Favourites" Original="Favourites">Favoritter</string> 

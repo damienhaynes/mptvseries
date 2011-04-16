@@ -137,7 +137,7 @@ namespace WindowPlugins.GUITVSeries
         // Views
         public static string Genres = "Genres";
         public static string All = "All";
-        public static string Latest = "Latest";
+        public static string Latest = "Latest Aired";
         public static string Channels = "Channels";
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
