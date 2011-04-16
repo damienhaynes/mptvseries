@@ -306,5 +306,7 @@
   <string Field="GettingActors" Original="Getting Actors from Online">Getting Actors from Online</string>
 
   <string Field="ShowAllEpisodes" Original="Show all Episodes">Show all Episodes</string>
+
+  <string Field="DownloadAllEpisodeInfo" Original="Download All Episode Info">Download All Episode Info</string>
   
 </strings>

@@ -330,7 +330,9 @@ namespace WindowPlugins.GUITVSeries
         public static string Timeout = "Timeout";
         public static string NoActors = "There are no Actors for this series.";
         public static string GettingActors = "Getting Actors from Online";
-        
+
+        public static string DownloadAllEpisodeInfo = "Download All Episode Info";
+
         #endregion
 
         #region Public Properties
