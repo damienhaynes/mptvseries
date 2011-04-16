@@ -14,9 +14,10 @@ There are 3 ways you can receive support for the plugin, Submitting log files an
  MP-TVSeries has a issue tracker [http://code.google.com/p/mptvseries/issues/list here]. Recommended if you have a re-producible bug or enhancement request 
 
  ==IRC==
- Join the #mp-tvseries IRC channel on Freenode
+ Join the #mp-tvseries IRC channel on Freenode 
 
  ==Submitting Useful Log Files==
+ If you require assitance its smart to include the log files with your post,  you will likely find the community will more often look at your issue if you provide all the necessary information. Instructions are below.
 
  * Make sure MP-TVSeries logging is set to _Debug_ Level
    http://mptvseries.googlecode.com/svn/wiki/Images/DebugLogLevel.jpg
