@@ -52,7 +52,7 @@
   <string Field="Options" Original="Options">Options</string>
   <string Field="Genres" Original="Genres">Par genres</string>
   <string Field="All" Original="All">Tous les épisodes</string>
-  <string Field="Latest" Original="Latest">Les derniers épisodes</string>
+  <string Field="Latest" Original="Latest Aired">Les derniers épisodes</string>
   <string Field="Channels" Original="Channels">Par chaines</string>
   <string Field="Unwatched" Original="Unwatched">Episodes non vus</string>
   <string Field="Favourites" Original="Favourites">Favoris</string>
