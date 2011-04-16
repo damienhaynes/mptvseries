@@ -334,10 +334,8 @@ namespace WindowPlugins.GUITVSeries
             optionsPreventSpoilers,
             optionsPreventSpoilerThumbnail,
             optionsAskToRate,
-            optionsFastViewSwitch,
             optionsFanartRandom,
-            optionsSeriesFanart,
-            optionsUseOnlineFavourites,
+            optionsDownloadAllEpisodesInfo,
             actionRecheckMI,
             showFanartChooser,
             addToPlaylist,
@@ -3622,12 +3620,9 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilerThumbnail;
 
-            //if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
-            //{
             pItem = new GUIListItem(Translation.AskToRate + " (" + (DBOption.GetOptions(DBOption.cAskToRate) ? Translation.on : Translation.off) + ")");
             dlg.Add(pItem);
-            pItem.ItemId = (int)eContextItems.optionsAskToRate;
-            //}
+            pItem.ItemId = (int)eContextItems.optionsAskToRate;          
 
             if (FanartBackground != null)
             {
@@ -3636,9 +3631,9 @@ namespace WindowPlugins.GUITVSeries
                 pItem.ItemId = (int)eContextItems.optionsFanartRandom;
             }
 
-            //pItem = new GUIListItem(Translation.UseOnlineFavourites + " (" + (DBOption.GetOptions(DBOption.cOnlineFavourites) ? Translation.on : Translation.off) + ")");
-            //dlg.Add(pItem);
-            //pItem.ItemId = (int)eContextItems.optionsUseOnlineFavourites;
+            pItem = new GUIListItem(Translation.DownloadAllEpisodeInfo + " (" + (DBOption.GetOptions(DBOption.cFullSeriesRetrieval) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.optionsDownloadAllEpisodesInfo;
 
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
@@ -3677,10 +3672,6 @@ namespace WindowPlugins.GUITVSeries
                         LoadFacade();
                         break;
 
-                    case (int)eContextItems.optionsFastViewSwitch:
-                        DBOption.SetOptions(DBOption.cswitchViewsFast, !DBOption.GetOptions(DBOption.cswitchViewsFast));
-                        break;
-
                     case (int)eContextItems.optionsAskToRate:
                         DBOption.SetOptions(DBOption.cAskToRate, !DBOption.GetOptions(DBOption.cAskToRate));
                         break;
@@ -3695,6 +3686,10 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // Update Fanart Displayed - may need to restore default artwork
                         Series_OnItemSelected(m_Facade.SelectedListItem);
+                        break;
+
+                    case (int)eContextItems.optionsDownloadAllEpisodesInfo:
+                        DBOption.SetOptions(DBOption.cFullSeriesRetrieval, !DBOption.GetOptions(DBOption.cFullSeriesRetrieval));
                         break;
                 }
             }

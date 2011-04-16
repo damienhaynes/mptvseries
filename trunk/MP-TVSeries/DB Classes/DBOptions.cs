@@ -115,8 +115,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cNewAPIUpgradeDone = "newAPIUpgradeDone";
         public const String cUpdateTimeStamp = "UpdateTimeStamp"; // new one and only timestamp
         public const String cOnlineUserID = "onlineUserID";
-        public const String cAskToRate = "askToRate";
-        public const String cswitchViewsFast = "switchViewsFast";
+        public const String cAskToRate = "askToRate";        
 
         public const String cAppendFirstLogoToList = "appendFirstLogoToList";
         public const String cGraphicalGroupView = "graphicalGroupView";
@@ -213,7 +212,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cFollwitHashedPassword = "FollwitHashedPassword";
         public const String cFollwitUpdateFrequency = "FollwitUpdateFrequency";
         public const String cFollwitLastUpdated = "FollwitLastUpdated";
-
 
         public const String cSortSpecialSeasonLast = "SortSpecialSeasonLast";
 
