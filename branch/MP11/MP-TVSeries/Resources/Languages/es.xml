@@ -52,7 +52,7 @@
   <string Field="Options" Original="Options">Opciones</string>
   <string Field="Genres" Original="Genres">Géneros</string>
   <string Field="All" Original="All">Todo</string>
-  <string Field="Latest" Original="Latest">Último</string>
+  <string Field="Latest" Original="Latest Aired">Último</string>
   <string Field="Channels" Original="Channels">Canales</string>
   <string Field="Unwatched" Original="Unwatched">No visto</string>
   <string Field="Favourites" Original="Favourites">Favoritos</string>

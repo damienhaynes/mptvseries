@@ -144,7 +144,7 @@ namespace WindowPlugins.GUITVSeries
         // Views
         public static string Genres = "Genres";
         public static string All = "All";
-        public static string Latest = "Latest";
+        public static string Latest = "Latest Aired";
         public static string Channels = "Channels";
         public static string Unwatched = "Unwatched";
         public static string Favourites = "Favourites";
@@ -356,7 +356,9 @@ namespace WindowPlugins.GUITVSeries
         public static string Timeout = "Timeout";
         public static string NoActors = "There are no Actors for this series.";
         public static string GettingActors = "Getting Actors from Online";
-        
+
+        public static string DownloadAllEpisodeInfo = "Download All Episode Info";
+
         #endregion
 
         #region Public Properties
