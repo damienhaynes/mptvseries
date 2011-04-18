@@ -43,6 +43,7 @@
 // Version Defines
 #define MEDIAPORTAL_MINNOWARN_VERSION		"1.1.0.0"
 #define MEDIAPORTAL_MIN_VERSION				"1.0.7.0" // Use at your own risk, for most part should work
+#define MEDIAPORTAL_MAX_VERSION				"1.1.6.0" // Just wont work!
 
 // Common Dialog Controls
 #define RES_PBUT_NEXT         			1   			// ID of Next button
@@ -792,6 +793,15 @@ begin
     		MessageBox(@MPMINREQNOTMET,SEVERE);
     	endif;
     	abort; 
+    endif; 
+    
+    // Check Maximum requirements are met
+    svVersion1 = MEDIAPORTAL_MAX_VERSION;
+    if VerCompare(svVersion1, svVersion2, VERSION) != 0 then
+    	if (MODE != SILENTMODE) then
+    		MessageBox(@MPMAXREQNOTMET,SEVERE);
+    	endif;
+    	abort; 
     endif;
     
     // Check if warning should be prompted
@@ -901,54 +911,15 @@ begin
     
 end;
      
-function NUMBER LaunchBrowser(szSite)
-	/*STRING szKey, szDir;
-	STRING svValue, svReturnString1, svReturnString2;
-	NUMBER nvType, nvSize;*/
+function NUMBER LaunchBrowser(szSite)	
 	OBJECT web;
-begin
-    /*RegDBSetDefaultRoot(HKEY_CLASSES_ROOT); 
-    
-	// Find the value in the registry under "HKey_Classes_Root\.htm" file,
-	// to see where the browser address is kept.
-	RegDBGetKeyValueEx(".htm", "", nvType, svValue, nvSize);
-	
-	// Append the return value to Shell\open\command
-	// to get the path to executable of the browser
-	szKey = svValue+"\\shell\\open\\command";
-	RegDBGetKeyValueEx(szKey, "", nvType, svValue, nvSize);
-	
-	// Because the value in the command usually has %1 or other placeholders,
-	// we parse the path to get the directory first and then the file name
-	// (this way all the characters after the file name including the placeholder are removed)
-	ParsePath(svReturnString1, svValue, PATH);
-	ParsePath(svReturnString2, svValue, FILENAME_ONLY);
-	
-	// Now append the .exe extension to the file name.
-	// If the browser is IE, the path contains an extra quote("").
-	// By removing the placeholder, we also removed the ending close quote("),
-	// but it still has the beginning opening quote ("),
-	// so you have to put and ending quote (" to make if a correct path.
-	// Netscape does not have the extra "" in the path.
-	szDir=svReturnString1^svReturnString2+".exe";
-	if ( svReturnString2 = "iexplore" ) then
-		szDir=svReturnString1^svReturnString2+".exe\"";
-	endif;
-	
-	// Now the path to the browser is available.
-	// You can launch the browser and pass your .htm file as a parameter to it.
-	if LaunchAppAndWait(szDir, szSite, NOWAIT) < 0 then
-		return -1;
-	else
-		return 0;
-	endif;*/
-	
+begin    
 	try
 		set web = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "Setup.Web" );
 		web.LaunchBrowser(szSite);
 		set web = NOTHING;
 	catch
-		MessageBox("Unable to show website: " + szSite, INFORMATION);
+		//MessageBox("Unable to show website: " + szSite, INFORMATION);
 	endcatch;
 	
 end;
