@@ -177,14 +177,20 @@ MP-TVSeries has options to change the episode ordering for a series, you will on
 ----
 
 =Download Episode Information for Whole Series==
-To download all the available information for your Series, including Episodes you may not have, Episodes that have not aired yet, and display these episodes inside Mediaportal, do the following:
+To download all the available information for your Series, including Episodes you may not have, Episodes that have not aired yet, and display these episodes inside Mediaportal, do either or the following to enable. note: all episode info will be downloaded next import run.
 
- ==Settings==
+ ==Option 1: Enable in Configuration==
  * Load MP-TVSeries Plugin Configuration
  * OnlineData Tab
  * Check the box _'Download Episode Information for the whole Series'_
  * The next import may take a while as it downloads all the available information for all your imported Series
  http://mptvseries.googlecode.com/svn/wiki/Images/DownloadEpisodeInfoAll.jpg
+
+ ==Option 2: Enable in Mediaportal==
+ * in Mediaporal, MP-TVSeries Plugin
+ * Press F9 on keyboard or INFO on MCE Remote
+ * Click OPTIONS
+ * Change 'DOWNLOAD ALL EPISODE INFO' to ON
 
  ==Show / Hide==
  * in Mediaporal, MP-TVSeries Plugin
@@ -439,8 +445,8 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Right Click an Old Series
    * Select 'Ignore on Scan'
 
- ==Speed Up Import - Upgrade to MP-TVSeries 3.x==
-   MP-TVSeries 3.x which runs on Mediaportal 1.2Beta+ has significantly faster import times compared to MP-TVSeries 2.x due to a new [http://code.google.com/p/mptvseries/wiki/FAQ#Series_Cache_%28Files%29 Caching] feature. If you have a large collection, this is highly recommended.
+ ==Speed Up Import - Upgrade to MP-TVSeries 2.9+==
+   MP-TVSeries 2.9+ has significantly faster import times compared to MP-TVSeries 2.8 and below due to a new [http://code.google.com/p/mptvseries/wiki/FAQ#Series_Cache_%28Files%29 Caching] feature. If you have a large collection, this is highly recommended.
 
  ==Speed Up Series Browsing - Change Layout==
    In Mediaportal, if you find browsing the Series list is slow or not smooth when scrolling, you may have older HTPC hardware for example, try switching the Series layouts to 'LIST POSTERS' or 'LIST BANNERS'
