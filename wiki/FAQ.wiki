@@ -390,8 +390,8 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
   ===Option 1 - Restore from Backup File===
   If you installed MP-TVSeries from the installer, it would have made a backup database in the below directory location. You could take the backup file from this location and overwrite the corrupt [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]. If the backups are extremely old, it may be wiser to use Option 2
 
-  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database\TVSeries_Backup\ ||
-  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\MediaPortal\database\TVSeries_Backup\ ||
+  || XP || C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database\TVSeries_Backup\ ||
+  || Vista & Win7 || C:\ProgramData\Team MediaPortal\MediaPortal\database\TVSeries_Backup\ ||
 
 
   ===Option 2 - New Database===
