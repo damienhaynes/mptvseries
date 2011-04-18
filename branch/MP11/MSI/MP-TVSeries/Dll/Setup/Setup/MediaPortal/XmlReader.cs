@@ -24,7 +24,11 @@ namespace MediaPortal
 
         public bool Load(string file)
         {
-            if (!File.Exists(file)) return false;
+            if (!File.Exists(file))
+            {
+                Document = null;
+                return false;
+            }
 
             try
             {
