@@ -425,10 +425,10 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
    * Click on a Fanart tagged Remote to Download that Fanart
    * Press F9 on Keyboard, INFO on remote to Delete a FanArt
 
- ==Modify 'Recently Added' 'Latest' Views To Exclude Watched Episodes==
+ ==Modify 'Recently Added' 'Latest Aired' Views To Exclude Watched Episodes==
    To change these views so it only shows episodes currently unwatched, you can [http://code.google.com/p/mptvseries/wiki/FAQ#Edit_Database edit] the database, and modify the query to below (Views table)
    
-  * Latest Unwatched  
+  * Latest Aired Unwatched  
   {{{
   episode<;><Episode.FirstAired>;<=;<today><cond><Episode.FirstAired>;>=;<today-30><cond><Episode.Watched>;=;0<;><Episode.FirstAired>;desc<;>
   }}}
