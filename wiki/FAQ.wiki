@@ -275,29 +275,29 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
 
  ==TVSeriesDatabase4.db3==
  This is the database file, where your MP-TVSeries data is stored. its recommended to backup this file incase you experience database corruption. 
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\database
+  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database ||
+  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\MediaPortal\database ||
 
  ==MPTVSeriesBanners and Fan Art (Folders)==
  These two folders inside the thumbs folder are where the artwork is stored. 
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\thumbs
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\thumbs
+  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\thumbs ||
+  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\MediaPortal\thumbs ||
 
  ==MP-TVSeries.log==
  This file contains a log of activities in the MP-TVSeries plugin, which is useful for diagnostic purposes
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\log
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\log
+  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\log ||
+  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\MediaPortal\log ||
 
  ==Language.XML (Files)==
  This directory contains all the language files, in XML format that can be used in MP-TVSeries
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\language\MP-TVSeries\
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\Mediaportal\language\MP-TVSeries\
+  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\language\MP-TVSeries\ ||
+  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\Mediaportal\language\MP-TVSeries\ ||
 
  ==Series Cache (Files)==
  From MP-TVSeries v2.9+, there will be caching of the files downloaded from thetvdb to speed up your import time. Cached series are only removed if the online api reports newer information is available.
 
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\MP-TVSeries\Cache
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\Mediaportal\MP-TVSeries\Cache
+  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\MP-TVSeries\Cache\ ||
+  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\Mediaportal\MP-TVSeries\Cache\ ||
 
 
 ----
@@ -390,8 +390,8 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
   ===Option 1 - Restore from Backup File===
   If you installed MP-TVSeries from the installer, it would have made a backup database in the below directory location. You could take the backup file from this location and overwrite the corrupt [http://code.google.com/p/mptvseries/wiki/FAQ#TVSeriesDatabase4.db3 TVSeriesDatabase4.db3]. If the backups are extremely old, it may be wiser to use Option 2
 
-  * *XP*  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database\TVSeries_Backup\
-  * *Vista & Windows 7*  C:\ProgramData\Team MediaPortal\MediaPortal\database\TVSeries_Backup\
+  || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\MediaPortal\database\TVSeries_Backup\ ||
+  || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\MediaPortal\database\TVSeries_Backup\ ||
 
 
   ===Option 2 - New Database===
