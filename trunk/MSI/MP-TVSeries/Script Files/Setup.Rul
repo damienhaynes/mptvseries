@@ -1391,6 +1391,12 @@ begin
         xmlWriter.SetEntry("Trakt", XML_TRAKT_MOVPICS, g_sTraktMovingPictures);  
         xmlWriter.SetEntry("Trakt", XML_TRAKT_MYVIDEOS, g_sTraktMyVideos);    
         
+        // Enable plugin on mediaportal startup
+        if (Is(FILE_EXISTS, g_sPluginsDir ^ "process\\TraktPlugin.dll")) then
+        	xmlWriter.SetEntry("plugins", "Trakt", "yes");
+        	xmlWriter.SetEntry("pluginsdlls", "TraktPlugin.dll", "yes");
+        endif;
+        
         // Save Document
         xmlWriter.Save(sFile);
            
@@ -1405,7 +1411,7 @@ end;
 
 function void GetTraktSettings()
 	OBJECT xmlReader, db;
-	STRING sFile, sResult;	
+	STRING sFile, sResult;
 begin
 	try
 		set xmlReader = CoCreateObjectDotNet(SUPPORTDIR^"Setup.dll", "MediaPortal.XmlReader" );
