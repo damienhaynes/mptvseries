@@ -214,7 +214,7 @@ To download all the available information for your Series, including Episodes yo
  * Click UPDATE
 
  ==Importing Videos Not At TheTVDB==
- MP-TVSeries is not intended for this scenario, but there is a solution you can use. If you have videos that you want to show in MP-TVSeries, and its not appropiate to create it at thetvdb.com, such as personal movies recorded on video cameras stc, you can try the following - Recommend MP-TVSeries 3.0.1+
+ MP-TVSeries is not intended for this scenario, but there is a solution you can use. If you have videos that you want to show in MP-TVSeries, and its not appropiate to create it at thetvdb.com, such as personal movies recorded on video cameras stc, you can try the following - Recommend MP-TVSeries v2.9+
 
  * Create proper filenames with season and episode syntax e.g.
    * My Trip to Fiji - S01E01.avi
@@ -270,8 +270,8 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
 
  ==MP-TVSeries.dll==
  This is the plugin itself which is used by Mediaportal, located in
-  * *x86*  C:\Program Files \Team MediaPortal\MediaPortal\plugins\Windows
-  * *x64*  C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows
+  || x86 || C:\Program Files \Team MediaPortal\MediaPortal\plugins\Windows ||
+  || x64 || C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows ||
 
  ==TVSeriesDatabase4.db3==
  This is the database file, where your MP-TVSeries data is stored. its recommended to backup this file incase you experience database corruption. 
