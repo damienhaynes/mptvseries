@@ -235,8 +235,8 @@ namespace WindowPlugins.GUITVSeries
                         return title;
 
                     default:
-                        return base[fieldName];
-                }
+                return base[fieldName];
+            }
             }
             set
             {

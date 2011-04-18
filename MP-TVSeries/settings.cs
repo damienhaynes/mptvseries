@@ -68,6 +68,7 @@ namespace WindowPlugins.GUITVSeries
         static DateTime _buildDate;
         static DateTime _mpBuildDate;
         static string _userAgent = null;
+
         #endregion
 
         #region Constructors
@@ -137,7 +138,7 @@ namespace WindowPlugins.GUITVSeries
         public static Version Version
         { get { return _version; } }
 
-        public static Version MPVersion 
+        public static Version MPVersion
         { get { return _mpVersion; } }
 
         public static DateTime BuildDate

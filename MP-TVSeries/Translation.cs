@@ -49,6 +49,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Episodes = "Episodes";
         public static string Toggle_watched_flag = "Toggle Watched";
         public static string Retrieve_Subtitle = "Retrieve Subtitle";
+        public static string Load_via_Torrent = "Load via Torrent";
         public static string Mark_all_as_watched = "Mark all as Watched";
         public static string Mark_all_as_unwatched = "Mark all as Unwatched";
         public static string Hide = "Hide";
@@ -77,7 +78,10 @@ namespace WindowPlugins.GUITVSeries
         public static string Delete_that_season = "Delete this season?";
         public static string Delete_that_episode = "Delete this episode?";
         public static string Confirm = "Confirm";
-        public static string Completed = "Completed";        
+        public static string Completed = "Completed";
+        public static string No_subtitles_found = "No subtitles found";
+        public static string Subtitles_download_complete = "Subtitles Download Complete";
+                
         public static string _Hidden_to_prevent_spoilers_ = " * Hidden to prevent spoilers *";
         public static string Yes = "Yes";
         public static string No = "No";
@@ -88,7 +92,8 @@ namespace WindowPlugins.GUITVSeries
         public static string special = "Special";
         public static string specials = "Specials";
         public static string delPhyiscalWarning = "You are about to permanently delete {0} physical file(s).\nWould you like to proceed?";
-        public static string Force_Online_Match = "Force New Online Lookup For Series";        
+        public static string Force_Online_Match = "Force New Online Lookup For Series";
+        public static string Load_via_NewsLeecher = "Load via NewsLeecher";
         public static string Download = "Download";
         public static string Actions = "Actions";
         public static string Options = "Options";
@@ -107,7 +112,9 @@ namespace WindowPlugins.GUITVSeries
         public static string AskToRate = "Ask me to rate unrated episodes";
         public static string DontAskToRate = "Don't ask me to rate again";
         public static string RatingStar = "Star";
-        public static string RatingStars = "Stars";                
+        public static string RatingStars = "Stars";        
+        public static string ResetUserSelections = "Reset User Selections";
+        public static string ResetIgnoredDownloadedFiles = "Reset Ignored Downloaded Files";
         public static string ChangeLayout = "Change Layout";
         public static string UseOnlineFavourites = "Use Online Favourites";
         public static string AddToPlaylist = "Add to Playlist";
@@ -212,7 +219,6 @@ namespace WindowPlugins.GUITVSeries
         public static string LayoutListPosters = "List Posters";
         public static string LayoutListThumbs = "List Panels";
         public static string LayoutFilmstrip = "Filmstrip";
-        public static string LayoutCoverflow = "Coverflow";
 
         // Skin Controls
         public static string ButtonAutoPlay = "Auto Play";
@@ -228,20 +234,34 @@ namespace WindowPlugins.GUITVSeries
         // ChooseFromSelectionDescriptor
         public static string CFS_Choose_Item = "Choose item";
         public static string CFS_Select_Matching_Item = "Select matching item:";
-        public static string CFS_Search_Again = "Search again";                
+        public static string CFS_Search_Again = "Search again";
+        public static string CFS_Select_Matching_Subitle_File = "Select Matching Subtitle File";
+        public static string CFS_Subtitle_Episode = "Episode:";
+        public static string CFS_Matching_Subtitles = "Matching Subtitles";
         public static string CFS_Choose_Correct_Series = "Choose Correct Series";
         public static string CFS_Local_Series  = "Local Series";
-        public static string CFS_Available_Series = "Available Series";        
+        public static string CFS_Available_Series = "Available Series";
+        public static string CFS_Select_Correct_Subtitle_Version = "Select desired subtitles version";
         public static string CFS_Select_Version = "Version:";
         public static string CFS_Choose_Correct_Episode = "Choose Correct Episode";
         public static string CFS_Local_Episode_Index = "Local Episiode index:";
-        public static string CFS_Available_Episode_List = "Available Episode list:";      
-        public static string CFS_Looking_For = "Looking for:";        
+        public static string CFS_Available_Episode_List = "Available Episode list:";
+        public static string CFS_Choose_Search_Site = "Choose search site:";
+        public static string CFS_List_Search_Site = "List of search sites:";
+        public static string CFS_Found_Torrents = "Found torrents:";
+        public static string CFS_Looking_For = "Looking for:";
+        public static string CFS_Choose_Correct_Season = "Choose correct season";
+        public static string CFS_Local_Season_Index = "Local Season index:";
+        public static string CFS_Available_Seasons = "Available Seasons list:";
         public static string CFS_Skip = "Skip";
         public static string CFS_Skip_Never_Ask_Again = "Skip / Never Ask Again";
         public static string CFS_No_Match_Manual_Search = "No Match Found, Manual Search...";
         public static string CFS_No_Results_Found = "No Results Found!";
-         
+        
+        // ChooseYesNoDescriptor
+        public static string CYN_Subtitle_File_Replace = "Subtitle File Replace";
+        public static string CYN_Old_Subtitle_Replace = "Old subtitle File present: overwrite?";
+        
         // TVDB Errors/Messages
         public static string TVDB_ERROR_TITLE = "Online TV Database Error";
         public static string TVDB_INFO_TITLE = "Online TV Database";
@@ -317,8 +337,14 @@ namespace WindowPlugins.GUITVSeries
         public static string LatestEpisode = "latest episode";
         public static string UnableToFindAny = "Unable to find any {0}";
         public static string UnableToFindAnyEpisode = "Unable to find any episodes";
-               
+
+        // Subtitles
+        public static string GetSubtitlesFrom = "Get subtitles from?";
+        public static string EnabledSubtitleSites = "Enabled subtitle sites:";
         public static string PlayNow = "Play Now";
+        public static string NoSubtitleDownload = "No Subtitle Download";
+        public static string UnableToRetrieveSubtitles = "Unable to retrieve subtitles";
+        public static string NoSubtitlesFoundOrRetrieved = "No subtitles found or retrieved";
 
         public static string TraktError = "Trakt Error";
         public static string TraktNotEnoughInfo = "Not enough information to send to server.";

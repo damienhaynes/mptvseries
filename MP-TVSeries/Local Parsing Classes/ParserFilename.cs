@@ -205,7 +205,8 @@ namespace WindowPlugins.GUITVSeries
                 if (sExpressions.Count == 0) reLoadExpressions();
 
                 int index = 0;
-               
+
+                //m_FileNameAfterReplacement = m_Filename.ToLower();
                 // run Before replacements
                 m_FileNameAfterReplacement = RunReplacements(replacementRegexBefore, m_Filename);
                 
