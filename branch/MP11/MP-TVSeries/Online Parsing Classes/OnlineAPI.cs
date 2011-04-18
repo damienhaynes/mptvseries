@@ -48,15 +48,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       series = 0,
       episode = 1,
     }
-
-    static Dictionary<int, Dictionary<string, XmlDocument>> zipCache = new Dictionary<int, Dictionary<string, XmlDocument>>();
+    
     static Dictionary<int, WebClient> webClientList = new Dictionary<int, WebClient>();
     static int nDownloadGUIDGenerator = 1;
-
-    static public void ClearBuffer()
-    {
-      zipCache = new Dictionary<int, Dictionary<string, XmlDocument>>();
-    }
 
     # region Language
     static string selLang = string.Empty;
@@ -302,24 +296,23 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode getFromCache(int seriesID, bool first, string elemName, string languageID)
     {
-      if (zipCache.ContainsKey(seriesID))
-      {
-        // we downloaded the zip before, lets get the record from it
-        Dictionary<string, XmlDocument> d = zipCache[seriesID];
-        if (d.ContainsKey(elemName))
+        // cache filename
+        string filename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}\{1}", seriesID, elemName));
+
+        // check if in cache
+        XmlNode node = Helper.LoadXmlCache(filename);
+        if (node != null) return node;
+
+        // xml is not cached, retrieve online
+        if (first)
         {
-          return d[elemName];
+            Generic(string.Format(apiURIs.FullSeriesUpdate, seriesID, languageID),
+                    true, true, Format.Zip, languageID, seriesID);
+
+            // its now cached, so load it
+            return getFromCache(seriesID, false, elemName, languageID);
         }
-      }
-      
-      if (first)
-      {
-        Generic(string.Format(apiURIs.FullSeriesUpdate,
-                                   seriesID,
-                                   languageID), true, true, Format.Zip, languageID, seriesID);
-        return getFromCache(seriesID, false, elemName, languageID);
-      }
-      return null;
+        return null;
     }
 
     #region Generic Private Implementation
@@ -361,15 +354,20 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
           {
             Dictionary<string, XmlDocument> x = DecompressZipToXmls(data);
             entryNameToGetIfZip += ".xml";
+            XmlNode root = null;
+
+            // save all xmls in zip to cache
+            foreach(var key in x.Keys)
+            {
+                string filename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}\{1}", seriesIDIfZip, key));
+                Helper.SaveXmlCache(filename, x[key].FirstChild.NextSibling);
+            }
+
+            // get what we are looking for            
             if (x.ContainsKey(entryNameToGetIfZip))
             {
-              XmlNode root = x[entryNameToGetIfZip].FirstChild.NextSibling;
-              //x.Remove(entryNameToGetIfZip);
-
-              if (zipCache.ContainsKey(seriesIDIfZip)) zipCache.Remove(seriesIDIfZip);
-              if (x.Keys.Count > 0) zipCache.Add(seriesIDIfZip, x);
-
-              return root;
+                root = x[entryNameToGetIfZip].FirstChild.NextSibling;
+                return root;
             }
             else MPTVSeriesLog.Write("Decompression returned null or not the requested entry");
           }

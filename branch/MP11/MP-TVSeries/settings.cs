@@ -43,7 +43,8 @@ namespace WindowPlugins.GUITVSeries
             thumbs,
             app,
             fanart,
-            skin
+            skin,
+            config
         };
 
         #region Path Vars
@@ -56,6 +57,7 @@ namespace WindowPlugins.GUITVSeries
         static string apppath = string.Empty;
         static string fanArtPath = string.Empty;
         static string skinPath = string.Empty;
+        static string configPath = string.Empty;
         #endregion
 
         #region Vars
@@ -112,6 +114,7 @@ namespace WindowPlugins.GUITVSeries
             thumbsPath = Config.GetFolder(Config.Dir.Thumbs);
             skinPath = Config.GetFolder(Config.Dir.Skin);
             fanArtPath = thumbsPath + @"\Fan Art";
+            configPath = Config.GetSubFolder(Config.Dir.Config, "MP-TVSeries");
             initFolders();
         }
         #endregion
@@ -176,6 +179,8 @@ namespace WindowPlugins.GUITVSeries
                     return fanArtPath;
                 case Path.skin:
                     return skinPath;
+                case Path.config:
+                    return configPath;
                 default: return string.Empty;
             }
         }

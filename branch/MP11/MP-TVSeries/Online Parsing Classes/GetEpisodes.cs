@@ -49,33 +49,25 @@ namespace WindowPlugins.GUITVSeries
         public void doWork(int nSeriesID)
         {            
             XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID);
-
-            if (node != null)
+            if (node == null) return;
+            
+            foreach (XmlNode episodeNode in node.SelectNodes("Episode"))
             {
-                foreach (XmlNode itemNode in node.ChildNodes)
+                DBOnlineEpisode episode = new DBOnlineEpisode();
+                foreach (XmlNode propertyNode in episodeNode.ChildNodes)
                 {
-                    foreach (XmlNode episodeNode in itemNode)
+                    if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
+                        episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                    else
                     {
-                        if (episodeNode.Name == "Episode")
-                        {
-                            DBOnlineEpisode episode = new DBOnlineEpisode();
-                            foreach (XmlNode propertyNode in episodeNode.ChildNodes)
-                            {
-                                if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                                    episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                                else
-                                {
-                                    // we don't know that field, add it to the series table
-                                    episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                                    episode[propertyNode.Name] = propertyNode.InnerText;
-                                }
-                            }                            
-                            listEpisodes.Add(episode);
-                        }
+                        // we don't know that field, add it to the table
+                        episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
+                        episode[propertyNode.Name] = propertyNode.InnerText;
                     }
-                }
-            }
-
+                }                            
+                listEpisodes.Add(episode);
+            }                             
+            
         }
     }
 }

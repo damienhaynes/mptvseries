@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Net;
 using System.IO;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -111,6 +112,35 @@ namespace WindowPlugins.GUITVSeries
         }
 
     }
+    #endregion
+
+    #region Date/Time extension Methods
+
+    public static class DateExtensions
+    {
+        /// <summary>
+        /// Date Time extension method to return a unix epoch
+        /// time as a long
+        /// </summary>
+        /// <returns> A long representing the Date Time as the number
+        /// of seconds since 1/1/1970</returns>
+        public static long ToEpoch(this DateTime dt)
+        {
+            return (long)(dt - new DateTime(1970, 1, 1)).TotalSeconds;
+        }
+
+        /// <summary>
+        /// Long extension method to convert a Unix epoch
+        /// time to a standard C# DateTime object.
+        /// </summary>
+        /// <returns>A DateTime object representing the unix
+        /// time as seconds since 1/1/1970</returns>
+        public static DateTime FromEpoch(this long unixTime)
+        {
+            return new DateTime(1970, 1, 1).AddSeconds(unixTime);
+        }
+    }
+
     #endregion
 
     public class Helper
@@ -278,8 +308,51 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        #region Other Public Methods
+        #region XML File Cache
 
+        public static void SaveXmlCache(string filename, XmlNode node)
+        {
+            // create cached document
+            try
+            {
+                MPTVSeriesLog.Write("Saving xml to file cache: " + filename, MPTVSeriesLog.LogLevel.Debug);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(node.OuterXml);
+                if (!Directory.Exists(Path.GetDirectoryName(filename)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(filename));
+                doc.Save(filename);
+            }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("Failed to save xml to cache: {0}", filename);
+                MPTVSeriesLog.Write("Exception: {0}", e.Message);
+            }
+        }
+
+        public static XmlNode LoadXmlCache(string filename)
+        {
+            if (!File.Exists(filename)) return null;
+
+            // Load cache
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                MPTVSeriesLog.Write("Loading xml from file cache: " + filename, MPTVSeriesLog.LogLevel.Debug);
+                doc.Load(filename);
+                return doc.FirstChild;
+            }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("Failed to load xml from file cache: {0}", filename);
+                MPTVSeriesLog.Write("Exception: {0}", e.Message);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Other Public Methods
+    
         /// <summary>
         /// Resolves skin\\ and thumbs\\ relative paths to absolute.
         /// Other relative paths are resolved using MediaPortal installation directory.
