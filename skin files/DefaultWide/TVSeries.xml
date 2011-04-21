@@ -61,9 +61,13 @@
 			</control> 				        
 	
 			<import>TVSeries.HiddenMenu.xml</import>
-			<import>TVSeries.Facade.3.xml</import>		
+			<import>TVSeries.Facade.xml</import>
+      <!--<import>TVSeries.Facade.2.xml</import>-->
+      <!--<import>TVSeries.Facade.3.xml</import>-->      
 			<import>TVSeries.SeriesAndSeasonListPosters.xml</import>
-			<import>TVSeries.SeriesWideBanners.3.xml</import>
+			<import>TVSeries.SeriesWideBanners.xml</import>
+      <!--<import>TVSeries.SeriesWideBanners.2.xml</import>-->
+      <!--<import>TVSeries.SeriesWideBanners.3.xml</import>-->
 			<import>TVSeries.SeriesAndSeasonFilmstrip.xml</import>
 			<import>TVSeries.EpisodeList.xml</import>
 			<import>TVSeries.GroupList.xml</import>
