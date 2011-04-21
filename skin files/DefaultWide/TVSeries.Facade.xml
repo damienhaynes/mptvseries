@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <window> 
 	<controls>
-		<!-- OVERLAYS -->
-		<control>
-			<description>WideBanner Background (No Fanart Visible)</description>
-			<type>image</type>            
-			<id>0</id>
-			<width>1280</width>
-			<height>720</height>
-			<texture>background.png</texture>            
-			<visible>facadeview.smallicons</visible>
-		</control>
+		<!-- OVERLAYS -->		
 		<control>
 			<description>FanArt Overlay - List/WideBanners</description>
 			<type>image</type>
@@ -20,7 +11,7 @@
 			<width>1284</width>
 			<height>722</height>
 			<texture>mainoverlay.png</texture>
-			<visible>facadeview.list|facadeview.largeicons</visible>
+			<visible>facadeview.list|facadeview.largeicons|facadeview.smallicons</visible>
 		</control>
 		<control>
 			<description>FanArt Overlay - Filmstrip</description>
@@ -64,6 +55,7 @@
 					<frameFocus>-</frameFocus>			
 					<enableFocusZoom>no</enableFocusZoom>
 					<scrollOffset>1</scrollOffset>
+          <textcolor>ffFFFFFF</textcolor>
 					<dimColor>30ffffff</dimColor>
 					<font>font12</font>
 					<unfocusedAlpha>150</unfocusedAlpha>
