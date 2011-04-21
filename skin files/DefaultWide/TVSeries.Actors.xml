@@ -196,8 +196,6 @@
           <id>50</id>
           <onleft>2</onleft>
           <onright>2</onright>
-          <textureUp>-</textureUp>
-          <textureDown>-</textureDown>
           <posX>360</posX>
           <posY>230</posY>
           <width>900</width>
