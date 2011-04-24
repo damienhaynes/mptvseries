@@ -214,7 +214,7 @@ To download all the available information for your Series, including Episodes yo
  * Click UPDATE
 
  ==Importing Videos Not At TheTVDB==
- MP-TVSeries is not intended for this scenario, but there is a solution you can use. If you have videos that you want to show in MP-TVSeries, and its not appropiate to create it at thetvdb.com, such as personal movies recorded on video cameras stc, you can try the following - Recommend MP-TVSeries v2.9+
+ MP-TVSeries is not intended for this scenario, but there is a solution you can use. If you have videos that you want to show in MP-TVSeries, and its not appropriate to create it at thetvdb.com, such as personal movies recorded on video cameras etc, you can try the following - Recommend MP-TVSeries v2.9+
 
  * Create proper filenames with season and episode syntax e.g.
    * My Trip to Fiji - S01E01.avi
@@ -230,6 +230,8 @@ To download all the available information for your Series, including Episodes yo
  * Find your Series, Enter Series and Episode info (This will create USEREDIT fields in database)
  * Right Click on series and select 'Ignore on Scan' so we dont prompt to match series everytime.
  * Enter GUI and select series, then play!
+
+ By default MP-TVSeries will automatically generate episode titles if they dont exist online e.g Episode 1, Episode 2 etc. If this behaviour is not wanted you can manually edit the Options Table in the database and set *AutoGenerateEpisodeTitles* to Zero. This change will only take affect for *NEW* episodes added to database, if you want to respect episode titles from filenames for existing files that have been import then you need to clear the database and re-import.
 
  Note: Adding manual artwork, at time of writing you need to edit the database directly...
 
