@@ -3370,9 +3370,11 @@ namespace WindowPlugins.GUITVSeries
             // Apply to local database
             item["myRating"] = value;
 
-            // Set the all user rating if not already set
-            if (item["Rating"] == "")
-                item["Rating"] = value;
+            // recalculate rating/votes
+            double currRating = string.IsNullOrEmpty(item["Rating"]) ? 0.0 : (double)item["Rating"];
+            double currCount = string.IsNullOrEmpty(item["RatingCount"]) ? 0.0 : (double)item["RatingCount"];
+            item["Rating"] = ((currRating * currCount) + double.Parse(value)) / (currCount + 1);
+            item["RatingCount"] = currCount + 1;
 
             // tell any listeners that user rated episode/series
             if (RateItem != null)
