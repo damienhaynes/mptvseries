@@ -154,6 +154,8 @@ namespace WindowPlugins.GUITVSeries
         {           
             lock (cache)
             {
+                if (SeriesID < 0) return new List<DBFanart>();
+
                 if (cache == null || !cache.ContainsKey(SeriesID))
                 {
                     try
@@ -163,12 +165,9 @@ namespace WindowPlugins.GUITVSeries
 
                         // retrieve all fields in the table
                         String sqlQuery = "select * from " + cTableName;
-                        if (SeriesID > 0)
-                        {
-                            sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
-                            if (availableOnly)
-                                sqlQuery += " and " + cLocalPath + " != ''";
-                        }
+                        sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
+                        if (availableOnly)
+                            sqlQuery += " and " + cLocalPath + " != ''";
                         sqlQuery += " order by " + cIndex;
 
                         SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
@@ -195,7 +194,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBFanart> faForSeries = null;
                 if (cache != null && cache.TryGetValue(SeriesID, out faForSeries))
                     return faForSeries;
-                return new List<DBFanart>();    
+                return new List<DBFanart>();
             }
         }
 
