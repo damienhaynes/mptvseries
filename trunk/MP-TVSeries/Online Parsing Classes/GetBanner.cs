@@ -376,9 +376,8 @@ namespace WindowPlugins.GUITVSeries
                     dbf[DBFanart.cLocalPath] = string.Empty;
 
                 dbf[DBFanart.cSeriesID] = SeriesID;
-                _fanart.Add(dbf);
-                
-            }            
+                _fanart.Add(dbf);                
+            }
         }
     }    
 }
