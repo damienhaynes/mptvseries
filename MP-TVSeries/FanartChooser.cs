@@ -919,6 +919,9 @@ namespace WindowPlugins.GUITVSeries
                 GUIListItem item = null;
                 List<DBFanart> onlineFanart = DBFanart.GetAll(seriesID, false);
 
+                // sort fanart by highest rated
+                onlineFanart.Sort();
+
                 // Filter Fanart Thumbnails to be displayed by resolution
                 if (DBOption.GetOptions(DBOption.cFanartThumbnailResolutionFilter) != 0)
                 {
