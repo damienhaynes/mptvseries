@@ -239,7 +239,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     CurrentView = (View)defaultView;                    
                 }                
-                m_Facade.CurrentLayout = (GUIFacadeControl.Layout)CurrentView;                
+                m_Facade.View = (GUIFacadeControl.ViewMode)CurrentView;                
             }            
 
             base.OnPageLoad();
@@ -371,7 +371,7 @@ namespace WindowPlugins.GUITVSeries
                         m_Facade.SelectedListItemIndex = m_PreviousSelectedItem;                    
 
                     // Work around for Filmstrip not allowing to programmatically select item
-                    if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip)
+                    if (m_Facade.View == GUIFacadeControl.ViewMode.Filmstrip)
                     {
                         m_bQuickSelect = true;
                         for (int i = 0; i < m_PreviousSelectedItem; i++)
@@ -380,7 +380,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         m_bQuickSelect = false;
                         // Note: this is better way, but Scroll offset wont work after set
-                        //GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripLayout.GetID, m_PreviousSelectedItem, 0, null);
+                        //GUIMessage msg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, m_Facade.WindowId, 0, m_Facade.FilmstripView.GetID, m_PreviousSelectedItem, 0, null);
                         //GUIGraphicsContext.SendMessage(msg);
                         //MPTVSeriesLog.Write("Sending a selection postcard to FilmStrip.", MPTVSeriesLog.LogLevel.Debug);
                     }                   
@@ -735,8 +735,8 @@ namespace WindowPlugins.GUITVSeries
             if (m_bQuickSelect) return;
 
             // if this is not a message from the facade, exit
-            if (parent != m_Facade && parent != m_Facade.FilmstripLayout &&
-                parent != m_Facade.ThumbnailLayout && parent != m_Facade.ListLayout)
+            if (parent != m_Facade && parent != m_Facade.FilmstripView &&
+                parent != m_Facade.ThumbnailView && parent != m_Facade.ListView)
                 return;
            
             DBFanart selectedFanart = item.TVTag as DBFanart;
@@ -773,61 +773,61 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case View.List:
                             CurrentView = View.PlayList;
-                            if (!AllowView(CurrentView) || m_Facade.PlayListLayout == null)
+                            if (!AllowView(CurrentView) || m_Facade.PlayListView == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.Playlist;
+                                m_Facade.View = GUIFacadeControl.ViewMode.Playlist;
                             }
                             break;
 
                         case View.PlayList:
                             CurrentView = View.Icons;
-                            if (!AllowView(CurrentView) || m_Facade.ThumbnailLayout == null)
+                            if (!AllowView(CurrentView) || m_Facade.ThumbnailView == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.SmallIcons;
+                                m_Facade.View = GUIFacadeControl.ViewMode.SmallIcons;
                             }
                             break;
 
                         case View.Icons:
                             CurrentView = View.LargeIcons;
-                            if (!AllowView(CurrentView) || m_Facade.ThumbnailLayout == null)
+                            if (!AllowView(CurrentView) || m_Facade.ThumbnailView == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.LargeIcons;
+                                m_Facade.View = GUIFacadeControl.ViewMode.LargeIcons;
                             }
                             break;
 
                         case View.LargeIcons:
                             CurrentView = View.FilmStrip;
-                            if (!AllowView(CurrentView) || m_Facade.FilmstripLayout == null)
+                            if (!AllowView(CurrentView) || m_Facade.FilmstripView == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
+                                m_Facade.View = GUIFacadeControl.ViewMode.Filmstrip;
                             }
                             break;
 
                         case View.FilmStrip:
                             CurrentView = View.List;
-                            if (!AllowView(CurrentView) || m_Facade.ListLayout == null)
+                            if (!AllowView(CurrentView) || m_Facade.ListView == null)
                             {
                                 shouldContinue = true;
                             }
                             else
                             {
-                                m_Facade.CurrentLayout = GUIFacadeControl.Layout.List;
+                                m_Facade.View = GUIFacadeControl.ViewMode.List;
                             }
                             break;
                     }

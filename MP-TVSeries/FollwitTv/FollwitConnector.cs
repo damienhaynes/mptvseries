@@ -350,7 +350,7 @@ namespace WindowPlugins.GUITVSeries.FollwitTv {
 
                     }
                     catch (Exception e) {
-                        MPTVSeriesLog.Write("[follw.it] Failed update synchronization: {0}", e.StackTrace);
+                        MPTVSeriesLog.Write("[follw.it] Failed update synchronization: {0}", e.Message);
                     }
 
                     // sleep in 5 second intervals to allow the thread to be aborted as needed.

@@ -147,6 +147,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     case ParsingAction.UpdateUserFavourites:
                         SetProgressLabel(this.labelRetrievingFavourites, progress);
                         break;
+                    case ParsingAction.BroadcastRecentlyAdded:
+                        break;
                     default:
                         break;
                 }
