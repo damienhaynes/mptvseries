@@ -2986,7 +2986,7 @@ namespace WindowPlugins.GUITVSeries
                                         }
                                         else
                                         {
-                                            item.Label = corrSeries[DBOnlineSeries.cPrettyName] + " - " + FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
+                                            item.Label = episode.ToString();
                                         }
 
                                     }

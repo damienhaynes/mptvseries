@@ -30,7 +30,7 @@ using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
-    public class DBFanart : DBTable
+    public class DBFanart : DBTable, IComparable<DBFanart>
     {
         public const String cTableName = "Fanart";
 
@@ -44,6 +44,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cResolution = "BannerType2"; // online
         public const String cDisabled = "Disabled";
         public const String cSeriesName = "SeriesName"; // online
+        public const String cRating = "Rating"; // online
+        public const String cRatingCount = "RatingCount"; // online
 
         enum FanartResolution
         {
@@ -152,6 +154,8 @@ namespace WindowPlugins.GUITVSeries
         {           
             lock (cache)
             {
+                if (SeriesID < 0) return new List<DBFanart>();
+
                 if (cache == null || !cache.ContainsKey(SeriesID))
                 {
                     try
@@ -161,12 +165,9 @@ namespace WindowPlugins.GUITVSeries
 
                         // retrieve all fields in the table
                         String sqlQuery = "select * from " + cTableName;
-                        if (SeriesID > 0)
-                        {
-                            sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
-                            if (availableOnly)
-                                sqlQuery += " and " + cLocalPath + " != ''";
-                        }
+                        sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
+                        if (availableOnly)
+                            sqlQuery += " and " + cLocalPath + " != ''";
                         sqlQuery += " order by " + cIndex;
 
                         SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
@@ -193,7 +194,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBFanart> faForSeries = null;
                 if (cache != null && cache.TryGetValue(SeriesID, out faForSeries))
                     return faForSeries;
-                return new List<DBFanart>();    
+                return new List<DBFanart>();
             }
         }
 
@@ -231,6 +232,10 @@ namespace WindowPlugins.GUITVSeries
                         AvailableFanarts[AvailableFanarts.Count-1].Read(ref results, index);                       
                     }
                 }
+                
+                // sort by highest rated
+                AvailableFanarts.Sort();
+
                 // Only return the fanarts that we want to download
                 int AutoDownloadCount = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
 
@@ -334,5 +339,28 @@ namespace WindowPlugins.GUITVSeries
         {
             return this[cSeriesID] + " -> " + this[cIndex];
         }
+
+        #region IComparable
+        public int CompareTo(DBFanart other)
+        {
+            // Sort by:
+            // 1. Highest Rated
+            // 2. Number of Votes
+
+            double thisFanart = 0.0;
+            double otherFanart = 0.0;
+
+            if (this[cRating] == other[cRating])
+            {
+                thisFanart += this[cRatingCount];
+                otherFanart += other[cRatingCount];
+            }
+
+            thisFanart += this[cRating];
+            otherFanart += other[cRating];
+
+            return otherFanart.CompareTo(thisFanart);
+        }
+        #endregion
     }
 }
