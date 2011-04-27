@@ -32,21 +32,7 @@
 			<label>#TVSeries.Description</label>
 			<visible>control.isvisible(1240)+facadeview.list</visible>
 			<animation effect="fade" time="250">WindowClose</animation>
-		</control>
-		<control>
-			<description>Shows in this Group</description>
-			<type>textboxscrollup</type>
-			<id>631</id>
-			<posX>40</posX>
-			<posY>100</posY>
-			<width>540</width>
-			<height>500</height>				
-			<textcolor>ffffffff</textcolor>
-			<font>font11</font>
-			<label>#TVSeries.Description</label>
-			<visible>control.isvisible(1240)+facadeview.smallicons</visible>
-			<animation effect="fade" time="250">WindowClose</animation>
-		</control>
+		</control>		
 
 	</controls>
 </window>
