@@ -1,0 +1,790 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Readme</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+.main_title { 
+	color: #0E5899;
+	font-family: verdana;
+	font-size: 18px;
+	font-weight: bold;
+	height: 22px;
+	padding-bottom: 10px;
+	text-align: center;
+	vertical-align: middle;
+}
+.tab_text {
+	color: #ffffff;
+	background-color: #6699CC;
+	min-width: 100px;
+	height: 15px;
+	padding: 3px 15px 3px 10px;
+	font-family: verdana;
+	font-size: 12px;
+	font-weight: bold;
+	float: left;
+}
+.tab_img {
+	width: 21px;
+	height: 21px;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-image: url("tri.gif");
+	float: left;
+}
+.tab_bar {
+	clear: both;
+	float: left;
+	width: 100%;
+	border-bottom: 2px solid #6699CC;
+}
+.tab_content {
+	clear: both;
+	margin: 0 auto;
+	padding: 10px;
+}
+p {
+	font-family: verdana;
+	font-size: 12px;
+	margin: 0 auto;
+	padding: 0;
+	margin-bottom: 10px;
+}
+ul {
+	list-style-image: url('bullet.jpg');
+}
+</style>
+</head>
+<body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
+	<div style="width: 100%;height: 100%;overflow: auto;">
+	
+	<div class="main_title">TVSeries v2.9.1 Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Fixed fanart incorrectly shown in episode thumb when series has no online series id.</p></li>
+			<li><p>Added Full episode string in listing when series view is skipped e.g. Recently Added view.</p></li>
+			<li><p>Fixed wrong fanart displayed in background on initial load of Fanart Chooser.</p></li>
+			<li><p>Changed fanart to be sorted by Highest Rated online in Fanart Chooser.</p></li>
+			<li><p>Updated TraktPlugin plugin to v0.9.5.</p></li>
+			<li><p>Fixed Rating/RatingCounts not re-calulating after rating episode/series. Saves waiting for next import of user ratings or series for changes to reflect.</p></li>
+		</ul>
+	</div>
+	
+  <div class="main_title">TVSeries v2.9.0 Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Improved Import process, data is now cached to disk and results in faster imports. Cached series are only removed if the online api reports newer information is available.</p></li>
+			<li><p>Updated Trakt Plugin to v0.9.4.0.</p></li>
+			<li><p>Renamed 'Latest' view to 'Latest Aired', this is more descriptive of what the view will show.</p></li>
+			<li><p>Added 'Download All Episode Information' to Options menu in GUI. Change takes affect next import that gets run.</p></li>
+      <li><p>Added MAX version check into the installer, installations will not be allowed on MediaPortal v1.1.6+ (aka MediaPortal 1.2 Beta). Last Public release supported is MediaPortal 1.2 Alpha (v1.1.5).</p></li>
+		</ul>
+	</div>
+  
+	<div class="main_title">TVSeries v2.8.3 Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added Trakt Upgrade to Installer, so settings previously entered in TVSeries will automatically be moved across to new Trakt Plugin.</p></li>
+			<li><p>Fixed Parental Controls not being respected if entering a protected view from ViewTags group view.</p></li>
+			<li><p>Added Expiration to Parental Control Lock, default is 60 minutes. Next time you attempt to enter a view that is protected you will be prompted for pin code again. Lock is still reset when restarting/resuming and when manually setting lock from Actions menu.</p></li>
+			<li><p>[API] Added external access to re-init Skin Settings. This could be useful if a skin wants to edit skinsettings.xml directly from a skin configuration plugin. Call SkinSettings.Init() and skin settings reflect with what changes have been done in xml without having to restart.</p></li>
+			<li><p>Added Skin Settings to disable Fanart from being displayed on a per Layout (list, icons, filmstrip, coverflow) and a per View Level (series, seasons, episodes)</p></li>
+			<li><p>Updated Trakt Plugin to v0.9.3.0.</p></li>
+			<li><p>Added option to disable 'Auto Generation of Episode Titles when Online Data does not Exist', this is hidden in the DBOptions table and is not exposed in UI.</p></li>
+			<li><p>Fixed 'New Episode Indicator' not being correctly set after import.</p></li>
+			<li><p>Renamed option 'Show Only Local Files' to 'Show All Files', new translation string is needed.</p></li>
+			<li><p>Updated Spanish translations.</p></li>
+			<li><p>Fixed date format not respecting regional settings in Video OSD if setting was enabled.</p></li>
+			<li><p>Fixed user edited Episode Names not showing in GUI.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.2 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Updated Trakt Plugin to v0.9.2.0.</p></li>
+			<li><p>[API] Fixed Toggled Watched event from the Episode view level.</p></li>
+			<li><p>Fix feature reference to Trakt Plugin in the installer.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.1 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>trakt.tv support is now handled in a seperate process plugin and is no longer configured in tvseries configuration. The installer has been updated to optionally include this feature, after installation be sure to re-enter your username and password in trakt configuration.</p></li>
+			<li><p>Updated French translations, thanks ubela64.</p></li>
+			<li><p>Updated Russian translations, thanks Undel.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.8.0 Beta Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added support for follw.it, a social media website allowing you to share with your friends what you have been watching and what you love. If enabled, follw.it will also automatically synchronize rating and watched flags between multiple mp-tvseries installations.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.7.1 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Updated trakt.tv watched sync to do ALL episodes that have been scrobbled and or marked as seen online.</p></li>
+      <li><p>Fixed (workaround) for actor images dissapearing when navigating the list. Also fixes flicker in Actors list layout.</p></li>
+      <li><p>Fixed sorting of seasons when seasons numbering used 'Years'. Specials not sorted at end of season list in this case.</p></li>
+      <li><p>Fixed sort order of Double Episodes in DVD Order.</p></li>
+      <li><p>Fixed new series added not automatically downloading fanart under some conditions. Changed option for 'update all existing fanart on import' to disabled. Will always check for missing fanart on series now regardless of setting.</p></li>
+      <li><p>Fixed sort order of episodes added to playlist when adding from the series view.</p></li>      
+      <li><p>Added Episode Index label to playlist blue3wide skin so its easier to identify the selected episode.</p></li>
+      <li><p>Updated translations file with recently added strings. Translators please add new strings from en.xml.</p></li>
+		</ul>
+	</div>
+	
+  <div class="main_title">TVSeries v2.7.0 Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added GUI to display Actor Names, Roles and Images for Series. Requires updated skin support and can be accessed from the context menu (F9/Info).</p></li>
+      <li><p>Improved Artwork Downloading, you can configure how many series/season images are downloaded for each type from configuration. Also it will no longer download season images for every season if you dont have a reference to it in the database. Artwork limits will be ignored if a new artwork is higher rated that your existing collection, in this case it will download a new artwork.</p></li>
+      <li><p>Fixed 'Download Blank Banners' not working, also added option for 'Download Text Banners' with both options off by default.</p></li>
+			<li><p>Improved Replacement Rules, filenames containing roman numerals or Pt X of Y will be replaced with season/episode number equivalents.</p></li>
+      <li><p>Watched items on trakt.tv will now be synced to your local collection. Note: this is only for the last 100 watched episodes, the API is being improved to better support syncing.</p></li>
+			<li><p>Series/Episode ratings will now be sent to trakt.tv, ratings 7-10 are set to 'Ninja' and 1-6 as 'Weak Sauce'. Existing Ratings Sync is not yet implemented.</p></li>
+			<li><p>Sending Ratings Online (theTVDB.com) is now done async so will not lock up the GUI anymore, this was particularly bad when the server was not available.</p></li>
+      <li><p>Updated Default Parsing Expression to filter out files in sample directories and also fix files in root folder. Note: Click on reset in Parsing Expressions dialog to get update.</p></li>
+      <li><p>When Episode image is not available or hidden, the currently selected Fanart will now be displayed instead.</p></li>
+      <li><p>Episode Names and Series/Episode overviews will be auto populated if empty e.g Episode 1, "No overview currently available"</p></li>
+      <li><p>Added option to add specials at the end of the season list rather than the beginning e.g. Season 1, Season 2, Specials. This is the new default and can be turned off from configuration.</p></li>
+      <li><p>Fixed playlists not loading if duplicate or removed episodes were found.</p></li>
+      <li><p>Fixed utf-8 encoding of xmls when downloading series details.</p></li>
+      <li><p>Updated Spanish translations, thanks Oscar.</p></li>
+		</ul>
+	</div>
+  
+	<div class="main_title">TVSeries v2.6.9 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Fixed trakt.tv manual synchronize from configuration not working after entering username/password. Needed to close and re-open for changes to take affect.</p></li>
+			<li><p>Fixed series original name being cleared and looked up again after each update scan if not using English for Online Language.</p></li>
+			<li><p>Fixed series original name not being set if there was no english translation online. This could result in error to find subtitles as series name would be empty. Also fixes the issue where online lookup would be done everytime Original name was required.</p></li>
+			<li><p>Updated Subtitle Downloader library to v2.3.0.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.8 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Added Synchronization of your library including watched state to trakt.tv. Synchronization can be manually run from configuration or have the plugin handle this automatically in GUI. Toggling watched states from GUI will also be reflected online but you can only set something unwatched if it has not been scrobbled online. Removal of series/episode is not yet supported but is available via API.</p></li>
+			<li><p>Added ability to map ACTION_PREV_PICTURE and ACTION_NEXT_PICTURE to remote control button or keyboard button. When action is recieved, it will cycle the series/season artwork. This is a shortcut to invoking the context menu and selecting Cycle Artwork.</p></li>
+			<li><p>Fixed 'Mark All as Watched' option applying watched state to episodes that were in database but not visible on screen. Will now respect 'Show Local Files Only' setting, also will check that episode has aired, ignoring episodes with future air date.</p></li>			
+			<li><p>Fixed theTVDB.com Series ID not being sent to trakt.tv when episode was scrobbled. This was a minor issue as we were sending correct original english title as well.</p></li>
+			<li><p>Fixed trakt.tv play count not incrementing after 1st watch if episode did not play to 100%.</p></li>
+			<li><p>Removed the trakt.tv user API key from configuration as it was un-needed, we can re-use the developer key.</p></li>				
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.7 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>trakt.tv support, tvseries can send watching and watched status online for anything new played. Watch your library build online and see what your friends are watching etc. Enter in your trakt username and password in configuration.</p></li>
+			<li><p>Added default icon to Dialog Notify, skins can add a tvseries.png in skins Media Logos folder.</p></li>
+			<li><p>Added Logo to Configuration plugins section.</p></li>
+			<li><p>Fix translation for Resume video dialog, now correctly displays 'episode' intead of 'movie'.</p></li>
+			<li><p>Updated Danish and Russian translations, thanks Steffansp and Undel.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.6 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Issue 520: [API] Fixed Episode Watched event being fired before setting watched in database.</p></li>
+			<li><p>Issue N/A: Better support for Silent Installation using the '/s' parameter. This can be used by MPEI installer to Install/Upgrade MP-TVSeries from Online Repository.</p></li>			
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.5 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Issue 501: Support for MediaPortal 1.2 skin feature 'Load Parameter' so that skin can jump to any view defined from the users home screen.</p></li>
+			<li><p>Issue 516: Fixed Virtual Keyboard not being displayed in MediaPortal 1.2 Alpha.</p></li>
+			<li><p>Issue N/A: Added helper method DBView.GetSkinViews() which skinners can take advantage of to get a list of available views in users database. Would typically be used in a skin editor together with the 'Load plugin with parameter' functionality in MediaPortal 1.2.</p></li>
+			<li><p>Issue N/A: Extended GetMostRecents() method so can optionally filter out watched episodes.</p></li>
+			<li><p>Issue N/A: Fix a possible exception when getting fanart from database.</p></li>
+			<li><p>Issue 513: Updated Greek translation file, thanks ellapse.</p></li>
+			<li><p>Issue N/A: Updated Polish translations, thanks amilewski.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.4 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Issue 500: Fix SkinSettings not filtering out new (and future) mediaportal skin functions correctly when reading properties from skin. thanks Rochess.</p></li>
+			<li><p>Issue 505: Fixed SkinSettings not reloading after user changes skin from GUI. User previously needed to restart mediaportal to have them reloaded.</p></li>
+			<li><p>Issue 508: Added User configurable number of days when looking in database for new episodes used for "New" stamp generation on series posters/banners.</p></li>
+			<li><p>Issue 510: Fixed new episodes added to database were marked as UnWatched even though they were previously watched.</p></li>
+			<li><p>Issue N/A: Fixed episodes being cleared from database if share suddenly became available during the remove run.</p></li>
+			<li><p>Issue N/A: Fix error in mediaportal's error log about missing translation when invoking Rate/PinCode dialogs.</p></li>
+			<li><p>Issue N/A: Updated French translations, thanks ubela64.</p></li>
+			<li><p>Issue N/A: Updated German translations, thanks catavolt.</p></li>
+			<li><p>Issue N/A: Updated Polish translations, thanks amilewski.</p></li>
+			<li><p>Issue N/A: Updated Spanish translations, thanks riturrioz.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.3 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<ul>
+			<li><p>Issue N/A: Fixed a null reference exception when doing an import, in some cases import would not complete.</p></li>
+			<li><p>Issue N/A: Online API now populates 'RatingCount' aka 'Votes' field, skinners can use this field to populate how many people have rated a series/episode.</p></li>
+			<li><p>Issue N/A: Added 'votes' field in configuration.</p></li>
+			<li><p>Issue N/A: Added new translation for 'Votes'.</p></li>
+			<li><p>Issue N/A: Fixed an error due to duplicate French translation.</p></li>
+			<li><p>Issue 496: Fixed an issue where sometimes the 'New' thumb stamp was cleared during online update.</p></li>
+			<li><p>Issue N/A: Added helper method to allow external plugins easy access to Recently Added and Recently Watched data. Two events can be subscribed to listen to OnPlaybackComplete and OnImportComplete.</p></li>
+			<li><p>Issue N/A: Removed News and Torrent support from plugin. This can be supported from external plugins. Also this section was not maintained.</li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.2 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 426: Added Find\Filter button to Parsing Wizard to execute filtering when ready rather than immediate filtering when typing.</p></li>
+			<li><p>Issue 490: Retrieve online languages on a separate background thread when loading configuration so UI does not lockup.</p></li>
+			<li><p>Issue N/A: Encode series name before doing lookup on API.</p></li>
+			<li><p>Issue 494: Fixed 'User Rating Prompt' not being able to be disabled from GUI if no account id has been defined.</p></li>
+			<li><p>Issue 493: Fixed case where files on mapped share that were added to database before 2.6.1 were not being removed when files no longer exist during local scan.</p></li>
+			<li><p>Issue 333: Ability to UnHide episodes, seasons and series from GUI. Will use 'selectedColor' of skin list control property to identify hidden episodes. New Options menu item in GUI 'Show Hidden Items' will allow you to toggle hidden episodes from view, this property is shared with the one currently used in Configuration.</p></li>
+			<li><p>Issue 214: In-line sorting of specials were still being shown in episode views when Season 0/Specials season was set to Hidden (This was because the individual episodes were not hidden as well). Setting a season to hidden/unhidden will now recursively set the property for each episode as well now. Users with current specials hidden and episodes not hidden will have to do a toggle manually to fix that up.</p></li>
+			<li><p>Issue N/A: Added 'Ignore on Scan' option to context menu in the configuration details tab, removed from property grid. 'Ignore on Scan', stops updates on a particular series.</p></li>
+			<li><p>Issue N/A: When setting series as Hidden, also set 'Ignore on Scan' on. When Un-Hiding series set 'Ignore on Scan' off.</p></li>
+			<li><p>Issue 478: Episode Count for Season is not updated in season list facade when there is hidden episodes from view. Count will be based on what is seen like with 'Show Local Files' setting.</p></li>
+			<li><p>Issue 492: Fixed online refresh actions being executed on series that have 'Ignore on Scan' property set.</p></li>
+			<li><p>Issue 456: Fixed error appearing in log when browsing group views and no USEREDIT column exists in database.</p></li>
+			<li><p>Issue 489: Added new view 'Available Media' which filters out any local episodes that are not available e.g. files on a disconnected network share or usb disk not plugged in.</p></li>
+			<li><p>Issue 485: Fixed facade colour turning to remote colour when doing a local scan.</p></li>
+			<li><p>Issue 488: Added 'Skip' to the Manual Series Lookup dialog. You could only press ESC or BACK previously which may not be obvious to user, having both entries 'Skip' and 'Skip / Never Ask Again' is much clearer.</p></li>
+			<li><p>Issue N/A: Renamed 'Approved' to 'Approve' in series match dialog. Fixed small alignment issue in configuration->import tab.</p></li>
+			<li><p>Issue 486: Updated Spanish Translation (thx joarreba!)</p></li>
+			<li><p>Issue 483: Fixed manual import not being executed immediately when initial import is still delayed.</p></li>
+			<li><p>Issue N/A: Some cleanup of the Debug logging.</p></li>
+			<li><p>Issue N/A: Fix for last online scan log message being incorrectly reported.</p></li>
+			<li><p>Issue N/A: Fixed retrieval of UserRatings being done on invalid series in database i.e. ID < 0.</p></li>
+			<li><p>Issue 481: Automatically add required Parsing fields in Step 1 of Import Wizard 'Series Name', 'Season ID' and 'Episode ID'. Removed the Add Columns link when nothing supported to add plus minor UI changes.</p></li>			
+			<li><p>Issue N/A: Added small delay (20 secs) before starting first File Scan when 'Scan remote shares is enabled', this will help for both CPU usage on start-up (which directly affects other plugin background tasks and also enough time for NICs to have initialised...this can help avoid a unnecessary Add Run).</p></li>
+			<li><p>Issue 460: Really fixed SubCentral not being available to enable/disable from configuration if launched from Installer. Forgot to wrap the subcentral path in quotes before parsed to PluginConfigLoader.</p></li>
+			<li><p>Issue 477: Fixed 'Insert Disk Message' not spanning multiple lines in Dialog.</p></li>
+			<li><p>Issue 476: Fix unhandled exception when exiting back from Series Panel in Import Wizard if there was unfinished edits.</p></li>
+			<li><p>Issue 475: Fixed rows in Step 1 of Import Wizard getting duplicated when adding a manual parse column.</p></li>
+			<li><p>Issue N/A: Updated SubtitleDownloader.dll library to v2.2.0.</p></li>
+		</ul>	
+	</div>
+	
+	<div class="main_title">TVSeries v2.6.1 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 450: Fixed local episode references in database being cleared when Import path was not available e.g. share was offline due to server restart. 'Removable' and 'Keep References' have been removed and are now handled internally.</p></li>
+			<li><p>Issue 436: Fixed 'Aired' order missing from available orders in Import Wizard.</p></li>			
+			<li><p>Issue 472: Fixed issue where importer tried to match episodes that no longer exist on disk. </p></li>			
+			<li><p>Issue 471: Fixed Import Wizard running multiple imports at the same time if 'Start Import' had been clicked more than once in the same session.</p></li>
+			<li><p>Issue 439: Fixed series search being executed in Import Wizard if user didnt enter in a custom search string. This would result in no match found since no valid series had been entered.</p></li>			
+			<li><p>Issue 445: Fixed subtitle logo not appearing after succcesfully downloading subtitle.</p></li>
+			<li><p>Issue 469: Fixed series/episode listing (facade) not updating immediately after new episodes had been identified.</p></li>			
+			<li><p>Issue 466: Fixed Volume Inserted/Removed event not being fired for an import path that was entered in lower case.</p></li>
+			<li><p>Issue 468: Fixed duplicate episodes appearing after import path became available. This occured when using mapped drives.</p></li>			
+			<li><p>Issue 465: Fixed 'Online Refresh' being run twice on Startup if scheduled to run.</p></li>
+			<li><p>Issue 462: Fixed series not being removed from list when deleted from Disk.</p></li>
+			<li><p>Issue 461: Fixed navigation back to Series list when deleting last episode from Disk.</p></li>
+			<li><p>Issue 463: Fixed issue when deleting an episode that has no online-data also deleted other episodes with no-online data.</p></li>
+			<li><p>Issue 457: Fixed default fields for configurable event commands before/after playback were missing from database. Note: there exists no UI for this yet.</p></li>
+			<li><p>Issue 460: Fixed SubCentral not being accesible to be enabled from configuration if launched configuration from Installer. A new command line parameter has been added to PluginConfigLoader.exe</p></li>
+			<li><p>Issue 446: Fixed Series not being sorted according to their User Edits.</p></li>
+			<li><p>Issue 392: Fixed double episodes not being matched if the corresponding season had an episode zero.</p></li>
+			<li><p>Issue N/A: Fixed scan on startup not working unless File/Folder Watcher was also enabled.</p></li>
+			<li><p>Issue 341: Improved logging when importer can not match a local file to an online episode. This resulted in strange behaviour in the Episode Matching panel of the Import Wizard.</p></li>
+			<li><p>Issue 452: Improved the default parsing expression used to match your episodes, thanks SilentException / RoChess. Be sure to reset them in configuration if upgrading.</p></li>
+			<li><p>Issue 464: Improved MediaInfo parsing speed when importing.</p></li>			
+			<li><p>Issue 425: Improved speed of Importing especially when dealing when many series/seasons.</p></li>			
+			<li><p>Issue N/A: Improved reliability of Series lookup in Import Wizard, the online database could not keep up and often resulted in timeouts if searching many series.</p></li>			
+			<li><p>Issue N/A: Allow 'Online Refresh' scan to be scheduled up to 1 week / 168 hrs.</p></li>
+			<li><p>Issue 349: Removed the Subtitle complete dialog that appeared after successful download of subtitle.</p></li>
+			<li><p>Issue N/A: Added back the 'Force Online Refresh' menu option, fixed it so it only does an update from online and not both local scan and online update.</p></li>			
+			<li><p>Issue 470: Added a message prompt to Import Wizard when navigting away from Series Match panel and there still exists unfinished user edit.</p></li>
+			<li><p>Issue N/A: Added configurable delay for Startup scan, this can be very useful to reduce cpu load on startup. Default is 30 secs.</p></li>			
+			<li><p>Issue N/A: Updated Danish translation, thanks Steffansp.</p></li>			
+			<li><p>Issue N/A: Updated French translation, thanks ubela64.</p></li>			
+		</ul>	
+	</div>
+	
+	<div class="main_title">TVSeries v2.6 Release Highlights</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Import Process</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Improved Import Process in configuration</strong></p>
+		<p>Importing in configuration has had a major overhaul, its now a wizard based process.</p>
+		<p>Users can change the local file information before import begins in the wizard e.g. edit the episode number or season 
+			number if tvseries does not recognise it.</p>
+		<p>No more annoying popup dialogs awaiting series approval or episode order approval. This is now done as part of the wizard.</p>
+		<p>Wizard also allows Local File to Online Episode Matching, e.g. Aired, DVD Order, Title matching or users
+			can manually match an episode from the list.</p>
+		<p>Improved feedback of Import Process, users can see a breakdown of the entire import procedure instead of a single progress bar.</p>
+		<p>Improved Default Regular Expression, so now even more files are automatically recognized. Click Reset in 'Regular Expression' page in configuration if upgrading.</p>
+		<p>Improved DVD Ordering such that it uses the Aired Order if DVD values are not set online.</p>
+		<p>Forcing a new online match for a series online will now always prompt to choose series.</p>
+		<p>Users can now change the 'Local File to Online Matching Method' for a series from the GUI in the Action Menu. 
+			This allows your files to be rematched against different ordering such as DVD Order.</p>
+		<p>Users can now sort the episode view by DVD Ordering or Aired Ordering.</p>
+		<p>Note: Due to changes above, users whom already have episodes imported by DVD order need to delete these series from database and re-import.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">User Edits</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>User modifications on database now persist</strong></p>
+		<p>You can now edit a field in the database via the Details screen in configuration and have its data persist. i.e. it will 
+			not be overwritten when an online update is run. For instance you can modify the Genres or a Series Title to your preference.</p>
+		<p>Changes done to fields in database are highlighted with a different colour in configuration.</p>
+		<p>To restore the default data for a field, simply delete the contents and it will automatically restore.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Play Behaviour</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Pressing 'Play' button on a series now has a whole range of play options</strong></p>
+		<p>Configuration 'General' tab, allows user to modify the behaviour of the 'Play' button when a series is selected. 
+			User can set to play the first unwatched episode, random episode, latest episode etc.</p>
+		<p>User can also configure to display a menu of choices when 'Play' is pressed.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">New Episodes Indicator</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>New Episodes for a series can easily be identified by user in banner views</strong></p>
+		<p>Configuration allows user to display a 'New' image icon on a banner/poster in 'WideBanners' and 'Filmstrip' layouts.</p>
+		<p>Behaviour of image can either be changed from 'Recently Added Episodes' or 'Unwatched Episodes'. This can be changed in 
+			the 'General' tab in configuration. Option can also be disabled</p>
+		<p>New Skin Settings for skinner to control the position of the image on a thumbnail.</p>
+		<p>If setting is enabled, but skin does not support it. A text style image is overlayed on banner/poster.</p>
+		<p>Note: see Blue3Wide for reference settings and image</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Subtitle Central Support</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Support for Subcentral has been added to TVSeries</strong></p>
+		<p>Sub-Central for TVSeries can be enabled in the 'Extras' tab in configuration.</p>
+		<p>Note: the 'Sub-Central' plugin must be installed, see 'Sub-Central' plugin for MediaPortal for more information.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Video Play and OSD Images</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>New Image support for OSD and custom Skin Properties on Play</strong></p>
+		<p>Skinner can now change the image pushed to the skin in OSD. This can be configured in TVSeries Skin Settings. 
+			Series Poster, Season Poster, Episode Image or even a custom image can be displayed.</p>
+		<p>New 'Play' properties can be created in Skin Settings e.g. skinner can create a property to display 'ClearArt' as seen in some 
+			XBMC skins on the OSD.</p>
+		<p>Note: see Blue3Wide for reference settings</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">General / Misc</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">		
+		<p>New option to display full filename in dialog when choosing subtitle to download.</p>
+		<p>Updated MediaInfo support to include new fields, better support/detection for HD codecs. It's recommended users Update MediaInfo 
+			using the link in the 'Details' tab in configuration. Skinners may need to be aware of some possible changes to some fields.</p>
+		<p>Fixed issue with importer failing to detect move/copy of folders to local import paths.</p>
+		<p>Full details of episode played in playlist view will now be shown in OSD.</p>
+		<p>Added Watched/Unwatched icons to playlist view.</p>
+		<p>New setting in configuration to add only 'Unwatched' episodes to a playlist.</p>
+		<p>When removing a custom view, all series associated with that view are now removed also.</p>
+		<p>Renamed 'Force Online Match' has been renamed to better describe its function.</p>
+		<p>Improved support for user defined scripts before/after playback.</p>
+		<p>Added Regular Expression support in 'String Replacements' section.</p>
+	</div>
+		
+	<div class="main_title">TVSeries v2.5.4 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.5.3:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>						
+			<li><p>Issue 408: Publish a new extended GUI Property for 'Currently Playing' in InfoService v1.6 Twitter.</p></li>			
+			<li><p>Issue 401: Fixed Episodes wont play if check for subtitles on play is enabled and subtitledownloader disabled.</p></li>
+			<li><p>Issue 400: Fixed skin files to work with Turkish Regional settings.</p></li>
+			<li><p>Issue 382: Fixed Importer failed when moving/copying folders to 'Local' import paths.</p></li>
+			<li><p>Issue 339: Fixed Episode counts and Remote colour not updating after episodes were deleted.</p></li>			
+			<li><p>Issue N/A: Fixed a possible exception when navigating episode view when an episode has not been parsed from online.</p></li>
+			<li><p>Issue N/A: Updated error checking when deleting files, now will handle any error when unable to access a file.</p></li>
+			<li><p>Issue N/A: Updated Recently Added episodes sent to Infoservice to send the three most recently added after each import.</p></li>
+			<li><p>Issue N/A: Updated Subtitle Downloader library to v2.0.0.</p></li>
+			<li><p>Issue N/A: Updated MediaInfo library to v0.7.33.</p></li>						
+			<li><p>Issue N/A: Updated Spanish translations, thanks joarreba.</p></li>
+			<li><p>Issue N/A: Added Korean translations, thanks seungjong.lee.</p></li>
+			<li><p>Issue N/A: Added Portuguese (Brazilian) translations, thanks pauloturij.</p></li>						
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.5.3 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.5.2:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 378: Fixed an unhanded exception when attempting to add a series to a view from details tab in configuration when an Episode or Season node was selected.</p></li>
+			<li><p>Issue 376: Fixed Download Menu item appears for subtitles even though its disabled in configuration.</p></li>
+			<li><p>Issue 374: Fixed deletes from database not working if no local file(s) were detected.</p></li>
+			<li><p>Issue 361: Fixed 'Up' navigation to increase Star Ratings in rate dialog. Blue3 skins updated.</p></li>						
+			<li><p>Issue 375: Added a background task to plugin load to check for available subtitle downloader sites. Previously done when initially loading context menu which may have caused a delay on slower systems.</p></li>
+			<li><p>Issue 217: Added a 'Rescan MediaInfo' menu item to the details tab in configuration for selected node (episode, season or series).</p></li>
+			<li><p>Issue N/A: Added version of plugin to configuraton splashscreen.</p></li>
+			<li><p>Issue N/A: Fixed Tab Order in Configuration General Settings Tab.</p></li>
+			<li><p>Issue N/A: Fixed an unhanded exception when cancelling the Delete dialog in configuration.</p></li>
+			<li><p>Issue N/A: Fixed Error Dialog not being displayed if plugin was unable to delete subtitles.</p></li>
+			<li><p>Issue N/A: Updated French translations, thanks Ubela64.</p></li>
+		</ul>
+	</div>
+	
+	<div class="main_title">TVSeries v2.5.2 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.5.1:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 331: Fixed Episode playback not working if subtitle was not found when download subtitle on play was enabled.</p></li>
+			<li><p>Issue 366: Fixed exception and inability to load plugin in GUI when no Import Paths were defined.</p></li>
+			<li><p>Issue 367: Fixed DeviceManager staring when resuming from standby if ImportPath monitoring was disabled.</p></li>
+			<li><p>Issue 369: Added ability to delete subtitles from disk. This is available from delete menu if 'Allow Delete from GUI' is enabled in configuration.</p></li>
+			<li><p>Issue 365: Added feedback message to user if plugin could not delete an episode from disk. Items will also not be removed from database if this occurs.</p></li>
+			<li><p>Issue N/A: Added a 'Play Now' menu item to Subtitle download context menu.</p></li>
+			<li><p>Issue N/A: Updated Subtitle Downloader libary to v1.9.1</p></li>
+			<li><p>Issue N/A: Updated Italian translations, thanks Cybertex.</p></li>
+			<li><p>Issue N/A: Updated Spanish translations, thanks Pedernal74.</p></li>
+			<li><p>Issue N/A: Updated French translations, thanks Ubela64.</p></li>
+			<li><p>Issue N/A: Updated Dutch translations, thanks Zinu.</p></li>
+			<li><p>Issue N/A: Updated Danish translations, thanks Steffansp.</p></li>
+		</ul>
+		
+		<b>Note</b> There are new translations in this release, please see bottom of en(us).xml for updates.
+		
+	</div>
+	
+	<div class="main_title">TVSeries v2.5.1 Maintenance Release</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Change Log since v2.5.0:</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">	
+		<ul>
+			<li><p>Issue 360: Fixed Episode Counts when the airdate was invalid e.g. 0000-00-00.</p></li>
+			<li><p>Issue 359: Fixed Double 'Play Random Episode' entry in configuration.</p></li>
+			<li><p>Issue 325: Fixed GUI not updating after some update actions occured e.g. Added new series/episode via Import Path monitor</p></li>
+			<li><p>Issue 345: Fixed series ratings not being set if user rating did not exist.</p></li>
+			<li><p>Issue 324: Fixed episode counts not updating in some circumstances.</p></li>
+			<li><p>Issue 348: Fixed subtitle lookup when using translated name for series</p></li>
+			<li><p>Issue 346: Fixed issue with episode thumb disppearing from OSD after escaping to back to series view.</p></li>
+			<li><p>Issue 330: Fixed Episode facade colour for removable media, will now appear offline if thats the case.</p></li>
+			<li><p>Issue 175: Fixed playlist action handling. Allow users to take screenshots or any other action without triggering playback.</p></li>
+			<li><p>Issue 347: Fixed MediaInfo retrieval if file is locked, file is now skipped if the file is locked.</p></li>
+					
+			<li><p>Issue 354: Improved logging when selecting an image that does not exist in configuration.</p></li>
+			<li><p>Issue 326: Improved AutoPlay handling and management with DVD Insert/Removed events. MediaPortal AutoPlay will be disabled while in plugin and re-enabled when exiting. Episodes will also be imported when new DVDs are inserted.</p></li>
+
+			<li><p>Issue 352: Changed behaviour of 'Keep reference to files no longer available' functionality. This is now import share dependent i.e can be enabled on one share and disabled on another, users should update setting from Import tab in configuration if setting previously was enabled.</p></li>
+			<li><p>Issue 154: Changed behaviour of 'Home' key to now take you to the 1st item in the list. 'h' key will continue to take you to the Home screen.</p></li>
+			
+			<li><p>Issue 004: Added new invoke commands that can be executed before\after playback of an episode. This is for advanced users only and requires editing of the database.</p></li>
+			<li><p>Issue 340: Added option to configuration to skip file monitoring on network shares when full screen playback is detected. Some users had issues with stuttering/dropped frames.</p></li>
+			<li><p>Issue N/A: Added Fanart filename when sending Recently Added episode information to InfoService plugin.</p>
+			<li><p>Issue N/A: Added new option in configuration to ignore Future/Empty AirDates when calculating episode counts.</p></li>
+			<li><p>Issue N/A: Added DTS-HD, TrueHD and Dolby Digital Plus logos to Blue3Wide skin.</p></li>
+			
+			<li><p>Issue 343: Updated Greek translations, thanks ellapse</p></li>
+			<li><p>Issue N/A: Updated Swedish translations, thanks emphatic</p></li>
+			<li><p>Issue N/A: Updated MediaInfo to v0.7.28. Note: version is incorrectly reported as v0.7.27</p></li>
+			<li><p>Issue N/A: Updated SubtitleDownloader to v1.8.0.</p></li>		
+		</ul>
+		
+		<b>BIG THANKS</b> to SilentExcept whom created patches for most of the issues lists above.
+		
+	</div>
+	
+	<div class="main_title">TVSeries v2.5 Release Highlights</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Skin</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Blue3Wide skin refresh and Translation support</strong></p>
+		<p>Updated Blue3Wide Skin layout, modularized the skin files so its easier to maintain and read, better 
+			visibility of the Fanart and the GUI is fully Translated. For users that dont like the new look you can 
+			find the old skin in the Zip Package.
+		</p>
+		<p>Skin properties are now read from all TVSeries xmls files so skinners can modularize skin files.</p>
+		<p>New Skin properties, see Skin Designers Guide for more information.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Translations</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Updated Translations and Publishing to skin</strong></p>
+		<p>The following languages have been updated: Dansk, Czech, Dutch, Italian, Spanish, Greek, Russian
+			German, French, Danish.</p>
+		<p>New Translations have been added so skinners can fully translate any existing TVSeries strings used. 
+			Translations can also be used in Skin Formatting rules. See Debug Log for a complete list of translatable strings.</p>
+		<p>Thanks to the following people whom contributed translations: 1stDead, Kucheek, HenkieFlits, RoChess, macro.tips
+			Cybertex, Pedernal74, elapse, Undel, Rasputin, catavolt, truffe, ubela64, Steffansp.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Import / File Monitoring</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Improvements to way Network Shares are handled and a new Import feature</strong></p>
+		<p>Improved support for Network Shares when monitoring paths for changes. All mapped shares are translated to UNC paths
+			and are now always picked by File Monitor when changes occur e.g. Delete File, Added File, Renamed File.</p>
+		<p>File Monitoring interval is now configurable and defaults to 5 mins. Setting can be changed in General Settings tab of configuration.</p>
+		<p>Added ability to update a single series/seasons/episodes from with-in the GUI. This also has the ability to delete and refresh Episode thumbnails
+			which are sometimes out-dated or wrong. Setting for 'Update' is available from the Action menu after selecting an item.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Configuration</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Speed Improvements and better Details Layout in Gridview.</strong></p>
+		<p>Improved Speed of loading the configuration dialog, esp. for large number of episodes.</p>
+		<p>Improved Speed of Selections in Details tree, cleaned up Display Field names and removed unnecessary fields.</p>
+		<p>Fixed Configuration not displaying Episodes in details tab for large episode collections (15,000+).</p>
+		<p>Fixed Right Click select of series/seasons/episodes in Details Tree.</p>
+		<p>Delete Logic is now consistent to the behaviour in the GUI.</p>
+		<p>Logo Rules / Formatting Rules tabs are now hidden. Skinners can set import="false" in TVSeries.SkinSettings.xml to show tabs.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Subtitles</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Subtitle Downloading is no longer handled internally by plugin</strong></p>
+		<p>TVSeries now uses the SubtitleDownloader library provided by Seco, the Subtitle downloader library includes the support 
+			for many Subtitle providers/languages and can be configured in the plugin.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Installer</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>Installer now include some new 3rd Party Libraries</strong></p>
+		<p>MediaInfo has been added back to package so old MediaPortal versions can easily be upgraded, current version is v0.7.27.0.</p>
+		<p>Libraries to support Subtitle downloading have been added SubtitleDownloader.dll (v1.6.0) and 7z.dll.</p>
+		<p>Database backup path has changed to the MediaPortal Database directory to make it easier to find and apply backup if needed.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">General / Misc</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">		
+		<p>Added new setting to Show season view when there is only one season available. Setting can be changed in General Settings of configuration.</p>
+		<p>Fixed and Re-Enabled Up/Down buttons in Parsing Expressions, much easier to add new ones and change order now.</p>
+		<p>Changed defaults for 'Prompt to Rate Episode' and 'Automatically choose Aired episode order' to enabled.</p>
+		<p>Added support 'Recently Added Episode' for new feature of the InfoService plugin (thanks edsche).</p>
+		<p>Fixed Sort Order of episodes in the 'Recently Added' view to respect Time component. Episodes now added on the same day are now sorted correctly.</p>
+		<p>Fixed a crash in Episode only views e.g. 'Recently Added' and 'Latest' when viewing an episode that did not get parsed from online.</p>
+		<p>Added new configuration setting to 'Substitute Missing Season Poster with corresponding Series Poster', default is disabled. 
+			Setting can be changed in General Settings of configuration</p>
+		<p>Episode Counts in Series/Season List will now only count episodes which have an AirDate less than or equal to Today.</p>
+	</div>
+	<div class="main_title">TVSeries v2.3 Release Highlights</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Views System</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 
+		<p><strong>The views system has been upgraded to support several new features:</strong></p>
+		
+		<p>The user can now create tagged views, this allows you to add any series to a defined view e.g.
+			Documentaries, Kids Shows, Adults Shows etc...
+		</p>
+		<p>Tagged Views can be created when adding a series to a <b>new</b> view from the plugins context menu with-in
+			MediaPortal or from the Views tab in Configuration. The Configuration program allows you to quickly
+			multi-select a range of Series to add to a particular view using the Add/Edit view dialog.
+		</p>
+		<p>Several new Built-in views have been added, some of which include: Actors, Adult Series, Kids Series,
+			Continuing Series, Ended Series, Top 10 etc. These views are available for selection in the Views
+			Configuration using the <b>Templates</b> dialog.
+		</p>
+		<p>Parental Control support, you can now protect views from the configuration views tab. After you have
+			locked down your views, enter a 4-Digit Pin in the Pin Code dialog. When a protected view is selected
+			from the plugin in MediaPortal you will be prompted to insert your Pin Code, if the pin entered is
+			correct you will see the contents of the protected view. If you have correctly entered a pin code and
+			then re-enter the view you will not be prompted unless you restart/resume or manually lock views from
+			the context menu.
+		</p>			
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Rate Series/Episodes</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 
+		<p><strong>A few new features have been added to enhance the users experience when rating episodes or series:</strong></p>
+		<p>Supported skins will now show a Graphical Rating dialog, this will also help you rate an episode or series by giving you
+			a meaningful description for the score e.g. Mediocre, Good, Great. Thanks goes to the MovingPictures team for
+			sharing the dialog.
+		</p>
+		<p>The User can choose between a 5 Star or a 10 Star rate dialog from Configuration under General Settings.</p>
+		<p>Fixed an issue where on occasion the episode list will disappear after rating an episode.</p>
+			
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Import Settings</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content">
+		<p><strong>The Online Data settings in configuration have been updated to provide several new features:</strong></p>
+		<p>You can now turn off Import when starting/resuming MediaPortal, this is of particular interest to 
+			people experiencing performance issues or have slow/non-existant internet connections. To completely turn off
+			automatic imports you also need to disable Updates.
+		</p>
+		<p>Downloading of user ratings can be disabled, when disabled the import will be faster but your episode ratings
+			will not be synced with the online database.
+		</p>
+		<p>Downloading of missing artwork can be disabled, during import the plugin will check if any series or season has 
+			no artwork available. If no artwork is found then an attempt will be done to check if any is available online and
+			download them. Import will be faster when disabling, time difference is neglible on smaller databases.
+		</p>
+		<p>During import the plugin checks all series fanart and updates the local database with any missing or new fanarts.
+			You can now disable this option for a faster import if you only want check for updates.
+		</p>
+		<p>You can now check for updates for episode(s) and series from Details tab in configuration. This will only do the updates
+			on the selected item, it will not do a full import.
+		</p>
+		<p>Automatic download of Fanart that contain Series Names/Logos is now optional, this is turned off by default.</p>		
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Installer Package</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 
+		<p><strong>An Installer has been created to help with deployment of the plugin, it has the following features:</strong></p>
+		<p>Support for all platforms supported by MediaPortal and is also compatible with the latest MediaPortal 1.1.0 release.</p>
+		<p>Custom directories defined in MediaPortalDirs.xml will be recognised and used for all components e.g. plugin, languages, skins etc</p>
+		<p>The installer supports upgrades for future releases.</p>
+		<p>The plugin and all of its components can be uninstalled from the Add\Remove programs in the Windows Control Panel.</p>
+		<p>During Installation the database is backed up the users documents directory: %USERPROFILE%\Documents\MP-TVSeries.</p>
+		<p>Options to remove artwork and database after an Uninstall to help keep your system clean.</p>
+		<p>Checks for multiple instances of the plugin after installation, this is to ensure that there is no erratic behaviour or conflicts.</p>
+	</div>
+	<div class="tab_bar"> 
+		<div class="tab_text">Misc Changes and Fixes</div>
+		<div class="tab_img"></div>
+	</div>
+	<div class="tab_content"> 		
+		<ul>
+			<li><p>Series Poster and Series Banner are now exposed to the skin as seperate properties.</p></li>
+			<li><p>Colours used in the List facade of skins which indicate Watched and Unavailable status have been changed to <b>playedColor</b> and <b>remoteColor</b>.
+					The Unwatched colour uses <b>textColor</b>.</p></li>
+			<li><p>New Delete options available, user can now delete from disk, database or both. Shortcut to menu can be invoked by pressing Zero on the Remote Control.
+					Delete menu is hidden unless enabled from with-in Configuration.</p></li>			
+			<li><p>SMS Style Virtual Keyboard support, option can be turned on from with-in Configuration.</p></li>
+			<li><p>Sorting of Specials in episode view can now be disabled from with-in Configuration.</p></li>
+			<li><p>Hide Spoilers option has been enhanced so you can Hide Overview and/or Episode Thumbnails. When episode thumbnails are hidden the Video OSD will show
+					the Series Poster instead. These options can be changed from with-in Configuration or the Context menu of the plugin.</p></li>
+			<li><p>Artwork Loading Delay can now be changed from with-in Configuration. Its recommended that defaults be left unless you know what you are doing.</p></li>
+			<li><p>Added ability to mark episodes as watched or unwatched in the Configuration Details tab.</p></li>
+			<li><p>The plugin now supports the latest <a href="http://mediainfo.sourceforge.net/en/Download/Windows">MediaInfo</a> library, this is no longer included in package. As of MediaPortal 1.0.1, 
+					MediaPortal ships mediainfo library as part of its release.</p></li>
+			<li><p>The Import Path section in Configuration now supports UNC path names e.g. \\server\\share</p></li>
+			<li><p>The Random Fanart function now cycles fanart on a configurable timer, this can be changed from the default 30secs from the Fanart Chooser window.</p></li>
+			<li><p>Added Import/Export of Parsing Expressions and String Replacements.</p></li>
+			<li><p>Added options to configure Playlists in Configuration Views tab e.g. Playlist Path. Also added new Auto-Shuffle on load property.</p></li>
+			<li><p>Fixed <b>DVD</b> order for regions using a comma as the default decimal separator, thanks freddan85</p></li>
+			<li><p>Fixed incorrect remository url when retrieving subtitles, thanks Gabe01</p></li>
+			<li><p>Fixed <b>Now Playing</b> OSD information not being set when playing from playlist view.</p></li>
+			<li><p>Fixed missing Hover image on Home Screen for Blue3 and Blue3 Wide skins.</p></li>
+			<li><p>Much faster episode count calculation when switching to and from 'Show all local files' in options menu.</p></li>
+			<li><p>Faster importing, some tasks that previously took a long time such as MediaInfo retrieval and Episode Counts are now done in the background.</p></li>		
+		</ul>
+		<p><strong>Note:</strong> there have been several updates (some of which are mentioned above) to the plugin which affect the skin, as a result all skins will need to be updated. See <a href="http://code.google.com/p/mptvseries/wiki/SkinDesignersGuide">Skin Designer's Guide</a> for more details on what
+			has changed. Please don't raise any issues with out dated skins.
+		</p>
+	</div>
+</div>
+</body>
+</html>
