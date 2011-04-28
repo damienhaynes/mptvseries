@@ -17,7 +17,7 @@ MP-TVSeries works on both x86 and x64 operating system platforms. However only x
 
 = Installation =
 
-Before you begin, download the latest setup package from the [http://code.google.com/p/mptvseries/downloads/list download] section.
+Before you begin, download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the setup.exe (Setup requires administrative privileges so you may be prompted to enter in credentials). 
 
 The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
