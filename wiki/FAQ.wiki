@@ -61,7 +61,7 @@ You can use either or both of the sites at the same time.
 
    ===Configuration During Install===
 
- * Download and run the Latest MP-TVSeries [http://code.google.com/p/mptvseries/downloads/list installer]
+ * Download and run the Latest MP-TVSeries [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries installer]
  * During Install, Ensure Trakt Feature is enabled
  * Type in your trakt.tv username and password into the password box
  * Check the box for MP-TVSeries and any optional plugin
