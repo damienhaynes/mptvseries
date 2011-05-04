@@ -1233,7 +1233,7 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_InfoHelp.IsBalloon = true;
             this.toolTip_InfoHelp.ReshowDelay = 100;
             this.toolTip_InfoHelp.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.toolTip_InfoHelp.ToolTipTitle = "View Format Help";
+            this.toolTip_InfoHelp.ToolTipTitle = "Help";
             // 
             // richTextBox_seriesFormat_Col1
             // 
