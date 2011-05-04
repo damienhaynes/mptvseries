@@ -329,6 +329,9 @@ namespace WindowPlugins.GUITVSeries
 
             chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
 
+            if (!(Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled)))
+                dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Visible = false;
+
             tabControl_Details.SelectTab(1);
         }
 
