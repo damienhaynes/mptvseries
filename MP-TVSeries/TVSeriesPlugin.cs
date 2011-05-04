@@ -227,6 +227,7 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bShowLastActiveModule = false;
         private int m_iLastActiveModule = 0;
         private bool LoadWithParameterSupported = false;
+        private bool m_PlaySelectedEpisodeAfterSubtitles = false;
         #endregion
 
         #region Events
@@ -433,9 +434,10 @@ namespace WindowPlugins.GUITVSeries
         /// MediaPortal will set #currentmodule with GetModuleName()
         /// </summary>
         /// <returns>Localized Window Name</returns>
-        //public override string GetModuleName() {
-        //	return pluginName;
-        //}
+        public override string GetModuleName()
+        {
+        	return pluginName;
+        }
 
         public override bool Init()
         {
@@ -513,6 +515,8 @@ namespace WindowPlugins.GUITVSeries
 
             // listen to this event to detect skin changes in GUI
             GUIWindowManager.OnDeActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnDeActivateWindow);
+
+            GUIWindowManager.OnActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnActivateWindow);
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";
             MPTVSeriesLog.Write("Loading main skin window: " + xmlSkin);
@@ -628,6 +632,8 @@ namespace WindowPlugins.GUITVSeries
             backdrop.GUIImageTwo = FanartBackground2;
             backdrop.LoadingImage = loadingImage;
 
+            DBEpisode previouslySelectedEpisode = m_SelectedEpisode;
+
             LoadFacade();
             m_Facade.Focus = true;
 
@@ -666,6 +672,13 @@ namespace WindowPlugins.GUITVSeries
                 {
                     LoadFacade();
                 }
+            }
+
+            // Play after subtitle download
+            if (m_PlaySelectedEpisodeAfterSubtitles && previouslySelectedEpisode != null && previouslySelectedEpisode == m_SelectedEpisode)
+            {
+                CommonPlayEpisodeAction();
+                m_PlaySelectedEpisodeAfterSubtitles = false;
             }
 
             // Push last update time to skin
@@ -1712,10 +1725,13 @@ namespace WindowPlugins.GUITVSeries
 
         protected void ShowSubtitleMenu(DBEpisode episode, bool fromPlay)
         {
-            if (Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled) && !fromPlay)
+            if (Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled))
             {
+                if (fromPlay)
+                {
+                    m_PlaySelectedEpisodeAfterSubtitles = true;
+                }
                 GUIWindowManager.ActivateWindow(84623);
-                return;
             }
         }
 
@@ -1872,6 +1888,12 @@ namespace WindowPlugins.GUITVSeries
                     SkinSettings.Init();
                 }
             }
+        }
+
+        void GUIWindowManager_OnActivateWindow(int windowId)
+        {
+            if (windowId != GetID && windowId != 84623 && m_PlaySelectedEpisodeAfterSubtitles)
+                m_PlaySelectedEpisodeAfterSubtitles = false; // we deactivate play after subtitles if user opens any window other than subcentral and tvseries
         }
 
         void m_VideoHandler_RateRequestOccured(DBEpisode episode)
@@ -5661,12 +5683,20 @@ namespace WindowPlugins.GUITVSeries
             {
                 return;
             }
-            //TODO MS: uncomment when download on play is available
-            //else if (!m_SelectedEpisode[DBEpisode.cAvailableSubtitles] && DBOption.GetOptions(DBOption.cSubCentralSubtitleDownloadOnPlay) && SubCentralEnabled?) {
-            //    ShowSubtitleMenu(m_SelectedEpisode, true);
-            //}
-            else
+
+            if (!m_PlaySelectedEpisodeAfterSubtitles && !m_SelectedEpisode[DBEpisode.cAvailableSubtitles] && DBOption.GetOptions(DBOption.cSubCentralSubtitleDownloadOnPlay))
+            {
+                ShowSubtitleMenu(m_SelectedEpisode, true);
+            }
+            else if (m_PlaySelectedEpisodeAfterSubtitles)
+            {
+                m_PlaySelectedEpisodeAfterSubtitles = false;
+            }
+            
+            if (!m_PlaySelectedEpisodeAfterSubtitles)
+            {   
                 m_VideoHandler.ResumeOrPlay(m_SelectedEpisode);
+            }
         }
 
         private DBEpisode GetFirstOrLastEpisode(List<DBEpisode> episodeList, bool first)

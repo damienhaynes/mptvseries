@@ -171,6 +171,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -1569,7 +1570,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
             this.dbOptChkBoxCountEmptyFutureEps.Checked = true;
             this.dbOptChkBoxCountEmptyFutureEps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 309);
+            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 307);
             this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
             this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
             this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
@@ -1612,6 +1613,20 @@ namespace WindowPlugins.GUITVSeries
                     "ve watched an episodes which hasn\'t been rated yet.");
             this.optionAsk2Rate.UseVisualStyleBackColor = true;
             this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
+            // 
+            // dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay
+            // 
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.AutoSize = true;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Location = new System.Drawing.Point(404, 330);
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Name = "dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Option = "SubCentral_SubtitleDownloadOnPlay";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Size = new System.Drawing.Size(281, 17);
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 44;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
+                    "sn\'t have any.\r\nNote: appliable only when using SubCentral.");
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
             // 
             // splitMain_Log
             // 
@@ -2555,6 +2570,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox3);
             this.groupBox1.Controls.Add(this.lblRecentAddedDays);
             this.groupBox1.Controls.Add(this.nudRecentlyAddedDays);
@@ -3674,5 +3690,6 @@ namespace WindowPlugins.GUITVSeries
         private FollwitTv.FollwitSettingsPanel follwitSettingsPanel1;
         private System.Windows.Forms.NumericUpDown nudParentalControlTimeout;
         private System.Windows.Forms.Label label19;
+        private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay;
     }
 }
