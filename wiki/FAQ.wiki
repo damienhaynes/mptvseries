@@ -239,7 +239,7 @@ To download all the available information for your Series, including Episodes yo
 ----
 
 =Subtitle Support=
-Newer versions of MP-TVSeries will now be supporting the [http://forum.team-mediaportal.com/showthread.php?t=85545&referrerid=104898 SubCentral] Plugin, 'Subtitle Downloader' will be retired.
+Newer versions of MP-TVSeries will now be supporting the [http://forum.team-mediaportal.com/showthread.php?t=85545&referrerid=104898 SubCentral] Plugin, 'Subtitle Downloader' will be retired, as it will no longer be maintained.
 
  ==Installation==
  * [http://www.team-mediaportal.com/extensions/movies-videos/subcentral Download] the SubCentral Plugin
