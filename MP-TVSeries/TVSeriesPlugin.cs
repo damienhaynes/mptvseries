@@ -916,12 +916,12 @@ namespace WindowPlugins.GUITVSeries
                     pItem.ItemId = (int)eContextMenus.options;
                     #endregion
 
-                    #region Download menu - keep at the bottom for fast access (menu + up => there)
+                    #region Subtitles - keep at the bottom for fast access (menu + up => there)
                     if (!emptyList && subtitleDownloadEnabled && this.listLevel == Listlevel.Episode)
                     {
-                        pItem = new GUIListItem(Translation.Download + " ...");
+                        pItem = new GUIListItem(Translation.Subtitles);
                         dlg.Add(pItem);
-                        pItem.ItemId = (int)eContextMenus.download;
+                        pItem.ItemId = (int)eContextItems.downloadSubtitle;
                     }
                     #endregion
 
@@ -929,24 +929,6 @@ namespace WindowPlugins.GUITVSeries
                     #region Selected Menu Item Actions (Sub-Menus)
                     switch (dlg.SelectedId)
                     {
-                        case (int)eContextMenus.download:
-                            {
-                                dlg.Reset();
-                                dlg.SetHeading(Translation.Download);
-
-                                if (subtitleDownloadEnabled)
-                                {
-                                    pItem = new GUIListItem(Translation.Retrieve_Subtitle);
-                                    dlg.Add(pItem);
-                                    pItem.ItemId = (int)eContextItems.downloadSubtitle;
-                                }
-
-                                dlg.DoModal(GUIWindowManager.ActiveWindow);
-                                if (dlg.SelectedId != -1)
-                                    bExitMenu = true;
-                            }
-                            break;
-
                         case (int)eContextMenus.action:
                             {
                                 dlg.Reset();
@@ -1287,7 +1269,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     #endregion
 
-                    #region Downloaders
+                    #region Subtitles
                     case (int)eContextItems.downloadSubtitle:
                         {
                             if (selectedEpisode != null)
