@@ -322,6 +322,8 @@ namespace WindowPlugins.GUITVSeries
                     case logicalViewStep.type.series:
                         // we expect to get the seriesID as stepSel
                         conditions.Add(new DBSeason(), DBSeason.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
+                        if (DBOption.GetOptions(DBOption.cSortSpecialSeasonLast))
+                            conditions.InsertOrderItem(DBSeason.cTableName + "." + DBSeason.cIndex + " = 0", SQLCondition.orderType.Ascending);
                         break;
                     case logicalViewStep.type.season:
                         // we expect to get the seriesID/seasonIndex as stepSel
