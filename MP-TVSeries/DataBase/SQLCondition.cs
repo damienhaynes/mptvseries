@@ -149,7 +149,7 @@ namespace WindowPlugins.GUITVSeries
         public void InsertOrderItem(string qualifiedFieldname, orderType type)
         {
             m_sOrderstring = m_sOrderstring.Replace("order by ", "").TrimStart();
-            m_sOrderstring = " order by " + qualifiedFieldname + (type == orderType.Ascending ? " asc " : " desc ") + " , " + m_sOrderstring;
+            m_sOrderstring = " order by " + qualifiedFieldname + (type == orderType.Ascending ? " asc " : " desc ") + (Helper.IsNullOrWhiteSpace(m_sOrderstring) ? string.Empty : ", " + m_sOrderstring);
             customOrderStringIsSet = true;
         }
 

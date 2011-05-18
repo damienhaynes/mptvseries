@@ -658,6 +658,15 @@ namespace WindowPlugins.GUITVSeries
             return;
         }
 
+        public static bool IsNullOrWhiteSpace(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return true;
+            }
+            return string.IsNullOrEmpty(value.Trim());
+        }
+
         #endregion
 
         #region Assembly methods
