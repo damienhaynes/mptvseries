@@ -140,7 +140,9 @@ namespace WindowPlugins.GUITVSeries
 
         static string buildIdentifier(string name)
         {
-            return "[TVSeries:" + name + "]";
+            // note: GetHashCode() experiences strangeness with dissappearing textures
+            // replace ';' to avoid issues with mediaportal texture splitting code            
+            return "[TVSeries:" + name.Replace(";","-") + "]";
         }
 
         /// <summary>
