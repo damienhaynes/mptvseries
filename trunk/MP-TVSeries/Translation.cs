@@ -333,6 +333,11 @@ namespace WindowPlugins.GUITVSeries
 
         public static string DownloadAllEpisodeInfo = "Download All Episode Info";
 
+        public static string Calendar = "Calendar";
+        public static string Recommendations = "Recommendations";
+        public static string Trending = "Trending";
+        public static string WatchList = "Watch List";
+
         #endregion
 
         #region Public Properties
