@@ -306,5 +306,9 @@
   <string Field="ShowAllEpisodes" Original="Show all Episodes">Show all Episodes</string>
 
   <string Field="DownloadAllEpisodeInfo" Original="Download All Episode Info">Download All Episode Info</string>
-  
+
+  <string Field="Calendar" Original="Calendar">Calendar</string>
+  <string Field="Recommendations" Original="Recommendations">Recommendations</string>
+  <string Field="Trending" Original="Trending">Trending</string>
+  <string Field="WatchList" Original="WatchList">Watch List</string>
 </strings>

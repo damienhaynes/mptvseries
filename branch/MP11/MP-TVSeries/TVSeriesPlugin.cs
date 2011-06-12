@@ -353,7 +353,8 @@ namespace WindowPlugins.GUITVSeries
 			showFanartChooser,
 			addToPlaylist,
 			viewAddToNewView,
-            showActorsGUI
+            showActorsGUI,
+            trakt
 		}
 
 		enum eContextMenus {
@@ -381,6 +382,14 @@ namespace WindowPlugins.GUITVSeries
             DVD,
             Absolute,   // used for matching only
             Title       // used for matching only
+        }
+
+        public enum TraktMenuItems
+        {
+            Calendar = 100,
+            Recommendations,
+            Trending,
+            WatchList
         }
 
         enum Listlevel
@@ -885,6 +894,15 @@ namespace WindowPlugins.GUITVSeries
 					pItem.ItemId = (int)eContextMenus.options;
 					#endregion
 
+                    #region trakt.tv menu
+                    if (Helper.IsTraktAvailableAndEnabled)
+                    {
+                        pItem = new GUIListItem("Trakt...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextItems.trakt;
+                    }
+                    #endregion
+
                     #region Download menu - keep at the bottom for fast access (menu + up => there)
                     if (!emptyList) {
                         if (subtitleDownloaderEnabled || newsEnable || torrentsEnable)
@@ -1314,6 +1332,12 @@ namespace WindowPlugins.GUITVSeries
 						}
 						break;
 					#endregion
+
+                    #region trakt.tv
+                    case (int)eContextItems.trakt:
+                        ShowTraktMenu();
+                        break;
+                    #endregion
 
 					#region Downloaders
 					case (int)eContextItems.downloadSubtitle: {
@@ -1894,7 +1918,66 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-        }       
+        }
+
+        protected void ShowTraktMenu()
+        {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlg == null) return;
+
+            dlg.Reset();
+            dlg.SetHeading("Trakt");
+
+            GUIListItem listItem = null;
+
+            // Display TV Show Relavent Windows
+
+            listItem = new GUIListItem(Translation.Calendar);
+            dlg.Add(listItem);
+            listItem.ItemId = (int)TraktMenuItems.Calendar;
+
+            listItem = new GUIListItem(Translation.Recommendations);
+            dlg.Add(listItem);
+            listItem.ItemId = (int)TraktMenuItems.Recommendations;
+
+            listItem = new GUIListItem(Translation.Trending);
+            dlg.Add(listItem);
+            listItem.ItemId = (int)TraktMenuItems.Trending;
+
+            listItem = new GUIListItem(Translation.WatchList);
+            dlg.Add(listItem);
+            listItem.ItemId = (int)TraktMenuItems.WatchList;
+
+            // Show Context Menu
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId < 0) return;
+
+            switch (dlg.SelectedId)
+            {
+                case ((int)TraktMenuItems.Calendar):
+                    // Jump to Trakt Calendar Window
+                    GUIWindowManager.ActivateWindow(87259);
+                    break;
+
+                case ((int)TraktMenuItems.Recommendations):
+                    // Jump to Trakt Show Recommendations Window
+                    GUIWindowManager.ActivateWindow(87262);
+                    break;
+
+                case ((int)TraktMenuItems.Trending):
+                    // Jump to Trakt Shows Trending Window
+                    GUIWindowManager.ActivateWindow(87265);
+                    break;
+
+                case ((int)TraktMenuItems.WatchList):
+                    // Jump to Trakt Shows Watch List Window
+                    GUIWindowManager.ActivateWindow(87268);
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
 		protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
 			if (control == this.viewMenuButton) {

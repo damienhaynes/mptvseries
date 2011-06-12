@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using MediaPortal.Configuration;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -699,6 +700,14 @@ namespace WindowPlugins.GUITVSeries
         public static bool IsSubCentralAvailableAndEnabled {
             get {
                 return Helper.IsAssemblyAvailable("SubCentral", new Version(0, 9, 0, 0)) && IsPluginEnabled("SubCentral");
+            }
+        }
+
+        public static bool IsTraktAvailableAndEnabled
+        {
+            get
+            {
+                return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "TraktPlugin.dll")) && IsPluginEnabled("Trakt");
             }
         }
 

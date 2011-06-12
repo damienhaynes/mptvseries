@@ -1777,8 +1777,7 @@ namespace WindowPlugins.GUITVSeries
             tEpisodeCounts.WorkerReportsProgress = true;
 
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);            
             condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
             List<DBSeries> series = DBSeries.Get(condition, false, false);            
 
