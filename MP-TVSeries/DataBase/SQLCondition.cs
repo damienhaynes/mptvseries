@@ -146,13 +146,6 @@ namespace WindowPlugins.GUITVSeries
             customOrderStringIsSet = true;
         }
 
-        public void InsertOrderItem(string qualifiedFieldname, orderType type)
-        {
-            m_sOrderstring = m_sOrderstring.Replace("order by ", "").TrimStart();
-            m_sOrderstring = " order by " + qualifiedFieldname + (type == orderType.Ascending ? " asc " : " desc ") + (Helper.IsNullOrWhiteSpace(m_sOrderstring) ? string.Empty : ", " + m_sOrderstring);
-            customOrderStringIsSet = true;
-        }
-
         public void AddCustom(string what, string value, SQLConditionType type, bool EncloseIfString)
         {
             if (EncloseIfString)

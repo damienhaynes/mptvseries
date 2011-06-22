@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading;
 using Trakt;
 using Trakt.Show;
-using Trakt.User;
 using Trakt.Rate;
+using Trakt.User;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -236,8 +236,8 @@ namespace WindowPlugins.GUITVSeries
         static bool HasEpisode(IEnumerable<TraktWatchedShows> watchedItems, DBEpisode episode)
         {
             IEnumerable<TraktWatchedShows> items = watchedItems.Where(s => s.SeriesId == episode[DBOnlineEpisode.cSeriesID] &&
-                                                                           s.Seasons.Where(e => e.Season == episode[DBOnlineEpisode.cSeasonIndex] &&
-                                                                                                e.Episodes.Contains(episode[DBOnlineEpisode.cEpisodeIndex])).Count() == 1);
+                                        s.Seasons.Where(e => e.Season == episode[DBOnlineEpisode.cSeasonIndex] &&
+                                                             e.Episodes.Contains(episode[DBOnlineEpisode.cEpisodeIndex])).Count() == 1);
             return items.Count() == 1;
         }
 

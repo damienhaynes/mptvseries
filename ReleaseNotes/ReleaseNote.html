@@ -59,7 +59,7 @@ ul {
 <body scroll="no" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
 	<div style="width: 100%;height: 100%;overflow: auto;">
 	
-  <div class="main_title">TVSeries v3.0.4 Release</div>
+  <div class="main_title">TVSeries v2.9.2 Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
 		<div class="tab_img"></div>
@@ -68,17 +68,14 @@ ul {
 		<ul>
       <li><p>Updated TraktPlugin plugin to v1.0.0. Now with GUI supporting a ton of trakt features without having to leave MediaPortal.</p></li>
       <li><p>Show a Trakt menu item in context menu if trakt plugin is installed, allows for easy jump to Calendar, Recommendations, Trending and Watch List windows. Supported skins can also support this from Hidden Menu.</p></li>
-			<li><p>Updated Hidden Menus in Default skins.</p></li>
+			<li><p>Updated Hidden Menus in Blue3 skins.</p></li>
 			<li><p>Fixed Ignored series did not re-calculate Episode Counts.</p></li>
 			<li><p>Fixed Series with semi-colon did not display thumbs in WideBanners and Filmstrip layouts.</p></li>
-			<li><p>Added setting to offer to download subtitles before playing. Requires SubCentral plugin.</p></li>
-      <li><p>Fixed 'Play First Unwatched Episode' which contain specials in season list.</p></li>
-      <li><p>Improved access to get Subtitles from context menu, removed the un-needed 'Download' item.</p></li>
-      <li><p>Updated Danish translations, thanks Steffan.</p></li>
-      <li><p>Updated Polish translations, thanks amilewski.</p></li>
+			<li><p>Updated Subtitle Downloader library to v2.9.</p></li>
 		</ul>
 	</div>
-	<div class="main_title">TVSeries v3.0.3 Beta Release</div>
+  
+	<div class="main_title">TVSeries v2.9.1 Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
 		<div class="tab_img"></div>
@@ -89,45 +86,26 @@ ul {
 			<li><p>Added Full episode string in listing when series view is skipped e.g. Recently Added view.</p></li>
 			<li><p>Fixed wrong fanart displayed in background on initial load of Fanart Chooser.</p></li>
 			<li><p>Changed fanart to be sorted by Highest Rated online in Fanart Chooser.</p></li>
-			<li><p>Updated Trakt Plugin to v0.9.5.</p></li>
+			<li><p>Updated TraktPlugin plugin to v0.9.5.</p></li>
 			<li><p>Fixed Rating/RatingCounts not re-calulating after rating episode/series. Saves waiting for next import of user ratings or series for changes to reflect.</p></li>
-			<li><p>Fix small icon layout for group views in DefaultWide skin.</p></li>
-			<li><p>Added alternative WideBanner layouts for DefaultWide, new default shows more banners and no longer shows selected poster. Alternatives need to be manually edited from TVSeries.xml.</p></li>
-			<li><p>Fix/Tweak width of genres in list layout for series/season views in DefaultWide skin.</p></li>
-			<li><p>Fix missing texture for spin buttons in Actors view in DefaultWide skin.</p></li>
-			<li><p>Updated overlays in all layouts in DefaultWide skin. More fanart is now visible.</p></li>
-			<li><p>Updated default hover image for Default skins.</p></li>
 		</ul>
 	</div>
 	
-  <div class="main_title">TVSeries v3.0.2 Beta Release</div>
+  <div class="main_title">TVSeries v2.9.0 Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
 		<div class="tab_img"></div>
 	</div>
 	<div class="tab_content">
 		<ul>
+			<li><p>Improved Import process, data is now cached to disk and results in faster imports. Cached series are only removed if the online api reports newer information is available.</p></li>
+			<li><p>Updated Trakt Plugin to v0.9.4.0.</p></li>
 			<li><p>Renamed 'Latest' view to 'Latest Aired', this is more descriptive of what the view will show.</p></li>
 			<li><p>Added 'Download All Episode Information' to Options menu in GUI. Change takes affect next import that gets run.</p></li>
-			<li><p>Updated TraktPlugin to 0.9.4.0.</p></li>
-      <li><p>Updated Parental Lock image in DefaultWide skin.</p></li>
+      <li><p>Added MAX version check into the installer, installations will not be allowed on MediaPortal v1.1.6+ (aka MediaPortal 1.2 Beta). Last Public release supported is MediaPortal 1.2 Alpha (v1.1.5).</p></li>
 		</ul>
 	</div>
   
-	<div class="main_title">TVSeries v3.0.1 Beta Release</div>
-	<div class="tab_bar"> 
-		<div class="tab_text">Change Log:</div>
-		<div class="tab_img"></div>
-	</div>
-	<div class="tab_content">
-		<ul>
-			<li><p>Added support for MediaPortal's new Default and DefaultWide skins.</p></li>
-			<li><p>Improved Import process, data is now cached to disk and results in faster imports. Cached series are only removed if the online api reports newer information is available.</p></li>
-			<li><p>Added support for Coverflow layout, only available on supported skins.</p></li>
-			<li><p>Updated TraktPlugin to 0.9.3.1 (same as 0.9.3.0 but compatible with MP 1.2 Beta)</p></li>
-		</ul>
-	</div>
-	
 	<div class="main_title">TVSeries v2.8.3 Release</div>
 	<div class="tab_bar"> 
 		<div class="tab_text">Change Log:</div>
@@ -143,7 +121,7 @@ ul {
 			<li><p>Updated Trakt Plugin to v0.9.3.0.</p></li>
 			<li><p>Added option to disable 'Auto Generation of Episode Titles when Online Data does not Exist', this is hidden in the DBOptions table and is not exposed in UI.</p></li>
 			<li><p>Fixed 'New Episode Indicator' not being correctly set after import.</p></li>
-			<li><p>Renamed option 'Show Only Local Files' to 'Show All Episodes', new translation string is needed.</p></li>
+			<li><p>Renamed option 'Show Only Local Files' to 'Show All Files', new translation string is needed.</p></li>
 			<li><p>Updated Spanish translations.</p></li>
 			<li><p>Fixed date format not respecting regional settings in Video OSD if setting was enabled.</p></li>
 			<li><p>Fixed user edited Episode Names not showing in GUI.</p></li>

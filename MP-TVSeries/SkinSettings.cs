@@ -338,9 +338,6 @@ namespace WindowPlugins.GUITVSeries {
                 if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
                     if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") SupportedLayouts.Add("SeriesFilmstrip");
 
-                if (innerNode.Attributes.GetNamedItem("Coverflow") != null)
-                  if (innerNode.Attributes.GetNamedItem("Coverflow").Value.ToLower() == "true") SupportedLayouts.Add("SeriesCoverflow");
-
             }
             #endregion
 
@@ -353,9 +350,6 @@ namespace WindowPlugins.GUITVSeries {
 
                 if (innerNode.Attributes.GetNamedItem("Filmstrip") != null)
                     if (innerNode.Attributes.GetNamedItem("Filmstrip").Value.ToLower() == "true") SupportedLayouts.Add("SeasonFilmstrip");
-
-                if (innerNode.Attributes.GetNamedItem("Coverflow") != null)
-                  if (innerNode.Attributes.GetNamedItem("Coverflow").Value.ToLower() == "true") SupportedLayouts.Add("SeasonCoverflow");
             }
             #endregion
 
@@ -457,10 +451,6 @@ namespace WindowPlugins.GUITVSeries {
                                 DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
                                 break;
 
-                            case "coverflow":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Coverflow");
-                                break;
-
                             default:
                                 DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
                                 break;
@@ -501,12 +491,8 @@ namespace WindowPlugins.GUITVSeries {
 
                             case "smallicons":
                             case "bigicons":
-                            case "filmstrip":                            
+                            case "filmstrip":
                                 DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
-                                break;
-
-                            case "coverflow":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "2");
                                 break;
 
                             default:
@@ -617,8 +603,6 @@ namespace WindowPlugins.GUITVSeries {
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesBanners, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("seriesposters");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesPosters, innerNode.InnerText.Trim());
-                innerNode = node.SelectSingleNode("seriescoverflow");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeriesPosters, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("seasonbanners");
                 if (innerNode != null) DBOption.SetOptions(DBOption.cQualitySeasonBanners, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("episodethumbs");
@@ -695,10 +679,8 @@ namespace WindowPlugins.GUITVSeries {
                     break;
 
                 case "Season":
-                    if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) =="1")
+                    if (DBOption.GetOptions(DBOption.cView_Season_ListFormat))
                         currentLayout = "Filmstrip";
-                    else if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) =="2")
-                        currentLayout = "Coverflow";
                     else
                         currentLayout = "List";
 

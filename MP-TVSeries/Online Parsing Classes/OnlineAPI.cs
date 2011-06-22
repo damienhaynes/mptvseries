@@ -136,54 +136,53 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static public bool SubmitRating(RatingType type, string itemId, int rating)
     {
-        string account = DBOption.GetOptions(DBOption.cOnlineUserID);
-        if (String.IsNullOrEmpty(account))
-        {
-            // if there is no tvdb account identifier, but we are using follwit. dont display the
-            // "please fill in ID" error.
-            if (FollwitConnector.Enabled) {
-                return false;
-            }
-
+      string account = DBOption.GetOptions(DBOption.cOnlineUserID);
+      if (String.IsNullOrEmpty(account))
+      {
+        // if there is no tvdb account identifier, but we are using follwit. dont display the
+        // "please fill in ID" error.
+        if (FollwitConnector.Enabled) {
+          return false;
+        }
             string[] lines = new string[] { Translation.TVDB_INFO_ACCOUNTID_1, Translation.TVDB_INFO_ACCOUNTID_2 };
             TVSeriesPlugin.ShowDialogOk(Translation.TVDB_INFO_TITLE, lines);
-            MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
-            return false;
-        }
+        MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
+        return false;
+      }
 
-        if (itemId == "0" || rating < 0 || rating > 10)
-        {
-            MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
-            return false;
-        }
+      if (itemId == "0" || rating < 0 || rating > 10)
+      {
+        MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
+        return false;
+      }
 
+      if (!DBOnlineMirror.IsMirrorsAvailable)
+      {
+        // Server maybe available now.
+        DBOnlineMirror.Init();
         if (!DBOnlineMirror.IsMirrorsAvailable)
         {
-            // Server maybe available now.
-            DBOnlineMirror.Init();
-            if (!DBOnlineMirror.IsMirrorsAvailable)
-            {
-                GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
+          GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
+          dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
                 if (!TVSeriesPlugin.IsNetworkAvailable)
                 {
                     string[] lines = new string[] { Translation.NETWORK_ERROR_UNAVAILABLE_1, Translation.NETWORK_ERROR_UNAVAILABLE_2 };
                     TVSeriesPlugin.ShowDialogOk(Translation.TVDB_ERROR_TITLE, lines);
-                }
+          }
                 else
                 {
                     string[] lines = new string[] { Translation.TVDB_ERROR_UNAVAILABLE_1, Translation.TVDB_ERROR_UNAVAILABLE_2 };
                     TVSeriesPlugin.ShowDialogOk(Translation.TVDB_ERROR_TITLE, lines);
-                }
+          }
                 
-                MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");
-                return false;
-            }
+          MPTVSeriesLog.Write("Cannot submit rating, the online database is unavailable");
+          return false;
         }
-        // ok we're good
-        MPTVSeriesLog.Write(string.Format("Submitting Rating of {2} for {0} {1}", type.ToString(), itemId, rating), MPTVSeriesLog.LogLevel.Debug);
-        Generic(string.Format(apiURIs.SubmitRating, account, type.ToString(), itemId, rating), true, false, Format.NoExtension);
-        return true;
+      }
+      // ok we're good
+      MPTVSeriesLog.Write(string.Format("Submitting Rating of {2} for {0} {1}", type.ToString(), itemId, rating), MPTVSeriesLog.LogLevel.Debug);
+      Generic(string.Format(apiURIs.SubmitRating, account, type.ToString(), itemId, rating), true, false, Format.NoExtension);
+      return true;
     }
 
     static public XmlNode Updates(UpdateType type)

@@ -636,7 +636,7 @@ namespace WindowPlugins.GUITVSeries
             int oSeason = other[DBSeason.cIndex] == 0 ? (9999 * DBOption.GetOptions(DBOption.cSortSpecialSeasonLast)) : (int)other[DBSeason.cIndex];
 
             return tSeason.CompareTo(oSeason);
-        }
+    }
 
     }
 }
