@@ -329,17 +329,18 @@
 		<row><td>ISRegistryComponent</td><td>{8A4BF4FA-0DB6-4387-B076-58F050BD0D62}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Issues</td><td>{8CCBDA0E-4673-4E6E-8650-D4F52E722867}</td><td>WEB</td><td>8</td><td/><td>issues.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Languages</td><td>{A20B47D5-E0B5-49ED-91E1-5D741E626B45}</td><td>MP_TVSERIES</td><td>8</td><td/><td>en_us_.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>LanguagesTrakt</td><td>{9C67A44F-D1AC-4142-8213-B3BA1D902757}</td><td>TRAKT</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MP_TVSeries.dll</td><td>{7D4D83BE-8C0C-4805-8E4D-BC3659C8D6C8}</td><td>WINDOWS1</td><td>8</td><td/><td>mp_tvseries.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PluginConfigLoader</td><td>{337317A8-AA1D-4EF5-9E02-C7BB56481D23}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>pluginconfigloader.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SubtitleDownloader.dll</td><td>{7762A85D-F052-4648-AF87-3A3F1FC9EBE8}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>subtitledownloader.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>TraktPlugin</td><td>{06FCD335-65CF-4DEB-965D-6B2BE9294493}</td><td>WINDOWS1</td><td>8</td><td/><td>traktplugin.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Updates</td><td>{EFECBB61-F929-4FE5-AE99-58D023A2035C}</td><td>WEB</td><td>8</td><td/><td>updates.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Wiki</td><td>{B6C9EB8C-2048-45DA-801E-A45FB97B1837}</td><td>WEB</td><td>8</td><td/><td>wiki.url</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>_z.dll</td><td>{50FB2E7A-ABE6-4433-A2FB-F064D4925450}</td><td>MPPROGRAMDIR</td><td>24</td><td/><td>_z.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>skinBlue3Media</td><td>{CC2C416E-AD41-4A37-AECC-F5EFCDC1FB39}</td><td>MEDIA</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>skinBlue3WideMedia</td><td>{7A68FBFD-F363-4E93-91A6-7438C8A024A3}</td><td>MEDIA1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3WideXML</td><td>{6DB5F268-AE17-4AFC-A85F-9BE977F3F4C1}</td><td>BLUE3WIDE</td><td>8</td><td/><td>tvseries.xml</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>skinBlue3XML</td><td>{092B6B62-8CFA-4A87-B026-C7AF7336A60A}</td><td>BLUE3</td><td>8</td><td/><td>tvseries.xml1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>trakt</td><td>{99A7A415-A69F-4E31-91F6-4B0ADCC7AFF8}</td><td>PROCESS</td><td>8</td><td/><td>traktplugin.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>skinTraktBlue3WideXML</td><td>{85D2D364-C8A3-4224-B9BE-194A74C9EF5B}</td><td>BLUE3WIDE</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>skinTraktBlue3XML</td><td>{7E76CBE3-073F-4240-AFAF-82DA49633A1A}</td><td>BLUE3</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -499,11 +500,12 @@
 		<row><td>TraktConfig</td><td>Bitmap1</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1048577</td><td/><td/><td>Text1</td><td/><td>0</td><td>1302</td><td/><td>NewBinary2</td></row>
 		<row><td>TraktConfig</td><td>CheckBox1</td><td>CheckBox</td><td>91</td><td>169</td><td>99</td><td>16</td><td>3</td><td/><td>##NEW_STRING9##</td><td>CheckBox2</td><td/><td>0</td><td>1309</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>CheckBox2</td><td>CheckBox</td><td>91</td><td>192</td><td>99</td><td>16</td><td>3</td><td/><td>##NEW_STRING10##</td><td>CheckBox3</td><td/><td>0</td><td>1310</td><td/><td/></row>
-		<row><td>TraktConfig</td><td>CheckBox3</td><td>CheckBox</td><td>197</td><td>169</td><td>99</td><td>16</td><td>3</td><td/><td>##NEW_STRING11##</td><td>GroupBox1</td><td/><td>0</td><td>1311</td><td/><td/></row>
+		<row><td>TraktConfig</td><td>CheckBox3</td><td>CheckBox</td><td>197</td><td>169</td><td>99</td><td>16</td><td>3</td><td/><td>##NEW_STRING11##</td><td>CheckBox4</td><td/><td>0</td><td>1311</td><td/><td/></row>
+		<row><td>TraktConfig</td><td>CheckBox4</td><td>CheckBox</td><td>197</td><td>192</td><td>99</td><td>16</td><td>3</td><td/><td>##NEW_STRING13##</td><td>ControlId_51</td><td/><td>0</td><td>1315</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>ControlId_1</td><td>PushButton</td><td>242</td><td>239</td><td>56</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_1##</td><td>ControlId_9</td><td/><td>131072</td><td>1</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>ControlId_12</td><td>PushButton</td><td>187</td><td>239</td><td>56</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_12##</td><td>Text3</td><td/><td>0</td><td>12</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>ControlId_1300</td><td>Line</td><td>47</td><td>227</td><td>325</td><td>1</td><td>3</td><td/><td/><td>GroupBox2</td><td/><td>131079</td><td>1300</td><td/><td/></row>
-		<row><td>TraktConfig</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>1</td><td>3</td><td/><td/><td>ControlId_1</td><td/><td>131088</td><td>1301</td><td/><td/></row>
+		<row><td>TraktConfig</td><td>ControlId_1301</td><td>Line</td><td>0</td><td>44</td><td>374</td><td>1</td><td>3</td><td/><td/><td>GroupBox1</td><td/><td>131088</td><td>1301</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>ControlId_2</td><td>PushButton</td><td>185</td><td>274</td><td>56</td><td>17</td><td>2</td><td/><td>##IDS__NewDialog_ControlId_2##</td><td/><td/><td>0</td><td>2</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>ControlId_50</td><td>Text</td><td>11</td><td>4</td><td>248</td><td>10</td><td>65539</td><td/><td>##IDS__NewDialog_ControlId_50##</td><td>ControlId_1300</td><td/><td>131072</td><td>50</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>ControlId_51</td><td>Text</td><td>19</td><td>18</td><td>240</td><td>23</td><td>65539</td><td/><td>##IDS__NewDialog_ControlId_51##</td><td>ControlId_7</td><td/><td>131072</td><td>51</td><td/><td/></row>
@@ -511,7 +513,7 @@
 		<row><td>TraktConfig</td><td>ControlId_9</td><td>PushButton</td><td>306</td><td>239</td><td>56</td><td>17</td><td>3</td><td/><td>##IDS__NewDialog_ControlId_9##</td><td>ControlId_12</td><td/><td>0</td><td>9</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>Edit1</td><td>Edit</td><td>151</td><td>98</td><td>139</td><td>17</td><td>7</td><td/><td/><td>Text4</td><td/><td>128</td><td>1306</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>Edit2</td><td>Edit</td><td>151</td><td>119</td><td>139</td><td>17</td><td>2097159</td><td/><td/><td>Text5</td><td/><td>128</td><td>1313</td><td/><td/></row>
-		<row><td>TraktConfig</td><td>GroupBox1</td><td>GroupBox</td><td>79</td><td>87</td><td>222</td><td>65</td><td>3</td><td/><td>##NEW_STRING5##</td><td>ControlId_51</td><td/><td>0</td><td>1305</td><td/><td/></row>
+		<row><td>TraktConfig</td><td>GroupBox1</td><td>GroupBox</td><td>79</td><td>87</td><td>222</td><td>65</td><td>3</td><td/><td>##NEW_STRING5##</td><td>ControlId_1</td><td/><td>0</td><td>1305</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>GroupBox2</td><td>GroupBox</td><td>79</td><td>154</td><td>222</td><td>64</td><td>3</td><td/><td>##NEW_STRING8##</td><td>Bitmap1</td><td/><td>0</td><td>1314</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>Text1</td><td>Text</td><td>13</td><td>49</td><td>357</td><td>22</td><td>65539</td><td/><td>##ID_STRING33##</td><td>Text2</td><td/><td>0</td><td>1303</td><td/><td/></row>
 		<row><td>TraktConfig</td><td>Text2</td><td>Text</td><td>12</td><td>73</td><td>343</td><td>15</td><td>65539</td><td/><td>##NEW_STRING4##</td><td>ControlId_1301</td><td/><td>0</td><td>1304</td><td/><td/></row>
@@ -646,6 +648,7 @@
 		<row><td>TARGETDIR</td><td/><td>SourceDir</td><td/><td>0</td><td/></row>
 		<row><td>TEAM_MEDIAPORTAL</td><td>ProgramFilesFolder</td><td>TEAMME~1|Team MediaPortal</td><td/><td>0</td><td/></row>
 		<row><td>TEAM_MEDIAPORTAL1</td><td>CommonAppDataFolder</td><td>TEAMME~1|Team MediaPortal</td><td/><td>0</td><td/></row>
+		<row><td>TRAKT</td><td>MPLANGUAGESDIR</td><td>Trakt</td><td/><td>0</td><td/></row>
 		<row><td>TempFolder</td><td>TARGETDIR</td><td>.:Temp</td><td/><td>0</td><td/></row>
 		<row><td>TemplateFolder</td><td>TARGETDIR</td><td>.:ShellNew</td><td/><td>0</td><td/></row>
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
@@ -1333,14 +1336,15 @@
 		<row><td>Skins</td><td/><td>##ID_STRING9##</td><td>##ID_STRING12##</td><td>16</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 		<row><td>SubTitleDowloader</td><td/><td>##ID_STRING28##</td><td>##ID_STRING29##</td><td>14</td><td>1</td><td>INSTALLDIR</td><td>16</td><td/><td/><td/><td/></row>
 		<row><td>Trakt</td><td/><td>##ID_STRING32##</td><td>##ID_STRING33##</td><td>8</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>TraktBlue3Skin</td><td>Trakt</td><td>##ID_STRING40##</td><td>##ID_STRING43##</td><td>4</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>TraktBlue3WideSkin</td><td>Trakt</td><td>##ID_STRING41##</td><td>##ID_STRING42##</td><td>6</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>TraktMainPlugin</td><td>Trakt</td><td>##ID_STRING39##</td><td/><td>0</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>Blue3</td><td>skinBlue3Media</td></row>
 		<row><td>Blue3</td><td>skinBlue3XML</td></row>
-		<row><td>Blue3Wide</td><td>skinBlue3WideMedia</td></row>
 		<row><td>Blue3Wide</td><td>skinBlue3WideXML</td></row>
 		<row><td>Main</td><td>Forums</td></row>
 		<row><td>Main</td><td>Home</td></row>
@@ -1354,7 +1358,10 @@
 		<row><td>Main</td><td>Wiki</td></row>
 		<row><td>SubTitleDowloader</td><td>SubtitleDownloader.dll</td></row>
 		<row><td>SubTitleDowloader</td><td>_z.dll</td></row>
-		<row><td>Trakt</td><td>trakt</td></row>
+		<row><td>TraktBlue3Skin</td><td>skinTraktBlue3XML</td></row>
+		<row><td>TraktBlue3WideSkin</td><td>skinTraktBlue3WideXML</td></row>
+		<row><td>TraktMainPlugin</td><td>LanguagesTrakt</td></row>
+		<row><td>TraktMainPlugin</td><td>TraktPlugin</td></row>
 	</table>
 
 	<table name="File">
@@ -1397,7 +1404,7 @@
 		<row><td>ru_utf8.xml</td><td>Languages</td><td>ru_utf8.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\ru_utf8.xml</td><td>17</td><td/></row>
 		<row><td>subtitledownloader.dll</td><td>SubtitleDownloader.dll</td><td>SUBTIT~1.DLL|SubtitleDownloader.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\SubtitleDownloader.dll</td><td>1</td><td/></row>
 		<row><td>sv.xml</td><td>Languages</td><td>sv.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;LanguageDir&gt;\sv.xml</td><td>17</td><td/></row>
-		<row><td>traktplugin.dll</td><td>trakt</td><td>TRAKTP~1.DLL|TraktPlugin.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\TraktPlugin.dll</td><td>1</td><td/></row>
+		<row><td>traktplugin.dll</td><td>TraktPlugin</td><td>TRAKTP~1.DLL|TraktPlugin.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;TrunkDir&gt;\external\TraktPlugin.dll</td><td>1</td><td/></row>
 		<row><td>tvseries.actors.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Actors.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Actors.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml</td><td>skinBlue3WideXML</td><td>TVSERI~1.XML|TVSeries.Dummy.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;SkinDir&gt;\blue3wide\TVSeries.Dummy.xml</td><td>1</td><td/></row>
 		<row><td>tvseries.dummy.xml1</td><td>skinBlue3XML</td><td>TVSERI~1.XML|TVSeries.dummy.xml</td><td>0</td><td>65535.0.0.0</td><td/><td>0</td><td>1</td><td>&lt;SkinDir&gt;\blue3\TVSeries.dummy.xml</td><td>17</td><td/></row>
@@ -1679,17 +1686,18 @@
 		<row><td>ISRegistryComponent</td><td/><td/><td>_E38F6CA8_8D42_411E_A66B_B22C2885C0C7_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Issues</td><td/><td/><td>_7F846ECC_7C21_4158_AB9A_FC4BE1131072_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Languages</td><td/><td/><td>_43676FB1_360E_4DBF_969B_179B371EB92A_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>LanguagesTrakt</td><td/><td/><td>_AE575457_4D44_4EFA_9B8B_44F01F850223_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MP_TVSeries.dll</td><td/><td/><td>_3D521D74_D0A4_40AB_8993_D9147023752A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PluginConfigLoader</td><td/><td/><td>_5B0A85B6_7138_45C5_A964_0E08743C61D3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>SubtitleDownloader.dll</td><td/><td/><td>_EA13FE16_030C_4022_AE5C_FAA0992269E0_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>TraktPlugin</td><td/><td/><td>_8420AA60_832A_410C_8D79_D508A12C4686_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Updates</td><td/><td/><td>_906420BA_C1A6_4D16_A4EE_0749D1E8796D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Wiki</td><td/><td/><td>_FA268EEB_795E_49F2_A65E_3688CE9B9ADC_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>_z.dll</td><td/><td/><td>_DFEAB152_6492_4430_8613_254C080FD337_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>skinBlue3Media</td><td/><td/><td>_D51CB0E0_168F_474F_B433_1699779B7DCF_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>skinBlue3WideMedia</td><td/><td/><td>_9731C4B7_32CE_4ECA_945D_A300288D0959_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3WideXML</td><td/><td/><td>_69B87E1A_652B_44E9_8735_18332E35DB31_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>skinBlue3XML</td><td/><td/><td>_009771E6_5FEF_4464_99DA_B17AB2A46804_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>trakt</td><td/><td/><td>_0FDF9DF3_3365_49E6_9E36_1266C89F14C2_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>skinTraktBlue3WideXML</td><td/><td/><td>_9691CAEA_4A6C_43F1_8B4C_921BA4BC8477_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>skinTraktBlue3XML</td><td/><td/><td>_3447E751_369C_412F_BA86_9E22F9CC9155_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -1747,8 +1755,10 @@
 		<col def="S0">IncludeFiles</col>
 		<col def="S0">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>skinBlue3Media</td><td>&lt;SkinDir&gt;\blue3\media</td><td>4</td><td>*.png</td><td/><td>10</td></row>
-		<row><td>skinBlue3WideMedia</td><td>&lt;SkinDir&gt;\blue3wide\media</td><td>4</td><td>*.png</td><td/><td>10</td></row>
+		<row><td>skinBlue3WideXML</td><td>&lt;SkinDir&gt;\blue3wide</td><td>4</td><td>*.png</td><td/><td>10</td></row>
+		<row><td>skinBlue3XML</td><td>&lt;SkinDir&gt;\blue3</td><td>4</td><td>*.png</td><td/><td>10</td></row>
+		<row><td>skinTraktBlue3WideXML</td><td>&lt;SkinDir&gt;\traktplugin\blue3wide</td><td>4</td><td>*.xml,*.png</td><td/><td>10</td></row>
+		<row><td>skinTraktBlue3XML</td><td>&lt;SkinDir&gt;\traktplugin\blue3</td><td>4</td><td>*.xml,*.png</td><td/><td>10</td></row>
 	</table>
 
 	<table name="ISFeatureExtended">
@@ -1768,9 +1778,13 @@
 		<row><td>Blue3</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Blue3Wide</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Main</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewFeature1</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Skins</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>SubTitleDowloader</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Trakt</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>TraktBlue3Skin</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>TraktBlue3WideSkin</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>TraktMainPlugin</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -2027,7 +2041,7 @@
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
 		<row><td>Release</td><td>IncludeActionHelp</td><td>1</td></row>
-		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.9.1</td></row>
+		<row><td>Release</td><td>ProductName</td><td>MediaPortal MP-TVSeries Plugin 2.9.2</td></row>
 		<row><td>Release</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
@@ -2306,15 +2320,20 @@
 		<row><td>Complete</td><td>Blue3</td></row>
 		<row><td>Complete</td><td>Blue3Wide</td></row>
 		<row><td>Complete</td><td>Main</td></row>
+		<row><td>Complete</td><td>NewFeature1</td></row>
 		<row><td>Complete</td><td>Skins</td></row>
 		<row><td>Complete</td><td>SubTitleDowloader</td></row>
 		<row><td>Complete</td><td>Trakt</td></row>
 		<row><td>Custom</td><td>Blue3</td></row>
 		<row><td>Custom</td><td>Blue3Wide</td></row>
 		<row><td>Custom</td><td>Main</td></row>
+		<row><td>Custom</td><td>NewFeature1</td></row>
 		<row><td>Custom</td><td>Skins</td></row>
 		<row><td>Custom</td><td>SubTitleDowloader</td></row>
 		<row><td>Custom</td><td>Trakt</td></row>
+		<row><td>Custom</td><td>TraktBlue3Skin</td></row>
+		<row><td>Custom</td><td>TraktBlue3WideSkin</td></row>
+		<row><td>Custom</td><td>TraktMainPlugin</td></row>
 	</table>
 
 	<table name="ISStorages">
@@ -3555,7 +3574,17 @@
 		<row><td>ID_STRING31</td><td>1033</td><td>Translations used by the plugin to present data in the GUI. This can optionally be installed if you wish to customise your own translations.</td><td>0</td><td/><td>-526482804</td></row>
 		<row><td>ID_STRING32</td><td>1033</td><td>Trakt</td><td>0</td><td/><td>-643851403</td></row>
 		<row><td>ID_STRING33</td><td>1033</td><td>Trakt actively keeps a record of what TV shows and movies you are watching. Based on your favorites, your friends, and the community, trakt recommends other TV shows and movies.</td><td>0</td><td/><td>-643886187</td></row>
+		<row><td>ID_STRING34</td><td>1033</td><td>TraktMainPlugin</td><td>0</td><td/><td>-1289773940</td></row>
+		<row><td>ID_STRING35</td><td>1033</td><td>Default Wide Skin</td><td>0</td><td/><td>-1289763700</td></row>
+		<row><td>ID_STRING36</td><td>1033</td><td>Default Wide Skin for Trakt Plugin.</td><td>0</td><td/><td>-1289753460</td></row>
+		<row><td>ID_STRING37</td><td>1033</td><td>Default Skin</td><td>0</td><td/><td>-1289759476</td></row>
+		<row><td>ID_STRING38</td><td>1033</td><td>Default Skin for Trakt Plugin.</td><td>0</td><td/><td>-1289763572</td></row>
+		<row><td>ID_STRING39</td><td>1033</td><td>TraktMainPlugin</td><td>0</td><td/><td>-1289774099</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://forum.team-mediaportal.com/my-tvseries-162/</td><td>0</td><td/><td>463295949</td></row>
+		<row><td>ID_STRING40</td><td>1033</td><td>Blue 3</td><td>0</td><td/><td>-1289786131</td></row>
+		<row><td>ID_STRING41</td><td>1033</td><td>Blue3 Wide</td><td>0</td><td/><td>-1289806867</td></row>
+		<row><td>ID_STRING42</td><td>1033</td><td>Blue3 Wide Skin for Trakt Plugin</td><td>0</td><td/><td>-1289794579</td></row>
+		<row><td>ID_STRING43</td><td>1033</td><td>Blue3 Skin for Trakt Plugin</td><td>0</td><td/><td>-1289782291</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>MediaPortal Forums</td><td>0</td><td/><td>463306189</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>http://code.google.com/p/mptvseries/downloads/list</td><td>0</td><td/><td>463326669</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.</td><td>0</td><td/><td>463331635</td></row>
@@ -3570,6 +3599,7 @@
 		<row><td>NEW_STRING10</td><td>1033</td><td>M&amp;oving Pictures</td><td>0</td><td/><td>840912110</td></row>
 		<row><td>NEW_STRING11</td><td>1033</td><td>My &amp;Videos</td><td>0</td><td/><td>840916206</td></row>
 		<row><td>NEW_STRING12</td><td>1033</td><td>[html]&lt;style type="text/css"&gt;html,body {padding:0; margin:0; background-color:ButtonFace} * {font-size: 8pt; font-family: "MS Sans Serif";} &lt;/style&gt; &lt;a href="http://trakt.tv"&gt;Signup to trakt.tv&lt;/a&gt; </td><td>0</td><td/><td>840948782</td></row>
+		<row><td>NEW_STRING13</td><td>1033</td><td>My &amp;Films</td><td>0</td><td/><td>-1289806068</td></row>
 		<row><td>NEW_STRING2</td><td>1033</td><td>Release Notes HTML goes here</td><td>0</td><td/><td>-1281533039</td></row>
 		<row><td>NEW_STRING3</td><td>1033</td><td>Text</td><td>0</td><td/><td>840923757</td></row>
 		<row><td>NEW_STRING4</td><td>1033</td><td>Trakt can also help you keep your watched flags syncronized across multiple pcs.</td><td>0</td><td/><td>840919725</td></row>
@@ -4151,6 +4181,7 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>NewProperty1</td><td>0</td><td/></row>
 		<row><td>NewProperty10</td><td>0</td><td/></row>
 		<row><td>NewProperty11</td><td>0</td><td/></row>
+		<row><td>NewProperty12</td><td>0</td><td/></row>
 		<row><td>NewProperty2</td><td>0</td><td/></row>
 		<row><td>NewProperty3</td><td>0</td><td/></row>
 		<row><td>NewProperty4</td><td>0</td><td/></row>
@@ -4182,9 +4213,9 @@ TQBQAC0AVABWAFMAZQByAGkAZQBzAAEAUgBlAGwAZQBhAHMAZQA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
-		<row><td>ProductCode</td><td>{EA33EF05-08A3-4210-A1B0-416692882EF3}</td><td/></row>
+		<row><td>ProductCode</td><td>{4A7ECBC0-A59A-47A1-A138-0EB07B5FFA72}</td><td/></row>
 		<row><td>ProductName</td><td>MP-TVSeries</td><td/></row>
-		<row><td>ProductVersion</td><td>2.9.1.1744</td><td/></row>
+		<row><td>ProductVersion</td><td>2.9.2.1772</td><td/></row>
 		<row><td>REBOOT</td><td>Suppress</td><td/></row>
 		<row><td>STANDARD_USE_SETUPEXE</td><td>##IDS_STANDARD_USE_SETUPEXE##</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ARPNOMODIFY;ARPNOREMOVE;ARPSYSTEMCOMPONENT;COMPANYNAME;INSTALLDIR;ISALWAYSINSTALLELEVATED;ISFOUNDNEWERPRODUCTVERSION;ISSETUPDRIVEN;ISX_SERIALNUM;IS_NET_API_GROUP_LIST;IS_NET_API_LOGON_DOMAIN_TOKEN;IS_NET_API_LOGON_PASSWORD;IS_NET_API_LOGON_USERNAME;IS_NET_API_LOGON_USERNAME_TOKEN;IS_NET_API_NEW_USER_CONFIRM;IS_NET_API_NEW_USER_GROUP;IS_NET_API_NEW_USER_NAME;IS_NET_API_NEW_USER_PASSWORD;IS_NET_API_NEW_USER_SERVER;IS_NET_API_SERVER_LIST;IS_NET_API_SERVER_NEW_USER_LIST;IS_NET_API_USER_LIST;IS_NEW_USER_CONFIRM_TEXT;IS_NEW_USER_GROUP_TEXT;IS_NEW_USER_NAME_TEXT;IS_NEW_USER_PASSWORD_TEXT;IS_NEW_USER_SERVER_TEXT;IS_SQLSERVER_AUTHENTICATION;IS_SQLSERVER_DATABASE;IS_SQLSERVER_LIST;IS_SQLSERVER_PASSWORD;IS_SQLSERVER_SERVER;IS_SQLSERVER_USERNAME;MAJORUPGRADE_01;SUPPORTDIR;USERNAME</td><td/></row>
