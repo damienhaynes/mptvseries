@@ -57,6 +57,7 @@
 #define RES_CHECK_TVSERIES				1309
 #define RES_CHECK_MOVPICS				1310
 #define RES_CHECK_MYVIDEOS				1311  
+#define RES_CHECK_MYFILMS				1315
 #define RES_LINK_TRAKTWEB				1312 
    
 // Custom Dialogs
@@ -69,6 +70,7 @@
 #define XML_TRAKT_MOVPICS				"MovingPictures"
 #define XML_TRAKT_TVSERIES				"TVSeries"
 #define XML_TRAKT_MYVIDEOS				"MyVideos"
+#define XML_TRAKT_MYFILMS				"MyFilms"
        
 // CSIDL values
 #ifndef CSIDL_PROFILE
@@ -127,6 +129,7 @@ STRING g_sTraktPassword;
 STRING g_sTraktTVSeries;
 STRING g_sTraktMovingPictures;
 STRING g_sTraktMyVideos;
+STRING g_sTraktMyFilms;
 
 //---------------------------------------------------------------------------
 // OnBegin
@@ -243,6 +246,7 @@ begin
 	g_sTraktUserName = "";
 	g_sTraktPassword = "";
 	g_sTraktMyVideos = "-1";
+	g_sTraktMyFilms = "-1";
 	g_sTraktTVSeries = "0";
 	if (Is(FILE_EXISTS, g_sPluginsDir ^ "Windows\\MovingPictures.dll")) then
 		g_sTraktMovingPictures = "1";
@@ -654,7 +658,14 @@ function OnFirstUIAfter()
     STRING szTitle, szMsg1, szMsg2, szOpt1, szOpt2, szSite, szFileName, szParams;
     NUMBER bOpt1, bOpt2;
 begin
-
+        
+    // Delete old Trakt Process plugin if it still exists
+	if (Is(FILE_EXISTS, g_sPluginsDir ^ "windows\\TraktPlugin.dll")) then
+		if (Is(FILE_EXISTS, g_sPluginsDir ^ "process\\TraktPlugin.dll")) then
+			DeleteFile(g_sPluginsDir ^ "process\\TraktPlugin.dll");
+		endif;
+	endif;
+        
 	// Clean Cache Folder, old skin may conflict with new changes
 	if FeatureIsItemSelected ( MEDIA, "Skins\\Default" ) then
     	CleanCache("Default");
@@ -1293,6 +1304,10 @@ Dlg_Wait:
 				
 				if (g_sTraktMyVideos != "-1") then
 					CtrlSetState(szDialogName, RES_CHECK_MYVIDEOS, BUTTON_CHECKED);
+				endif;   
+				
+				if (g_sTraktMyFilms != "-1") then
+					CtrlSetState(szDialogName, RES_CHECK_MYFILMS, BUTTON_CHECKED);
 				endif;
 	  		 
 	  		case RES_LINK_TRAKTWEB:	  			
@@ -1356,6 +1371,15 @@ Dlg_Wait:
 	    if (g_sTraktMyVideos = "-1") then
 	    	g_sTraktMyVideos = "2";
 	    endif;	
+	endif; 
+	
+	if (CtrlGetState(szDialogName, RES_CHECK_MYFILMS) = BUTTON_UNCHECKED) then
+		g_sTraktMyFilms = "-1";
+	else    
+		// preserve sort order
+	    if (g_sTraktMyFilms = "-1") then
+	    	g_sTraktMyFilms = "3";
+	    endif;	
 	endif;
 		
     EndDialog (szDialogName);
@@ -1389,10 +1413,11 @@ begin
         xmlWriter.SetEntry("Trakt", XML_TRAKT_PASSWORD, g_sTraktPassword);
         xmlWriter.SetEntry("Trakt", XML_TRAKT_TVSERIES, g_sTraktTVSeries);  
         xmlWriter.SetEntry("Trakt", XML_TRAKT_MOVPICS, g_sTraktMovingPictures);  
-        xmlWriter.SetEntry("Trakt", XML_TRAKT_MYVIDEOS, g_sTraktMyVideos);    
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_MYVIDEOS, g_sTraktMyVideos);
+        xmlWriter.SetEntry("Trakt", XML_TRAKT_MYFILMS, g_sTraktMyFilms);        
         
         // Enable plugin on mediaportal startup
-        if (Is(FILE_EXISTS, g_sPluginsDir ^ "process\\TraktPlugin.dll")) then
+        if (Is(FILE_EXISTS, g_sPluginsDir ^ "windows\\TraktPlugin.dll")) then
         	xmlWriter.SetEntry("plugins", "Trakt", "yes");
         	xmlWriter.SetEntry("pluginsdlls", "TraktPlugin.dll", "yes");
         endif;
@@ -1438,6 +1463,11 @@ begin
 		sResult = xmlReader.GetEntry("Trakt", XML_TRAKT_MYVIDEOS);
 		if (sResult != "") then
 			g_sTraktMyVideos = sResult;
+		endif;   
+		
+		sResult = xmlReader.GetEntry("Trakt", XML_TRAKT_MYFILMS);
+		if (sResult != "") then
+			g_sTraktMyFilms = sResult;
 		endif;
 						
 		if (g_sTraktUserName = "" && g_sTraktPassword = "") then 
