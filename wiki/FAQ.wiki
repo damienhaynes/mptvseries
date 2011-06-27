@@ -226,16 +226,25 @@ To download all the available information for your Series, including Episodes yo
  * Start the Import Wizard, and select Skip when no match is found for the 'My Trip to Fiji'
  * Finish Import
  * Select 'Details' tab.
- * Click 'Show Hidden Items'
  * Find your Series, Enter Series and Episode info (This will create USEREDIT fields in database)
- * Right Click on series and select 'Ignore on Scan' so we dont prompt to match series everytime.
+ * Right Click on series and select 'Ignore on Scan' so we dont prompt to match series everytime an import is run.
  * Enter GUI and select series, then play!
 
  By default MP-TVSeries will automatically generate episode titles if they dont exist online e.g Episode 1, Episode 2 etc. If this behaviour is not wanted you can manually edit the Options Table in the database and set *AutoGenerateEpisodeTitles* to Zero. This change will only take affect for *NEW* episodes added to database, if you want to respect episode titles from filenames for existing files that have been import then you need to clear the database and re-import.
 
- Note: Adding manual artwork, at time of writing you need to edit the database directly...
+----
 
+=Custom Artwork=
+Typically if you are importing videos not available on theTVDB.com such as sports videos, then you will most likely want to add some artwork. Follow these instructions to get custom artwork in tvseries:
 
+ * In your thumbs\MPTVSeriesBanners\ folder create the *Show Name* if it doesnt already exist (this should match your series name, replace invalid filename characters with underscore) and then create the following directory structure:
+  http://mptvseries.googlecode.com/svn/wiki/Images/FAQ/CustomArtworkExplorerFolderStructure.jpg
+ * In the *episode* folder create artwork in the following format: custom-{seasonindex}x{episodeindex}.jpg e.g. *custom-2001x1.jpg*
+ * In the *season* folder create artwork in the following format: custom-{seasonindex}.jpg e.g *custom-2011.jpg*
+ * In the *widebanner* and *poster* folders create artwork in the following format: *custom.jpg*
+
+Now in Configuration, select the series and pick the *custom* artwork from the drop down list.
+  http://mptvseries.googlecode.com/svn/wiki/Images/FAQ/ConfigSeriesArtwork.jpg
 ----
 
 =Subtitle Support=
