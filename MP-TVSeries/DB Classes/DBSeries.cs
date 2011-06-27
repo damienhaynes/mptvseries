@@ -476,6 +476,12 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     String sList = m_onlineSeries[DBOnlineSeries.cBannerFileNames];
+
+                    // Add custom artwork by user
+                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(m_onlineSeries.ToString()) + @"\widebanner\custom.jpg");
+                    if (File.Exists(customArtwork))
+                        outList.Add(customArtwork);
+
                     if (String.IsNullOrEmpty(sList))
                         return outList;
 
@@ -513,6 +519,12 @@ namespace WindowPlugins.GUITVSeries
                 if (m_onlineSeries != null)
                 {
                     String sList = m_onlineSeries[DBOnlineSeries.cPosterFileNames];
+
+                    // Add custom artwork by user
+                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(m_onlineSeries.ToString()) + @"\posters\custom.jpg");
+                    if (File.Exists(customArtwork))
+                        outList.Add(customArtwork);
+
                     if (String.IsNullOrEmpty(sList))
                         return outList;
 
