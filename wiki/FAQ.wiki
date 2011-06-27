@@ -254,16 +254,14 @@ Newer versions of MP-TVSeries will now be supporting the [http://forum.team-medi
  ==Installation==
  * [http://www.team-mediaportal.com/extensions/movies-videos/subcentral Download] the SubCentral Plugin
  * Check SubCentral Plugin is enabled in MP Configuration, Plugins
- * in MP-TVSeries Configuration, Click Extras tab
+ * in MP-TVSeries Configuration, Click General tab
  * Tick “Enable SubCentral” check box. 
- * Tick “Use SubCentral for episode 'HasSubtitles query' if you also want SubCentral for MediaInfo subtitles check (more through search).
- * Disable SubtitleDownloader if enabled.
+ * (Optional) Tick “Offer to download subtitles before playing (SubCentral)” if you want to perform an automatic subtitle search before playing an episode that does not have any subtitles.
 
  ==Download a Subtitle==
  * In the Episode list, highlight the episode you want to download a subtitle
  * Press F9 on keyboard or INFO on MCE Remote
- * Select 'DOWNLOAD'
- * Select 'RETRIEVE SUBTITLE'
+ * Select 'SUBTITLES...'
  * Find Select and Download the required Subtitle
  * Return to the TV Series Plugin
 
