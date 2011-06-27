@@ -255,7 +255,6 @@ Newer versions of MP-TVSeries will now be supporting the [http://forum.team-medi
  * [http://www.team-mediaportal.com/extensions/movies-videos/subcentral Download] the SubCentral Plugin
  * Check SubCentral Plugin is enabled in MP Configuration, Plugins
  * in MP-TVSeries Configuration, Click General tab
- * Tick “Enable SubCentral” check box. 
  * (Optional) Tick “Offer to download subtitles before playing (SubCentral)” if you want to perform an automatic subtitle search before playing an episode that does not have any subtitles.
 
  ==Download a Subtitle==
