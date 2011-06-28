@@ -84,7 +84,7 @@ You can use any or all of the sites at the same time.
 
   ===Installation==
   
-  [http://mptvseries.googlecode.com/issues/attachment?aid=5780006000&name=MyShows+Plugin.zip&token=acfeb9d26cdfec55cfc8baf04d2afd73 Download] Myshows Plugin.dll and copy it into \Team MediaPortal\MediaPortal\plugins\process 
+  [http://code.google.com/p/mptvseries/issues/detail?id=578 Download] Myshows Plugin.dll and copy it into \Team MediaPortal\MediaPortal\plugins\process 
 
   ===Configuration===
 
