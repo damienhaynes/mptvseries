@@ -80,17 +80,19 @@ You can use any or all of the sites at the same time.
 
 ==myshows.ru==
 
-  This site is russian analog for Trakt/Follw.it
-  * Watch this space - more information coming soon
+  For Russian MP users Myshows.ru is supported. Now it is possible to mark episodes as watched automatically after playback and toggle watched status manually from Mediaportal. 
 
   ===Installation==
   
-  * Coming Soon
+  Download Myshows Plugin.dll and copy it into \Team MediaPortal\MediaPortal\plugins\process 
 
   ===Configuration===
 
-  * Coming Soon
-
+  * Load MYSHOWS from Mediaportal Configuration, Plugins.
+  * Enter your myshows.ru login and password
+  * Click "test" to verify connection
+  * Click "Save" in plugin config
+  * Click "OK" in Mediaportal Configuration to save settings.
 
 ----
 
