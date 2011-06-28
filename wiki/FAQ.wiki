@@ -91,7 +91,7 @@ You can use any or all of the sites at the same time.
   * Load 'MyShowsPlugin' from Mediaportal Configuration, Plugins.
   * Enter your myshows.ru login and password
   * Click "Test Login" to verify your credentials
-  * Click "Save" in plugin config
+  * Click "OK" 
   * Click "OK" in Mediaportal Configuration to save settings.
 http://mptvseries.googlecode.com/svn/wiki/Images/MyShowsConfig.jpg
 
