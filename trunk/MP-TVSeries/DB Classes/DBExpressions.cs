@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBExpression : DBTable
     {
         public const String cTableName = "expressions";
-        public const int cDBVersion = 4;
+        public const int cDBVersion = 5;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -63,12 +63,36 @@ namespace WindowPlugins.GUITVSeries
             // make sure the table is created - create a dummy object
             DBExpression dummy = new DBExpression();
             DBExpression[] expressions = DBExpression.GetAll();
-                        
+
             if (expressions == null || expressions.Length == 0)
             {
-                // no expressions in the db => put the default ones
+                // no expressions in the db, add defaults
                 AddDefaults();
-            }           
+            }
+            else
+            {
+                // upgrade, add any new expressions
+                int nCurrentDBVersion = cDBVersion;
+                int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBExpressionsVersion);
+
+                while (nUpgradeDBVersion != nCurrentDBVersion)
+                {
+                    DBExpression expression = new DBExpression();
+                    switch (nUpgradeDBVersion)
+                    {
+                        case 4:
+                            expression[DBExpression.cEnabled] = "1";
+                            expression[DBExpression.cIndex] = expressions.Length;
+                            expression[DBExpression.cType] = DBExpression.cType_Regexp;
+                            expression[DBExpression.cExpression] = @"(^.*?\\?(?<series>[^\\$]+?)[ .-]+(?<firstaired>\d{2,4}[.-]\d{2}[.-]\d{2,4})[ .-]*(?<title>(?![^\\]*?(?<!the)[ .(-]sample[ .)-]).*?)\.(?<ext>[^.]*)$)";
+                            expression.Commit();
+                            break;
+                    }
+                    nUpgradeDBVersion++;
+                }
+
+                DBOption.SetOptions(DBOption.cDBExpressionsVersion, nCurrentDBVersion);
+            }
         }
 
         public static void AddDefaults()
@@ -101,16 +125,21 @@ namespace WindowPlugins.GUITVSeries
             expression.Commit();
 
             expression[DBExpression.cIndex] = "5";
-            expression[DBExpression.cType] = DBExpression.cType_Simple;
-            expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>.<ext>";
+            expression[DBExpression.cType] = DBExpression.cType_Regexp;
+            expression[DBExpression.cExpression] = @"(^.*?\\?(?<series>[^\\$]+?)[ .-]+(?<firstaired>\d{2,4}[.-]\d{2}[.-]\d{2,4})[ .-]*(?<title>(?![^\\]*?(?<!the)[ .(-]sample[ .)-]).*?)\.(?<ext>[^.]*)$)";
             expression.Commit();
 
             expression[DBExpression.cIndex] = "6";
             expression[DBExpression.cType] = DBExpression.cType_Simple;
-            expression[DBExpression.cExpression] = @"<series>\Season <season>\Episode <episode> - <title>.<ext>";
+            expression[DBExpression.cExpression] = @"<series> - <season>x<episode> - <title>.<ext>";
             expression.Commit();
 
             expression[DBExpression.cIndex] = "7";
+            expression[DBExpression.cType] = DBExpression.cType_Simple;
+            expression[DBExpression.cExpression] = @"<series>\Season <season>\Episode <episode> - <title>.<ext>";
+            expression.Commit();
+
+            expression[DBExpression.cIndex] = "8";
             expression[DBExpression.cType] = DBExpression.cType_Simple;
             expression[DBExpression.cExpression] = @"<series>\<season>x<episode> - <title>.<ext>";
             expression.Commit();

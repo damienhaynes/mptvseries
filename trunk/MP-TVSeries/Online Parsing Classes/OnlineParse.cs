@@ -2113,8 +2113,19 @@ namespace WindowPlugins.GUITVSeries
                             // Don't want to match local episodes with no EpisodeIndex2 with an online episode index of zero
                             iEpIndex2 = -1;
                         }
+                        
+                        // Check whether we are parsing a Air Date vs Episode/Season Index
+                        if (localEpisode[DBEpisode.cEpisodeIndex] < 0 && !string.IsNullOrEmpty(localEpisode[DBOnlineEpisode.cFirstAired]))
+                        {
+                            string airDate = string.Empty;
+                            try { airDate = DateTime.Parse(localEpisode[DBOnlineEpisode.cFirstAired]).ToString("yyyy-MM-dd"); }
+                            catch { return int.MaxValue; }
 
-                        if ((int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
+                            if (airDate == onlineEpisode[DBOnlineEpisode.cFirstAired]) return 0;
+                            return int.MaxValue;
+                        }
+
+                        if (localEpisode[DBEpisode.cEpisodeIndex] >= 0 && (int)localEpisode[DBEpisode.cSeasonIndex] == (int)onlineEpisode[DBOnlineEpisode.cSeasonIndex] &&
                                 ((int)localEpisode[DBEpisode.cEpisodeIndex] == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex] ||
                                 iEpIndex2 == (int)onlineEpisode[DBOnlineEpisode.cEpisodeIndex]))
                         {

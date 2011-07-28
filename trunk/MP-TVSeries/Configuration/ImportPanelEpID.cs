@@ -215,11 +215,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
             }
             else if (ep is DBOnlineEpisode)
             {
-                return string.Format("{0,2:D}{1,2:D}{2} - {3}",
+                return string.Format("{0,2:D}{1,2:D}{2} - {3} [{4}]",
                     ep[DBEpisode.cSeasonIndex] > 0 ? (string)ep[DBEpisode.cSeasonIndex] + "x" : "Special: ",
                     ep[DBEpisode.cEpisodeIndex] > 0 ? (string)ep[DBEpisode.cEpisodeIndex] : "?",
                     ep[DBEpisode.cEpisodeIndex2] > 0 ? "-" + ep[DBEpisode.cEpisodeIndex2] : string.Empty,
-                    ep[DBOnlineEpisode.cEpisodeName]);
+                    ep[DBOnlineEpisode.cEpisodeName], ep[DBOnlineEpisode.cFirstAired]);
             }
             return string.Empty;
         }

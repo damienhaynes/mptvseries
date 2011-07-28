@@ -1194,7 +1194,7 @@ namespace WindowPlugins.GUITVSeries
                 //don't include hidden episodes unless the ShowHiddenItems option is set
                 cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
             }
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;
@@ -1249,8 +1249,8 @@ namespace WindowPlugins.GUITVSeries
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);            
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
+            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;
