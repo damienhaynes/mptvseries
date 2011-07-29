@@ -2219,7 +2219,7 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     case "Title":
                         int fuzzyness = 3;
-                        string localTitle = localEpisode[DBEpisode.cEpisodeName];
+                        string localTitle = localEpisode[DBEpisode.cRawEpisodeName];
                         string onlineTitle = onlineEpisode[DBOnlineEpisode.cEpisodeName];
                         if (string.IsNullOrEmpty(localTitle) || string.IsNullOrEmpty(onlineTitle)) return int.MaxValue;
                         double maxDistance = Math.Min(localTitle.Length, onlineTitle.Length) * 0.1 + fuzzyness;
