@@ -509,5 +509,6 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
 
    Load Mediaportal, TVSeries plugin, and press the KEY you set to change the artwork
 
-
+  ==Play Next & Play Prev - Playlist Keyboard Shortcut== 
+  Support has been added for Play Next / Play Prev in the  MP-TvSeries Playlist player when viewing fullscreen video. F7=Prev, F8=Next
 ----
