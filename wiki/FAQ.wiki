@@ -3,6 +3,9 @@
 
 ----
 
+=MPTVSeries Window ID=
+  * 9811
+
 =Questions, Suggestions & Bug Reports=
 
 There are 3 ways you can receive support for the plugin, Submitting log files and or Screenshots is recommended
@@ -509,6 +512,13 @@ Its sometimes reported that the database file TVSeriesDatabase4.db3 has become d
 
    Load Mediaportal, TVSeries plugin, and press the KEY you set to change the artwork
 
-  ==Play Next & Play Prev - Playlist Keyboard Shortcut== 
-  Support has been added for Play Next / Play Prev in the  MP-TvSeries Playlist player when viewing fullscreen video. F7=Prev, F8=Next
+
+  ==Playlist Keyboard Shortcuts== 
+  The following are shortcuts avaialble for playlists in MP-TVSeries
+  * Play Next = F8
+  * Play Prev = F7
+  * Add to Playlist = Y
+  * Show Playlist = F1
+  Note: for Add to Playlist and Show Playlist shorcuts, you need to add them to "Keys and Sounds" in the Mediaportal Configuration. See screenshow below. Note: Window ID for MP-TVSeries is 9811
+ http://mptvseries.googlecode.com/svn/wiki/Images/PlaylistShortcuts.jpg
 ----
