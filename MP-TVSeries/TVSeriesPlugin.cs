@@ -1471,6 +1471,11 @@ namespace WindowPlugins.GUITVSeries
                 case Action.ActionType.ACTION_SHOW_PLAYLIST:
                     ShowPlaylistWindow();
                     break;
+                
+                case Action.ActionType.ACTION_QUEUE_ITEM:
+                    // Add selected item(s) to playlist
+                    AddItemToPlayList();
+                    break;
 
                 case Action.ActionType.REMOTE_0:
                     if (DBOption.GetOptions(DBOption.cShowDeleteMenu))
@@ -5476,7 +5481,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (this.listLevel == Listlevel.Group)
             {
-
+                return;
             }
             else if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
             {
