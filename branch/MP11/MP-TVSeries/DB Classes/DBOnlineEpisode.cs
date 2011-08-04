@@ -194,7 +194,22 @@ namespace WindowPlugins.GUITVSeries
                 if (this[cEpisodeThumbnailFilename].ToString().Length > 0)
                 {
                     return Helper.PathCombine(Settings.GetPath(Settings.Path.banners), this[cEpisodeThumbnailFilename]);
-                } else return string.Empty;
+                } 
+                else
+                {
+                    // check for custom image
+                    DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                    if (series != null)
+                    {
+                        string seriesName = series.ToString();
+                        string seasonIdx = this[DBOnlineEpisode.cSeasonIndex];
+                        string episodeIdx = this[DBOnlineEpisode.cEpisodeIndex];
+                        string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), string.Format(@"{0}\episodes\custom-{1}x{2}.jpg", Helper.cleanLocalPath(seriesName), seasonIdx, episodeIdx).ToLowerInvariant());
+                        if (System.IO.File.Exists(customArtwork))
+                            return customArtwork;
+                    }
+                }
+                return string.Empty;
             }
         }
 

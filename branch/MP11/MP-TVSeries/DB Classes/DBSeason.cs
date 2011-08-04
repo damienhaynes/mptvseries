@@ -273,6 +273,17 @@ namespace WindowPlugins.GUITVSeries
             {
                 List<String> outList = new List<string>();
                 String sList = this[cBannerFileNames];
+
+                // Add custom artwork by user
+                DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
+                if (series != null)
+                {
+                    string seriesName = series.ToString();
+                    string seasonIdx = this[DBSeason.cIndex];
+                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), string.Format(@"{0}\seasons\custom-{1}.jpg", Helper.cleanLocalPath(seriesName), seasonIdx));
+                    if (File.Exists(customArtwork))
+                        outList.Add(customArtwork);
+                }
                 if (String.IsNullOrEmpty(sList))
                     return outList;
 
