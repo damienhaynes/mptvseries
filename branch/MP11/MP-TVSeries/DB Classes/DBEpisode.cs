@@ -75,6 +75,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeIndex2 = DBOnlineEpisode.cEpisodeIndex + "2";
         
         public const String cEpisodeName = "LocalEpisodeName";
+        public const String cRawEpisodeName = "RawEpisodeName";
         public const String cImportProcessed = "LocalImportProcessed";
         public const String cCompositeUpdated = "CompositeUpdated";
         public const String cOriginalComposite = "OriginalComposite";
@@ -1064,6 +1065,10 @@ namespace WindowPlugins.GUITVSeries
                             }
                             return retVal;
 
+                        // use for title matching online
+                        case cRawEpisodeName:
+                            return base[cEpisodeName];
+                        
                         default:
                             retVal = m_onlineEpisode[fieldName];
                             if (String.IsNullOrEmpty(retVal))
@@ -1194,7 +1199,7 @@ namespace WindowPlugins.GUITVSeries
                 //don't include hidden episodes unless the ShowHiddenItems option is set
                 cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
             }
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;
@@ -1249,8 +1254,8 @@ namespace WindowPlugins.GUITVSeries
         {
             m_bUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);            
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, Watched, FirstAired");
+            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired");
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;

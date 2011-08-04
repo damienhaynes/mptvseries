@@ -167,10 +167,25 @@ namespace WindowPlugins.GUITVSeries
         public void Init()
         {
             GUIWindowManager.Receivers += new SendMessageHandler(this.OnMessage);
+            GUIWindowManager.OnNewAction += new OnActionHandler(this.OnNewAction);
 
 			// external player handlers
 			Utils.OnStartExternal += new Utils.UtilEventHandler(onStartExternal);
 			Utils.OnStopExternal += new Utils.UtilEventHandler(onStopExternal);
+        }
+
+        void OnNewAction(MediaPortal.GUI.Library.Action action)
+        {
+            switch (action.wID)
+            {
+                case MediaPortal.GUI.Library.Action.ActionType.ACTION_NEXT_ITEM:
+                    PlayNext();
+                    break;
+
+                case MediaPortal.GUI.Library.Action.ActionType.ACTION_PREV_ITEM:
+                    PlayPrevious();
+                    break;
+            }
         }
 
         public void OnMessage(GUIMessage message)

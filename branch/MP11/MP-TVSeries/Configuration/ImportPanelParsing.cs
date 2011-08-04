@@ -70,7 +70,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                     case DBSeries.cParsedName:
                         col.Importance = 99;
                         col.Pretty = "Series";
-                        break;
+                        break;                   
                     case DBEpisode.cSeasonIndex:
                         col.Importance = 98;
                         col.Pretty = "Season ID";
@@ -83,8 +83,12 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         col.Importance = 96;
                         col.Pretty = "Episode ID 2";
                         break;
-                    case DBEpisode.cEpisodeName:
+                    case DBOnlineEpisode.cFirstAired:
                         col.Importance = 95;
+                        col.Pretty = "Air Date";
+                        break;
+                    case DBEpisode.cEpisodeName:
+                        col.Importance = 94;
                         col.Pretty = "Episode Name";
                         break;
                     case DBEpisode.cExtension:
@@ -145,6 +149,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
             
             if (dataGridViewReview.Rows.Count > 0)
             {
+                if (!dataGridViewReview.Columns.Contains(DBOnlineEpisode.cFirstAired))
+                    comboBoxAddColumn.Items.Add("Air Date");
                 if (!dataGridViewReview.Columns.Contains(DBEpisode.cEpisodeIndex2))
                     comboBoxAddColumn.Items.Add("Episode ID 2");
                 if (!dataGridViewReview.Columns.Contains(DBEpisode.cEpisodeName))
@@ -210,8 +216,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 // TODO: make possible to only have series filled out!
                 // we require at least the series to be filled for all enabled ones
                 var invalids = results.Count(pr => !pr.parser.Matches.ContainsKey(DBSeries.cParsedName) || string.IsNullOrEmpty(pr.parser.Matches[DBSeries.cParsedName]));
-                invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cEpisodeIndex]));
-                invalids += results.Count(pr => !pr.parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cSeasonIndex]));
+                invalids += results.Count(pr => (!pr.parser.Matches.ContainsKey(DBEpisode.cEpisodeIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cEpisodeIndex])) && (!pr.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired) || string.IsNullOrEmpty(pr.parser.Matches[DBOnlineEpisode.cFirstAired])));
+                invalids += results.Count(pr => (!pr.parser.Matches.ContainsKey(DBEpisode.cSeasonIndex) || string.IsNullOrEmpty(pr.parser.Matches[DBEpisode.cSeasonIndex])) && (!pr.parser.Matches.ContainsKey(DBOnlineEpisode.cFirstAired) || string.IsNullOrEmpty(pr.parser.Matches[DBOnlineEpisode.cFirstAired])));
+
                 if (invalids == 0)
                 {
                     if (UserFinishedEditing != null)
@@ -219,7 +226,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 }
                 else
                 {
-                    MessageBox.Show("All Enabled results need at least the Series/Season/Episode IDs Filled out!", "Unable to continue", MessageBoxButtons.OK);
+                    MessageBox.Show("All Enabled results need at least the Series and [Season/Episode or AirDate] Filled out!", "Unable to continue", MessageBoxButtons.OK);
                     return;
                 }
             }
@@ -296,7 +303,10 @@ namespace WindowPlugins.GUITVSeries.Configuration
            
             string colName = string.Empty;
             switch (this.comboBoxAddColumn.Text)
-            {                
+            {
+                case "Air Date":
+                    colName = DBOnlineEpisode.cFirstAired;
+                    break;
                 case "Episode ID 2":
                     colName = DBEpisode.cEpisodeIndex2;
                     break;
