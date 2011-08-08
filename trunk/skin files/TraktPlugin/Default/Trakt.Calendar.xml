@@ -163,8 +163,19 @@
 						<onleft>50</onleft>
 						<onright>50</onright>
 						<onup>21</onup>
+						<ondown>3</ondown>
+					</control>
+          <control>
+						<description>Start Date</description>
+						<type>button</type>
+						<id>3</id>
+            <width>180</width>
+						<label>Start Date</label>
+						<onleft>50</onleft>
+						<onright>50</onright>
+						<onup>2</onup>
 						<ondown>2</ondown>
-					</control>					
+					</control>
 				</control>
       </control>
 		</control>
@@ -177,7 +188,7 @@
       <posY>450</posY>
       <height>113</height>
       <width>200</width>
-      <keepaspectratio>yes</keepaspectratio>
+      <keepaspectratio>no</keepaspectratio>
       <zoom>no</zoom>
       <texture flipY="true" diffuse="diffusemirrorwide.png">#selectedthumb</texture>      
       <animation effect="fade" time="250" delay="0">WindowClose</animation>
