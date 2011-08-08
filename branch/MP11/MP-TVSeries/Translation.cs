@@ -363,6 +363,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Recommendations = "Recommendations";
         public static string Trending = "Trending";
         public static string WatchList = "Watch List";
+        public static string Shouts = "Shouts";
 
         #endregion
 
