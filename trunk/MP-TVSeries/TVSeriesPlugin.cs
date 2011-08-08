@@ -379,7 +379,8 @@ namespace WindowPlugins.GUITVSeries
             Calendar = 100,
             Recommendations,
             Trending,
-            WatchList
+            WatchList,
+            Shouts
         }
 
         enum Listlevel
@@ -1746,6 +1747,34 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        protected void ShowTraktShouts()
+        {
+            if (listLevel != Listlevel.Episode)
+            {
+                TraktPlugin.GUI.ShowShout seriesInfo = new TraktPlugin.GUI.ShowShout
+                {
+                    TVDbId = m_SelectedSeries[DBSeries.cID],
+                    Title = m_SelectedSeries[DBOnlineSeries.cPrettyName]
+                };
+                TraktPlugin.GUI.GUIShouts.ShoutType = TraktPlugin.GUI.GUIShouts.ShoutTypeEnum.show;
+                TraktPlugin.GUI.GUIShouts.ShowInfo = seriesInfo;
+            }
+            else
+            {
+                TraktPlugin.GUI.EpisodeShout episodeInfo = new TraktPlugin.GUI.EpisodeShout
+                {
+                    TVDbId = m_SelectedEpisode[DBOnlineEpisode.cSeriesID],
+                    Title = m_SelectedSeries[DBOnlineSeries.cPrettyName],
+                    SeasonIdx = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex],
+                    EpisodeIdx = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]
+                };
+                TraktPlugin.GUI.GUIShouts.ShoutType = TraktPlugin.GUI.GUIShouts.ShoutTypeEnum.episode;
+                TraktPlugin.GUI.GUIShouts.EpisodeInfo = episodeInfo;
+            }
+            TraktPlugin.GUI.GUIShouts.Fanart = GUIPropertyManager.GetProperty("#TVSeries.Current.Fanart").Trim();
+            GUIWindowManager.ActivateWindow(87280);
+        }
+
         protected void ShowTraktMenu()
         {
             IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
@@ -1774,6 +1803,10 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(listItem);
             listItem.ItemId = (int)TraktMenuItems.WatchList;
 
+            listItem = new GUIListItem(Translation.Shouts);
+            dlg.Add(listItem);
+            listItem.ItemId = (int)TraktMenuItems.Shouts;
+
             // Show Context Menu
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId < 0) return;
@@ -1798,6 +1831,11 @@ namespace WindowPlugins.GUITVSeries
                 case ((int)TraktMenuItems.WatchList):
                     // Jump to Trakt Shows Watch List Window
                     GUIWindowManager.ActivateWindow(87268);
+                    break;
+
+                case ((int)TraktMenuItems.Shouts):
+                    // Jump to Trakt Shouts Window
+                    ShowTraktShouts();
                     break;
 
                 default:
