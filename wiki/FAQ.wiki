@@ -157,8 +157,12 @@ MP-TVSeries is does not currently support combining multiple files into a single
 We recommend in this scenario to join the files together, Click the following links for example programs for [http://www.alexander-noe.com/video/amg/ AVI files] and [http://www.bunkus.org/videotools/mkvtoolnix/ MKV files]
 
  ==Episodes with Air Date==
-MP-TVSeries does not currently support filenames that only contain the Air Date, example 'The Daily Show with Jon Stewart - 2010-12-16.avi'
-There is a open enhancement request [http://code.google.com/p/mptvseries/issues/detail?id=127 here], which you may like to Star.
+MP-TVSeries now supports AirDate parsing, matched up from episodes listed at theTVDB.com
+Some examples below are episodes which will now parse by default - Note: requires atleast v2.9.3 for MP 1.1 or v3.0.5 for MP 1.2B
+
+ * Conan.(2010).2010.11.08.Baa.Baa.Blackmail.mkv 
+ * Conan.(2010).2011.07.20.Hell.Hath.No.Cell.Phone.Reception.mkv
+ * The.Colbert.Report.2011.07.27.Dr.Missy.Cummings.mkv
 
  ==Auto Renaming of Files==
 MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer] and [http://www.tvrename.com Tv Rename] 
