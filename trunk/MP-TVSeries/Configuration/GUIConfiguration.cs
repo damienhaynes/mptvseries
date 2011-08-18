@@ -1469,7 +1469,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void OnlineParsing_OnCompleted(bool bDataUpdated)
+        private void OnlineParsing_OnCompleted(bool newEpisodes)
         {
             TimeSpan span = DateTime.Now - m_timingStart;
             MPTVSeriesLog.Write("Online Parsing Completed in " + span);           

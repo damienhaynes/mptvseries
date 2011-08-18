@@ -42,6 +42,7 @@ using Cornerstone.MP;
 using System.Xml;
 using WindowPlugins.GUITVSeries.GUI;
 using WindowPlugins.GUITVSeries.FollwitTv;
+using TraktPlugin.TraktAPI;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -4757,7 +4758,7 @@ namespace WindowPlugins.GUITVSeries
             base.Process();
         }
 
-        void parserUpdater_OnlineParsingCompleted(bool bDataUpdated)
+        void parserUpdater_OnlineParsingCompleted(bool newEpisodes)
         {
             setProcessAnimationStatus(false);
 
@@ -4767,7 +4768,7 @@ namespace WindowPlugins.GUITVSeries
                 setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
             m_parserUpdaterWorking = false;
-            if (bDataUpdated)
+            if (OnlineParsing.m_bDataUpdated)
             {
                 if (m_Facade != null) LoadFacade();
             }
