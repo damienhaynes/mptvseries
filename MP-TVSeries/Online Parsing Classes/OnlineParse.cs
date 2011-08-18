@@ -186,7 +186,8 @@ namespace WindowPlugins.GUITVSeries
         public BackgroundWorker m_worker = new BackgroundWorker();
         IFeedback m_feedback = null;
 
-        bool m_bDataUpdated = false;
+        public static bool m_bDataUpdated = false;
+        bool m_bNewLocalFiles = false;        
         bool m_bFullSeriesRetrieval = false;
         bool m_bNoExactMatch = false;       //if set to true then the user will be always prompted to choose the series
         CParsingParameters m_params = null;
@@ -199,7 +200,7 @@ namespace WindowPlugins.GUITVSeries
         int MAX_TIMEOUT = 120000;
 
         public delegate void OnlineParsingProgressHandler(int nProgress, ParsingProgress Progress);
-        public delegate void OnlineParsingCompletedHandler(bool bDataUpdated);
+        public delegate void OnlineParsingCompletedHandler(bool newLocalFiles);
 
         /// <summary>
         /// This will be triggered once all the SeriesAndEpisodeInfo has been parsed completely.
@@ -231,9 +232,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (OnlineParsingCompleted != null) // only if any subscribers exist
                 {
-                    OnlineParsingCompleted.Invoke(m_bDataUpdated);
+                    OnlineParsingCompleted.Invoke(m_bNewLocalFiles);
                 }
-            }           
+            }
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -2359,7 +2360,10 @@ namespace WindowPlugins.GUITVSeries
                 parsedFiles = UserModifiedParsedResults;
 
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
-            
+
+            // Signal external event listeners that new local files have been added
+            if (parsedFiles.Count > 0) m_bNewLocalFiles = true;
+
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
             List<DBSeason> relatedSeasons = new List<DBSeason>();
