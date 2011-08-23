@@ -3385,7 +3385,6 @@ namespace WindowPlugins.GUITVSeries
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(820, 730);
             this.Name = "ConfigurationForm";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MP-TV Series Configuration";
             this.contextMenuStrip_DetailsTree.ResumeLayout(false);

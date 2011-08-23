@@ -66,6 +66,9 @@
     <OutputPath>bin\x86\Release\</OutputPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Utils, Version=1.1.6.27644, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -434,6 +437,7 @@
     <None Include="Resources\Images\busy.gif" />
     <None Include="Resources\Images\big_spinner.gif" />
     <None Include="Resources\Images\find.png" />
+    <Content Include="icon.ico" />
     <Content Include="Resources\Images\folder_explore.png" />
     <None Include="Resources\Images\importaccept.png" />
     <None Include="Resources\Images\importpending.png" />
