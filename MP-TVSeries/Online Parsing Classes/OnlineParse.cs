@@ -2362,7 +2362,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
 
             // Signal external event listeners that new local files have been added
-            if (parsedFiles.Count > 0) m_bNewLocalFiles = true;
+            m_bNewLocalFiles = parsedFiles.Count > 0;
 
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
