@@ -1526,21 +1526,22 @@ public class Script
     <Author>ltfearme</Author>
     <HomePage>http://code.google.com/p/mptvseries/</HomePage>
     <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
-    <UpdateUrl />
+    <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>3</Major>
-      <Minor>0</Minor>
-      <Build>6</Build>
-      <Revision>0</Revision>
+      <Minor>1</Minor>
+      <Build>0</Build>
+      <Revision>1824</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
     <VersionDescription>* Created new MPEI Installer, supports external SubCentral and Trakt external extensions.
-* Improved OnImportCompleted event handler for external plugins. Parameter now only gets set if there is any new files added during import.</VersionDescription>
+* Improved OnImportCompleted event handler for external plugins. Parameter now only gets set if there is any new files added during import.
+* Fixed facade issues in external windows when tvseries importer is running.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation />
-    <ReleaseDate>2011-08-22T15:25:06.3794045+10:00</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.0.1824.mpe1</OnlineLocation>
+    <ReleaseDate>2011-09-07T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\MP-TVSeries.mpe1</Location>
     <Params>
@@ -2456,28 +2457,28 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{923f1569-1a51-4257-9f2d-be1b9ba13d6a}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{59e22726-2f95-4c21-831c-5b8346f8096f}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{168b1c22-8fe3-4896-9f6f-0b47751a4528}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{1ee46244-5d2e-4df2-9346-91a42f3439bf}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{a51cb29b-d4c9-4c0b-977a-0b4eec66e2a6}-SubCentral.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{604483ec-19a5-4d37-ba10-7200aee0ad21}-SubCentral.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{f1ff6a62-a921-43e2-bdb7-ca04cf39679a}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{82c8da89-8372-46a6-98a8-7c7fb6ddb6d1}-TraktPlugin.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -2526,7 +2527,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       </FolderGroup>
     </FolderGroups>
     <ProjectFilename>MP-TVSeries.xmp2</ProjectFilename>
-    <UpdatePath1 />
+    <UpdatePath1>.\update.xml</UpdatePath1>
     <UpdatePath2 />
     <UpdatePath3 />
   </ProjectSettings>
