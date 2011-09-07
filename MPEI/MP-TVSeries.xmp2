@@ -1543,7 +1543,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
     <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.0.1824.mpe1</OnlineLocation>
     <ReleaseDate>2011-09-07T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
-    <Location>.\Release\MP-TVSeries.mpe1</Location>
+    <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -2457,28 +2457,28 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{59e22726-2f95-4c21-831c-5b8346f8096f}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{10b95525-60eb-4f92-8caf-00f701ebb644}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{1ee46244-5d2e-4df2-9346-91a42f3439bf}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{95c50a69-45d9-4ef5-997d-bd7e72f55a82}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{604483ec-19a5-4d37-ba10-7200aee0ad21}-SubCentral.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{0ce74faa-c7bf-4785-aefa-015219d3a886}-SubCentral.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{82c8da89-8372-46a6-98a8-7c7fb6ddb6d1}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{47d8e952-f45c-47fb-af13-9b0d36202a3a}-TraktPlugin.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
