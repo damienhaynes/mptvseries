@@ -2184,6 +2184,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void LoadFacade()
         {
+            if (GUIWindowManager.ActiveWindow != GetID) return;
+
             if (bg == null)
             {
                 bg = new System.ComponentModel.BackgroundWorker();
@@ -2274,7 +2276,6 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 BackgroundFacadeLoadingArgument arg = e.UserState as BackgroundFacadeLoadingArgument;
-                //MPTVSeriesLog.Write("bg_ProgressChanged for: " + arg.Type.ToString(), MPTVSeriesLog.LogLevel.Debug);
 
                 if (bg.CancellationPending)
                 {
@@ -2320,7 +2321,8 @@ namespace WindowPlugins.GUITVSeries
                             if (itemsForDelayedImgLoading != null && itemsForDelayedImgLoading.Count > arg.IndexArgument)
                             {
                                 string image = arg.Argument as string;
-                                itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
+                                if (itemsForDelayedImgLoading[arg.IndexArgument] != null)
+                                    itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
                             }
                             /*if (itemsForDelayedImgLoading != null) {
                                 string image = arg.Argument as string;
