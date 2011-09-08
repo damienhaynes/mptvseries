@@ -15,6 +15,22 @@ Below is a list of pre-requisites that must be met before you can proceed to ins
 
 MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
 
+= Installation for MP 1.2 Release Candidate =
+
+Before you begin, download the latest mpe1 package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
+To Start the Installation, open or double click on the MP-TVSeries-3.xxx.mpe1 (Setup requires administrative privileges so you may be prompted to enter in credentials).
+
+The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-1.jpg
+
+The *Feature screen is used to select the different features and components you want to install.
+ 
+ * Click to select or de-select any features you want to install
+ * The Trakt and SubCentral Features are Optional
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-2.jpg 
+ * Click the *Next* button to Continue
+
+
 = Installation for MP 1.1.3 =
 
 Before you begin, download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
