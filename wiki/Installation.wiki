@@ -17,6 +17,12 @@ MP-TVSeries works on both x86 and x64 operating system platforms. However only x
 
 = Installation for MP v1.2 RC =
 
+MP-TVSeries v3.1.0+ for MP v1.2 RC+ can be installed in either of the 2 methods below. Once you have installed the Plugin, a Shortcut will be created on the Desktop for easy access to the MP-TVSeries Plugin Configuration
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/DesktopShortcut.jpg
+
+
+
  == Install via Media Portal Extension Installer ==
 
 MP-TVSeries v3.1.0+ can now be installed via the Extension Installer. Note this requires MP v1.2 RC1+.
