@@ -101,7 +101,8 @@ The final screen notifies you that the setup has been finished successfully.
 
 = Installation for MP v1.1.3 =
 
-Before you begin, download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
+For those still using MP 1.1, you can download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section. Note: Read the comments for a link to the 1.1.x version.
+
 To Start the Installation, open or double click on the setup.exe (Setup requires administrative privileges so you may be prompted to enter in credentials). 
 
 The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
