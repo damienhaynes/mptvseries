@@ -17,6 +17,12 @@ MP-TVSeries works on both x86 and x64 operating system platforms. However only x
 
 = Installation for MP v1.2 RC =
 
+ == Install via Media Portal Extension Installer ==
+
+
+
+ == Install via Manual Download ==
+
 Before you begin, download the latest mpe1 package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the MP-TVSeries-3.xxx.mpe1 (Setup requires administrative privileges so you may be prompted to enter in credentials).
 
