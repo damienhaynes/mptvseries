@@ -27,11 +27,11 @@ Click Start, Programs, Team Mediaportal, Mediaportal and select the
 
  http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-1.jpg
 
-*Click Known extensions Tab
-*Select MP-TVSeries from the list
-*Click 'Install'
-*Click the Version you want to install.
-*Click 'Yes' to install the plugin.
+ * Click Known extensions Tab
+ * Select MP-TVSeries from the list
+ * Click 'Install'
+ * Click the Version you want to install.
+ * Click 'Yes' to install the plugin.
 
 http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-2.jpg
 
