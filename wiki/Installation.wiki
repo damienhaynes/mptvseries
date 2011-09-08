@@ -78,6 +78,17 @@ The final screen notifies you that the setup has been finished successfully.
 
  == Uninstall ==
 
+ To uninstall the plugin, follow the instructions below, which are the same for if you installed it via the manual MPE1 download or via the Mediaportal Extensions Install
+
+ * Click Start, Programs, Team Mediaportal, Mediaportal and select the 
+'Mediaportal Extension Installer'
+ * Click 'MP-TVSeries' from the 'Installed Extensions' Tab
+ * Click 'Uninstall'
+ * Click 'Yes' to Uninstall
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-Uninstall-1.jpg
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-Uninstall-2.jpg
+
 ----
 
 = Installation for MP v1.1.3 =
