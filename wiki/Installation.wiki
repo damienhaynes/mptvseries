@@ -1,6 +1,6 @@
 #summary Installation Guide for plugin.
 #labels Featured
-<wiki:toc max_depth="2" />
+<wiki:toc max_depth="3" />
 = Introduction =
 
 This guide is intended to guide you through the installation process of the MP-TVSeries plugin. It is assumed !MediaPortal v1.1.x or higher is installed and the user has a general knowledge of the Windows Operating system.
