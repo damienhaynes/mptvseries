@@ -15,23 +15,36 @@ Below is a list of pre-requisites that must be met before you can proceed to ins
 
 MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
 
-= Installation for MP 1.2 Release Candidate =
+= Installation for MP v1.2 RC =
 
 Before you begin, download the latest mpe1 package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the MP-TVSeries-3.xxx.mpe1 (Setup requires administrative privileges so you may be prompted to enter in credentials).
 
+Note: this mpe1 installer requires atleast 1.2 RC and will not install on MP 1.2Beta
+
+
 The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
  http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-1.jpg
 
-The *Feature screen is used to select the different features and components you want to install.
+The *Feature* screen is used to select the different features and components you want to install.
  
  * Click to select or de-select any features you want to install
  * The Trakt and SubCentral Features are Optional
  http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-2.jpg 
  * Click the *Next* button to Continue
 
+The Plugin will now install the plugins 
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-3.jpg
 
-= Installation for MP 1.1.3 =
+When the installation is finished, the following screen is shown.
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-4.jpg
+
+The final screen notifies you that the setup has been finished successfully.
+
+ * Optionally - click "Launch MP-TVSeries Configuration" if you would like to go straight into the plugin's configuration screen
+ * Click Finish.
+
+= Installation for MP v1.1.3 =
 
 Before you begin, download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the setup.exe (Setup requires administrative privileges so you may be prompted to enter in credentials). 
