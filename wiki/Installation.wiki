@@ -19,6 +19,18 @@ MP-TVSeries works on both x86 and x64 operating system platforms. However only x
 
  == Install via Media Portal Extension Installer ==
 
+MP-TVSeries v3.1.0+ can now be installed via the Extension Installer. Note this requires MP v1.2 RC1+.
+
+Click Start, Programs, Team Mediaportal, Mediaportal and select the 
+Mediaportal Extension Installer
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-1.jpg
+
+Click 'Known extensions' Tab
+Select MP-TVSeries from the list
+Click 'Install'
+
+ http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-2.jpg
 
 
  == Install via Manual Download ==
