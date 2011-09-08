@@ -9,7 +9,7 @@ This guide is intended to guide you through the installation process of the MP-T
 Below is a list of pre-requisites that must be met before you can proceed to install the plugin.
 
 == Software ==
- * !MediaPortal v1.1.x or MediaPortal 1.2 Alpha
+ * !MediaPortal v1.1.x or MediaPortal 1.2 RC
  * Winzip/[http://www.rarlab.com/download.htm WinRAR] (for manual install)
  * Windows XP SP2+, Windows Vista SP1+, Windows 2003 SP2+, Windows 7
 
