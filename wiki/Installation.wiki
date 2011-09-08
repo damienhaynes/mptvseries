@@ -15,7 +15,7 @@ Below is a list of pre-requisites that must be met before you can proceed to ins
 
 MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
 
-= Installation =
+= Installation for MP 1.1.3 =
 
 Before you begin, download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the setup.exe (Setup requires administrative privileges so you may be prompted to enter in credentials). 
