@@ -74,6 +74,8 @@ The final screen notifies you that the setup has been finished successfully.
  * Optionally - click "Launch MP-TVSeries Configuration" if you would like to go straight into the plugin's configuration screen
  * Click Finish.
 
+----
+
 = Installation for MP v1.1.3 =
 
 Before you begin, download the latest setup package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
