@@ -115,7 +115,7 @@ The *Complete* screen notifies you that the setup has been finished successfully
 
  * Click to select or de-select any post installation tasks.
 
-= Maintenance MP v1.1.3 Installer=
+ == Maintenance MP v1.1.3 Installer==
 After MP-TVSeries is installed, if the setup.exe is run again or MP-TVSeries is selected from the Windows Control Panel *Add/Remove Programs* applet, the *Maintenance Welcome* screen is shown similar to the following:
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupModifyWelcome.jpg
 
@@ -126,13 +126,13 @@ Select one of the following radio buttons:
 
 Click the *Next* button to continue. Depending on what you have selected in the previous step, see the corresponding section below.
 
-== Modify MP v1.1.3 Installer==
+ === Modify MP v1.1.3 Installer ===
 If Modify is selected, you can go through the setup process again. It shows you the *Select Features* screen. You can modify the settings in all these screens and change your setup accordingly.
 
-== Repair MP v1.1.3 Installer ==
+ === Repair MP v1.1.3 Installer ===
 Repair should be used when MP-TVSeries is not working due to missing files. This can be caused by files that have been deleted or corrupted accidentally. Repair makes sure files and registry settings are copied and set correctly again. However, it does not allow you select or change features of the install. It will use the default setup settings initially and may reset installation parameters, a Modify should be run afterwards to re-configure the plugin.
 
-== Remove MP v1.1.3 Installer ==
+ === Remove MP v1.1.3 Installer ===
 When you select the Remove option, the setup wizard will prompt to confirm that you want to un-install:
  http://mptvseries.googlecode.com/svn/wiki/Images/SetupRemovePrompt.jpg
 
