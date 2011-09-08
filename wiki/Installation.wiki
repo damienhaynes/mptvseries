@@ -33,23 +33,22 @@ Click 'Install'
 Click the Version you want to install.
 Click 'Yes' to install the plugin.
 
-You will now be presented with a installation wizard, the same 
-as the below screenshots.
+http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-2.jpg
+
+You will now be presented with a Setup Wizard, as shown in the below
+screenshots.
 
 When you have finished the installation, close the Extension Installer.
 
- http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Extension-Installer-2.jpg
-
-
-
-
+ 
  == Install via Manual Download ==
 
 Before you begin, download the latest mpe1 package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the MP-TVSeries-3.xxx.mpe1 (Setup requires administrative privileges so you may be prompted to enter in credentials).
 
 Note: this mpe1 installer requires atleast 1.2 RC and will not install on MP 1.2Beta
-
+ 
+ === Setup Wizard ===
 
 The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
  http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-1.jpg
