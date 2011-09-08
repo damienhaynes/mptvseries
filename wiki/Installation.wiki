@@ -52,6 +52,8 @@ You will now be presented with a *Setup Wizard Installer*, as shown in the below
 ----
  
  = Setup Wizard Installer=
+  
+  == Installation ==
 
 The MP-TVSeries setup wizard shows the *Welcome* screen similar to this:
  http://mptvseries.googlecode.com/svn/wiki/Images/MPE1-Installer-1.jpg
@@ -73,6 +75,8 @@ The final screen notifies you that the setup has been finished successfully.
 
  * Optionally - click "Launch MP-TVSeries Configuration" if you would like to go straight into the plugin's configuration screen
  * Click Finish.
+
+ == Uninstall ==
 
 ----
 
