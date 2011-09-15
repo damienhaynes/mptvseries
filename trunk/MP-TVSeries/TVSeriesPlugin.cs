@@ -1785,7 +1785,7 @@ namespace WindowPlugins.GUITVSeries
             dlg.SetHeading("Trakt");
 
             GUIListItem listItem = null;
-
+            
             // Display TV Show Relavent Windows
 
             listItem = new GUIListItem(Translation.Calendar);
@@ -2211,6 +2211,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         bool bFacadeEmpty = true;
+        int itemsToDisplay = 0;
         private void prepareLoadFacade()
         {
             try
@@ -2482,6 +2483,18 @@ namespace WindowPlugins.GUITVSeries
 
             if (m_Facade == null)
                 return;
+
+            if (!bFacadeEmpty && m_Facade.Count == 0)
+            {
+                MPTVSeriesLog.Write("Facade is not suppose to be empty, retrying reload");
+                LoadFacade();
+            }
+
+            if (!bFacadeEmpty && this.listLevel == Listlevel.Episode && m_Facade.Count != itemsToDisplay)
+            {
+                MPTVSeriesLog.Write("Facade count is not correct, retrying reload");
+                LoadFacade();
+            }
 
             if (!CheckSkinFanartSettings()) DisableFanart();
 
@@ -2964,8 +2977,11 @@ namespace WindowPlugins.GUITVSeries
                             if (episodesToDisplay.Count == 0)
                                 bFacadeEmpty = true;
 
+                            itemsToDisplay = episodesToDisplay.Count;
+
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
+                                MPTVSeriesLog.Write(string.Format("Adding episode {0} to list", episode.ToString()), MPTVSeriesLog.LogLevel.Debug);
                                 try
                                 {
                                     //bEmpty = false;
