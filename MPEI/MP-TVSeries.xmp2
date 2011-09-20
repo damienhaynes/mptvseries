@@ -35,8 +35,8 @@
         </Files>
       </GroupItem>
       <GroupItem Name="DefaultSkin">
-        <ParentGroup>Skins</ParentGroup>
-        <DisplayName>Default</DisplayName>
+        <ParentGroup />
+        <DisplayName>Default Skin</DisplayName>
         <DefaulChecked>true</DefaulChecked>
         <Description>Default Skin (4:3) for MP-TVSeries.</Description>
         <Files>
@@ -346,8 +346,8 @@
         </Files>
       </GroupItem>
       <GroupItem Name="DefaultWideSkin">
-        <ParentGroup>Skins</ParentGroup>
-        <DisplayName>DefaultWide</DisplayName>
+        <ParentGroup />
+        <DisplayName>DefaultWide Skin</DisplayName>
         <DefaulChecked>true</DefaulChecked>
         <Description>Default Wide Skin (16:9) for MP-TVSeries.</Description>
         <Files>
@@ -733,36 +733,20 @@
           </Items>
         </Files>
       </GroupItem>
-      <GroupItem Name="Skins">
-        <ParentGroup />
-        <DisplayName>Skins</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
-        <Description>This feature contains MediaPortal default Skin support for the MP-TVSeries plugin</Description>
-        <Files>
-          <Items />
-        </Files>
-      </GroupItem>
-      <GroupItem Name="ExternalPlugins">
-        <ParentGroup />
-        <DisplayName>Plugins</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
-        <Description>External Plugins rececommended to use with MP-TVSeries plugin.</Description>
-        <Files>
-          <Items />
-        </Files>
-      </GroupItem>
       <GroupItem Name="TraktPlugin">
-        <ParentGroup>ExternalPlugins</ParentGroup>
-        <DisplayName>Trakt</DisplayName>
+        <ParentGroup />
+        <DisplayName>Trakt Plugin</DisplayName>
         <DefaulChecked>true</DefaulChecked>
-        <Description>Trakt for MediaPortal actively keeps a record of what TV shows and movies you are watching. Based on your favorites, your friends, and the community, trakt recommends other TV shows and movies.</Description>
+        <Description>Trakt for MediaPortal actively keeps a record of what TV shows and movies you are watching. Based on your favorites, your friends, and the community, trakt recommends other TV shows and movies.
+
+Trakt can also help you keep your watched flags in sync across multiple computers.</Description>
         <Files>
           <Items />
         </Files>
       </GroupItem>
       <GroupItem Name="SubCentralPlugin">
-        <ParentGroup>ExternalPlugins</ParentGroup>
-        <DisplayName>SubCentral</DisplayName>
+        <ParentGroup />
+        <DisplayName>SubCentral Plugin</DisplayName>
         <DefaulChecked>true</DefaulChecked>
         <Description>The purpose of the plugin is to allow user to search and download subtitles for movies or TV shows managed by popular Moving Pictures and MP-TVSeries plugins. It also has the interfaces to allow easy implementation and integration in any other plugin. </Description>
         <Files>
@@ -1042,8 +1026,6 @@ Click Next to continue or Cancel to exit Setup.
         </Actions>
         <IncludedGroups>
           <string>Language</string>
-          <string>Skins</string>
-          <string>ExternalPlugins</string>
           <string>DefaultSkin</string>
           <string>DefaultWideSkin</string>
           <string>TraktPlugin</string>
@@ -1114,7 +1096,7 @@ Click Next to continue or Cancel to exit Setup.
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="ClearSkinCache" ActionType="ClearSkinCache" ConditionGroup="Skins">
+            <ActionItem Name="ClearSkinCache" ActionType="ClearSkinCache" ConditionGroup="DefaultWideSkin">
               <Params>
                 <Items />
               </Params>
@@ -1530,18 +1512,18 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>1</Minor>
-      <Build>0</Build>
-      <Revision>1824</Revision>
+      <Build>1</Build>
+      <Revision>1858</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Created new MPEI Installer, supports external SubCentral and Trakt external extensions.
-* Improved OnImportCompleted event handler for external plugins. Parameter now only gets set if there is any new files added during import.
-* Fixed facade issues in external windows when tvseries importer is running.</VersionDescription>
+    <VersionDescription>* Fixed issue where incorrect number of episodes were shown after playback is stopped, also fixes issue where sometimes no episodes were displayed.
+
+* Updated Trakt MPEI package to v1.1.2.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.0.1824.mpe1</OnlineLocation>
-    <ReleaseDate>2011-09-07T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/[Name]-3.1.1.1858.mpe1</OnlineLocation>
+    <ReleaseDate>2011-09-20T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2457,28 +2439,28 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{10b95525-60eb-4f92-8caf-00f701ebb644}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{37862b77-88f7-4885-a9d2-fecaa1ea24b9}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{95c50a69-45d9-4ef5-997d-bd7e72f55a82}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{bf7fd126-69c7-457b-a210-b161607fd5c4}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0ce74faa-c7bf-4785-aefa-015219d3a886}-SubCentral.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{63a7c2ae-7239-45dd-9d17-2416fa07d230}-SubCentral.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{47d8e952-f45c-47fb-af13-9b0d36202a3a}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{0efd9e63-e255-4066-bddd-7c77d9fec0b7}-TraktPlugin.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
