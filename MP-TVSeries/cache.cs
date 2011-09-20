@@ -228,6 +228,7 @@ namespace WindowPlugins.GUITVSeries
         #region HierarchyCache Implementation
         class hierarchyCache<T, S, M> : ICacheable<T> where S : ICacheable<M>, new()
         {
+            System.Threading.ReaderWriterLockSlim _lock = new System.Threading.ReaderWriterLockSlim();
             T _Item = default(T);
             public Dictionary<int, S> subItems = new Dictionary<int, S>();
 
@@ -240,10 +241,16 @@ namespace WindowPlugins.GUITVSeries
 
             public void dummySubItems(M dummy)
             {
-                foreach(KeyValuePair<int, S> sub in subItems)
-                {
-                    currNoObjects--;
-                    sub.Value.fullItem = dummy;
+                try {
+                _lock.EnterReadLock();
+                    foreach (KeyValuePair<int, S> sub in subItems)
+                    {
+                        currNoObjects--;
+                        sub.Value.fullItem = dummy;
+                    }
+                } 
+                finally {
+                    _lock.ExitReadLock();
                 }
             }
 
@@ -256,8 +263,14 @@ namespace WindowPlugins.GUITVSeries
             public S getSubItem(int index)
             {
                 S result = default(S);
-                if (subItems.TryGetValue(index, out result))
-                    return result;
+                try {
+                    _lock.EnterReadLock();
+                    if (subItems.TryGetValue(index, out result))
+                        return result;
+                } 
+                finally {
+                    _lock.ExitReadLock();
+                }
                 return default(S);
             }
 
@@ -276,14 +289,26 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (subItem == null)
                     return;
-
-                if (!subItems.ContainsKey(key))
+                try
                 {
-                    subItems.Add(key, subItem);
-                    currNoObjects++;
-                    cache.sizeChanged();
+                    _lock.EnterUpgradeableReadLock();
+                    if (!subItems.ContainsKey(key))
+                    {
+                        try
+                        {
+                            _lock.EnterWriteLock();
+                            subItems.Add(key, subItem);
+                        }
+                        finally { _lock.ExitWriteLock(); }
+                        currNoObjects++;
+                        cache.sizeChanged();
+                    }
+                    else { subItems[key] = subItem; }
                 }
-                else { subItems[key] = subItem; }
+                finally
+                {
+                    _lock.ExitUpgradeableReadLock();
+                }
             }
 
             public void Add(int key, M subItem)
@@ -291,30 +316,58 @@ namespace WindowPlugins.GUITVSeries
                 if (subItem == null)
                     return;
 
-                if (!subItems.ContainsKey(key))
+                try
                 {
-                    S rawsubItem = new S();
-                    rawsubItem.fullItem = subItem;
-                    subItems.Add(key, rawsubItem);
-                    if (subItem != null)
+                    _lock.EnterUpgradeableReadLock();
+                    if (!subItems.ContainsKey(key))
                     {
-                        currNoObjects++;
-                        cache.sizeChanged();
+                        S rawsubItem = new S();
+                        rawsubItem.fullItem = subItem;
+                        try
+                        {
+                            _lock.EnterWriteLock();
+                            subItems.Add(key, rawsubItem);                        
+                        }
+                        finally { _lock.ExitWriteLock(); }
+                        if (subItem != null)
+                        {
+                            currNoObjects++;
+                            cache.sizeChanged();
+                        }
                     }
+                    else { subItems[key].fullItem = subItem; }
                 }
-                else { subItems[key].fullItem = subItem; }
-                
+                finally
+                {
+                    _lock.ExitUpgradeableReadLock();
+                }
             }
+
             public void AddDummy(int key)
             {
-                if (!subItems.ContainsKey(key))
-                    subItems.Add(key, new S());
+                try
+                {
+                    _lock.EnterUpgradeableReadLock();
+                    if (!subItems.ContainsKey(key))
+                    {
+                        try
+                        {
+                            _lock.EnterWriteLock();
+                            subItems.Add(key, new S());
+                        }
+                        finally { _lock.ExitWriteLock(); }                        
+                    }
+                }
+                finally
+                {
+                    _lock.ExitUpgradeableReadLock();
+                }
             }
 
             public override string ToString()
             {
                 return fullItem.ToString() + " Subitems: " + subItems.Count.ToString();
-            }
+            }      
         }
         #endregion
     }
