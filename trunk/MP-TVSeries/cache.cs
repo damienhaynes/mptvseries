@@ -182,10 +182,12 @@ namespace WindowPlugins.GUITVSeries
             if (episode == null) return;
             _cache.AddDummy(episode[DBSeason.cSeriesID]);
             singleSeriesRef = _cache.getSubItem(episode[DBSeason.cSeriesID]);
+            if (singleSeriesRef == null) return;
             singleSeriesRef.AddDummy(episode[DBSeason.cIndex]);
             // use addRaw for episode!!
             //MPTVSeriesLog.Write("Cache: Adding/Changing Episode: " + episode[DBEpisode.cCompositeID], MPTVSeriesLog.LogLevel.Debug);
-            singleSeriesRef.getSubItem(episode[DBSeason.cIndex]).AddRaw(episode[DBEpisode.cEpisodeIndex], episode);
+            var hc = singleSeriesRef.getSubItem(episode[DBSeason.cIndex]);
+            if (hc != null) hc.AddRaw(episode[DBEpisode.cEpisodeIndex], episode);
         }
 
         public static void addChangeSeries(DBSeries series)
@@ -201,7 +203,8 @@ namespace WindowPlugins.GUITVSeries
             // does the series exist already, if not create a dummy
             _cache.AddDummy(season[DBSeason.cSeriesID]);
             //MPTVSeriesLog.Write("Cache: Adding/Changing Season: " + season[DBSeason.cSeriesID] + " S" + season[DBSeason.cIndex], MPTVSeriesLog.LogLevel.Debug);
-            _cache.getSubItem(season[DBSeason.cSeriesID]).Add(season[DBSeason.cIndex], season);
+            var hc = _cache.getSubItem(season[DBSeason.cSeriesID]);
+            if (hc != null) hc.Add(season[DBSeason.cIndex], season);
         }
         #endregion
 
