@@ -43,6 +43,8 @@ using System.Xml;
 using WindowPlugins.GUITVSeries.GUI;
 using WindowPlugins.GUITVSeries.FollwitTv;
 using TraktPlugin.TraktAPI;
+using TraktPlugin.TraktHandlers;
+using TraktPlugin.TraktAPI.DataStructures;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -377,11 +379,14 @@ namespace WindowPlugins.GUITVSeries
 
         public enum TraktMenuItems
         {
-            Calendar = 100,
+            MainMenu = 100,
+            Calendar,
             Recommendations,
             Trending,
             WatchList,
-            Shouts
+            Shouts,
+            AddToWatchList,
+            Rate
         }
 
         enum Listlevel
@@ -1748,6 +1753,82 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        #region Trakt Menu
+
+        protected bool CheckTraktLogin()
+        {
+            if (TraktPlugin.TraktSettings.AccountStatus != ConnectionState.Connected)
+            {
+                if (TraktPlugin.GUI.GUIUtils.ShowYesNoDialog(TraktPlugin.GUI.Translation.Login, Translation.TraktNotLoggedIn, true))
+                {
+                    // Launch Trakt Account Settings window
+                    GUIWindowManager.ActivateWindow(87272);
+                }
+                return false;
+            }
+            return true;
+        }
+
+        protected void RateTraktItem()
+        {
+            if (!CheckTraktLogin()) return;
+
+            if (listLevel != Listlevel.Episode)
+            {
+                TraktPlugin.GUI.GUIUtils.ShowRateDialog<TraktRateSeries>(BasicHandler.CreateShowRateData(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries[DBSeries.cID]));
+            }
+            else
+            {
+                TraktRateEpisode rateObj = BasicHandler.CreateEpisodeRateData
+                (
+                    m_SelectedSeries[DBOnlineSeries.cPrettyName], 
+                    m_SelectedEpisode[DBOnlineEpisode.cSeriesID], 
+                    m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], 
+                    m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]
+                );
+                TraktPlugin.GUI.GUIUtils.ShowRateDialog<TraktRateEpisode>(rateObj);
+            }
+        }
+
+        protected void AddItemToWatchList()
+        {
+            if (!CheckTraktLogin()) return;
+
+            Thread syncThread = new Thread(delegate(object obj)
+            {
+                TraktResponse response = null;
+
+                if (listLevel != Listlevel.Episode)
+                {
+                    response = TraktAPI.SyncShowWatchList(BasicHandler.CreateShowSyncData(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedSeries[DBSeries.cID]), TraktSyncModes.watchlist);
+                    if (response != null && response.Status == "success")
+                        TraktPlugin.GUI.GUIWatchListShows.ClearCache(TraktPlugin.TraktSettings.Username);
+                }
+                else
+                {
+                    List<TraktEpisodeSync.Episode> episodeList = new List<TraktEpisodeSync.Episode>();
+                    episodeList.Add(new TraktEpisodeSync.Episode { EpisodeIndex = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], SeasonIndex = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex] });
+
+                    TraktEpisodeSync syncData = new TraktEpisodeSync
+                    {
+                        UserName = TraktPlugin.TraktSettings.Username,
+                        Password = TraktPlugin.TraktSettings.Password,
+                        Title = m_SelectedSeries[DBOnlineSeries.cPrettyName],
+                        Year = m_SelectedSeries.Year,
+                        SeriesID = m_SelectedEpisode[DBOnlineEpisode.cSeriesID],
+                        EpisodeList = episodeList
+                    };
+                    response = TraktAPI.SyncEpisodeWatchList(syncData, TraktSyncModes.watchlist);
+                }
+            })
+            {
+                IsBackground = true,
+                Name = "Adding Item to Watch List"
+            };
+
+            syncThread.Start();
+        }
+
         protected void ShowTraktShouts()
         {
             if (listLevel != Listlevel.Episode)
@@ -1788,6 +1869,10 @@ namespace WindowPlugins.GUITVSeries
             
             // Display TV Show Relavent Windows
 
+            listItem = new GUIListItem(Translation.MainMenu);
+            dlg.Add(listItem);
+            listItem.ItemId = (int)TraktMenuItems.MainMenu;
+
             listItem = new GUIListItem(Translation.Calendar);
             dlg.Add(listItem);
             listItem.ItemId = (int)TraktMenuItems.Calendar;
@@ -1804,9 +1889,38 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(listItem);
             listItem.ItemId = (int)TraktMenuItems.WatchList;
 
-            listItem = new GUIListItem(Translation.Shouts);
-            dlg.Add(listItem);
-            listItem.ItemId = (int)TraktMenuItems.Shouts;
+            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Episode)
+            {
+                listItem = new GUIListItem(Translation.Shouts);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.Shouts;
+            }
+
+            if (this.listLevel == Listlevel.Series)
+            {
+                listItem = new GUIListItem(string.Format(Translation.AddToWatchList, Translation.Series));
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.AddToWatchList;
+            }
+            else if (this.listLevel == Listlevel.Episode)
+            {
+                listItem = new GUIListItem(string.Format(Translation.AddToWatchList, Translation.Episode));
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.AddToWatchList;
+            }
+
+            if (this.listLevel == Listlevel.Series)
+            {
+                listItem = new GUIListItem(Translation.RateSeries);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.Rate;
+            }
+            else if (this.listLevel == Listlevel.Episode)
+            {
+                listItem = new GUIListItem(Translation.RateEpisode);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.Rate;
+            }
 
             // Show Context Menu
             dlg.DoModal(GUIWindowManager.ActiveWindow);
@@ -1814,6 +1928,11 @@ namespace WindowPlugins.GUITVSeries
 
             switch (dlg.SelectedId)
             {
+                case ((int)TraktMenuItems.MainMenu):
+                    // Jump to Trakt Main Menu Window
+                    GUIWindowManager.ActivateWindow(87258);
+                    break;
+
                 case ((int)TraktMenuItems.Calendar):
                     // Jump to Trakt Calendar Window
                     GUIWindowManager.ActivateWindow(87259);
@@ -1839,10 +1958,22 @@ namespace WindowPlugins.GUITVSeries
                     ShowTraktShouts();
                     break;
 
+                case ((int)TraktMenuItems.AddToWatchList):
+                    // Add series/episode to personal Watchlist
+                    AddItemToWatchList();
+                    break;
+
+                case ((int)TraktMenuItems.Rate):
+                    // Rate series/episode
+                    RateTraktItem();
+                    break;
+
                 default:
                     break;
             }        
         }
+
+        #endregion
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
