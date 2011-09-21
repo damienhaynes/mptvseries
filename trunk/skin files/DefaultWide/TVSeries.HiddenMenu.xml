@@ -136,52 +136,27 @@
 						<visible>plugin.isenabled(SubCentral)+control.isvisible(1239)</visible>
 					</control>
 					<control>
-						<description>Trakt Calendar</description>
+						<description>Trakt</description>
 						<type>button</type>
 						<id>99991</id>
-						<label>#Trakt.Translation.Calendar.Label</label>
-						<hyperlink>87259</hyperlink>
+						<label>Trakt</label>
+						<hyperlink>87258</hyperlink>
 						<onup>66612</onup>
-						<ondown>99992</ondown>
+						<ondown>99999</ondown>
 						<onleft>50</onleft>
 						<width>310</width>
 						<visible>plugin.isenabled(Trakt)</visible>
 					</control>
-					<control>
-						<description>Trakt Recommendations</description>
+          <control>
+						<description>MPEIUPDATE:5e2777c3_966c_407f_b5a9_e51205b70b3e</description>
 						<type>button</type>
-						<id>99992</id>
-						<label>#Trakt.Translation.Recommendations.Label</label>
-						<hyperlink>87262</hyperlink>
+						<id>99999</id>
+						<label>#MPEI.Translation.UpdateAvailable.Label</label>
 						<onup>99991</onup>
-						<ondown>99993</ondown>
-						<onleft>50</onleft>
-						<width>310</width>
-						<visible>plugin.isenabled(Trakt)</visible>
-					</control>
-					<control>
-						<description>Trakt Trending</description>
-						<type>button</type>
-						<id>99993</id>
-						<label>#Trakt.Translation.Trending.Label</label>
-						<hyperlink>87265</hyperlink>
-						<onup>99992</onup>
-						<ondown>99994</ondown>
-						<onleft>50</onleft>
-						<width>310</width>
-						<visible>plugin.isenabled(Trakt)</visible>
-					</control>
-					<control>
-						<description>Trakt Watch List</description>
-						<type>button</type>
-						<id>99994</id>
-						<label>#Trakt.Translation.WatchList.Label</label>
-						<hyperlink>87268</hyperlink>
-						<onup>99993</onup>
 						<ondown>2</ondown>
 						<onleft>50</onleft>
-						<width>310</width>
-						<visible>plugin.isenabled(Trakt)</visible>
+						<width>310</width>            
+						<visible>string.equals(#mpei.5e2777c3_966c_407f_b5a9_e51205b70b3e.haveupdate,true)+control.isvisible(1237)</visible>
 					</control>
 				</control>
 				<control>
@@ -192,7 +167,7 @@
 					<font>font10</font>
 					<posX>71</posX>
 					<posY>615</posY>
-					<textcolor>ffffffff</textcolor>					
+					<textcolor>ffffffff</textcolor>
 				</control>
 				<control>
 					<id>0</id>
