@@ -1513,17 +1513,23 @@ public class Script
       <Major>3</Major>
       <Minor>1</Minor>
       <Build>1</Build>
-      <Revision>1858</Revision>
+      <Revision>1864</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
     <VersionDescription>* Fixed issue where incorrect number of episodes were shown after playback is stopped, also fixes issue where sometimes no episodes were displayed.
 
-* Updated Trakt MPEI package to v1.1.2.</VersionDescription>
+* Fixed crash in cache when navigating views. Typically seen if using Filmstrip/Coverflow layouts in season view.
+
+* Added Trakt Main Menu, Rate and Add to Watchlist items in context menu.
+
+* Updated Trakt MPEI package to v1.1.3.
+
+* Added a button to DefaultWide skins HiddenMenu which allows you to upgrade TVSereis via the Extensions plugin if an update is available.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/[Name]-3.1.1.1858.mpe1</OnlineLocation>
-    <ReleaseDate>2011-09-20T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.1.1864.mpe1</OnlineLocation>
+    <ReleaseDate>2011-09-22T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2439,28 +2445,28 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{37862b77-88f7-4885-a9d2-fecaa1ea24b9}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{02b02267-ef49-405d-ae81-769e35329794}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{bf7fd126-69c7-457b-a210-b161607fd5c4}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{7d937f7d-4e2a-4b00-b722-8daedd91d925}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{63a7c2ae-7239-45dd-9d17-2416fa07d230}-SubCentral.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{2e74f776-0f34-47aa-98ce-56b655ff304e}-SubCentral.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0efd9e63-e255-4066-bddd-7c77d9fec0b7}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{fb7675e7-6fae-486b-9747-8bc4f3c77e59}-TraktPlugin.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
