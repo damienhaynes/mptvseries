@@ -241,15 +241,17 @@ namespace WindowPlugins.GUITVSeries
 
             public void dummySubItems(M dummy)
             {
-                try {
-                _lock.EnterReadLock();
+                try
+                {
+                    _lock.EnterReadLock();
                     foreach (KeyValuePair<int, S> sub in subItems)
                     {
                         currNoObjects--;
                         sub.Value.fullItem = dummy;
                     }
-                } 
-                finally {
+                }
+                finally
+                {
                     _lock.ExitReadLock();
                 }
             }
@@ -263,7 +265,8 @@ namespace WindowPlugins.GUITVSeries
             public S getSubItem(int index)
             {
                 S result = default(S);
-                try {
+                try
+                {
                     _lock.EnterReadLock();
                     if (subItems.TryGetValue(index, out result))
                         return result;
@@ -299,11 +302,17 @@ namespace WindowPlugins.GUITVSeries
                             _lock.EnterWriteLock();
                             subItems.Add(key, subItem);
                         }
-                        finally { _lock.ExitWriteLock(); }
+                        finally
+                        {
+                            _lock.ExitWriteLock();
+                        }
                         currNoObjects++;
                         cache.sizeChanged();
                     }
-                    else { subItems[key] = subItem; }
+                    else
+                    {
+                        subItems[key] = subItem;
+                    }
                 }
                 finally
                 {
@@ -326,16 +335,22 @@ namespace WindowPlugins.GUITVSeries
                         try
                         {
                             _lock.EnterWriteLock();
-                            subItems.Add(key, rawsubItem);                        
+                            subItems.Add(key, rawsubItem);
                         }
-                        finally { _lock.ExitWriteLock(); }
+                        finally
+                        {
+                            _lock.ExitWriteLock();
+                        }
                         if (subItem != null)
                         {
                             currNoObjects++;
                             cache.sizeChanged();
                         }
                     }
-                    else { subItems[key].fullItem = subItem; }
+                    else
+                    {
+                        subItems[key].fullItem = subItem;
+                    }
                 }
                 finally
                 {
@@ -355,7 +370,10 @@ namespace WindowPlugins.GUITVSeries
                             _lock.EnterWriteLock();
                             subItems.Add(key, new S());
                         }
-                        finally { _lock.ExitWriteLock(); }                        
+                        finally
+                        {
+                            _lock.ExitWriteLock();
+                        }
                     }
                 }
                 finally
@@ -367,7 +385,7 @@ namespace WindowPlugins.GUITVSeries
             public override string ToString()
             {
                 return fullItem.ToString() + " Subitems: " + subItems.Count.ToString();
-            }      
+            }
         }
         #endregion
     }
