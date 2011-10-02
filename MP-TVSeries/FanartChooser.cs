@@ -98,6 +98,7 @@ namespace WindowPlugins.GUITVSeries
         BackgroundWorker loadingWorker = null; // to fetch list and thumbnails
         public static BackgroundWorker downloadingWorker = new BackgroundWorker(); // to do the actual downloading
         static Queue<DBFanart> toDownload = new Queue<DBFanart>();
+        private object locker = new object();
         int m_PreviousSelectedItem = -1;
         private View currentView = View.LargeIcons;
         bool m_bQuickSelect = false;
@@ -1030,26 +1031,29 @@ namespace WindowPlugins.GUITVSeries
 
             string preview = string.Empty;
             
-            if (fanart.isAvailableLocally)
+            lock (locker)
             {
-                // Ensure Fanart on Disk is valid as well
-                if (ImageAllocator.LoadImageFastFromFile(fanart.FullLocalPath) == null)
+                if (fanart.isAvailableLocally)
                 {
-                    MPTVSeriesLog.Write("Fanart is invalid, deleting...");
-                    fanart.Delete();
-                    fanart.Chosen = false;
-                    m_Facade.SelectedListItem.Label = Translation.FanArtOnline;
-                }                    
+                    // Ensure Fanart on Disk is valid as well
+                    if (ImageAllocator.LoadImageFastFromFile(fanart.FullLocalPath) == null)
+                    {
+                        MPTVSeriesLog.Write("Fanart is invalid, deleting...");
+                        fanart.Delete();
+                        fanart.Chosen = false;
+                        m_Facade.SelectedListItem.Label = Translation.FanArtOnline;
+                    }                    
                 
-                // Should be safe to assign fullsize fanart if available
-                preview = fanart.isAvailableLocally ?
-                          ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
-                          m_Facade.SelectedListItem.IconImageBig;
-            }
-            else
-                preview = m_Facade.SelectedListItem.IconImageBig;
+                    // Should be safe to assign fullsize fanart if available
+                    preview = fanart.isAvailableLocally ?
+                              ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
+                              m_Facade.SelectedListItem.IconImageBig;
+                }
+                else
+                    preview = m_Facade.SelectedListItem.IconImageBig;
                       
-            TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
+                TVSeriesPlugin.setGUIProperty("FanArt.SelectedPreview", preview);
+            }
         }
 
     }

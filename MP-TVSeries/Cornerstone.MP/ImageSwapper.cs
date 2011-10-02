@@ -38,7 +38,7 @@ namespace Cornerstone.MP {
     /// 
     /// This class also uses the AsyncImageResource class for asynchronus image loading, 
     /// dramtically improving GUI performance. It also takes advantage of the Delay feature of
-    /// the AsyncImageResource to prevent unneccisary loads when rapid image changes are made.
+    /// the AsyncImageResource to prevent unnecessary loads when rapid image changes are made.
     /// </summary>
     public class ImageSwapper {       
         private bool imagesNeedSwapping = false;
@@ -63,6 +63,7 @@ namespace Cornerstone.MP {
                     MPTVSeriesLog.Write("ImageSwapper: Clearing Properties");
                     _imageResource.Property = _propertyTwo;
                     _imageResource.Property = _propertyOne;
+                    _imageResource.Filename = null;
                 }
             }
         }
