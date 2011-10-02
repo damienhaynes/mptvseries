@@ -70,7 +70,7 @@ namespace Cornerstone.MP {
 
         /// <summary>
         /// If multiple changes to the Filename property are made in rapid succession, this delay
-        /// will be used to prevent uneccisary loading operations. Most useful for large images that
+        /// will be used to prevent unecessary loading operations. Most useful for large images that
         /// take a non-trivial amount of time to load from memory.
         /// </summary>
         public int Delay {
@@ -140,6 +140,9 @@ namespace Cornerstone.MP {
             }
 
             set {
+                if (value == null)
+                    value = " ";
+
                 Thread newThread = new Thread(new ParameterizedThreadStart(setFilenameWorker));
                 newThread.Name = "AsyncImageResource.setFilenameWorker";
                 newThread.Start(value);
@@ -225,8 +228,7 @@ namespace Cornerstone.MP {
             if (!_active || filename == null || !File.Exists(filename))
                 return false;
 
-            try
-            {
+            try {
                 if (GUITextureManager.Load(filename, 0, 0, 0, true) > 0)
                     return true;
             }
@@ -254,6 +256,7 @@ namespace Cornerstone.MP {
             // if not available load image ourselves and pass to MediaPortal. Much slower but this still
             // gives us asynchronous loading. 
             Image image = LoadImageFastFromFile(filename);
+            //MPTVSeriesLog.WriteMultiLine("AsyncImageResource LoadFromMemory - " + Environment.StackTrace, MPTVSeriesLog.LogLevel.Debug);
             if (GUITextureManager.LoadFromMemory(image, getIdentifier(filename), 0, 0, 0) > 0) {
                 return getIdentifier(filename);
             }
@@ -300,7 +303,7 @@ namespace Cornerstone.MP {
                     image = (Image)typeof(Bitmap).InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { imagePtr });
             }
             catch (Exception) {
-                MPTVSeriesLog.Write("AsyncImageResource: Failed to load image from ", filename, MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("AsyncImageResource: Failed to load image from {0}", filename, MPTVSeriesLog.LogLevel.Normal);
                 image = null;
             }
 

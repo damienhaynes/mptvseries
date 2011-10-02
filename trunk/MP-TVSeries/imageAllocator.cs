@@ -128,6 +128,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (String.IsNullOrEmpty(sFileName) || !System.IO.File.Exists(sFileName)) return string.Empty;
                 string ident = buildIdentifier(sFileName);
+                //MPTVSeriesLog.WriteMultiLine("AsyncImageResource LoadFromMemory - " + Environment.StackTrace, MPTVSeriesLog.LogLevel.Debug);
                 if (GUITextureManager.LoadFromMemory(null, ident, 0, size.Width, size.Height) > 0) return ident;
                 else return buildMemoryImage(LoadImageFastFromFile(sFileName), ident, size, false);
             }
@@ -163,6 +164,7 @@ namespace WindowPlugins.GUITVSeries
                     image = Resize(image, size);                                        
                 }
                 PerfWatcher.GetNamedWatch("add to TextureManager").Start();
+                //MPTVSeriesLog.WriteMultiLine("AsyncImageResource LoadFromMemory - " + Environment.StackTrace, MPTVSeriesLog.LogLevel.Debug);
                 GUITextureManager.LoadFromMemory(image, name, 0, size.Width, size.Height);
                 PerfWatcher.GetNamedWatch("add to TextureManager").Stop();
             }
