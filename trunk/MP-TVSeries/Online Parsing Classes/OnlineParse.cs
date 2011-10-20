@@ -1630,11 +1630,13 @@ namespace WindowPlugins.GUITVSeries
 
                 // Get all online episodes that have a image but not yet downloaded                
                 string query = string.Empty;
-                if (Settings.isConfig)
-                    // Be more thorough in configuration, user may have deleted thumbs locally
-                    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
-                else
-                    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
+                // be more thorough everywhere, images might be broken or deleted
+                //if (Settings.isConfig)
+                //    // Be more thorough in configuration, user may have deleted thumbs locally
+                //    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
+                //else
+                //    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
+                query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
 
                 List<DBEpisode> episodes = DBEpisode.Get(query);
 
@@ -1659,12 +1661,13 @@ namespace WindowPlugins.GUITVSeries
                             sThumbNailFilename = Helper.PathCombine(seriesFolder, @"Episodes\" + episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg");
                             completePath = Helper.PathCombine(basePath, sThumbNailFilename);
 
-                            if (!File.Exists(completePath)) 
+                            if (!File.Exists(completePath)
+                                || ImageAllocator.LoadImageFastFromFile(completePath) == null) // or the file is damaged
                             {
                                 MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]), MPTVSeriesLog.LogLevel.Debug);
                                 System.Net.WebClient webClient = new System.Net.WebClient();
                                 webClient.Headers.Add("user-agent", Settings.UserAgent);
-								//webClient.Headers.Add("referer", "http://thetvdb.com/");
+                                //webClient.Headers.Add("referer", "http://thetvdb.com/");
                                 string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
                                 try 
                                 {
@@ -1678,7 +1681,7 @@ namespace WindowPlugins.GUITVSeries
                                     } 
                                     else 
                                     {
-										MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
+                                        MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
                                         webClient.DownloadFile(url, completePath);
 
                                         m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), ++nIndex, episodes.Count, episode, completePath));

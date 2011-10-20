@@ -60,6 +60,9 @@ namespace WindowPlugins.GUITVSeries
         static Size reqSeasonPosterSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonBanners) / 100);
         static Size reqSeasonPosterCFSize = new Size(400 * DBOption.GetOptions(DBOption.cQualitySeasonCoverflow) / 100, 578 * DBOption.GetOptions(DBOption.cQualitySeasonCoverflow) / 100);
         static float reqEpisodeImagePercentage = (float)(DBOption.GetOptions(DBOption.cQualityEpisodeImages)) / 100f;
+        static Size DefPosterSize = new Size(680, 1000);
+        static Size DefBannerSize = new Size(758, 140);
+        static Size DefSeasonPosterSize = new Size(400, 578);
 
         static ImageAllocator()
         {
@@ -92,28 +95,56 @@ namespace WindowPlugins.GUITVSeries
         /// <returns>The new banner.</returns>
         private static Bitmap drawNewBanner(string origBanner, ImageType type)
         {
-            string newStampLocation = GUIGraphicsContext.Skin + @"\Media\tvseries_newlabel.png";
-            Bitmap image = new Bitmap(LoadImageFastFromFile(origBanner));
-            Graphics gph = Graphics.FromImage(image);
+          Image mainImage = LoadImageFastFromFile(origBanner);
+          if (mainImage == null)
+          {
+            return null;
+          }
 
-            if (System.IO.File.Exists(newStampLocation))
+          Bitmap image = new Bitmap(mainImage);
+          return drawNewBanner(image, type);
+        }
+
+        /// <summary>
+        /// Drawing a 'NEW' stamp on top of an existing banner.
+        /// </summary>
+        /// <param name="origBanner">Original banner.</param>
+        /// <returns>The new banner.</returns>
+        private static Bitmap drawNewBanner(Bitmap origBanner, ImageType type)
+        {
+            if (origBanner == null)
             {
-                Bitmap newStamp = new Bitmap(LoadImageFastFromFile(newStampLocation));
-                if (type == ImageType.poster)
-                    gph.DrawImage(newStamp, SkinSettings.PosterNewStampPosX, SkinSettings.PosterNewStampPosY);
+                return null;
+            }
+
+            string newStampLocation = GUIGraphicsContext.Skin + @"\Media\tvseries_newlabel.png";
+            Image newImage = LoadImageFastFromFile(newStampLocation);
+
+            Graphics gph = Graphics.FromImage(origBanner);
+            try
+            {
+                if (newImage != null)
+                {
+                  Bitmap newStamp = new Bitmap(newImage);
+                  if (type == ImageType.poster)
+                      gph.DrawImage(newStamp, SkinSettings.PosterNewStampPosX, SkinSettings.PosterNewStampPosY);
+                  else
+                      gph.DrawImage(newStamp, SkinSettings.WideBannerNewStampPosX, SkinSettings.WideBannerNewStampPosY);
+                }
                 else
-                    gph.DrawImage(newStamp, SkinSettings.WideBannerNewStampPosX, SkinSettings.WideBannerNewStampPosY);
+                {
+                    gph.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), new Rectangle(((origBanner.Width - 200) / 2), ((origBanner.Height - 100) / 2), 200, 100));
+                    GUIFont fontList = GUIFontManager.GetFont(s_sFontName);
+                    Font font = new Font(fontList.FontName, 50);
+                    gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                    gph.DrawString("New", font, new SolidBrush(Color.FromArgb(200, Color.Red)), ((origBanner.Width - 180) / 2), (origBanner.Height - font.GetHeight()) / 2);
+                }
             }
-            else
+            finally
             {
-                gph.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.White)), new Rectangle(((image.Width - 200) / 2), ((image.Height - 100) / 2), 200, 100));
-                GUIFont fontList = GUIFontManager.GetFont(s_sFontName);
-                Font font = new Font(fontList.FontName, 50);
-                gph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                gph.DrawString("New", font, new SolidBrush(Color.FromArgb(200, Color.Red)), ((image.Width - 180) / 2), (image.Height - font.GetHeight()) / 2);
+                gph.Dispose();
             }
-            gph.Dispose();
-            return image;
+            return origBanner;
         }
 
         /// <summary>
@@ -215,7 +246,8 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Sets or gets the default Series banner size with which banners will be loaded into memory
         /// </summary>
-        public static Size SetSeriesBannerSize {
+        public static Size SetSeriesBannerSize
+        {
             set { reqSeriesBannerSize = value; } 
             get { return reqSeriesBannerSize;} 
         }
@@ -223,7 +255,8 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Sets or gets the default Season banner size with which filmstrip posters will be loaded into memory
         /// </summary>
-        public static Size SetSeasonPosterSize { 
+        public static Size SetSeasonPosterSize
+        { 
             set { reqSeasonPosterSize = value; } 
             get { return reqSeasonPosterSize; } 
         }
@@ -240,7 +273,8 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Sets or gets the default Series poster size with which Filmstrip posters will be loaded into memory
         /// </summary>
-        public static Size SetSeriesPosterSize { 
+        public static Size SetSeriesPosterSize
+        { 
             set { reqSeriesPosterSize = value; } 
             get { return reqSeriesPosterSize; } 
         }
@@ -254,7 +288,8 @@ namespace WindowPlugins.GUITVSeries
             get { return reqSeriesPosterCFSize; }
         }
 
-        public static String GetSeriesBanner(DBSeries series) {
+        public static String GetSeriesBanner(DBSeries series)
+        {
             string sFileName = series.Banner;;
             string sTextureName = string.Empty;
             
@@ -290,11 +325,17 @@ namespace WindowPlugins.GUITVSeries
                         sTextureName = buildMemoryImageFromFile(sFileName, reqSeriesBannerSize);
                 }
             }
-            else 
+            
+            if (string.IsNullOrEmpty(sTextureName))
             {                
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
-                sTextureName = buildMemoryImage(drawSimpleBanner(reqSeriesBannerSize, series[DBOnlineSeries.cPrettyName]), ident, reqSeriesBannerSize, true);
+                Bitmap b = drawSimpleBanner(DefBannerSize, series[DBOnlineSeries.cPrettyName]); // create "full" size banner so we can stamp new on it
+                if (ShowNewImage)
+                {
+                    drawNewBanner(b, ImageType.widebanner);
+                }
+                sTextureName = buildMemoryImage(b, ident, reqSeriesBannerSize, true);
             }
 
             if(sTextureName.Length > 0 && !s_SeriesImageList.Contains(sTextureName)) 
@@ -303,7 +344,8 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
-        public static String GetSeriesPoster(DBSeries series, bool isCoverflow) {
+        public static String GetSeriesPoster(DBSeries series, bool isCoverflow)
+        {
             string sFileName = series.Poster;;
             string sTextureName = string.Empty;
 
@@ -322,8 +364,8 @@ namespace WindowPlugins.GUITVSeries
 
             Size size = isCoverflow ? reqSeriesPosterCFSize : reqSeriesPosterSize;
 
-            if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) {
-
+            if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
+            {
                 if (ShowNewImage)
                 {
                     //make banner with new tag
@@ -341,10 +383,17 @@ namespace WindowPlugins.GUITVSeries
                         sTextureName = buildMemoryImageFromFile(sFileName, size);
                 }
             }
-            else {
+
+            if (string.IsNullOrEmpty(sTextureName))
+            {
                 // no image, use text, create our own
                 string ident = "series_" + series[DBSeries.cID];
-                sTextureName = buildMemoryImage(drawSimpleBanner(size, series[DBOnlineSeries.cPrettyName]), ident, size, true);
+                Bitmap b = drawSimpleBanner(DefPosterSize, series[DBOnlineSeries.cPrettyName]); // create "full" size poster so we can stamp new on it
+                if (ShowNewImage)
+                {
+                    drawNewBanner(b, ImageType.poster);
+                }
+                sTextureName = buildMemoryImage(b, ident, size, true);
             }
 
             if (sTextureName.Length > 0 && !s_SeriesImageList.Contains(sTextureName)) 
@@ -353,11 +402,13 @@ namespace WindowPlugins.GUITVSeries
             return sTextureName;
         }
 
-        public static String GetSeriesBannerAsFilename(DBSeries series) {            
+        public static String GetSeriesBannerAsFilename(DBSeries series)
+        {            
             return series.Banner;
         }
 
-        public static String GetSeriesPosterAsFilename(DBSeries series) {
+        public static String GetSeriesPosterAsFilename(DBSeries series)
+        {
             return series.Poster;
         }
 
@@ -366,7 +417,7 @@ namespace WindowPlugins.GUITVSeries
             Size size = isCoverflow ? reqSeasonPosterCFSize : reqSeasonPosterSize;
 
             String sFileName = season.Banner;
-            String sTextureName;
+            String sTextureName = null;
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName))
             {
                 if (DBOption.GetOptions(DBOption.cAltImgLoading)) 
@@ -374,7 +425,8 @@ namespace WindowPlugins.GUITVSeries
                 else
                     sTextureName = buildMemoryImageFromFile(sFileName, size);
             }
-            else if (createIfNotExist)
+            
+            if (createIfNotExist && string.IsNullOrEmpty(sTextureName))
             {
                 // no image, use text, create our own
                 string text = (season[DBSeason.cIndex] == 0) ? Translation.specials : Translation.Season + season[DBSeason.cIndex];
@@ -438,14 +490,17 @@ namespace WindowPlugins.GUITVSeries
             FlushSeasons();
             FlushSeries();
         }
+
         public static void FlushSeries()
         {
             Flush(s_SeriesImageList);
         }
+
         public static void FlushSeasons()
         {
             Flush(s_SeasonsImageList);
         }
+ 
         public static void FlushOthers(bool bFlushPersistents)
         {
             Flush(s_OtherDiscardableImageList);
