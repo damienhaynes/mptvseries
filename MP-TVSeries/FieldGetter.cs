@@ -97,7 +97,7 @@ namespace WindowPlugins.GUITVSeries
                                        if (field.Contains("<Episode.SeasonIndex>") || field.Contains("<Episode.EpisodeIndex>"))
                                        {
                                            DBSeries s = Helper.getCorrespondingSeries(e[DBOnlineEpisode.cSeriesID]);
-                                           if (s[DBOnlineSeries.cEpisodeSortOrder] == "DVD") return true;
+                                           if (null != s && s[DBOnlineSeries.cEpisodeSortOrder] == "DVD") return true;
                                        }
                                        return false;
                                    },

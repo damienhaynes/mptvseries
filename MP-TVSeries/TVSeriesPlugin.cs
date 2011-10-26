@@ -2713,56 +2713,40 @@ namespace WindowPlugins.GUITVSeries
                             // view handling
                             List<string> items = m_CurrLView.getGroupItems(m_CurrViewStep, m_stepSelection);
 
-                            setGUIProperty(guiProperty.GroupCount, items.Count.ToString());
-                            setGUIProperty("#itemcount", items.Count.ToString());
-
-                            if (items.Count == 0)
-                                bFacadeEmpty = true;
-
-                            for (int index = 0; index < items.Count; index++)
+                            //for (int index = 0; index < items.Count; index++)
+                            foreach (string itemStr in items)
                             {
-                                item = new GUIListItem(items[index]);
-                                if (item.Label.Length == 0) item.Label = Translation.Unknown;
-                                item.TVTag = items[index];
-
-                                if (graphical || DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                if (bg.CancellationPending) return;
+                                try 
                                 {
-                                    // also display fist logo in list directly
-                                    item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
+                                    item = new GUIListItem(itemStr);
+                                    if (item.Label.Length == 0) item.Label = Translation.Unknown;
+                                    item.TVTag = itemStr;
+
+                                    if (graphical || DBOption.GetOptions(DBOption.cAppendFirstLogoToList))
+                                    {
+                                        // also display fist logo in list directly
+                                        item.IconImage = item.IconImageBig = localLogos.getLogos(m_CurrLView.groupedInfo(m_CurrViewStep), item.Label, 0, 0);
+                                    }
+
+                                    ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, count, item);
+
+                                    if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
+                                      selectedIndex = count;
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    //string groupedBy = m_CurrLView.groupedInfo(m_CurrViewStep);
-                                    //SQLCondition cond = new SQLCondition();
-                                    //if (m_CurrLView.m_steps[m_CurrViewStep].groupedBy.attempSplit && item.Label != Translation.Unknown)
-                                    //{
-                                    //    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""), item.Label, SQLConditionType.Like);
-                                    //}
-                                    //else
-                                    //{
-                                    //    cond.Add(new DBOnlineSeries(), groupedBy.Substring(groupedBy.IndexOf('.') + 1).Replace(">", ""),
-                                    //             (item.Label == Translation.Unknown ? string.Empty : item.Label),
-                                    //              SQLConditionType.Equal);
-                                    //}
-                                    //if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
-                                    //{
-                                    //    // not generic
-                                    //    SQLCondition fullSubCond = new SQLCondition();
-                                    //    fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
-                                    //    cond.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
-                                    //}
-                                    //cond.AddCustom("exists ( select id from local_series where id = online_series.id and hidden = 0)");
-                                    //List<DBValue> seriesInGroup = DBOnlineSeries.GetSingleField(DBOnlineSeries.cPrettyName, cond, new DBOnlineSeries());
-                                    //item.Label3 = string.Format("{0} {1}", seriesInGroup.Count.ToString(), Translation.Series_Plural);
-
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying group list item: " + ex.ToString());
+                                    count--;
                                 }
-
-                                ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, index, item);
-
-                                if (m_back_up_select_this != null && selectedIndex == -1 && item.Label == m_back_up_select_this[0])
-                                    selectedIndex = index;
+                                count++;
                             }
 
+                            setGUIProperty(guiProperty.GroupCount, count.ToString());
+                            setGUIProperty("#itemcount", count.ToString());
+
+                            if (count == 0)
+                                bFacadeEmpty = true;
                         }
                         break;
                     #endregion
@@ -2803,9 +2787,6 @@ namespace WindowPlugins.GUITVSeries
                             // Get list of series for current view
                             seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
 
-                            // set mediaportal itemcount property
-                            setGUIProperty("#itemcount", seriesList.Count.ToString());
-
                             // Sort Series List if Title has been user edited
                             string titleField = DBOption.GetOptions(DBOption.cSeries_UseSortName) ? DBOnlineSeries.cSortName : DBOnlineSeries.cPrettyName;
                             seriesList.Sort(new Comparison<DBSeries>((x, y) =>
@@ -2821,12 +2802,6 @@ namespace WindowPlugins.GUITVSeries
 
                                 return string.Compare(seriesX, seriesY);
                             }));
-
-                            if (seriesList.Count == 0)
-                                bFacadeEmpty = true;
-
-                            // Update Series Count Property
-                            setGUIProperty(guiProperty.SeriesCount, seriesList.Count.ToString());
 
                             MPTVSeriesLog.Write(string.Format("Displaying {0} series", seriesList.Count.ToString()), MPTVSeriesLog.LogLevel.Debug);
                             foreach (DBSeries series in seriesList)
@@ -2912,14 +2887,22 @@ namespace WindowPlugins.GUITVSeries
                                         else
                                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, count, item);
                                     }
-
                                 }
                                 catch (Exception ex)
                                 {
-                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.Message);
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying series list item: " + ex.ToString());
+                                    count--;
                                 }
                                 count++;
                             }
+
+                            // Update Series Count Property
+                            setGUIProperty(guiProperty.SeriesCount, count.ToString());
+                            // set mediaportal itemcount property
+                            setGUIProperty("#itemcount", count.ToString());
+
+                            if (count == 0)
+                                bFacadeEmpty = true;
                         }
                         break;
                     #endregion
@@ -2930,9 +2913,6 @@ namespace WindowPlugins.GUITVSeries
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
                             seasons.Sort();
 
-                            // set mediaportal itemcount property
-                            setGUIProperty("#itemcount", seasons.Count.ToString());
-
                             bool canBeSkipped = (seasons.Count == 1) && DBOption.GetOptions(DBOption.cSkipSeasonViewOnSingleSeason);
                             if (!canBeSkipped)
                                 MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
@@ -2942,6 +2922,7 @@ namespace WindowPlugins.GUITVSeries
 
                             foreach (DBSeason season in seasons)
                             {
+                                if (bg.CancellationPending) return;
                                 try
                                 {
                                     item = null;
@@ -3065,10 +3046,17 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 catch (Exception ex)
                                 {
-                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.Message);
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying season list item: " + ex.ToString());
+                                    count--;
                                 }
                                 count++;
                             }
+
+                            // set mediaportal itemcount property
+                            setGUIProperty("#itemcount", count.ToString());
+
+                            if (count == 0)
+                                bFacadeEmpty = true;
 
                             // if there is only one season to display, skip directly to the episodes list
                             if (skipSeasonIfOne_DirectionDown && seasons.Count == 1 && canBeSkipped)
@@ -3094,24 +3082,20 @@ namespace WindowPlugins.GUITVSeries
                             // Get a list of Episodes to display for current view							
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
 
-                            // Update Filtered Episode Count Property, this acurately displays the number of items on the facade
-                            // #TVSeries.Series.EpisodeCount is not desirable in some views e.g. Recently Added or views that filter by episode fields
-                            setGUIProperty(guiProperty.FilteredEpisodeCount, episodesToDisplay.Count.ToString());
-                            setGUIProperty("#itemcount", episodesToDisplay.Count.ToString());
-
                             int watchedCount = 0;
-                            int unwatchedCount = episodesToDisplay.Count;
+                            int unwatchedCount = 0;
 
                             MPTVSeriesLog.Write(string.Format("Displaying {0} episodes from {1}", episodesToDisplay.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
                             item = null;
-
-                            if (episodesToDisplay.Count == 0)
-                                bFacadeEmpty = true;
 
                             itemsToDisplay = episodesToDisplay.Count;
 
                             foreach (DBEpisode episode in episodesToDisplay)
                             {
+                                if (bg.CancellationPending) return;
+
+                                bool increaseWatchedCount = false;
+                                bool increaseUnwatchedCount = false;
                                 MPTVSeriesLog.Write(string.Format("Adding episode {0} to list", episode.ToString()), MPTVSeriesLog.LogLevel.Debug);
                                 try
                                 {
@@ -3174,8 +3158,11 @@ namespace WindowPlugins.GUITVSeries
 
                                     if (item.IsPlayed)
                                     {
-                                        watchedCount++;
-                                        unwatchedCount--;
+                                        increaseWatchedCount = true;
+                                    }
+                                    else
+                                    {
+                                        increaseUnwatchedCount = true;
                                     }
 
                                     item.TVTag = episode;
@@ -3235,10 +3222,25 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 catch (Exception ex)
                                 {
-                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.Message);
+                                    MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error displaying episode list item: " + ex.ToString());
+                                    // don't do any of these because item wasn't added
+                                    itemsToDisplay--;
+                                    increaseWatchedCount = false;
+                                    increaseUnwatchedCount = false;
+                                    count--;
                                 }
                                 count++;
+                                if (increaseWatchedCount)
+                                    watchedCount++;
+                                if (increaseUnwatchedCount)
+                                    unwatchedCount++;
                             }
+                            setGUIProperty(guiProperty.FilteredEpisodeCount, count.ToString());
+                            setGUIProperty("#itemcount", count.ToString());
+
+                            if (count == 0)
+                                bFacadeEmpty = true;
+
                             // Push Watched/Unwatched Count for Current Episode View
                             setGUIProperty(guiProperty.WatchedCount, watchedCount.ToString());
                             setGUIProperty(guiProperty.UnWatchedCount, unwatchedCount.ToString());
