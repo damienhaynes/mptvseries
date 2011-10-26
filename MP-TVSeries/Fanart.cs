@@ -185,6 +185,7 @@ namespace WindowPlugins.GUITVSeries
         public static void ClearFanartCache(int seriesID) {                    
             string searchPattern = seriesID.ToString() + "*.jpg";
             string cachePath = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), @"_cache\fanart\original\");
+            if (!System.IO.Directory.Exists(cachePath)) return; //exit if no dir to avoid any exception in GetFiles
             string[] fileList = Directory.GetFiles(cachePath, searchPattern);
 
             foreach (string file in fileList) {
@@ -236,13 +237,24 @@ namespace WindowPlugins.GUITVSeries
                 {
                     // lets create one from the fullsize fanart on disk
                     string fullSizeFanart = Fanart.getFanart(SeriesID).FanartFilename;
-                    if (!string.IsNullOrEmpty(fullSizeFanart) && File.Exists(fullSizeFanart))
+                    if (!string.IsNullOrEmpty(fullSizeFanart) && File.Exists(fullSizeFanart) &&
+                        _ThumbFileName.Length > Settings.GetPath(Settings.Path.fanart).Length) // only if we have filename
                     {
-                        Image img = Image.FromFile(fullSizeFanart);
-                        Bitmap bmp = ImageAllocator.Resize(img, new Size(400, 225));
+                        try
+                        {
+                            //create directory first, to get rid of GDI+ errors
+                            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(_ThumbFileName));
 
-                        bmp.Save(_ThumbFileName, ImageFormat.Jpeg);
-                        return _ThumbFileName;
+                            Image img = Image.FromFile(fullSizeFanart);
+                            Bitmap bmp = ImageAllocator.Resize(img, new Size(400, 225));
+
+                            bmp.Save(_ThumbFileName, ImageFormat.Jpeg);
+                            return _ThumbFileName;
+                        }
+                        catch (Exception ex)
+                        {
+                            MPTVSeriesLog.Write("Failed to create fanart thumbnail {0} from full fanart {1}: {2}",  _ThumbFileName, fullSizeFanart, ex.ToString());
+                        }
                     }
                 }
 
