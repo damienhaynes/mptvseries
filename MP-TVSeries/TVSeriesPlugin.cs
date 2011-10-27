@@ -545,6 +545,8 @@ namespace WindowPlugins.GUITVSeries
             base.DeInit();
 
             DeviceManager.StopMonitor();
+            System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged -= NetworkAvailabilityChanged;
+            Microsoft.Win32.SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
         }
 
         protected override void OnPageLoad()
@@ -2143,6 +2145,7 @@ namespace WindowPlugins.GUITVSeries
 
         void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
         {
+            MPTVSeriesLog.Write("MP-TVSeries received power event {0}", e.Mode);
             if (e.Mode == Microsoft.Win32.PowerModes.Resume)
             {
                 MPTVSeriesLog.Write("MP-TVSeries is resuming from standby");
