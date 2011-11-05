@@ -234,6 +234,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     OnlineParsingCompleted.Invoke(m_bNewLocalFiles);
                 }
+                m_bNewLocalFiles = false;
             }
         }
 
