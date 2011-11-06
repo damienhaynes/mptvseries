@@ -1981,23 +1981,25 @@ namespace WindowPlugins.GUITVSeries
         {
             if (control == this.viewMenuButton)
             {
-                showViewSwitchDialog();
-                viewMenuButton.Focus = false;
+                showViewSwitchDialog();                
+                GUIControl.UnfocusControl(GetID, viewMenuButton.GetID);
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
                 return;
             }
 
             if (control == this.LayoutMenuButton)
             {
                 ShowLayoutMenu();
-                LayoutMenuButton.Focus = false;
+                GUIControl.UnfocusControl(GetID, LayoutMenuButton.GetID);
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
                 return;
             }
 
             if (control == this.OptionsMenuButton)
             {
                 ShowOptionsMenu();
-                OptionsMenuButton.Focus = false;
-                m_Facade.Focus = true;
+                GUIControl.UnfocusControl(GetID, OptionsMenuButton.GetID);
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
                 return;
             }
 
@@ -2010,15 +2012,16 @@ namespace WindowPlugins.GUITVSeries
                 // Start Import if delayed
                 m_scanTimer.Change(1000, 1000);
 
-                ImportButton.Focus = false;
-                m_Facade.Focus = true;
+                GUIControl.UnfocusControl(GetID, ImportButton.GetID);
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
                 return;
             }
 
             if (control == this.LoadPlaylistButton)
             {
                 OnShowSavedPlaylists(DBOption.GetOptions(DBOption.cPlaylistPath));
-                LoadPlaylistButton.Focus = false;
+                GUIControl.UnfocusControl(GetID, LoadPlaylistButton.GetID);
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
                 return;
             }
 
