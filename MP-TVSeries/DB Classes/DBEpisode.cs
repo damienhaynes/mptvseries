@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Linq;
 using SQLite.NET;
 using MediaPortal.Database;
 using System.Text.RegularExpressions;
@@ -1520,6 +1521,75 @@ namespace WindowPlugins.GUITVSeries
             return Get(condition, false);
         }        
         #endregion
+
+        #region Next Episode Helpers
+
+        public static List<DBEpisode> GetNextWatchingEpisodes()
+        {
+            return GetNextWatchingEpisodes(3);
+        }
+
+        /// <summary>
+        /// Returns the next episodes on currently watching series
+        /// Will only return unique series that have next episodes to watch
+        /// </summary>
+        public static List<DBEpisode> GetNextWatchingEpisodes(int limit)
+        {
+            List<DBEpisode> nextEpisodes = new List<DBEpisode>(limit);
+
+            // First get the most recently watched
+            // Try to get more than one series so widen the range
+            var episodesWatched = GetMostRecent(MostRecentType.Watched, 30, 100);
+            
+            // get the last 3 series watched
+            foreach (int seriesId in episodesWatched.Select(e => (int)e[DBEpisode.cSeriesID]).Distinct())
+            {
+                // get next unwatched episode
+                var episode = DBEpisode.GetNextUnWatched(seriesId);
+                if (episode != null) nextEpisodes.Add(episode);
+                if (nextEpisodes.Count == limit) break;
+            }
+            
+            return nextEpisodes;
+        }
+
+        /// <summary>
+        /// Returns the next unwatched episode for a series
+        /// Will return null if no unwatched episodes air next
+        /// This works best when user enables to download all 
+        /// episode information from theTVDB.com
+        /// </summary>   
+        public static DBEpisode GetNextUnWatched(int seriesId)
+        {
+            // get all episodes for the series
+            var conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, seriesId, SQLConditionType.Equal);
+            var episodes = DBEpisode.Get(conditions, false);
+            if (episodes.Count == 0) return null;
+
+            // sorts by viewing order (getRelSortingIndexOfEp)
+            // this is what users would logically watch next in tvseries
+            episodes.Sort();
+
+            // get most recently watched episode
+            var watchedEpisodes = episodes.Where(e => !string.IsNullOrEmpty(e[cDateWatched]));
+            if (watchedEpisodes.Count() == 0) return episodes.First();
+            var lastWatched = watchedEpisodes.OrderByDescending(e => DateTime.Parse(e[cDateWatched])).First();
+            
+            // get next episode that is unwatched
+            int index = episodes.IndexOf(lastWatched);
+            if (index >= episodes.Count) return null;
+
+            var unwatchedEpisodes = episodes.Skip(index).Where(e => !e[DBOnlineEpisode.cWatched]).ToList();
+            if (unwatchedEpisodes.Count == 0) return null;
+            
+            return unwatchedEpisodes.First();
+        }
+
+        #endregion
+
+        #region Get Episode Helpers
+
         public static List<DBEpisode> GetAll()
         {
             return Get(new SQLCondition(), true);
@@ -1582,6 +1652,8 @@ namespace WindowPlugins.GUITVSeries
             }
             return outList;
         }
+
+        #endregion
 
         /// <summary>
         /// If the episode contains an OnlineEpisode returns it's ToString() result
