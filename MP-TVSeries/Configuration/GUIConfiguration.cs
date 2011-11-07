@@ -3516,10 +3516,6 @@ namespace WindowPlugins.GUITVSeries
         {
             // so that locallogos can clean up its stuff
             localLogos.cleanUP();
-
-            // save the config size
-            DBOption.SetOptions(DBOption.cConfigSizeHeight, this.Size.Height);
-            DBOption.SetOptions(DBOption.cConfigSizeWidth, this.Size.Width);
         }
 
         private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
@@ -4384,9 +4380,11 @@ namespace WindowPlugins.GUITVSeries
             DBOption.SetOptions(DBOption.cParentalControlResetInterval, (int)nudParentalControlTimeout.Value);
         }
 
-        private void nupParentalControlTimeout_ValueChanged(object sender, EventArgs e)
+        private void ConfigurationForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            // save the config size
+            DBOption.SetOptions(DBOption.cConfigSizeHeight, this.Size.Height);
+            DBOption.SetOptions(DBOption.cConfigSizeWidth, this.Size.Width);
         }
     }
     
