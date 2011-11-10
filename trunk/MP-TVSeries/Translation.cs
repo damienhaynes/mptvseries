@@ -338,6 +338,7 @@ namespace WindowPlugins.GUITVSeries
         public static string MainMenu = "Main Menu";
         public static string AddToWatchList = "Add {0} to Watchlist";
         public static string TraktNotLoggedIn = "You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?";
+        public static string RelatedSeries = "Related Series";
         #endregion
 
         #region Public Properties

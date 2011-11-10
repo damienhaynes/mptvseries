@@ -386,7 +386,8 @@ namespace WindowPlugins.GUITVSeries
             WatchList,
             Shouts,
             AddToWatchList,
-            Rate
+            Rate,
+            Related
         }
 
         enum Listlevel
@@ -1831,6 +1832,11 @@ namespace WindowPlugins.GUITVSeries
             syncThread.Start();
         }
 
+        protected void ShowRelatedItems()
+        {
+            TraktPlugin.TraktHelper.ShowRelatedShows(m_SelectedSeries[DBSeries.cID], m_SelectedSeries[DBOnlineSeries.cPrettyName]);
+        }
+
         protected void ShowTraktShouts()
         {
             if (listLevel != Listlevel.Episode)
@@ -1903,22 +1909,21 @@ namespace WindowPlugins.GUITVSeries
                 listItem = new GUIListItem(string.Format(Translation.AddToWatchList, Translation.Series));
                 dlg.Add(listItem);
                 listItem.ItemId = (int)TraktMenuItems.AddToWatchList;
+
+                listItem = new GUIListItem(Translation.RateSeries);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.Rate;
+
+                listItem = new GUIListItem(Translation.RelatedSeries);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.Related;
             }
             else if (this.listLevel == Listlevel.Episode)
             {
                 listItem = new GUIListItem(string.Format(Translation.AddToWatchList, Translation.Episode));
                 dlg.Add(listItem);
                 listItem.ItemId = (int)TraktMenuItems.AddToWatchList;
-            }
 
-            if (this.listLevel == Listlevel.Series)
-            {
-                listItem = new GUIListItem(Translation.RateSeries);
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.Rate;
-            }
-            else if (this.listLevel == Listlevel.Episode)
-            {
                 listItem = new GUIListItem(Translation.RateEpisode);
                 dlg.Add(listItem);
                 listItem.ItemId = (int)TraktMenuItems.Rate;
@@ -1968,6 +1973,11 @@ namespace WindowPlugins.GUITVSeries
                 case ((int)TraktMenuItems.Rate):
                     // Rate series/episode
                     RateTraktItem();
+                    break;
+                
+                case ((int)TraktMenuItems.Related):
+                    // Related Series/Episodes
+                    ShowRelatedItems();
                     break;
 
                 default:
