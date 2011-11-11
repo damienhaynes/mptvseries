@@ -2,6 +2,13 @@
 <wiki:toc max_depth="3" />
 
 ----
+=What is MP-TVSeries=
+
+MP-TVSeries is a popular TV Series plug-in for MediaPortal, an open-source media center application. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online to thetvdb.com and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.
+
+This Plugin does not play Live TV
 
 =MPTVSeries Window ID=
   * 9811
