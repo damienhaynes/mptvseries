@@ -1512,24 +1512,40 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>1</Minor>
-      <Build>1</Build>
-      <Revision>1864</Revision>
+      <Build>2</Build>
+      <Revision>1881</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed issue where incorrect number of episodes were shown after playback is stopped, also fixes issue where sometimes no episodes were displayed.
+    <VersionDescription>* Fixed textures leak on Fanart Chooser window.
 
-* Fixed crash in cache when navigating views. Typically seen if using Filmstrip/Coverflow layouts in season view.
+* Fixed duplicate translations in English en-US.xml.
 
-* Added Trakt Main Menu, Rate and Add to Watchlist items in context menu.
+* Updated Russian Translations, thanks Undel.
 
-* Updated Trakt MPEI package to v1.1.3.
+* Improved image handling when creating and loading, fixes most common errors seen.
 
-* Added a button to DefaultWide skins HiddenMenu which allows you to upgrade TVSereis via the Extensions plugin if an update is available.</VersionDescription>
+* Fixed a loading exception in that could occur when populating the facade.
+
+* Fixed potential exceptions to do with Fanart thumbnail handling.
+
+* [API] Fixed a bug where the parameter in the OnlineParsingCompleted event was not being cleared. Was only being reset if a LocalParse action was done, but that doesn't happen all the time.
+
+* [API] Added API to get list of episodes that are next to watch. This can be done per series to get the next episode or get a list of episodes from the last set of unique series you have been watching recently (this could be used to display on BasicHome).
+
+* Fixed some focus issues with facade when using Hidden Menu buttons.
+
+* Fixed an error in log after closing tvseries configuration which was launched from desktop shortcut.
+
+* Added Trakt Related Shows to context menu. You can view related/similar shows that you may also be interested in.
+
+* Updated Trakt MPEI package to v1.3.0.
+
+* Updated SubCentral MPEI package to v1.1.2.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.1.1864.mpe1</OnlineLocation>
-    <ReleaseDate>2011-09-22T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.2.1881.mpe1</OnlineLocation>
+    <ReleaseDate>2011-11-11T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
