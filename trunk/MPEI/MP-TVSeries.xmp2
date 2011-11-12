@@ -1512,40 +1512,18 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>1</Minor>
-      <Build>2</Build>
-      <Revision>1881</Revision>
+      <Build>3</Build>
+      <Revision>1888</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed textures leak on Fanart Chooser window.
+    <VersionDescription>* Fixed Season artwork not being displayed in Filmstrip and Coverflow layouts.
 
-* Fixed duplicate translations in English en-US.xml.
-
-* Updated Russian Translations, thanks Undel.
-
-* Improved image handling when creating and loading, fixes most common errors seen.
-
-* Fixed a loading exception in that could occur when populating the facade.
-
-* Fixed potential exceptions to do with Fanart thumbnail handling.
-
-* [API] Fixed a bug where the parameter in the OnlineParsingCompleted event was not being cleared. Was only being reset if a LocalParse action was done, but that doesn't happen all the time.
-
-* [API] Added API to get list of episodes that are next to watch. This can be done per series to get the next episode or get a list of episodes from the last set of unique series you have been watching recently (this could be used to display on BasicHome).
-
-* Fixed some focus issues with facade when using Hidden Menu buttons.
-
-* Fixed an error in log after closing tvseries configuration which was launched from desktop shortcut.
-
-* Added Trakt Related Shows to context menu. You can view related/similar shows that you may also be interested in.
-
-* Updated Trakt MPEI package to v1.3.0.
-
-* Updated SubCentral MPEI package to v1.1.2.</VersionDescription>
+* Updated Danish translations, thanks Steffansp.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.2.1881.mpe1</OnlineLocation>
-    <ReleaseDate>2011-11-11T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.3.1888.mpe1</OnlineLocation>
+    <ReleaseDate>2011-11-12T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2461,28 +2439,28 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{02b02267-ef49-405d-ae81-769e35329794}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{b3558ead-79f7-4282-b39a-af66a116c0b4}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7d937f7d-4e2a-4b00-b722-8daedd91d925}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{e8bb10d9-fe66-4d66-be86-2fabd1e472d3}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{2e74f776-0f34-47aa-98ce-56b655ff304e}-SubCentral.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{8633add6-c756-4515-9f28-3d55cb0404b3}-SubCentral.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{fb7675e7-6fae-486b-9747-8bc4f3c77e59}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{65c4dd60-bc62-4b9b-a6aa-01e79d31937a}-TraktPlugin.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
