@@ -433,7 +433,9 @@ namespace WindowPlugins.GUITVSeries
                 string ident = season[DBSeason.cSeriesID] + "S" + season[DBSeason.cIndex];
                 sTextureName = buildMemoryImage(drawSimpleBanner(size, text), ident, size, true);
             }
-            else return string.Empty;
+
+            // nothing left we can do, so return empty if still nothing
+            if (string.IsNullOrEmpty(sTextureName)) return string.Empty;
 
             s_SeasonsImageList.Add(sTextureName);
             return sTextureName;
