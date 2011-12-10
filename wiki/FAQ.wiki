@@ -172,7 +172,7 @@ Some examples below are episodes which will now parse by default - Note: require
  * The.Colbert.Report.2011.07.27.Dr.Missy.Cummings.mkv
 
  ==Auto Renaming of Files==
-MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer] and [http://www.tvrename.com Tv Rename] 
+MP-TVSeries does not currently support the auto renaming of your files. However their are free 3rd party tools such as [http://www.theRenamer.com TheRenamer], [http://www.tvrename.com Tv Rename], [http://www.mediacentermaster.com/ Media Centre Master ] and [http://filebot.sourceforge.net/ Filebot] which you could use to organise/rename the files in your collection.
 
  ==Folder Structure==
 There are many variations you could use, below is a way that works well with the renaming tools above. 
