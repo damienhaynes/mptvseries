@@ -1653,6 +1653,12 @@ namespace WindowPlugins.GUITVSeries
             return outList;
         }
 
+        public static DBEpisode Get(int seriesId, int seasonIdx, int episodeIdx)
+        {
+            List<DBEpisode> episodes = Get(seriesId, seasonIdx, true);
+            return episodes.FirstOrDefault(e => e[DBOnlineEpisode.cEpisodeIndex] == episodeIdx);
+        }
+
         #endregion
 
         /// <summary>
