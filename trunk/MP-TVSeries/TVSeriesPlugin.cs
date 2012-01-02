@@ -170,6 +170,8 @@ namespace WindowPlugins.GUITVSeries
         List<logicalView> m_allViews = new List<logicalView>();
         private logicalView m_CurrLView = null;
         private int m_CurrViewStep = 0;
+        private bool m_JumpToViewLevel = false;
+        private LoadingParameter m_LoadingParameter = null;
         private List<string[]> m_stepSelections = new List<string[]>();
         private string[] m_stepSelection = null;
         private List<string> m_stepSelectionPretty = new List<string>();
@@ -229,7 +231,6 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bPluginLoaded = false;
         private bool m_bShowLastActiveModule = false;
         private int m_iLastActiveModule = 0;
-        private bool LoadWithParameterSupported = false;
         private bool m_PlaySelectedEpisodeAfterSubtitles = false;
         #endregion
 
@@ -508,11 +509,6 @@ namespace WindowPlugins.GUITVSeries
                 m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
             }
 
-            // check if running version of mediaportal support loading with parameter           
-            if (typeof(GUIWindow).GetField("_loadParameter", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance) != null)
-            {
-                LoadWithParameterSupported = true;
-            }
             #endregion
 
             #region Initialize Importer
@@ -564,7 +560,7 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", pluginName);
+            GUIPropertyManager.SetProperty("#currentmodule", pluginName);
 
             ImageAllocator.SetFontName(m_Facade.AlbumListLayout == null ? m_Facade.ListLayout.FontName : m_Facade.AlbumListLayout.FontName);
 
@@ -596,57 +592,130 @@ namespace WindowPlugins.GUITVSeries
 
             localLogos.appendEpImage = m_Episode_Image == null ? true : false;
 
+            #region View Setup and Loading Parameters
             bool viewSwitched = false;
+            m_LoadingParameter = GetLoadingParameter();
 
-            string jumpToViewName = null;
-            if (LoadWithParameterSupported)
+            if (m_LoadingParameter.Type != LoadingParameterType.None && m_LoadingParameter.Type != LoadingParameterType.View)
             {
-                jumpToViewName = GetJumpToViewName();
+                m_JumpToViewLevel = true;
+
+                if (m_allViews == null || m_allViews.Count == 0) m_allViews = logicalView.getAll(false);
+                if (m_CurrLView == null) switchView((string)DBOption.GetOptions("lastView"));
+
+                int viewLevels = m_CurrLView.m_steps.Count;
+
+                m_SelectedSeries = Helper.getCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));
+                if (m_SelectedSeries == null)
+                {
+                    m_LoadingParameter.Type = LoadingParameterType.None;
+                }
+                else
+                {
+                    m_stepSelection = new string[] { m_LoadingParameter.SeriesId };
+                    m_stepSelections.Add(m_stepSelection);
+                    pushFieldsToSkin(m_SelectedSeries, "Series");
+                }
+
+                switch (m_LoadingParameter.Type)
+                {
+                    #region Series
+                    case LoadingParameterType.Series:
+                        // load into Season view if multiple seasons exists
+                        // will auto drill down to current available season if only one exists
+                        if (viewLevels > 1) m_CurrViewStep = viewLevels - 2;
+                        else m_CurrViewStep = 0;
+                        this.listLevel = Listlevel.Season;
+                        break;
+                    #endregion
+
+                    #region Season
+                    case LoadingParameterType.Season:
+                        m_SelectedSeason = Helper.getCorrespondingSeason(Convert.ToInt32(m_LoadingParameter.SeriesId), Convert.ToInt32(m_LoadingParameter.SeasonIdx));
+                        if (m_SelectedSeason == null)
+                        {
+                            m_LoadingParameter.Type = LoadingParameterType.None;
+                            break;
+                        }
+                        // load into episode view for series/season
+                        if (viewLevels > 1) m_CurrViewStep = viewLevels - 1;
+                        else m_CurrViewStep = 0;
+                        this.listLevel = Listlevel.Episode;
+                        m_stepSelection = new string[] { m_LoadingParameter.SeriesId, m_LoadingParameter.SeasonIdx };
+                        m_stepSelections.Add(m_stepSelection);
+                        break;
+                    #endregion
+
+                    #region Episode
+                    case LoadingParameterType.Episode:
+                        m_SelectedEpisode = DBEpisode.Get(Convert.ToInt32(m_LoadingParameter.SeriesId), Convert.ToInt32(m_LoadingParameter.SeasonIdx), Convert.ToInt32(m_LoadingParameter.EpisodeIdx));
+                        if (m_SelectedEpisode == null)
+                        {
+                            m_LoadingParameter.Type = LoadingParameterType.None;
+                            break;
+                        }
+                        // load into episode view for series/season
+                        if (viewLevels > 1) m_CurrViewStep = viewLevels - 1;
+                        else m_CurrViewStep = 0;
+                        this.listLevel = Listlevel.Episode;
+                        m_stepSelection = new string[] { m_LoadingParameter.SeriesId, m_LoadingParameter.SeasonIdx };
+                        m_stepSelections.Add(m_stepSelection);
+                        break;
+                    #endregion
+                }
+
+                setViewLabels();
             }
 
             // Initialize View, also check if current view is locked after exiting and re-entering plugin
-            if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked) || !string.IsNullOrEmpty(jumpToViewName))
+            if (m_LoadingParameter.Type == LoadingParameterType.None || m_LoadingParameter.Type == LoadingParameterType.View)
             {
-                // Get available Views
-                m_allViews = logicalView.getAll(false);
-                if (m_allViews.Count > 0)
+                m_JumpToViewLevel = false;
+
+                if (m_CurrLView == null || (m_CurrLView.ParentalControl && logicalView.IsLocked) || !string.IsNullOrEmpty(m_LoadingParameter.ViewName))
                 {
-                    try
+                    // Get available Views
+                    m_allViews = logicalView.getAll(false);
+                    if (m_allViews.Count > 0)
                     {
-                        if (!string.IsNullOrEmpty(jumpToViewName))
+                        try
                         {
-                            viewSwitched = switchView(jumpToViewName);
+                            if (m_LoadingParameter.Type == LoadingParameterType.View)
+                            {
+                                viewSwitched = switchView(m_LoadingParameter.ViewName);
+                            }
+                            else
+                            {
+                                viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+                            }
                         }
-                        else
+                        catch
                         {
-                            viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
+                            viewSwitched = false;
+                            MPTVSeriesLog.Write("Error when switching view");
                         }
                     }
-                    catch
+                    else
                     {
                         viewSwitched = false;
-                        MPTVSeriesLog.Write("Error when switching view");
+                        MPTVSeriesLog.Write("Error, cannot display items because no Views have been found!");
                     }
                 }
                 else
                 {
-                    viewSwitched = false;
-                    MPTVSeriesLog.Write("Error, cannot display items because no Views have been found!");
+                    viewSwitched = true;
+                    setViewLabels();
+                }
+
+                // If unable to load view, exit
+                if (!viewSwitched)
+                {
+                    GUIWindowManager.ShowPreviousWindow();
+                    return;
                 }
             }
-            else
-            {
-                viewSwitched = true;
-                setViewLabels();
-            }
-
-            // If unable to load view, exit
-            if (!viewSwitched)
-            {
-                GUIWindowManager.ShowPreviousWindow();
-                return;
-            }
-
+            #endregion
+           
             backdrop.GUIImageOne = FanartBackground;
             backdrop.GUIImageTwo = FanartBackground2;
             backdrop.LoadingImage = loadingImage;
@@ -1461,7 +1530,7 @@ namespace WindowPlugins.GUITVSeries
                 case Action.ActionType.ACTION_PREVIOUS_MENU:
                     // back one level
                     MPTVSeriesLog.Write("ACTION_PREVIOUS_MENU", MPTVSeriesLog.LogLevel.Debug);
-                    if (m_CurrViewStep == 0)
+                    if (m_CurrViewStep == 0 || m_JumpToViewLevel)
                     {
                         goto case Action.ActionType.ACTION_PARENT_DIR;
                     }
@@ -3098,6 +3167,24 @@ namespace WindowPlugins.GUITVSeries
                             // Get a list of Episodes to display for current view							
                             List<DBEpisode> episodesToDisplay = m_CurrLView.getEpisodeItems(m_CurrViewStep, m_stepSelection);
 
+                            #region Loading Parameter Filtering
+                            // If we have a loading parameter for a particular episode then filter out the rest of episodes
+                            if (m_LoadingParameter.Type == LoadingParameterType.Episode)
+                            {
+                                episodesToDisplay.RemoveAll(e => e[DBOnlineEpisode.cEpisodeIndex] != m_LoadingParameter.EpisodeIdx);
+                            }
+
+                            // If we are in episode view then we have already filtered out series/season except for Episode Only Heirachical views
+                            if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep) && m_LoadingParameter.Type != LoadingParameterType.None & m_LoadingParameter.Type != LoadingParameterType.View)
+                            {
+                                episodesToDisplay.RemoveAll(e => e[DBOnlineEpisode.cSeriesID] != m_LoadingParameter.SeriesId);
+                                if (m_LoadingParameter.SeasonIdx != null)
+                                {
+                                    episodesToDisplay.RemoveAll(e => e[DBOnlineEpisode.cSeasonIndex] != m_LoadingParameter.SeasonIdx);
+                                }
+                            }
+                            #endregion
+
                             int watchedCount = 0;
                             int unwatchedCount = 0;
 
@@ -3885,6 +3972,7 @@ namespace WindowPlugins.GUITVSeries
                 viewSwitched = switchView(m_allViews[dlg.SelectedId]);
                 if (viewSwitched)
                 {
+                    m_JumpToViewLevel = false;
                     LoadFacade();
                     return true;
                 }
@@ -4388,16 +4476,88 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+        #region Loading Parameters
+        /// <summary>
+        /// Gets the loading parameter from the hyperlinkparameter property of skin button control
+        /// </summary>        
+        private LoadingParameter  GetLoadingParameter()
+        {
+            LoadingParameter loadingParameter = new LoadingParameter
+            {
+                Type = LoadingParameterType.None
+            };
+
+            if (string.IsNullOrEmpty(_loadParameter)) return loadingParameter;
+
+            MPTVSeriesLog.Write("Parsing Loading Parameters: " + _loadParameter, MPTVSeriesLog.LogLevel.Debug);
+
+            // check for legacy support (viewname only) or single parameter types
+            if (!_loadParameter.Contains("|"))
+            {                
+                loadingParameter.Type = LoadingParameterType.View;
+                loadingParameter.ViewName = _loadParameter;
+                // view only
+                if (_loadParameter.Contains("view:"))
+                {
+                    loadingParameter.ViewName = _loadParameter.Substring(5);
+                }
+                // series only
+                if (_loadParameter.Contains("seriesid:"))
+                {
+                    loadingParameter.Type = LoadingParameterType.Series;
+                    loadingParameter.SeriesId = _loadParameter.Substring(9);
+                }
+                return loadingParameter;
+            }
+
+            try
+            {
+                foreach (string currParam in _loadParameter.Split('|'))
+                {
+                    string[] keyValue = currParam.Split(':');
+                    string key = keyValue[0];
+                    string value = keyValue[1];
+
+                    switch (key.ToLowerInvariant())
+                    {
+                        case "view":
+                            loadingParameter.Type = LoadingParameterType.View;
+                            loadingParameter.ViewName = value;
+                            break;
+
+                        case "seriesid":
+                            loadingParameter.Type = LoadingParameterType.Series;
+                            loadingParameter.SeriesId = value;
+                            break;
+
+                        case "seasonidx":
+                            loadingParameter.Type = LoadingParameterType.Season;
+                            loadingParameter.SeasonIdx = value;
+                            break;
+
+                        case "episodeidx":
+                            loadingParameter.Type = LoadingParameterType.Episode;
+                            loadingParameter.EpisodeIdx = value;
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MPTVSeriesLog.Write("Error parsing loading parameters: " + _loadParameter);
+                loadingParameter.Type = LoadingParameterType.None;
+                return loadingParameter;
+            }
+
+            return loadingParameter;
+        }
+        #endregion
+
         #region Database Views
         List<string> sviews = new List<string>();
-
-        /// <summary>
-        /// Gets View Name to Jump To, passed from hyperlink property of skin button control
-        /// </summary>        
-        private string GetJumpToViewName()
-        {
-            return _loadParameter;
-        }
 
         private void switchView(int offset)
         {
@@ -6225,6 +6385,24 @@ namespace WindowPlugins.GUITVSeries
 
         public object Argument = null;
         public int IndexArgument = 0;
+    }
+
+    enum LoadingParameterType
+    {
+        None,
+        Series,
+        Season,
+        Episode,
+        View
+    }
+
+    class LoadingParameter
+    {
+        public LoadingParameterType Type { get; set; }
+        public string SeriesId { get; set; }
+        public string SeasonIdx { get; set; }
+        public string EpisodeIdx { get; set; }
+        public string ViewName { get; set; }
     }
 }
 
