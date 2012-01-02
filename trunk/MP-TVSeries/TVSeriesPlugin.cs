@@ -346,7 +346,8 @@ namespace WindowPlugins.GUITVSeries
             addToPlaylist,
             viewAddToNewView,
             showActorsGUI,
-            trakt
+            trakt,
+            downloadTorrent
         }
 
         enum eContextMenus
@@ -1007,9 +1008,18 @@ namespace WindowPlugins.GUITVSeries
                     #region trakt.tv menu
                     if (Helper.IsTraktAvailableAndEnabled)
                     {
-                        pItem = new GUIListItem("Trakt...");
+                        pItem = new GUIListItem("Trakt ...");
                         dlg.Add(pItem);
                         pItem.ItemId = (int)eContextItems.trakt;
+                    }
+                    #endregion
+
+                    #region My Torrents Search
+                    if (listLevel != Listlevel.Group && Helper.IsMyTorrentsAvailableAndEnabled)
+                    {
+                        pItem = new GUIListItem(Translation.SearchTorrent + " ...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextItems.downloadTorrent;
                     }
                     #endregion
 
@@ -1369,6 +1379,12 @@ namespace WindowPlugins.GUITVSeries
                     #region trakt.tv
                     case (int)eContextItems.trakt:
                         ShowTraktMenu();
+                        break;
+                    #endregion
+
+                    #region My Torrents
+                    case (int)eContextItems.downloadTorrent:
+                        ShowMyTorrents();
                         break;
                     #endregion
 
@@ -1808,6 +1824,8 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        #region SubCentral Menu
+
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
             ShowSubtitleMenu(episode, false);
@@ -1824,6 +1842,26 @@ namespace WindowPlugins.GUITVSeries
                 GUIWindowManager.ActivateWindow(84623);
             }
         }
+
+        #endregion
+
+        #region My Torrent Menu
+        protected void ShowMyTorrents()
+        {
+            string searchObj = string.Empty;
+            if (listLevel != Listlevel.Episode)
+            {
+                searchObj = string.Format("{0}", m_SelectedSeries[DBOnlineSeries.cOriginalName]);
+            }
+            else
+            {
+                searchObj = string.Format("{0} S{1:00}E{2:00}", m_SelectedSeries[DBOnlineSeries.cOriginalName], Convert.ToInt32(m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex].ToString()), Convert.ToInt32(m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex].ToString()));
+            }
+
+            GUIWindowManager.ActivateWindow(5678, searchObj);
+
+        }
+        #endregion
 
         #region Trakt Menu
 
@@ -1861,7 +1899,7 @@ namespace WindowPlugins.GUITVSeries
                 TraktPlugin.GUI.GUIUtils.ShowRateDialog<TraktRateEpisode>(rateObj);
             }
         }
-
+        
         protected void AddItemToWatchList()
         {
             if (!CheckTraktLogin()) return;

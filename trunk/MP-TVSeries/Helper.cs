@@ -728,6 +728,13 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public static bool IsMyTorrentsAvailableAndEnabled
+        {
+            get
+            {
+                return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "MyTorrents.dll")) && IsPluginEnabled("MyTorrents");
+            }
+        }
         #endregion
 
         #region Web Methods

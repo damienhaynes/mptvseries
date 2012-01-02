@@ -339,6 +339,8 @@ namespace WindowPlugins.GUITVSeries
         public static string AddToWatchList = "Add {0} to Watchlist";
         public static string TraktNotLoggedIn = "You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?";
         public static string RelatedSeries = "Related Series";
+
+        public static string SearchTorrent = "Torrent Search";
         #endregion
 
         #region Public Properties
