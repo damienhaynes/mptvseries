@@ -1539,6 +1539,9 @@ namespace WindowPlugins.GUITVSeries
             switch (action.wID)
             {
                 case Action.ActionType.ACTION_PARENT_DIR:
+                    m_CurrViewStep = 0;
+                    m_stepSelections.Clear();
+                    m_stepSelectionPretty.Clear();
                     ImageAllocator.FlushAll();
                     GUIWindowManager.ShowPreviousWindow();
                     break;
@@ -1546,7 +1549,7 @@ namespace WindowPlugins.GUITVSeries
                 case Action.ActionType.ACTION_PREVIOUS_MENU:
                     // back one level
                     MPTVSeriesLog.Write("ACTION_PREVIOUS_MENU", MPTVSeriesLog.LogLevel.Debug);
-                    if (m_CurrViewStep == 0 || m_JumpToViewLevel)
+                    if (m_CurrViewStep == 0 || m_stepSelectionPretty.Count == 0 || m_JumpToViewLevel)
                     {
                         goto case Action.ActionType.ACTION_PARENT_DIR;
                     }
@@ -4011,6 +4014,7 @@ namespace WindowPlugins.GUITVSeries
                 if (viewSwitched)
                 {
                     m_JumpToViewLevel = false;
+                    m_LoadingParameter.Type = LoadingParameterType.None;
                     LoadFacade();
                     return true;
                 }
