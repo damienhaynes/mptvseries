@@ -1542,6 +1542,7 @@ namespace WindowPlugins.GUITVSeries
                     m_CurrViewStep = 0;
                     m_stepSelections.Clear();
                     m_stepSelectionPretty.Clear();
+                    m_stepSelections.Add(new string[] { null });
                     ImageAllocator.FlushAll();
                     GUIWindowManager.ShowPreviousWindow();
                     break;
