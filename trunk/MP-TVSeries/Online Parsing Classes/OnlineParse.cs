@@ -1631,13 +1631,15 @@ namespace WindowPlugins.GUITVSeries
 
                 // Get all online episodes that have a image but not yet downloaded                
                 string query = string.Empty;
+                
+                if (Settings.isConfig)
+                    // Be more thorough in configuration, user may have deleted thumbs locally
+                    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
+                else
+                    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
+
                 // be more thorough everywhere, images might be broken or deleted
-                //if (Settings.isConfig)
-                //    // Be more thorough in configuration, user may have deleted thumbs locally
-                //    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
-                //else
-                //    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
-                query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
+                //query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
 
                 List<DBEpisode> episodes = DBEpisode.Get(query);
 
