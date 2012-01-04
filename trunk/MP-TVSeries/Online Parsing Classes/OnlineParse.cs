@@ -328,8 +328,13 @@ namespace WindowPlugins.GUITVSeries
 
             BackgroundWorker tMediaInfo = null;
             BackgroundWorker tEpisodeCounts = null;
-            BackgroundWorker tUserRatings = null;      
-   
+            BackgroundWorker tUserRatings = null;
+
+            // remove first update episode count as this is added twice in some Import Actions
+            // we could do distinct() but that removes last
+            if (m_params.m_actions.Count(pa => pa == ParsingAction.UpdateEpisodeCounts) == 2)
+                m_params.m_actions.Remove(ParsingAction.UpdateEpisodeCounts);
+
             Online_Parsing_Classes.GetUpdates updates = null;
             foreach (ParsingAction action in m_params.m_actions) {
                 MPTVSeriesLog.Write("Begin Parsing action: ", action.ToString(), MPTVSeriesLog.LogLevel.Debug);
