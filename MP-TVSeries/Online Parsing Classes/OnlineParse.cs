@@ -335,6 +335,14 @@ namespace WindowPlugins.GUITVSeries
             if (m_params.m_actions.Count(pa => pa == ParsingAction.UpdateEpisodeCounts) == 2)
                 m_params.m_actions.Remove(ParsingAction.UpdateEpisodeCounts);
 
+            // we may need to clear the cache to identify new episodes
+            // but update check and identify are done in two seperate import actions (online/local)
+            if (m_params.m_actions.Contains(ParsingAction.GetOnlineUpdates) && m_params.m_actions.Contains(ParsingAction.IdentifyNewEpisodes))
+            {
+                m_params.m_actions.Remove(ParsingAction.GetOnlineUpdates);
+                m_params.m_actions.Insert(m_params.m_actions.IndexOf(ParsingAction.IdentifyNewEpisodes), ParsingAction.GetOnlineUpdates);
+            }
+                
             Online_Parsing_Classes.GetUpdates updates = null;
             foreach (ParsingAction action in m_params.m_actions) {
                 MPTVSeriesLog.Write("Begin Parsing action: ", action.ToString(), MPTVSeriesLog.LogLevel.Debug);
