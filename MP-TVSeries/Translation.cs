@@ -341,6 +341,7 @@ namespace WindowPlugins.GUITVSeries
         public static string RelatedSeries = "Related Series";
 
         public static string SearchTorrent = "Torrent Search";
+        public static string SearchNZB = "NZB Search";
         #endregion
 
         #region Public Properties

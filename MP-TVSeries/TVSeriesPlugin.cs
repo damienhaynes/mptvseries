@@ -347,7 +347,8 @@ namespace WindowPlugins.GUITVSeries
             viewAddToNewView,
             showActorsGUI,
             trakt,
-            downloadTorrent
+            downloadTorrent,
+            downloadNZB
         }
 
         enum eContextMenus
@@ -1023,6 +1024,15 @@ namespace WindowPlugins.GUITVSeries
                     }
                     #endregion
 
+                    #region NZB Search
+                    if (listLevel == Listlevel.Episode && Helper.IsMpNZBAvailableAndEnabled)
+                    {
+                        pItem = new GUIListItem(Translation.SearchNZB + " ...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextItems.downloadNZB;
+                    }
+                    #endregion
+
                     #region Subtitles - keep at the bottom for fast access (menu + up => there)
                     if (!emptyList && subtitleDownloadEnabled && this.listLevel == Listlevel.Episode)
                     {
@@ -1385,6 +1395,12 @@ namespace WindowPlugins.GUITVSeries
                     #region My Torrents
                     case (int)eContextItems.downloadTorrent:
                         ShowMyTorrents();
+                        break;
+                    #endregion
+
+                    #region mpNZB
+                    case (int)eContextItems.downloadNZB:
+                        ShowMPNZB();
                         break;
                     #endregion
 
@@ -1859,10 +1875,24 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                searchObj = string.Format("{0} S{1:00}E{2:00}", m_SelectedSeries[DBOnlineSeries.cOriginalName], Convert.ToInt32(m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex].ToString()), Convert.ToInt32(m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex].ToString()));
+                searchObj = string.Format("{0} S{1:00}E{2:00}", m_SelectedSeries[DBOnlineSeries.cOriginalName], m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]);
             }
 
             GUIWindowManager.ActivateWindow(5678, searchObj);
+
+        }
+        #endregion
+
+        #region NZB Menu
+        protected void ShowMPNZB()
+        {
+            string searchObj = string.Empty;
+            if (listLevel == Listlevel.Episode)
+            {
+                searchObj = string.Format("search:{0} S{1}E{2}", m_SelectedSeries[DBOnlineSeries.cOriginalName], m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]);
+            }
+           
+            GUIWindowManager.ActivateWindow(3847, searchObj);
 
         }
         #endregion

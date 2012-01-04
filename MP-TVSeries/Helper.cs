@@ -735,6 +735,14 @@ namespace WindowPlugins.GUITVSeries
                 return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "MyTorrents.dll")) && IsPluginEnabled("MyTorrents");
             }
         }
+
+        public static bool IsMpNZBAvailableAndEnabled
+        {
+            get
+            {
+                return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "mpNZB.dll")) && IsPluginEnabled("mpNZB");
+            }
+        }
         #endregion
 
         #region Web Methods
