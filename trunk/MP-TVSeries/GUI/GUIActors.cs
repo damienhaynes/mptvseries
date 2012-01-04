@@ -28,7 +28,13 @@ namespace WindowPlugins.GUITVSeries.GUI
         #endregion
 
         #region Enums
-        
+
+        public enum ContextMenuItem
+        {
+            layout,
+            searchmovie
+        }
+
         public enum Layout
         {
             List = 0,
@@ -129,6 +135,49 @@ namespace WindowPlugins.GUITVSeries.GUI
                     break;
             }
             base.OnAction(action);
+        }
+
+        protected override void OnShowContextMenu()
+        {
+            GUIListItem selectedItem = this.FacadeActors.SelectedListItem;
+            if (selectedItem == null) return;
+
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            dlg.Reset();
+            dlg.SetHeading(Translation.Actors);
+
+            GUIListItem listItem = null;
+
+            // MovingPictures: Search for Actor in Movies
+            if (Helper.IsMovingPicturesAvailableAndEnabled)
+            {
+                listItem = new GUIListItem(Translation.SearchActorInMovies);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)ContextMenuItem.searchmovie;
+            }
+
+            listItem = new GUIListItem(Translation.ChangeLayout + " ...");
+            dlg.Add(listItem);
+            listItem.ItemId = (int)ContextMenuItem.layout;
+
+            // Show Context Menu
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+            if (dlg.SelectedId < 0) return;
+
+            switch (dlg.SelectedId)
+            {
+                case ((int)ContextMenuItem.layout):
+                    ShowLayoutsMenu();
+                    break;
+
+                case ((int)ContextMenuItem.searchmovie):
+                    DBActor actor = (selectedItem as GUIActorListItem).Item as DBActor;
+                    string searchObj = string.Format("searchcast:{0}", actor.Name);
+                    GUIWindowManager.ActivateWindow(96742, searchObj);
+                    break;
+            }
+
+            base.OnShowContextMenu();
         }
         #endregion
 

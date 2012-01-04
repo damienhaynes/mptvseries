@@ -342,6 +342,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static string SearchTorrent = "Torrent Search";
         public static string SearchNZB = "NZB Search";
+        public static string SearchActorInMovies = "Search for Actor in Movies";
         #endregion
 
         #region Public Properties
