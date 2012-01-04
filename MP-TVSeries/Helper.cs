@@ -743,6 +743,14 @@ namespace WindowPlugins.GUITVSeries
                 return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "mpNZB.dll")) && IsPluginEnabled("mpNZB");
             }
         }
+
+        public static bool IsMovingPicturesAvailableAndEnabled
+        {
+            get
+            {
+                return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "MovingPictures.dll")) && IsPluginEnabled("Moving Pictures");
+            }
+        }
         #endregion
 
         #region Web Methods
