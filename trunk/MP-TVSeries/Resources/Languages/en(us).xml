@@ -317,5 +317,6 @@
   <string Field="RelatedSeries" Original="RelatedSeries">Related Series</string>
 
   <string Field="SearchTorrent" Original="Torrent Search">Torrent Search</string>
+  <string Field="SearchNZB" Original="NZB Search">NZB Search</string>
   
 </strings>
