@@ -138,3 +138,8 @@ Most new developers on the project will be using this method first. Subversion g
 == Committing Changes to Subversion ==
 
 If you start making regular contributions to the project then you'll probably be added as a Project Member. This means you can commit changes directly to Subversion via TortoiseSVN. I am not going to cover this process here but it is pretty simple. Just be sure that you fill out a meaningful log message. The ability to skim through the past log messages in Subversion is very important, and if you make a commit without logging a message you will get yelled at. Also try to commit groups of files all at once. If you have made changes to five files all for one bug fix or enhancement, then these five files should all be committed together. Don't check them in one at a time individually, this just makes it more difficult to track changes in the version history.
+
+== Problems with x64 OS ==
+
+If you have an issue with Visual Studio 2010 and are running x64 OS, see
+this from [http://blogs.msdn.com/b/visualstudio/archive/2010/06/19/resgen-exe-error-an-attempt-was-made-to-load-a-program-with-an-incorrect-format.aspx Visual Studio Blog] for a solution
