@@ -141,5 +141,8 @@ If you start making regular contributions to the project then you'll probably be
 
 == Problems with Visual Studio 2010 and x64 OS ==
 
-If you have an issue with Visual Studio 2010 and are running x64 OS, see
-this from [http://blogs.msdn.com/b/visualstudio/archive/2010/06/19/resgen-exe-error-an-attempt-was-made-to-load-a-program-with-an-incorrect-format.aspx Visual Studio Blog] for a solution. Option 2 has been confirmed to work but you can use whichever.
+If you have an issue with Visual Studio 2010 and are running x64 OS, similar to below
+
+Error 1 Could not load file or assembly 'file:///MEDIAPORTAL/SVN/TVSeries/External/Core.dll' or one of its dependencies. An attempt was made to load a program with an incorrect format. Line 656, position 5. D:\MEDIAPORTAL\SVN\TVSeries\MP-TVSeries\Configuration\GUIConfiguration.resx 656 5 MP-TVSeries
+
+see this from [http://blogs.msdn.com/b/visualstudio/archive/2010/06/19/resgen-exe-error-an-attempt-was-made-to-load-a-program-with-an-incorrect-format.aspx Visual Studio Blog] for a solution. Workaround 2 has been confirmed to work but you can use whichever.
