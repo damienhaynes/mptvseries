@@ -13,6 +13,19 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 <wiki:toc max_depth="3" />
 
 = Skinner's Change Log =
+== v3.2.0 ==
+ * Added extra loading parameter support to jump to a particular Series or Season. Can also specify an episode which will filter out the list of episodes, typically you would just specify a series and a season as user might want to play the next episode. Below are some examples:
+
+{{{
+<hyperlinkParameter>seriesid:79488</hyperlinkParameter>
+}}}
+{{{
+<hyperlinkParameter>seriesid:79488|seasonidx:2</hyperlinkParameter>
+}}}
+{{{
+<hyperlinkParameter>seriesid:79488|seasonidx:2|episodeidx:6</hyperlinkParameter>
+}}}
+
 == v3.1.0 ==
  * Now that there is a MPEI Extension installer you can also check if an update is available using a Skin Button e.g.
 {{{
@@ -26,7 +39,7 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 }}}
  * Extension GUID is: *5e2777c3_966c_407f_b5a9_e51205b70b3e*
 
-== v3.0 ==
+== v3.0.0 ==
  * Added Coverflow support, to enable skin support from skin you need to add the coverflow facade control and also enable it in TVSeries.SkinSettings.xml:
 {{{
 <layouts>
