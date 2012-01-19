@@ -389,6 +389,7 @@ namespace WindowPlugins.GUITVSeries
             WatchList,
             Shouts,
             AddToWatchList,
+            AddToList,
             Rate,
             Related
         }
@@ -1933,7 +1934,23 @@ namespace WindowPlugins.GUITVSeries
                 TraktPlugin.GUI.GUIUtils.ShowRateDialog<TraktRateEpisode>(rateObj);
             }
         }
-        
+
+        protected void AddItemToCustomList()
+        {
+            if (this.listLevel == Listlevel.Series)
+            {
+                TraktPlugin.TraktHelper.AddRemoveShowInUserList(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedSeries[DBSeries.cID], false);
+            }
+            if (this.listLevel == Listlevel.Season)
+            {
+                TraktPlugin.TraktHelper.AddRemoveSeasonInUserList(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedSeason[DBSeason.cIndex], m_SelectedSeries[DBSeries.cID], false);
+            }
+            if (this.listLevel == Listlevel.Episode)
+            {
+                TraktPlugin.TraktHelper.AddRemoveEpisodeInUserList(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], m_SelectedSeries[DBSeries.cID], false);
+            }
+        }
+
         protected void AddItemToWatchList()
         {
             if (!CheckTraktLogin()) return;
@@ -2070,6 +2087,25 @@ namespace WindowPlugins.GUITVSeries
                 listItem.ItemId = (int)TraktMenuItems.Rate;
             }
 
+            if (this.listLevel == Listlevel.Episode)
+            {
+                listItem = new GUIListItem(string.Format(Translation.AddToCustomList, Translation.Episode));
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.AddToList;
+            }
+            if (this.listLevel == Listlevel.Season)
+            {
+                listItem = new GUIListItem(string.Format(Translation.AddToCustomList, Translation.Season));
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.AddToList;
+            }
+            if (this.listLevel == Listlevel.Series)
+            {
+                listItem = new GUIListItem(string.Format(Translation.AddToCustomList, Translation.Series));
+                dlg.Add(listItem);
+                listItem.ItemId = (int)TraktMenuItems.AddToList;
+            }
+
             // Show Context Menu
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId < 0) return;
@@ -2109,6 +2145,11 @@ namespace WindowPlugins.GUITVSeries
                 case ((int)TraktMenuItems.AddToWatchList):
                     // Add series/episode to personal Watchlist
                     AddItemToWatchList();
+                    break;
+
+                case ((int)TraktMenuItems.AddToList):
+                    // Add series/season/episode to custom list
+                    AddItemToCustomList();
                     break;
 
                 case ((int)TraktMenuItems.Rate):
