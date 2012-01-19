@@ -789,61 +789,6 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            //if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cRemovable].Index)
-            //{
-            //    if (cell.Value != null)
-            //    {
-            //        string sEnabled = cell.Value.ToString();
-            //        if (sEnabled == "True")
-            //        {
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = false;
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = false;
-            //        }
-            //        else
-            //        {
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].ReadOnly = true;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-            //        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
-            //        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
-            //        dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
-            //    }
-            //}
-
-            //if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cKeepReference].Index)
-            //{
-            //    if (!cell.ReadOnly)
-            //    {
-            //        if (cell.Value != null)
-            //        {
-            //            string sEnabled = cell.Value.ToString();
-            //            if (sEnabled == "True")
-            //                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
-            //            else
-            //                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = true;
-
-            //            if (dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value.ToString().ToUpper() == "TRUE")
-            //            {
-            //                DataGridViewCheckBoxCell cbCell = (DataGridViewCheckBoxCell)dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference];
-            //                dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
-
-            //            }
-            //        }
-            //        else
-            //        {
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cEnabled].Value = true;
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cRemovable].Value = true;
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cKeepReference].Value = false;
-            //            dataGridView_ImportPathes.Rows[e.RowIndex].Cells[DBImportPath.cPath].Value = "";
-            //        }
-            //    }
-            //}
-
             if (e.ColumnIndex == dataGridView_ImportPathes.Columns[DBImportPath.cPath].Index)
             {
                 // Determine if user clicked on the last row, (manually add new row)
@@ -881,6 +826,13 @@ namespace WindowPlugins.GUITVSeries
                     if (!Directory.Exists(importPathPopup.SelectedPath))
                     {
                         MessageBox.Show("Import path entered does not exist or is invalid.", "Import Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (bNewRow)
+                            dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
+                        return;
+                    }
+                    else if (DBImportPath.GetAll().Select(p => p[DBImportPath.cPath].ToString().ToLowerInvariant()).Contains(importPathPopup.SelectedPath.ToLowerInvariant()))
+                    {
+                        MessageBox.Show("Import path already exists.", "Import Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (bNewRow)
                             dataGridView_ImportPathes.Rows.RemoveAt(e.RowIndex);
                         return;
