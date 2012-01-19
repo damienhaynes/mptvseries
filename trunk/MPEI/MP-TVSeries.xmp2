@@ -1511,19 +1511,26 @@ public class Script
     <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>3</Major>
-      <Minor>1</Minor>
-      <Build>3</Build>
-      <Revision>1888</Revision>
+      <Minor>2</Minor>
+      <Build>0</Build>
+      <Revision>1909</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed Season artwork not being displayed in Filmstrip and Coverflow layouts.
-
-* Updated Danish translations, thanks Steffansp.</VersionDescription>
+    <VersionDescription>* Added support to directly loading into series via loading parameters.
+* Added MyTorrents search for selected series/episodes. Thanks edalex86.
+* Added NZB Search via mpNZB plugin.
+* Added Actor search on movies from Actors window, requires MovingPictures 1.3.0.
+* Added 'Add to Custom List' in Trakt context menu entry.
+* Added checking for unique import paths.This will prevent users encountering an error when navigating in ImportWizard,
+* Fixed duplicate action for EpisodeCounts during import.
+* Fixed ImportWizard not being able to identify episodes even though they are online. Cache was not being cleared before this action.
+* Updated French translations, thanks ubela64.
+</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.3.1888.mpe1</OnlineLocation>
-    <ReleaseDate>2011-11-12T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.2.0.1909.mpe1</OnlineLocation>
+    <ReleaseDate>2012-01-19T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
