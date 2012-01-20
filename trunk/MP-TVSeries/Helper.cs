@@ -612,9 +612,8 @@ namespace WindowPlugins.GUITVSeries
         public static bool IsFullscreenVideo {
             get {
                 bool isFullscreen = false;
-                if (GUIWindowManager.ActiveWindow == (int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO)
+                if (GUIWindowManager.ActiveWindow == (int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO || GUIWindowManager.ActiveWindow == (int)GUIWindow.Window.WINDOW_TVFULLSCREEN)
                     isFullscreen = true;
-
                 return isFullscreen;
             }
         }
