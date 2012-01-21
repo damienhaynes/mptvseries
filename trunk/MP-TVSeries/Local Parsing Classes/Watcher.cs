@@ -604,7 +604,7 @@ namespace WindowPlugins.GUITVSeries
         void DoFileScan(List<String> scannedFolders, ref List<PathPair> previousScan)
         {
 
-            MPTVSeriesLog.Write("File Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);                              
+            MPTVSeriesLog.Write("File Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
             
             // Check if Fullscreen Video is active as this can cause stuttering/dropped frames
             if (!DBOption.GetOptions(DBOption.cImport_ScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
@@ -639,6 +639,8 @@ namespace WindowPlugins.GUITVSeries
             }
             
             previousScan = newScan;
+
+            MPTVSeriesLog.Write("File Watcher: Finished File Scan on Import Paths", MPTVSeriesLog.LogLevel.Normal);
         }
 
         void workerWatcher_DoWork(object sender, DoWorkEventArgs e)
@@ -666,7 +668,7 @@ namespace WindowPlugins.GUITVSeries
             while (!worker.CancellationPending)
             {               
                TimeSpan tsUpdate = DateTime.Now - timeLastScan;
-                if ((int)tsUpdate.TotalMinutes > m_nScanLapse) 
+                if ((int)tsUpdate.TotalMinutes >= m_nScanLapse) 
                 {
                     timeLastScan = DateTime.Now;
                     DoFileScan();
