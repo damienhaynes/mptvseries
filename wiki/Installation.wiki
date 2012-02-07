@@ -9,15 +9,15 @@ This guide is intended to guide you through the installation process of the MP-T
 Below is a list of pre-requisites that must be met before you can proceed to install the plugin.
 
 == Software ==
- * !MediaPortal v1.1.x or MediaPortal 1.2 RC
+ * !MediaPortal v1.1.x or MediaPortal 1.2.x
  * Winzip/[http://www.rarlab.com/download.htm WinRAR] (for manual install)
  * Windows XP SP2+, Windows Vista SP1+, Windows 2003 SP2+, Windows 7
 
 MP-TVSeries works on both x86 and x64 operating system platforms. However only x86 libraries are used.
 
-= Installation for MP v1.2 RC =
+= Installation for MP v1.2.X =
 
-MP-TVSeries v3.1.0+ for MP v1.2 RC+ can be installed in either of the 2 methods below. Once you have installed the Plugin, a Shortcut will be created on the Desktop for easy access to the MP-TVSeries Plugin Configuration
+MP-TVSeries v3.1.0+ for MP v1.2.x can be installed in either of the 2 methods below. Once you have installed the Plugin, a Shortcut will be created on the Desktop for easy access to the MP-TVSeries Plugin Configuration
 
  http://mptvseries.googlecode.com/svn/wiki/Images/DesktopShortcut.jpg
 
@@ -25,7 +25,7 @@ MP-TVSeries v3.1.0+ for MP v1.2 RC+ can be installed in either of the 2 methods 
 
  == Install via Media Portal Extension Installer ==
 
-MP-TVSeries v3.1.0+ can now be installed via the Extension Installer. Note this requires MP v1.2 RC1+.
+MP-TVSeries v3.1.0+ can now be installed via the Extension Installer. Note this requires MP v1.2.x
 
  * Click Start, Programs, Team Mediaportal, Mediaportal
  * Select 'Mediaportal Extension Installer'
@@ -50,7 +50,7 @@ When you have finished the installation, close the Extension Installer.
 Before you begin, download the latest mpe1 package from the [http://www.team-mediaportal.com/extensions/movies-videos/mp-tvseries download] section.
 To Start the Installation, open or double click on the MP-TVSeries-3.xxx.mpe1 (Setup requires administrative privileges so you may be prompted to enter in credentials).
 
-Note: this mpe1 installer requires atleast 1.2 RC and will not install on MP 1.2Beta
+Note: this mpe1 installer requires atleast MP 1.2.x
 
 You will now be presented with a *Setup Wizard Installer*, as shown in the below screenshots.
 
