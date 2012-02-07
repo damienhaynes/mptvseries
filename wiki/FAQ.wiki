@@ -339,6 +339,15 @@ The following are the locations of the files and folders used by MP-TVSeries, sh
 || XP ||  C:\Documents and Settings\All Users\Application Data\Team MediaPortal\Mediaportal\MP-TVSeries\Cache\ ||
 || Vista & Win7 ||  C:\ProgramData\Team MediaPortal\Mediaportal\MP-TVSeries\Cache\ ||
 
+=MP-TVSeries Registry Location=
+
+If you have modified the default path to the DB, that is stored
+and can be changed in the registry using the following key
+
+|| HKEY_CURRENT_USER\Software\MPTVSeries\DBFile ||
+
+Note: if you are using the default path, this will be empty.
+
 
 ----
 
