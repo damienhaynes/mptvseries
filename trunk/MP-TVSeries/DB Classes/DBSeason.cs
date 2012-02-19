@@ -571,12 +571,12 @@ namespace WindowPlugins.GUITVSeries
                 // close progress dialog
                 progressDialog.Close();
                 
-                // if there are no local episodes, we still need to delete from online table
-                if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
+                // if we have removed all episodes in season without error, cleanup the online table
+                if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
                 {
                     condition = new SQLCondition();
                     condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBSeason.cSeriesID], SQLConditionType.Equal);
-                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);                    
+                    condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBSeason.cIndex], SQLConditionType.Equal);
                     DBOnlineEpisode.Clear(condition);
                 }
             }

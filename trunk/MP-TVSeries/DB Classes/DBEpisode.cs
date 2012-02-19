@@ -756,10 +756,11 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             if (episodes != null)
             {
-                foreach (DBEpisode episode in episodes)
+                if (episodes.Count > 0)
                 {
                     string file = this[DBEpisode.cFilename];
-                    if ((type != TVSeriesPlugin.DeleteMenuItems.database && !episode.isWritable()) || type == TVSeriesPlugin.DeleteMenuItems.database)
+                    // there can only be one file reference, even with multiple online references  e.g double episodes
+                    if ((type != TVSeriesPlugin.DeleteMenuItems.database && !episodes.First().isWritable()) || type == TVSeriesPlugin.DeleteMenuItems.database)
                     {
                         DBEpisode.Clear(condition);
 
@@ -779,18 +780,21 @@ namespace WindowPlugins.GUITVSeries
 
                         if (type != TVSeriesPlugin.DeleteMenuItems.disk)
                         {
-                            SQLCondition condition1 = new SQLCondition();
-                            condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, this[DBOnlineEpisode.cID], SQLConditionType.Equal);
-                            if (this[DBOnlineEpisode.cID] == 0)
+                            foreach (var episode in episodes)
                             {
-                                // online episodes with no data have id=0, so we should improve the query
-                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
-                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
-                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeIndex, this[DBOnlineEpisode.cEpisodeIndex], SQLConditionType.Equal);
+                                SQLCondition condition1 = new SQLCondition();
+                                condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                                if (this[DBOnlineEpisode.cID] == 0)
+                                {
+                                    // online episodes with no data have id=0, so we should improve the query
+                                    condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+                                    condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, episode[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+                                    condition1.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeIndex, episode[DBOnlineEpisode.cEpisodeIndex], SQLConditionType.Equal);
+                                }
+                                DBOnlineEpisode.Clear(condition1);
                             }
-                            DBOnlineEpisode.Clear(condition1);
                         }
-                    
+
                     }
                     else
                     {
