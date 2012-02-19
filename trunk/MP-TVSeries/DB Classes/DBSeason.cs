@@ -28,6 +28,8 @@ using System.Text;
 using SQLite.NET;
 using System.IO;
 using MediaPortal.Database;
+using MediaPortal.Dialogs;
+using MediaPortal.GUI.Library;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -531,10 +533,39 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             if (episodes != null)
             {
+                DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
+                string seriesName = series == null ? this[DBSeason.cSeriesID].ToString() : series.ToString();
+
+                // show progress dialog as this can be a long process esp for network drives
+                // will show new progress for each season if deleting from the series level
+                GUIDialogProgress progressDialog = (GUIDialogProgress)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS);
+                progressDialog.Reset();
+                progressDialog.DisplayProgressBar = true;
+                progressDialog.ShowWaitCursor = false;
+                progressDialog.DisableCancel(true);
+                progressDialog.SetHeading(Translation.Delete);
+                progressDialog.Percentage = 0;
+                progressDialog.SetLine(1, seriesName);
+                progressDialog.SetLine(2, string.Empty);
+                progressDialog.StartModal(GUIWindowManager.ActiveWindow);
+
+                int counter = 0;
+              
                 foreach (DBEpisode episode in episodes)
                 {
+                    string episodeName = string.Format("{0}x{1} - {2}", episode[DBOnlineEpisode.cSeasonIndex], episode[DBOnlineEpisode.cEpisodeIndex], episode[DBOnlineEpisode.cEpisodeName]);
+                    progressDialog.SetLine(2, episodeName);
+                    GUIWindowManager.Process();
+
                     resultMsg.AddRange(episode.deleteEpisode(type));
+
+                    progressDialog.Percentage = Convert.ToInt32(((double)++counter / (double)episodes.Count) * 100.0);
+                    GUIWindowManager.Process();
                 }
+
+                // close progress dialog
+                System.Threading.Thread.Sleep(1000);
+                progressDialog.Close();
 
                 // if there are no local episodes, we still need to delete from online table
                 if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)

@@ -608,13 +608,15 @@ namespace WindowPlugins.GUITVSeries
 
                 int viewLevels = m_CurrLView.m_steps.Count;
 
-                m_SelectedSeries = Helper.getCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));
+                m_SelectedSeries = Helper.getCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));                
                 if (m_SelectedSeries == null)
                 {
+                    MPTVSeriesLog.Write("Failed to get series object from loading parameter!", MPTVSeriesLog.LogLevel.Debug);
                     m_LoadingParameter.Type = LoadingParameterType.None;
                 }
                 else
                 {
+                    MPTVSeriesLog.Write(string.Format("Loading into series: {0}", m_SelectedSeries.ToString(), MPTVSeriesLog.LogLevel.Debug));
                     m_stepSelection = new string[] { m_LoadingParameter.SeriesId };
                     m_stepSelections.Add(m_stepSelection);
                     pushFieldsToSkin(m_SelectedSeries, "Series");
