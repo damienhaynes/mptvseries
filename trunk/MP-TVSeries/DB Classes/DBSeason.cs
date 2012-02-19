@@ -533,6 +533,9 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             if (episodes != null)
             {
+                bool hasLocalEpisodesToDelete = episodes.Exists(e => !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
+                hasLocalEpisodesToDelete &= (type == TVSeriesPlugin.DeleteMenuItems.disk || type == TVSeriesPlugin.DeleteMenuItems.diskdatabase);
+
                 DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
                 string seriesName = series == null ? this[DBSeason.cSeriesID].ToString() : series.ToString();
 
@@ -545,9 +548,11 @@ namespace WindowPlugins.GUITVSeries
                 progressDialog.DisableCancel(true);
                 progressDialog.SetHeading(Translation.Delete);
                 progressDialog.Percentage = 0;
-                progressDialog.SetLine(1, seriesName);
+                progressDialog.SetLine(1, string.Format("{0} {1}", seriesName, this[DBSeason.cIndex]));
                 progressDialog.SetLine(2, string.Empty);
-                progressDialog.StartModal(GUIWindowManager.ActiveWindow);
+                
+                // only show progress dialog if we have local files in season
+                if (hasLocalEpisodesToDelete) progressDialog.StartModal(GUIWindowManager.ActiveWindow);
 
                 int counter = 0;
               
@@ -564,9 +569,8 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // close progress dialog
-                System.Threading.Thread.Sleep(1000);
                 progressDialog.Close();
-
+                
                 // if there are no local episodes, we still need to delete from online table
                 if (episodes.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
                 {
