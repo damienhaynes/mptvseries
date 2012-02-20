@@ -373,10 +373,9 @@ namespace WindowPlugins.GUITVSeries
             this.nudParentalControlTimeout.Value = DBOption.GetOptions(DBOption.cParentalControlResetInterval);
 
             txtMainMirror.Text = DBOption.GetOptions(DBOption.cMainMirror);
-
+            
             MPTVSeriesLog.pauseAutoWriteDB = false;
-            MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
-            this.comboLogLevel.SelectedIndex = (int)MPTVSeriesLog.selectedLogLevel;
+
             this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
             
             this.cbNewEpisodeThumbIndicator.SelectedIndex = (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
@@ -2908,14 +2907,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void comboLogLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.comboLogLevel.SelectedIndex == 0) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
-            else if (this.comboLogLevel.SelectedIndex == 1) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
-            else if (this.comboLogLevel.SelectedIndex == 2) MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.DebugSQL;
-            else MPTVSeriesLog.selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
-        }     
-
         private void textBox_PluginHomeName_TextChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
@@ -4337,6 +4328,12 @@ namespace WindowPlugins.GUITVSeries
             // save the config size
             DBOption.SetOptions(DBOption.cConfigSizeHeight, this.Size.Height);
             DBOption.SetOptions(DBOption.cConfigSizeWidth, this.Size.Width);
+        }
+
+        private void dbOptionSQLLogging_CheckStateChanged(object sender, EventArgs e)
+        {
+            // update logging level so reflects in current config window
+            MPTVSeriesLog.InitLogLevel();
         }
     }
     
