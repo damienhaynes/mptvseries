@@ -321,5 +321,18 @@
   <string Field="SearchActorInMovies" Original="Search for Actor in Movies">Search for Actor in Movies</string>
 
   <string Field="AddToCustomList" Original="Add {0} to Custom List...">Add {0} to Custom List...</string>
-  
+
+  <string Field="insertDisk" Original="Please insert Disk">Please insert Disk</string>
+  <string Field="InsertDiskMessage1" Original="The media for the episode you have selected">The media for the episode you have selected</string>
+  <string Field="InsertDiskMessage2" Original="is currently not available.">is currently not available.</string>
+  <string Field="InsertDiskMessage3" Original="Please insert or connect media">Please insert or connect media</string>
+  <string Field="InsertDiskMessage4" Original="labeled: {0}">labeled: {0}</string>
+  <string Field="OK" Original="OK">OK</string>
+  <string Field="Cancel" Original="Cancel">Cancel</string>
+  <string Field="Ignore" Original="Ignore">Ignore</string>
+  <string Field="CycleSeriesThumb" Original="Cycle Series Panel">Cycle Series Panel</string>
+  <string Field="Update" Original="Update">Update</string>
+  <string Field="ViewTagExistsMessage" Original="The view '{0}' already exists">The view '{0}' already exists</string>
+  <string Field="LayoutListThumbs" Original="List Panels">List Panels</string>
+  <string Field="LayoutCoverflow" Original="Coverflow">Coverflow</string>
 </strings>

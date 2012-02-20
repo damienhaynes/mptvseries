@@ -21,23 +21,24 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
+using System.Text.RegularExpressions;
+using MediaPortal.Configuration;
+using MediaPortal.GUI.Library;
 
 namespace WindowPlugins.GUITVSeries
 {
     static class Translation
-    {
-        private static Dictionary<string, string> translations;
-
+    {        
         /// <summary>
         /// These will be loaded with the language files content
-        /// if the selected lang file is not found, it will first try to load en(us).xml as a backup
+        /// if the selected lang file is not found, it will first try to load en-US.xml as a backup
         /// if that also fails it will use the hardcoded strings as a last resort.
         /// </summary>
         #region Translatable Fields
@@ -347,18 +348,39 @@ namespace WindowPlugins.GUITVSeries
         public static string AddToCustomList = "Add {0} to Custom List...";
         #endregion
 
+        #region Private variables
+
+        private static Dictionary<string, string> translations;
+        private static Regex translateExpr = new Regex(@"\$\{([^\}]+)\}");
+        private static string path = string.Empty;
+
+        #endregion
+
+        #region Constructor
+
+        static Translation()
+        {
+
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
         /// Gets the translated strings collection in the active language
         /// </summary>
-        public static Dictionary<string, string> Strings {
-            get {
-                if (translations == null) {
+        public static Dictionary<string, string> Strings
+        {
+            get
+            {
+                if (translations == null)
+                {
                     translations = new Dictionary<string, string>();
                     Type transType = typeof(Translation);
                     FieldInfo[] fields = transType.GetFields(BindingFlags.Public | BindingFlags.Static);
-                    foreach (FieldInfo field in fields) {
+                    foreach (FieldInfo field in fields)
+                    {
                         translations.Add(field.Name, field.GetValue(transType).ToString());
                     }
                 }
@@ -366,98 +388,129 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public static string CurrentLanguage
+        {
+            get
+            {
+                string language = string.Empty;
+                try
+                {
+                    language = GUILocalizeStrings.GetCultureName(GUILocalizeStrings.CurrentLanguage());
+                }
+                catch (Exception)
+                {
+                    language = CultureInfo.CurrentUICulture.Name;
+                }
+                return language;
+            }
+        }
+        public static string PreviousLanguage { get; set; }
+
         #endregion
 
         #region Public Methods
-        static string path = string.Empty;
-        static public void Init()
+
+        public static void Init()
         {
-            string lang = DBOption.GetOptions(DBOption.cLanguage);
-            if (lang.Length == 0)
-            {
-                MPTVSeriesLog.Write("No Translation selected, falling back to English");
-                lang = "en(us)";
-                DBOption.SetOptions(DBOption.cLanguage, lang);
-            }
-            
-            path = Settings.GetPath(Settings.Path.lang);
+            translations = null;
+            MPTVSeriesLog.Write("Using language " + CurrentLanguage);
+
+            path = Config.GetSubFolder(Config.Dir.Language, "MP-TVSeries");
+
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
-            MPTVSeriesLog.Write("Loading Translations for ", lang, MPTVSeriesLog.LogLevel.Normal);
-            MPTVSeriesLog.Write(loadTranslations(lang).ToString() + " translated Strings found");
-        }
-        static Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
 
-        public static int loadTranslations(string lang) {
-            XmlDocument doc=new XmlDocument();
-            TranslatedStrings=new Dictionary<string, string>();
-            Type TransType=typeof(Translation);
-            FieldInfo[] fieldInfos=TransType.GetFields(BindingFlags.Public|BindingFlags.Static);
+            string lang = PreviousLanguage = CurrentLanguage;
+            LoadTranslations(lang);
 
-            try {
-                doc.Load(path+"\\"+lang+".xml");
-            }
-            catch (Exception e) {
-                if (lang=="en(us)")
-                    return 0; // othwerise we are in an endless loop!
-                MPTVSeriesLog.Write("Cannot find Translation File (or error in xml): ", lang, MPTVSeriesLog.LogLevel.Normal);
-                MPTVSeriesLog.Write(e.Message);
-                MPTVSeriesLog.Write("Falling back to English", MPTVSeriesLog.LogLevel.Normal);
-                DBOption.SetOptions(DBOption.cLanguage, "en(us)");
-                return loadTranslations("en(us)");
-            }
-
-            string transField=string.Empty;
-            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes) {
-                if (stringEntry.NodeType==XmlNodeType.Element)
-                    try {
-                        transField=stringEntry.Attributes.GetNamedItem("Field").Value;
-                        TranslatedStrings.Add(transField, stringEntry.InnerText);
-                    }
-                    catch (Exception ex) {
-                        MPTVSeriesLog.Write(string.Format("Error adding translation field ({0}:{1}), {2}", transField, stringEntry.InnerText, ex.Message));
-                    }
-            }
-
-            foreach (FieldInfo fi in fieldInfos) {
-                TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType, new object[] { Get(fi.Name) });
-            }
-
-            int count=TranslatedStrings.Count;
-            TranslatedStrings=null; // free up
-            return count;
-        }
-
-        public static string Get(string Field)
-        {
-            if (TranslatedStrings != null && TranslatedStrings.ContainsKey(Field)) return TranslatedStrings[Field];
-            else if(Field != null && Field.Length > 0) {
-                try {
-                    return (string)(typeof(Translation).InvokeMember(Field, BindingFlags.GetField, null, typeof(Translation), null));
-                }
-                catch {
-                    //MPTVSeriesLog.Write(string.Format("Unable to translate field: {0}", Field));
-                    return string.Empty; 
-                }
-            } 
-            else 
-                return string.Empty;
-        }
-
-        public static List<string> getSupportedLangs()
-        {
-            List<string> langs = new List<string>();
-            path = Settings.GetPath(Settings.Path.lang);
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            foreach (string file in System.IO.Directory.GetFiles(path, "*.xml"))
+            // publish all available translation strings
+            // so skins have access to them
+            foreach (string name in Strings.Keys)
             {
-                langs.Add(System.IO.Path.GetFileNameWithoutExtension(file));
+                GUIPropertyManager.SetProperty("#TVSeries.Translation." + name + ".Label", Translation.Strings[name]);
             }
-            return langs;
         }
+
+        public static int LoadTranslations(string lang)
+        {
+            XmlDocument doc = new XmlDocument();
+            Dictionary<string, string> TranslatedStrings = new Dictionary<string, string>();
+            string langPath = string.Empty;
+
+            try
+            {
+                langPath = Path.Combine(path, lang + ".xml");
+                doc.Load(langPath);
+            }
+            catch (Exception e)
+            {
+                if (lang == "en")
+                    return 0; // otherwise we are in an endless loop!
+
+                if (e.GetType() == typeof(FileNotFoundException))
+                    MPTVSeriesLog.Write("Cannot find translation file {0}. Falling back to English", langPath);
+                else
+                    MPTVSeriesLog.Write("Error in translation xml file: {0}. Falling back to English", lang);
+
+                return LoadTranslations("en");
+            }
+
+            foreach (XmlNode stringEntry in doc.DocumentElement.ChildNodes)
+            {
+                if (stringEntry.NodeType == XmlNodeType.Element)
+                {
+                    try
+                    {
+                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("Field").Value, stringEntry.InnerText);
+                    }
+                    catch (Exception ex)
+                    {
+                        MPTVSeriesLog.Write("Error in Translation Engine", ex.Message);
+                    }
+                }
+            }
+
+            Type TransType = typeof(Translation);
+            FieldInfo[] fieldInfos = TransType.GetFields(BindingFlags.Public | BindingFlags.Static);
+            foreach (FieldInfo fi in fieldInfos)
+            {
+                if (TranslatedStrings != null && TranslatedStrings.ContainsKey(fi.Name))
+                    TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType, new object[] { TranslatedStrings[fi.Name] });
+                else
+                    MPTVSeriesLog.Write("Translation not found for field: {0}. Using hard-coded English default.", fi.Name);
+            }
+            return TranslatedStrings.Count;
+        }
+
+        public static string GetByName(string name)
+        {
+            if (!Strings.ContainsKey(name))
+                return name;
+
+            return Strings[name];
+        }
+
+        public static string GetByName(string name, params object[] args)
+        {
+            return String.Format(GetByName(name), args);
+        }
+
+        /// <summary>
+        /// Takes an input string and replaces all ${named} variables with the proper translation if available
+        /// </summary>
+        /// <param name="input">a string containing ${named} variables that represent the translation keys</param>
+        /// <returns>translated input string</returns>
+        public static string ParseString(string input)
+        {
+            MatchCollection matches = translateExpr.Matches(input);
+            foreach (Match match in matches)
+            {
+                input = input.Replace(match.Value, GetByName(match.Groups[1].Value));
+            }
+            return input;
+        }
+
         #endregion
+
     }
 }

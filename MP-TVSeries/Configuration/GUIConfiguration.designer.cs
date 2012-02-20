@@ -102,7 +102,6 @@ namespace WindowPlugins.GUITVSeries
             this.buttonViewTemplates = new System.Windows.Forms.Button();
             this.textBox_PluginHomeName = new System.Windows.Forms.TextBox();
             this.checkBox_RandBanner = new System.Windows.Forms.CheckBox();
-            this.comboLanguage = new System.Windows.Forms.ComboBox();
             this.nudWatchedAfter = new System.Windows.Forms.NumericUpDown();
             this.checkBox_Series_UseSortName = new System.Windows.Forms.CheckBox();
             this.checkBox_doFolderWatch = new System.Windows.Forms.CheckBox();
@@ -257,7 +256,6 @@ namespace WindowPlugins.GUITVSeries
             this.numericUpDownBackdropDelay = new System.Windows.Forms.NumericUpDown();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.tab_view = new System.Windows.Forms.TabPage();
             this.playlistSettings = new WindowPlugins.GUITVSeries.Configuration.PlaylistSettings();
@@ -607,24 +605,11 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_RandBanner.Location = new System.Drawing.Point(404, 169);
             this.checkBox_RandBanner.Name = "checkBox_RandBanner";
             this.checkBox_RandBanner.Size = new System.Drawing.Size(261, 17);
-            this.checkBox_RandBanner.TabIndex = 36;
+            this.checkBox_RandBanner.TabIndex = 33;
             this.checkBox_RandBanner.Text = "&Display random Artwork in series and season view";
             this.toolTip_Help.SetToolTip(this.checkBox_RandBanner, "Enable this option to display a random banner when entering series/season view");
             this.checkBox_RandBanner.UseVisualStyleBackColor = true;
             this.checkBox_RandBanner.CheckedChanged += new System.EventHandler(this.checkBox_RandBanner_CheckedChanged);
-            // 
-            // comboLanguage
-            // 
-            this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboLanguage.FormattingEnabled = true;
-            this.comboLanguage.Location = new System.Drawing.Point(402, 19);
-            this.comboLanguage.Name = "comboLanguage";
-            this.comboLanguage.Size = new System.Drawing.Size(119, 21);
-            this.comboLanguage.TabIndex = 29;
-            this.toolTip_Help.SetToolTip(this.comboLanguage, "Select the language that the plugin user interface will be displayed in Media Por" +
-                    "tal.\r\nThis does not control the language of downloaded data from the online data" +
-                    "base");
-            this.comboLanguage.SelectedIndexChanged += new System.EventHandler(this.comboLanguage_SelectedIndexChanged);
             // 
             // nudWatchedAfter
             // 
@@ -674,7 +659,7 @@ namespace WindowPlugins.GUITVSeries
             this.chkAllowDeletes.Location = new System.Drawing.Point(404, 261);
             this.chkAllowDeletes.Name = "chkAllowDeletes";
             this.chkAllowDeletes.Size = new System.Drawing.Size(269, 17);
-            this.chkAllowDeletes.TabIndex = 41;
+            this.chkAllowDeletes.TabIndex = 37;
             this.chkAllowDeletes.Text = "Allow user to delete &files from the GUI context menu";
             this.toolTip_Help.SetToolTip(this.chkAllowDeletes, "Enable this option to allow users to delete items using the context menu from wit" +
                     "h-in Media Portal");
@@ -684,10 +669,10 @@ namespace WindowPlugins.GUITVSeries
             // linkImpWatched
             // 
             this.linkImpWatched.AutoSize = true;
-            this.linkImpWatched.Location = new System.Drawing.Point(401, 78);
+            this.linkImpWatched.Location = new System.Drawing.Point(402, 50);
             this.linkImpWatched.Name = "linkImpWatched";
             this.linkImpWatched.Size = new System.Drawing.Size(120, 13);
-            this.linkImpWatched.TabIndex = 32;
+            this.linkImpWatched.TabIndex = 29;
             this.linkImpWatched.TabStop = true;
             this.linkImpWatched.Text = "Import Watched Flags...";
             this.toolTip_Help.SetToolTip(this.linkImpWatched, "Import the \'Watched\' Status of all episodes from file");
@@ -696,10 +681,10 @@ namespace WindowPlugins.GUITVSeries
             // linkExWatched
             // 
             this.linkExWatched.AutoSize = true;
-            this.linkExWatched.Location = new System.Drawing.Point(401, 101);
+            this.linkExWatched.Location = new System.Drawing.Point(401, 71);
             this.linkExWatched.Name = "linkExWatched";
             this.linkExWatched.Size = new System.Drawing.Size(121, 13);
-            this.linkExWatched.TabIndex = 33;
+            this.linkExWatched.TabIndex = 30;
             this.linkExWatched.TabStop = true;
             this.linkExWatched.Text = "Export Watched Flags...";
             this.toolTip_Help.SetToolTip(this.linkExWatched, "Export the \'Watched\' Status of all episodes to file");
@@ -711,7 +696,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkbox_SortSpecials.Location = new System.Drawing.Point(404, 123);
             this.checkbox_SortSpecials.Name = "checkbox_SortSpecials";
             this.checkbox_SortSpecials.Size = new System.Drawing.Size(239, 17);
-            this.checkbox_SortSpecials.TabIndex = 34;
+            this.checkbox_SortSpecials.TabIndex = 31;
             this.checkbox_SortSpecials.Text = "Sort Specials in Episode list (Aired Order only)";
             this.toolTip_Help.SetToolTip(this.checkbox_SortSpecials, "Enable this option to sort specials in the main episode list by their correspondi" +
                     "ng air date.\r\nNote: This will only work if the episode list is sorted by \'Aired " +
@@ -1504,7 +1489,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_OnlyShowLocalFiles.Location = new System.Drawing.Point(404, 192);
             this.checkBox_Episode_OnlyShowLocalFiles.Name = "checkBox_Episode_OnlyShowLocalFiles";
             this.checkBox_Episode_OnlyShowLocalFiles.Size = new System.Drawing.Size(256, 17);
-            this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 37;
+            this.checkBox_Episode_OnlyShowLocalFiles.TabIndex = 34;
             this.checkBox_Episode_OnlyShowLocalFiles.Text = "&Show all episodes in local database when in GUI";
             this.toolTip_InfoHelp.SetToolTip(this.checkBox_Episode_OnlyShowLocalFiles, resources.GetString("checkBox_Episode_OnlyShowLocalFiles.ToolTip"));
             this.checkBox_Episode_OnlyShowLocalFiles.UseVisualStyleBackColor = true;
@@ -1573,7 +1558,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
             this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
             this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
-            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 43;
+            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 39;
             this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
             this.dbOptChkBoxCountEmptyFutureEps.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
@@ -1590,7 +1575,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(223, 17);
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 39;
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 35;
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online";
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, "If enabled and episode has been rated, mark the episode as watched.");
@@ -1620,7 +1605,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Name = "dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay";
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Option = "SubCentral_SubtitleDownloadOnPlay";
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Size = new System.Drawing.Size(281, 17);
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 44;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 40;
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
@@ -1630,11 +1615,11 @@ namespace WindowPlugins.GUITVSeries
             // dbOptionSQLLogging
             // 
             this.dbOptionSQLLogging.AutoSize = true;
-            this.dbOptionSQLLogging.Location = new System.Drawing.Point(402, 52);
+            this.dbOptionSQLLogging.Location = new System.Drawing.Point(404, 23);
             this.dbOptionSQLLogging.Name = "dbOptionSQLLogging";
             this.dbOptionSQLLogging.Option = "SQLLoggingEnabled";
             this.dbOptionSQLLogging.Size = new System.Drawing.Size(166, 17);
-            this.dbOptionSQLLogging.TabIndex = 45;
+            this.dbOptionSQLLogging.TabIndex = 28;
             this.dbOptionSQLLogging.Text = "Enable Verbose SQL Logging";
             this.dbOptionSQLLogging.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptionSQLLogging, "Enable verbose SQL Logging, WARNING!!! This will impact performance if enabled.");
@@ -2621,8 +2606,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.label39);
             this.groupBox1.Controls.Add(this.label38);
             this.groupBox1.Controls.Add(this.nudWatchedAfter);
-            this.groupBox1.Controls.Add(this.label32);
-            this.groupBox1.Controls.Add(this.comboLanguage);
             this.groupBox1.Controls.Add(this.checkBox_RandBanner);
             this.groupBox1.Controls.Add(this.textBox_PluginHomeName);
             this.groupBox1.Controls.Add(this.label16);
@@ -2642,7 +2625,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox3.Name = "dbOptionCheckBox3";
             this.dbOptionCheckBox3.Option = "SortSpecialSeasonLast";
             this.dbOptionCheckBox3.Size = new System.Drawing.Size(188, 17);
-            this.dbOptionCheckBox3.TabIndex = 35;
+            this.dbOptionCheckBox3.TabIndex = 32;
             this.dbOptionCheckBox3.Text = "Sort Specials at end of season list.";
             this.dbOptionCheckBox3.ToolTip = "Enable this option to sort specials at end of season list rather than first item." +
                 "";
@@ -2728,7 +2711,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox2.Name = "dbOptionCheckBox2";
             this.dbOptionCheckBox2.Option = "SkipSeasonViewOnSingleSeason";
             this.dbOptionCheckBox2.Size = new System.Drawing.Size(234, 17);
-            this.dbOptionCheckBox2.TabIndex = 40;
+            this.dbOptionCheckBox2.TabIndex = 36;
             this.dbOptionCheckBox2.Text = "Skip season view if there is only one season";
             this.dbOptionCheckBox2.ToolTip = "";
             this.dbOptionCheckBox2.UseVisualStyleBackColor = true;
@@ -2740,7 +2723,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBoxSubstituteMissingArtwork.Name = "dbOptionCheckBoxSubstituteMissingArtwork";
             this.dbOptionCheckBoxSubstituteMissingArtwork.Option = "SubstituteMissingArtwork";
             this.dbOptionCheckBoxSubstituteMissingArtwork.Size = new System.Drawing.Size(280, 17);
-            this.dbOptionCheckBoxSubstituteMissingArtwork.TabIndex = 42;
+            this.dbOptionCheckBoxSubstituteMissingArtwork.TabIndex = 38;
             this.dbOptionCheckBoxSubstituteMissingArtwork.Text = "Substitute Missing Season Posters with Series Posters";
             this.dbOptionCheckBoxSubstituteMissingArtwork.ToolTip = "";
             this.dbOptionCheckBoxSubstituteMissingArtwork.UseVisualStyleBackColor = true;
@@ -2843,15 +2826,6 @@ namespace WindowPlugins.GUITVSeries
             this.label38.Size = new System.Drawing.Size(141, 13);
             this.label38.TabIndex = 2;
             this.label38.Text = "An episode is &watched after:";
-            // 
-            // label32
-            // 
-            this.label32.Location = new System.Drawing.Point(329, 23);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(67, 13);
-            this.label32.TabIndex = 28;
-            this.label32.Text = "&Language:";
-            this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label16
             // 
@@ -3598,8 +3572,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.NumericUpDown nudWatchedAfter;
-        private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.ComboBox comboLanguage;
         private System.Windows.Forms.CheckBox checkBox_RandBanner;
         private System.Windows.Forms.TextBox textBox_PluginHomeName;
         private System.Windows.Forms.Label label16;
