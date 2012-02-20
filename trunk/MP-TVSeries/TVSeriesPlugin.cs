@@ -466,9 +466,6 @@ namespace WindowPlugins.GUITVSeries
             m_localControlForInvoke.CreateControl();
 
             MPTVSeriesLog.Write("**** Plugin started in MediaPortal ****");
-
-            // Get Logging Level
-            MPTVSeriesLog.selectedLogLevel = (MPTVSeriesLog.LogLevel)(int)DBOption.GetOptions("logLevel");
             DBOption.LogOptions();
 
             #region Translations

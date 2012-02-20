@@ -172,6 +172,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionSQLLogging = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -254,8 +255,6 @@ namespace WindowPlugins.GUITVSeries
             this.label74 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.numericUpDownBackdropDelay = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.comboLogLevel = new System.Windows.Forms.ComboBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
@@ -1628,6 +1627,20 @@ namespace WindowPlugins.GUITVSeries
                     "sn\'t have any.\r\nNote: appliable only when using SubCentral.");
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
             // 
+            // dbOptionSQLLogging
+            // 
+            this.dbOptionSQLLogging.AutoSize = true;
+            this.dbOptionSQLLogging.Location = new System.Drawing.Point(402, 52);
+            this.dbOptionSQLLogging.Name = "dbOptionSQLLogging";
+            this.dbOptionSQLLogging.Option = "SQLLoggingEnabled";
+            this.dbOptionSQLLogging.Size = new System.Drawing.Size(166, 17);
+            this.dbOptionSQLLogging.TabIndex = 45;
+            this.dbOptionSQLLogging.Text = "Enable Verbose SQL Logging";
+            this.dbOptionSQLLogging.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptionSQLLogging, "Enable verbose SQL Logging, WARNING!!! This will impact performance if enabled.");
+            this.dbOptionSQLLogging.UseVisualStyleBackColor = true;
+            this.dbOptionSQLLogging.CheckStateChanged += new System.EventHandler(this.dbOptionSQLLogging_CheckStateChanged);
+            // 
             // splitMain_Log
             // 
             this.splitMain_Log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2570,6 +2583,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.dbOptionSQLLogging);
             this.groupBox1.Controls.Add(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox3);
             this.groupBox1.Controls.Add(this.lblRecentAddedDays);
@@ -2594,8 +2608,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.label27);
             this.groupBox1.Controls.Add(this.numericUpDownBackdropDelay);
             this.groupBox1.Controls.Add(this.checkbox_SortSpecials);
-            this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Controls.Add(this.comboLogLevel);
             this.groupBox1.Controls.Add(this.linkExWatched);
             this.groupBox1.Controls.Add(this.linkImpWatched);
             this.groupBox1.Controls.Add(this.chkAllowDeletes);
@@ -2813,29 +2825,6 @@ namespace WindowPlugins.GUITVSeries
             0,
             0});
             this.numericUpDownBackdropDelay.ValueChanged += new System.EventHandler(this.numericUpDownBackdropDelay_ValueChanged);
-            // 
-            // label11
-            // 
-            this.label11.Location = new System.Drawing.Point(328, 52);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(68, 13);
-            this.label11.TabIndex = 30;
-            this.label11.Text = "Lo&g Level:";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // comboLogLevel
-            // 
-            this.comboLogLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboLogLevel.FormattingEnabled = true;
-            this.comboLogLevel.Items.AddRange(new object[] {
-            "Normal",
-            "Debug",
-            "Debug+SQL (huge!)"});
-            this.comboLogLevel.Location = new System.Drawing.Point(402, 47);
-            this.comboLogLevel.Name = "comboLogLevel";
-            this.comboLogLevel.Size = new System.Drawing.Size(119, 21);
-            this.comboLogLevel.TabIndex = 31;
-            this.comboLogLevel.SelectedIndexChanged += new System.EventHandler(this.comboLogLevel_SelectedIndexChanged);
             // 
             // label39
             // 
@@ -3596,8 +3585,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.NumericUpDown numericUpDownBackdropDelay;
         private System.Windows.Forms.CheckBox checkbox_SortSpecials;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox comboLogLevel;
         private System.Windows.Forms.LinkLabel linkExWatched;
         private System.Windows.Forms.LinkLabel linkImpWatched;
         private System.Windows.Forms.CheckBox chkAllowDeletes;
@@ -3691,5 +3678,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.NumericUpDown nudParentalControlTimeout;
         private System.Windows.Forms.Label label19;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay;
+        private Configuration.DBOptionCheckBox dbOptionSQLLogging;
     }
 }

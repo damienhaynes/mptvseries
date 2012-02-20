@@ -38,7 +38,6 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #region Vars
-        static private LogLevel _selectedLogLevel = LogLevel.Normal;
         static String m_filename = Settings.GetPath(Settings.Path.log);
         static StreamWriter m_LogStream;
         static System.Windows.Forms.ListBox m_ListLog;
@@ -51,27 +50,17 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Properties
-        public static LogLevel selectedLogLevel
-	    {
-		    get { return _selectedLogLevel;}
-		    set {
-                    if (value != _selectedLogLevel)
-                    {
-                        Write("Switched LogLevel to: " + value.ToString());
-                        _selectedLogLevel = value;
-                        if (!pauseAutoWriteDB)
-                            DBOption.SetOptions(DBOption.cLogLevel, (int)value);
-                    }
-                }
-            }
+        static LogLevel selectedLogLevel{ get; set; }
         #endregion
-
+        
         #region Constructor
         static MPTVSeriesLog()
         {
             if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.ToLower() == "devenv")
                 return;
- 
+                            
+            InitLogLevel();
+
             // let's rename the old one to .bak just like MP does
             try
             {
@@ -96,10 +85,25 @@ namespace WindowPlugins.GUITVSeries
             {
                 // oopps, can't create file
             }
-
-            selectedLogLevel = LogLevel.Normal;
+            
             pauseAutoWriteDB = true;
             
+        }
+        #endregion
+
+        #region Other Public Methods
+        public static void InitLogLevel()
+        {
+            using (var xmlreader = new MediaPortal.Profile.MPSettings())
+            {
+                int logLevel = xmlreader.GetValueAsInt("general", "loglevel", 2);
+                if (DBOption.GetOptions(DBOption.cSQLLoggingEnabled))
+                    selectedLogLevel = MPTVSeriesLog.LogLevel.DebugSQL;
+                else if (logLevel == 3)
+                    selectedLogLevel = MPTVSeriesLog.LogLevel.Debug;
+                else
+                    selectedLogLevel = MPTVSeriesLog.LogLevel.Normal;
+            }
         }
         #endregion
 
@@ -199,9 +203,6 @@ namespace WindowPlugins.GUITVSeries
                     #region Hide Personal Info
                     if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey))
                         entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
-
-                    if (OmmitKey && !String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cTraktPassword)))
-                        entry = entry.Replace("\"" + DBOption.GetOptions(DBOption.cTraktPassword) + "\"", "\"<traktPassword>\"");
                     #endregion
 
                     String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);

@@ -180,9 +180,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cOnPlaySeriesOrSeasonAction = "OnPlaySeriesOrSeasonAction";
 
         public const String cNewEpisodeThumbType = "NewEpisodeThumbType";
-        public const String cNewEpisodeRecentDays = "NewEpisodeRecentDays";
-
-        public const String cLogLevel = "logLevel";
+        public const String cNewEpisodeRecentDays = "NewEpisodeRecentDays";        
 
         public const String cSubCentralEnabled = "SubCentral_Enabled";
         public const String cSubCentralEnabledForEpisodes = "SubCentral_EnabledForEpisodes";
@@ -221,10 +219,12 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cParentalControlResetInterval = "ParentalControlResetInterval";
 
+        public const String cSQLLoggingEnabled = "SQLLoggingEnabled";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
-        private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";
-        
+        private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";       
+
         static DBOption()
         {
             try
@@ -531,10 +531,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cOnPlaySeriesOrSeasonAction) == null)
                     SetOptions(cOnPlaySeriesOrSeasonAction, 2); // set first unwatched as default
-
-                if (GetOptions(cLogLevel) == null)
-                    SetOptions(cLogLevel, 0);
-
+                
                 if (GetOptions(cNewEpisodeThumbType) == null)
                     SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
 
@@ -583,18 +580,11 @@ namespace WindowPlugins.GUITVSeries
                 if (GetOptions(cArtworkLimitSeasonPosters) == null)
                     SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
 
-                if (GetOptions(cTraktPassword) == null)
-                    SetOptions(cTraktPassword, string.Empty);
-
-                if (GetOptions(cTraktUsername) == null)
-                    SetOptions(cTraktUsername, string.Empty);
-
                 if (GetOptions(cFollwitEnabled) == null)
                     SetOptions(cFollwitEnabled, false);
 
                 if (GetOptions(cFollwitBaseUrl) == null)
                     SetOptions(cFollwitBaseUrl, "http://follw.it/");
-
 
                 if (GetOptions(cFollwitUsername) == null)
                     SetOptions(cFollwitUsername, string.Empty);
@@ -621,6 +611,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cShowDeleteMenu) == null)
                     SetOptions(cShowDeleteMenu, true);
+
+                if (GetOptions(cSQLLoggingEnabled) == null)
+                    SetOptions(cSQLLoggingEnabled, false);
 
             }
             catch (Exception ex)
