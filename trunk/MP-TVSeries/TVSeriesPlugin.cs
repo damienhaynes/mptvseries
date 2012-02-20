@@ -1875,7 +1875,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                searchObj = string.Format("{0} S{1:00}E{2:00}", m_SelectedSeries[DBOnlineSeries.cOriginalName], m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]);
+                searchObj = string.Format("{0} S{1:00}E{2:00}", m_SelectedSeries[DBOnlineSeries.cOriginalName], (int)m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], (int)m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]);
             }
 
             GUIWindowManager.ActivateWindow(5678, searchObj);
@@ -2325,7 +2325,7 @@ namespace WindowPlugins.GUITVSeries
                     SkinSettings.Init();
                 }
 
-                // did language change
+                // did language change?
                 if (Translation.CurrentLanguage != Translation.PreviousLanguage)
                 {
                     MPTVSeriesLog.Write("Language Changed to '{0}' from GUI, initializing translations.", Translation.CurrentLanguage);
