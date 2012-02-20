@@ -90,7 +90,9 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
-            
+
+            Translation.Init();
+
             // set height/width
             int height = DBOption.GetOptions(DBOption.cConfigSizeHeight);
             int width = DBOption.GetOptions(DBOption.cConfigSizeWidth);
@@ -344,21 +346,6 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!SkinSettings.ImportLogos) {
                 lstLogos.Items.AddRange(localLogos.getFromDB().ToArray());
-            }
-
-            comboLanguage.Items.AddRange(Translation.getSupportedLangs().ToArray());
-            if (comboLanguage.Items.Count == 0) comboLanguage.Enabled = false;
-            else
-            {
-                string sel = DBOption.GetOptions(DBOption.cLanguage);
-                for (int i = 0; i < comboLanguage.Items.Count; i++)
-                {
-                    if ((string)comboLanguage.Items[i] == sel)
-                    {
-                        comboLanguage.SelectedIndex = i;
-                        break;
-                    }
-                }
             }
 
             // Get Online Languages and fill language combobox
@@ -3418,14 +3405,6 @@ namespace WindowPlugins.GUITVSeries
                 nudScanRemoteShareFrequency.Enabled = false;
         }
 
-        private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cLanguage, (string)comboLanguage.SelectedItem);
-            Translation.loadTranslations("en(us)"); // flush previously selected, perhaps untranslated in new language, strings (otherwise we get a mix)
-            Translation.Init();
-            LoadViews();
-        }
-
         private void _availViews_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!pauseViewConfigSave)
@@ -4334,6 +4313,11 @@ namespace WindowPlugins.GUITVSeries
         {
             // update logging level so reflects in current config window
             MPTVSeriesLog.InitLogLevel();
+        }
+
+        private void dbOptionSQLLogging_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
     

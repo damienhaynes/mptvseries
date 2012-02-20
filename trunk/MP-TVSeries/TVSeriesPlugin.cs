@@ -1108,7 +1108,7 @@ namespace WindowPlugins.GUITVSeries
                                     string currSortBy = selectedSeries[DBOnlineSeries.cEpisodeSortOrder].ToString();
                                     if (string.IsNullOrEmpty(currSortBy)) currSortBy = "Aired";
 
-                                    pItem = new GUIListItem(string.Format("{0}: {1}", Translation.SortBy, Translation.Get(currSortBy + "Order")));
+                                    pItem = new GUIListItem(string.Format("{0}: {1}", Translation.SortBy, Translation.GetByName(currSortBy + "Order")));
                                     dlg.Add(pItem);
                                     pItem.ItemId = (int)eContextItems.actionEpisodeSortBy;
                                 }

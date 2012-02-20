@@ -356,7 +356,7 @@ namespace WindowPlugins.GUITVSeries
             bool hasSeriesBeforeIt = false;
 
             this.m_name = fromDB[DBView.cTransToken];
-            this.m_prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.Get(this.m_name) : (String)fromDB[DBView.cPrettyName];
+            this.m_prettyName = fromDB[DBView.cPrettyName].ToString().Length == 0 ? Translation.GetByName(this.m_name) : (String)fromDB[DBView.cPrettyName];
             this.m_uniqueID = fromDB[DBView.cIndex];
             this.m_Enabled = fromDB[DBView.cEnabled];
             this.IsTaggedView = fromDB[DBView.cTaggedView];
@@ -402,7 +402,7 @@ namespace WindowPlugins.GUITVSeries
             m_toUpdateForConfig[DBView.cIndex] = m_uniqueID;
             m_toUpdateForConfig[DBView.cEnabled] = m_Enabled;
             m_toUpdateForConfig[DBView.cTransToken] = m_name;
-            m_toUpdateForConfig[DBView.cPrettyName] = m_prettyName != Translation.Get(m_name) ? prettyName : string.Empty;
+            m_toUpdateForConfig[DBView.cPrettyName] = m_prettyName != Translation.GetByName(m_name) ? prettyName : string.Empty;
             m_toUpdateForConfig[DBView.cParentalControl] = ParentalControl;
             m_toUpdateForConfig.Commit();
         }

@@ -92,8 +92,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cView_Episode_Subtitle = "View_Episode_Secondary";
         public const String cView_Episode_Main = "View_Episode_Main";
         
-        public const String cRandomBanner = "randomBanner";
-        public const String cLanguage = "lang";
+        public const String cRandomBanner = "randomBanner";        
 
         public const String cUpdateBannersTimeStamp = "UpdateBannersTimeStamp"; // not used anymore
 

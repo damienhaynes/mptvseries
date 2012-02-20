@@ -118,7 +118,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (DBView view in DBView.getAll(false))
             {
                 string viewName = view[DBView.cTransToken];
-                string viewDisplayName = string.IsNullOrEmpty(Translation.Get(viewName)) ? viewName : Translation.Get(viewName);
+                string viewDisplayName = string.IsNullOrEmpty(Translation.GetByName(viewName)) ? viewName : Translation.GetByName(viewName);
                 KeyValuePair<string, string> skinview = new KeyValuePair<string, string>(viewName, viewDisplayName);
                 viewList.Add(skinview);
             }
