@@ -526,7 +526,7 @@ namespace WindowPlugins.GUITVSeries
             #region Skin Settings / Load
             SkinSettings.Init();
 
-            // listen to this event to detect skin changes in GUI
+            // listen to this event to detect skin/language changes in GUI
             GUIWindowManager.OnDeActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnDeActivateWindow);
 
             GUIWindowManager.OnActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnActivateWindow);
@@ -2318,10 +2318,18 @@ namespace WindowPlugins.GUITVSeries
             // Settings/General window
             if (windowID == (int)Window.WINDOW_SETTINGS_SKIN)
             {
+                // did skin change?
                 if (SkinSettings.CurrentSkin != SkinSettings.PreviousSkin)
                 {
                     MPTVSeriesLog.Write("Skin Change detected in GUI, reloading skin settings");
                     SkinSettings.Init();
+                }
+
+                // did language change
+                if (Translation.CurrentLanguage != Translation.PreviousLanguage)
+                {
+                    MPTVSeriesLog.Write("Language Changed to '{0}' from GUI, initializing translations.", Translation.CurrentLanguage);
+                    Translation.Init();
                 }
             }
         }
