@@ -541,16 +541,19 @@ namespace WindowPlugins.GUITVSeries
 
                 // show progress dialog as this can be a long process esp for network drives
                 // will show new progress for each season if deleting from the series level
-                GUIDialogProgress progressDialog = (GUIDialogProgress)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS);
-                progressDialog.Reset();
-                progressDialog.DisplayProgressBar = true;
-                progressDialog.ShowWaitCursor = false;
-                progressDialog.DisableCancel(true);
-                progressDialog.SetHeading(Translation.Delete);
-                progressDialog.Percentage = 0;
-                progressDialog.SetLine(1, string.Format("{0} {1}", seriesName, this[DBSeason.cIndex]));
-                progressDialog.SetLine(2, string.Empty);
-                
+                GUIDialogProgress progressDialog = null;
+                if (!Settings.isConfig)
+                {
+                    progressDialog = (GUIDialogProgress)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS);
+                    progressDialog.Reset();
+                    progressDialog.DisplayProgressBar = true;
+                    progressDialog.ShowWaitCursor = false;
+                    progressDialog.DisableCancel(true);
+                    progressDialog.SetHeading(Translation.Delete);
+                    progressDialog.Percentage = 0;
+                    progressDialog.SetLine(1, string.Format("{0} {1}", seriesName, this[DBSeason.cIndex]));
+                    progressDialog.SetLine(2, string.Empty);
+                }
                 // only show progress dialog if we have local files in season
                 if (hasLocalEpisodesToDelete) progressDialog.StartModal(GUIWindowManager.ActiveWindow);
 
@@ -559,17 +562,17 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode episode in episodes)
                 {
                     string episodeName = string.Format("{0}x{1} - {2}", episode[DBOnlineEpisode.cSeasonIndex], episode[DBOnlineEpisode.cEpisodeIndex], episode[DBOnlineEpisode.cEpisodeName]);
-                    progressDialog.SetLine(2, episodeName);
-                    GUIWindowManager.Process();
+                    if (!Settings.isConfig) progressDialog.SetLine(2, episodeName);
+                    if (!Settings.isConfig) GUIWindowManager.Process();
 
                     resultMsg.AddRange(episode.deleteEpisode(type));
 
-                    progressDialog.Percentage = Convert.ToInt32(((double)++counter / (double)episodes.Count) * 100.0);
-                    GUIWindowManager.Process();
+                    if (!Settings.isConfig) progressDialog.Percentage = Convert.ToInt32(((double)++counter / (double)episodes.Count) * 100.0);
+                    if (!Settings.isConfig) GUIWindowManager.Process();
                 }
 
                 // close progress dialog
-                progressDialog.Close();
+                if (!Settings.isConfig) progressDialog.Close();
                 
                 // if we have removed all episodes in season without error, cleanup the online table
                 if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
