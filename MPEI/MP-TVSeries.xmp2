@@ -791,13 +791,6 @@ Trakt can also help you keep your watched flags in sync across multiple computer
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\MP-TVSeries\Resources\Languages\en(us).xml</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{7870861f-4da5-4c84-9d69-ae340fb9febf}-en(us).xml</ZipFileName>
-              <DestinationFilename>%Language%\MP-TVSeries\en(us).xml</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\MP-TVSeries\Resources\Languages\es.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{7b31dd9d-3d02-484a-b7be-eb68ccd1cda2}-es.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\es.xml</DestinationFilename>
@@ -847,13 +840,6 @@ Trakt can also help you keep your watched flags in sync across multiple computer
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\MP-TVSeries\Resources\Languages\no(nb).xml</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{74c439ea-2c17-4700-9416-4a0f562aa805}-no(nb).xml</ZipFileName>
-              <DestinationFilename>%Language%\MP-TVSeries\no(nb).xml</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\MP-TVSeries\Resources\Languages\no.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{3202f32e-4587-4f35-a2b1-e8dbed251bc4}-no.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\no.xml</DestinationFilename>
@@ -875,13 +861,6 @@ Trakt can also help you keep your watched flags in sync across multiple computer
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\MP-TVSeries\Resources\Languages\pt_pt.xml</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{a29d3d5c-2ec2-4d07-b292-5069e48c2333}-pt_pt.xml</ZipFileName>
-              <DestinationFilename>%Language%\MP-TVSeries\pt_pt.xml</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\MP-TVSeries\Resources\Languages\ru.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{c81375ff-3a4f-4a64-96ed-4ba59654ba78}-ru.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\ru.xml</DestinationFilename>
@@ -889,16 +868,37 @@ Trakt can also help you keep your watched flags in sync across multiple computer
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\MP-TVSeries\Resources\Languages\ru_utf8.xml</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{aeb27b54-b1fb-4500-a828-656d1dee5d0a}-ru_utf8.xml</ZipFileName>
-              <DestinationFilename>%Language%\MP-TVSeries\ru_utf8.xml</DestinationFilename>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\sv.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fc30db1d-2c79-4ce4-b198-6f0b30febb31}-sv.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\sv.xml</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\MP-TVSeries\Resources\Languages\sv.xml</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{fc30db1d-2c79-4ce4-b198-6f0b30febb31}-sv.xml</ZipFileName>
-              <DestinationFilename>%Language%\MP-TVSeries\sv.xml</DestinationFilename>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{74e996c3-c6a3-4817-8a7a-d68dd93bf439}-en-US.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\en-US.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\no-NB.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b1be31e0-483f-4222-bc0b-25e42e5e01bb}-no-NB.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\no-NB.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\pt.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e8422b30-c967-4874-a9b1-5b854b1cae48}-pt.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\pt.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\ru_iso1251.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{bc57b91c-aa65-40c6-b2f7-3fac05451a1f}-ru_iso1251.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\ru_iso1251.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -1512,25 +1512,27 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>2</Minor>
-      <Build>0</Build>
-      <Revision>1909</Revision>
+      <Build>1</Build>
+      <Revision>1928</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Added support to directly loading into series via loading parameters.
-* Added MyTorrents search for selected series/episodes. Thanks edalex86.
-* Added NZB Search via mpNZB plugin.
-* Added Actor search on movies from Actors window, requires MovingPictures 1.3.0.
-* Added 'Add to Custom List' in Trakt context menu entry.
-* Added checking for unique import paths.This will prevent users encountering an error when navigating in ImportWizard,
-* Fixed duplicate action for EpisodeCounts during import.
-* Fixed ImportWizard not being able to identify episodes even though they are online. Cache was not being cleared before this action.
-* Updated French translations, thanks ubela64.
-</VersionDescription>
+    <VersionDescription>* Fixed detection of fullscreen video to also include Live TV when doing period check for new files.
+* Fixed file scan schedule being off by one minute.
+* Fixed logging/progress for episode thumbnail downloads.
+* Fixed an issue where the online_episode table was not being cleared properly on season delete.
+* Fixed uTorrent Search season/episode number format.
+* Added support for language changes from GUI Settings.
+* Added a progress dialog when deleting episodes from a season/series view. Typically this can be a lengthy operation esp. for network drives.
+* Updated Dutch translations, thanks powermarcel10.
+* Updated Trakt Plugin to v1.5.1.
+* Removed TVSeries Logging setting and use MediaPortal Logging settings.
+* Removed TVSeries GUI Language setting and use MediaPortal Language settings.
+* Changed default value for 'MarkRatedEpisodeAsWatched' to false so it doesn't conflict with online 'unseen' syncing.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.2.0.1909.mpe1</OnlineLocation>
-    <ReleaseDate>2012-01-19T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.2.1.1928.mpe1</OnlineLocation>
+    <ReleaseDate>2012-03-06T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2298,13 +2300,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\MP-TVSeries\Resources\Languages\en(us).xml</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7870861f-4da5-4c84-9d69-ae340fb9febf}-en(us).xml</ZipFileName>
-        <DestinationFilename>%Language%\MP-TVSeries\en(us).xml</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Languages\es.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{7b31dd9d-3d02-484a-b7be-eb68ccd1cda2}-es.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\es.xml</DestinationFilename>
@@ -2354,13 +2349,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\MP-TVSeries\Resources\Languages\no(nb).xml</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{74c439ea-2c17-4700-9416-4a0f562aa805}-no(nb).xml</ZipFileName>
-        <DestinationFilename>%Language%\MP-TVSeries\no(nb).xml</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Languages\no.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{3202f32e-4587-4f35-a2b1-e8dbed251bc4}-no.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\no.xml</DestinationFilename>
@@ -2382,13 +2370,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\MP-TVSeries\Resources\Languages\pt_pt.xml</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{a29d3d5c-2ec2-4d07-b292-5069e48c2333}-pt_pt.xml</ZipFileName>
-        <DestinationFilename>%Language%\MP-TVSeries\pt_pt.xml</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Languages\ru.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{c81375ff-3a4f-4a64-96ed-4ba59654ba78}-ru.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\ru.xml</DestinationFilename>
@@ -2396,16 +2377,37 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\MP-TVSeries\Resources\Languages\ru_utf8.xml</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{aeb27b54-b1fb-4500-a828-656d1dee5d0a}-ru_utf8.xml</ZipFileName>
-        <DestinationFilename>%Language%\MP-TVSeries\ru_utf8.xml</DestinationFilename>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\sv.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fc30db1d-2c79-4ce4-b198-6f0b30febb31}-sv.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\sv.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\MP-TVSeries\Resources\Languages\sv.xml</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{fc30db1d-2c79-4ce4-b198-6f0b30febb31}-sv.xml</ZipFileName>
-        <DestinationFilename>%Language%\MP-TVSeries\sv.xml</DestinationFilename>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{74e996c3-c6a3-4817-8a7a-d68dd93bf439}-en-US.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\en-US.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\no-NB.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b1be31e0-483f-4222-bc0b-25e42e5e01bb}-no-NB.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\no-NB.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\pt.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e8422b30-c967-4874-a9b1-5b854b1cae48}-pt.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\pt.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\ru_iso1251.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{bc57b91c-aa65-40c6-b2f7-3fac05451a1f}-ru_iso1251.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\ru_iso1251.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
