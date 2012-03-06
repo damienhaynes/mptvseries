@@ -88,32 +88,44 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<string> getFromDB()
         {
-            string all = DBOption.GetOptions(optionName);
-            entries.Clear();
-            entriesValidForInfo.Clear();
-            splitConditions.Clear();
-            if (all.Length > 0)
-                entries = new List<string>(Regex.Split(all, entriesSplit));
-            entriesInMemory = true;
-            if (entries.Count == 0)
-                MPTVSeriesLog.Write("No LogoRules found!");
-            else
+            try
             {
-                // we calculate relevances once here so we can avoid doing it everytime
-                // we also split them here so we can avoid doing this later
-                for(int i=0; i<entries.Count; i++)
-                {
-                    List<Level> levels = new List<Level>();
-                    if (isRelevant(entries[i], Level.Series)) levels.Add(Level.Series);
-                    if (isRelevant(entries[i], Level.Season)) levels.Add(Level.Season);
-                    if (isRelevant(entries[i], Level.Episode)) levels.Add(Level.Episode);
-                    //if (isRelevant(entries[i], Level.Group)) levels.Add(Level.Group);
-                    entriesValidForInfo.Add(i, levels);
+                string all = DBOption.GetOptions(optionName).ToString().Trim();
+                entries.Clear();
+                entriesValidForInfo.Clear();
+                splitConditions.Clear();
 
-                    splitConditions.Add(i, new List<string>(Regex.Split(entries[i], localLogos.condSplit)));
+                if (all.Length > 0)
+                    entries = new List<string>(Regex.Split(all, entriesSplit));
+                entriesInMemory = true;
+
+                if (entries.Count == 0)
+                {
+                    MPTVSeriesLog.Write("No Logo-Rules found!", MPTVSeriesLog.LogLevel.Debug);
                 }
+                else
+                {
+                    // we calculate relevances once here so we can avoid doing it everytime
+                    // we also split them here so we can avoid doing this later
+                    for (int i = 0; i < entries.Count; i++)
+                    {
+                        List<Level> levels = new List<Level>();
+                        if (isRelevant(entries[i], Level.Series)) levels.Add(Level.Series);
+                        if (isRelevant(entries[i], Level.Season)) levels.Add(Level.Season);
+                        if (isRelevant(entries[i], Level.Episode)) levels.Add(Level.Episode);
+                        entriesValidForInfo.Add(i, levels);
+
+                        splitConditions.Add(i, new List<string>(Regex.Split(entries[i], localLogos.condSplit)));
+                    }
+                }
+                return entries;
             }
-            return entries;
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("Error loading logos into memory: " + e.Message);
+                entriesInMemory = false;
+                return entries;
+            }
         }
 
         static string getLogos(Level level, int imgHeight, int imgWidth, ref List<string> logosForBuilding)
