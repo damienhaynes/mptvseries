@@ -41,9 +41,8 @@ namespace WindowPlugins.GUITVSeries
 
         #endregion
 
-        #region private & init stuff        
-        private static SQLiteClient m_db = null;
-        private static int m_nLogLevel = 0; // normal log = 0; debug log = 1;
+        #region private & init stuff
+        private static SQLiteClient m_db = null;        
 
         private static bool m_bIndexOnlineEpisodes;
         private static bool m_bIndexLocalEpisodes;
@@ -79,11 +78,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
         #endregion
-        public static void SetGlobalLogLevel(int nLevel)
-        {
-            m_nLogLevel = nLevel;
-        }
-
+        
         public static void CreateDBIndices(string sCommand, string sTable, bool bSetFlag)
         {            
             try

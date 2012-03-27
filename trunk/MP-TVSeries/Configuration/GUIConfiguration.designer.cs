@@ -167,11 +167,12 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.numericUpDownImportDelay = new System.Windows.Forms.NumericUpDown();
+            this.dbOptChkBoxPlayOutOfOrderCheck = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionSQLLogging = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionSQLLogging = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -548,15 +549,15 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoTemplate.TabIndex = 3;
             this.btnLogoTemplate.Text = "&Templates...";
             this.toolTip_Help.SetToolTip(this.btnLogoTemplate, "Click button to select from a pre-defined list of logo templates.\r\nA Logo package" +
-                    " must be installed to display logos succesfully in Media Portal");
+        " must be installed to display logos succesfully in Media Portal");
             this.btnLogoTemplate.UseVisualStyleBackColor = true;
             this.btnLogoTemplate.Click += new System.EventHandler(this.btnLogoTemplate_Click);
             // 
             // lstLogos
             // 
-            this.lstLogos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstLogos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstLogos.FormattingEnabled = true;
             this.lstLogos.HorizontalScrollbar = true;
             this.lstLogos.Location = new System.Drawing.Point(7, 19);
@@ -618,7 +619,7 @@ namespace WindowPlugins.GUITVSeries
             this.nudWatchedAfter.Size = new System.Drawing.Size(44, 20);
             this.nudWatchedAfter.TabIndex = 3;
             this.toolTip_Help.SetToolTip(this.nudWatchedAfter, "Enter the percentage of the episode that has been viewed to consider it as watche" +
-                    "d.\r\nEpisode foreground color will change to indicated that it is watched");
+        "d.\r\nEpisode foreground color will change to indicated that it is watched");
             this.nudWatchedAfter.Value = new decimal(new int[] {
             95,
             0,
@@ -635,7 +636,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Series_UseSortName.TabIndex = 16;
             this.checkBox_Series_UseSortName.Text = "So&rt Series using the Sort Name instead of the Pretty Name";
             this.toolTip_Help.SetToolTip(this.checkBox_Series_UseSortName, "Enable to sort Series names using the Sort (Original) Name found in the Details t" +
-                    "ab");
+        "ab");
             this.checkBox_Series_UseSortName.UseVisualStyleBackColor = true;
             this.checkBox_Series_UseSortName.CheckedChanged += new System.EventHandler(this.checkBox_Series_UseSortName_CheckedChanged);
             // 
@@ -648,8 +649,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_doFolderWatch.TabIndex = 17;
             this.checkBox_doFolderWatch.Text = "Watch my &Import folders for changes automatically";
             this.toolTip_Help.SetToolTip(this.checkBox_doFolderWatch, "Enable this option to allow the plug-in to monitor import folders for new, delete" +
-                    "d and modified TV Series and update the database accordingly.\r\nThis option only " +
-                    "works from with-in Media Portal");
+        "d and modified TV Series and update the database accordingly.\r\nThis option only " +
+        "works from with-in Media Portal");
             this.checkBox_doFolderWatch.UseVisualStyleBackColor = true;
             this.checkBox_doFolderWatch.CheckedChanged += new System.EventHandler(this.checkBox_doFolderWatch_CheckedChanged);
             // 
@@ -662,7 +663,7 @@ namespace WindowPlugins.GUITVSeries
             this.chkAllowDeletes.TabIndex = 37;
             this.chkAllowDeletes.Text = "Allow user to delete &files from the GUI context menu";
             this.toolTip_Help.SetToolTip(this.chkAllowDeletes, "Enable this option to allow users to delete items using the context menu from wit" +
-                    "h-in Media Portal");
+        "h-in Media Portal");
             this.chkAllowDeletes.UseVisualStyleBackColor = true;
             this.chkAllowDeletes.CheckedChanged += new System.EventHandler(this.chkAllowDeletes_CheckedChanged);
             // 
@@ -699,8 +700,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkbox_SortSpecials.TabIndex = 31;
             this.checkbox_SortSpecials.Text = "Sort Specials in Episode list (Aired Order only)";
             this.toolTip_Help.SetToolTip(this.checkbox_SortSpecials, "Enable this option to sort specials in the main episode list by their correspondi" +
-                    "ng air date.\r\nNote: This will only work if the episode list is sorted by \'Aired " +
-                    "Order\'.");
+        "ng air date.\r\nNote: This will only work if the episode list is sorted by \'Aired " +
+        "Order\'.");
             this.checkbox_SortSpecials.UseVisualStyleBackColor = true;
             this.checkbox_SortSpecials.CheckedChanged += new System.EventHandler(this.checkbox_SortSpecials_CheckedChanged);
             // 
@@ -713,7 +714,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkboxRatingDisplayStars.TabIndex = 12;
             this.checkboxRatingDisplayStars.Text = "Show 5 Star Rate Dialog";
             this.toolTip_Help.SetToolTip(this.checkboxRatingDisplayStars, "Enable this option to dislay a 5 Star Rate Dialog instead of 10 Stars, theTVDB.co" +
-                    "m accepts 10 Stars\r\nso 5 Stars will be rounded up");
+        "m accepts 10 Stars\r\nso 5 Stars will be rounded up");
             this.checkboxRatingDisplayStars.UseVisualStyleBackColor = true;
             this.checkboxRatingDisplayStars.CheckedChanged += new System.EventHandler(this.checkboxRatingDisplayStars_CheckedChanged);
             // 
@@ -726,7 +727,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_scanRemoteShares.TabIndex = 18;
             this.checkBox_scanRemoteShares.Text = "Scan remote shares every";
             this.toolTip_Help.SetToolTip(this.checkBox_scanRemoteShares, "(Recommended) Instead of trying to setup a filesystem  watcher on a remote share " +
-                    "(hazardous), scan periodically");
+        "(hazardous), scan periodically");
             this.checkBox_scanRemoteShares.UseVisualStyleBackColor = true;
             this.checkBox_scanRemoteShares.CheckedChanged += new System.EventHandler(this.checkBox_scanRemoteShares_CheckedChanged);
             // 
@@ -747,7 +748,7 @@ namespace WindowPlugins.GUITVSeries
             this.nudScanRemoteShareFrequency.Size = new System.Drawing.Size(44, 20);
             this.nudScanRemoteShareFrequency.TabIndex = 19;
             this.toolTip_Help.SetToolTip(this.nudScanRemoteShareFrequency, "Enter the percentage of the episode that has been viewed to consider it as watche" +
-                    "d.\r\nEpisode foreground color will change to indicated that it is watched");
+        "d.\r\nEpisode foreground color will change to indicated that it is watched");
             this.nudScanRemoteShareFrequency.Value = new decimal(new int[] {
             5,
             0,
@@ -767,7 +768,7 @@ namespace WindowPlugins.GUITVSeries
             this.nudRecentlyAddedDays.Size = new System.Drawing.Size(43, 20);
             this.nudRecentlyAddedDays.TabIndex = 26;
             this.toolTip_Help.SetToolTip(this.nudRecentlyAddedDays, "Select the number of days to look back in database for new episodes when displayi" +
-                    "ng the *NEW* stamp on series thumbs.");
+        "ng the *NEW* stamp on series thumbs.");
             this.nudRecentlyAddedDays.Value = new decimal(new int[] {
             7,
             0,
@@ -784,8 +785,8 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_FullSeriesRetrieval.TabIndex = 17;
             this.checkBox_FullSeriesRetrieval.Text = "Download &Episode information for the whole series";
             this.toolTip_Help.SetToolTip(this.checkBox_FullSeriesRetrieval, "Enable this option to download data for all seasons and episodes available online" +
-                    " (takes longer).\r\nDisable to download data only for episodes local to this compu" +
-                    "ter");
+        " (takes longer).\r\nDisable to download data only for episodes local to this compu" +
+        "ter");
             this.checkBox_FullSeriesRetrieval.UseVisualStyleBackColor = true;
             this.checkBox_FullSeriesRetrieval.CheckedChanged += new System.EventHandler(this.checkBox_FullSeriesRetrieval_CheckedChanged);
             // 
@@ -810,7 +811,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_OnlineSearch.TabIndex = 0;
             this.checkBox_OnlineSearch.Text = "&Download data from the TV Online Database (theTVDB.com)";
             this.toolTip_Help.SetToolTip(this.checkBox_OnlineSearch, "Enable this option to download data for TV Series including Banners and Episode t" +
-                    "humbnails.\r\nData can be manually entered or corrected in Details tab");
+        "humbnails.\r\nData can be manually entered or corrected in Details tab");
             this.checkBox_OnlineSearch.UseVisualStyleBackColor = true;
             this.checkBox_OnlineSearch.CheckedChanged += new System.EventHandler(this.checkBox_OnlineSearch_CheckedChanged);
             // 
@@ -835,8 +836,8 @@ namespace WindowPlugins.GUITVSeries
             this.linkDelUpdateTime.TabStop = true;
             this.linkDelUpdateTime.Text = "Clear Update Timestamps";
             this.toolTip_Help.SetToolTip(this.linkDelUpdateTime, "Click here to reset Timestamps for the last date-time data for series was updated" +
-                    " from the online database.\r\nThis will force a re-request of all data on next imp" +
-                    "ort");
+        " from the online database.\r\nThis will force a re-request of all data on next imp" +
+        "ort");
             this.linkDelUpdateTime.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDelUpdateTime_LinkClicked);
             // 
             // txtMainMirror
@@ -890,7 +891,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoChooseOrder.TabIndex = 16;
             this.checkBox_AutoChooseOrder.Text = "Automatically choose Aired when multiple &orders are found online";
             this.toolTip_Help.SetToolTip(this.checkBox_AutoChooseOrder, "Enable this option to automatically select Aired order when multiple orders are f" +
-                    "ound online e.g. DVD or Absolute");
+        "ound online e.g. DVD or Absolute");
             this.checkBox_AutoChooseOrder.UseVisualStyleBackColor = true;
             this.checkBox_AutoChooseOrder.CheckedChanged += new System.EventHandler(this.checkBox_AutoChooseOrder_CheckedChanged);
             // 
@@ -903,7 +904,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoOnlineDataRefresh.TabIndex = 12;
             this.checkBox_AutoOnlineDataRefresh.Text = "A&utomatically download updated data from theTVDB.com every:";
             this.toolTip_Help.SetToolTip(this.checkBox_AutoOnlineDataRefresh, "Enable this option to make the plug-in automatically ask for a refresh of the onl" +
-                    "ine data every x hours");
+        "ine data every x hours");
             this.checkBox_AutoOnlineDataRefresh.UseVisualStyleBackColor = true;
             this.checkBox_AutoOnlineDataRefresh.CheckedChanged += new System.EventHandler(this.checkBox_AutoOnlineDataRefresh_CheckedChanged);
             // 
@@ -940,7 +941,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoDownloadMissingArtwork.TabIndex = 24;
             this.checkBox_AutoDownloadMissingArtwork.Text = "Download missing artwork for existing series/season on local scan";
             this.toolTip_Help.SetToolTip(this.checkBox_AutoDownloadMissingArtwork, "Only update new artwork when unchecked.  This can help speed up import for large " +
-                    "collections.");
+        "collections.");
             this.checkBox_AutoDownloadMissingArtwork.UseVisualStyleBackColor = true;
             this.checkBox_AutoDownloadMissingArtwork.CheckedChanged += new System.EventHandler(this.checkBox_AutoDownloadMissingArtwork_CheckedChanged);
             // 
@@ -953,15 +954,15 @@ namespace WindowPlugins.GUITVSeries
             this.checkboxAutoDownloadFanartSeriesName.TabIndex = 33;
             this.checkboxAutoDownloadFanartSeriesName.Text = "Download Fanart containing Series Names (Logos)";
             this.toolTip_Help.SetToolTip(this.checkboxAutoDownloadFanartSeriesName, "Enable to automatically download Fanart that contain series names in artwork, use" +
-                    "rs can\r\nstill choose Fanart that contain series names from the Fanart Chooser wi" +
-                    "ndow.");
+        "rs can\r\nstill choose Fanart that contain series names from the Fanart Chooser wi" +
+        "ndow.");
             this.checkboxAutoDownloadFanartSeriesName.UseVisualStyleBackColor = true;
             this.checkboxAutoDownloadFanartSeriesName.CheckedChanged += new System.EventHandler(this.checkboxAutoDownloadFanartSeriesName_CheckedChanged);
             // 
             // buttonStartImport
             // 
-            this.buttonStartImport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStartImport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStartImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartImport.Location = new System.Drawing.Point(3, 3);
             this.buttonStartImport.Name = "buttonStartImport";
@@ -969,7 +970,7 @@ namespace WindowPlugins.GUITVSeries
             this.buttonStartImport.TabIndex = 4;
             this.buttonStartImport.Text = "&Start Import Wizard";
             this.toolTip_Help.SetToolTip(this.buttonStartImport, "Click to Start Importing data from the Online Database, updates data for all seri" +
-                    "es, seasons and episodes new and old");
+        "es, seasons and episodes new and old");
             this.buttonStartImport.UseVisualStyleBackColor = true;
             this.buttonStartImport.Click += new System.EventHandler(this.buttonStartImport_Click);
             // 
@@ -979,9 +980,9 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Replace.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Replace.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView_Replace.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView_Replace.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView_Replace.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_Replace.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Replace.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -1024,7 +1025,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Replace.StandardTab = true;
             this.dataGridView_Replace.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.dataGridView_Replace, "Strings that are to be replaced before or after parsing data to online database l" +
-                    "ookup");
+        "ookup");
             this.dataGridView_Replace.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_Replace_CellEndEdit);
             this.dataGridView_Replace.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_Replace_DefaultValuesNeeded);
             this.dataGridView_Replace.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_Replace_UserDeletedRow);
@@ -1053,7 +1054,7 @@ namespace WindowPlugins.GUITVSeries
             this.buildExpr.TabStop = true;
             this.buildExpr.Text = "Build";
             this.toolTip_Help.SetToolTip(this.buildExpr, "A Simple Expression Builder that can be used to help the plug-in understand your " +
-                    "TV Shows file structure");
+        "TV Shows file structure");
             this.buildExpr.Visible = false;
             this.buildExpr.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.buildExpr_LinkClicked);
             // 
@@ -1098,15 +1099,15 @@ namespace WindowPlugins.GUITVSeries
             // 
             // textBox_dblocation
             // 
-            this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_dblocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_dblocation.Location = new System.Drawing.Point(198, 2);
             this.textBox_dblocation.Name = "textBox_dblocation";
             this.textBox_dblocation.ReadOnly = true;
             this.textBox_dblocation.Size = new System.Drawing.Size(346, 20);
             this.textBox_dblocation.TabIndex = 1;
             this.toolTip_Help.SetToolTip(this.textBox_dblocation, "The Database Path used by MP-TVSeries to store all TV information and settings fo" +
-                    "r this plugin");
+        "r this plugin");
             // 
             // checkBox_ShowHidden
             // 
@@ -1133,7 +1134,7 @@ namespace WindowPlugins.GUITVSeries
             this.linkMediaInfoUpdate.TabStop = true;
             this.linkMediaInfoUpdate.Text = "Update Media Info";
             this.toolTip_Help.SetToolTip(this.linkMediaInfoUpdate, "Click here to force the plug-in to read the media information for local files aga" +
-                    "in e.g. resolution, codecs...");
+        "in e.g. resolution, codecs...");
             this.linkMediaInfoUpdate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkMediaInfoUpdate_LinkClicked);
             // 
             // button_TestReparse
@@ -1181,7 +1182,7 @@ namespace WindowPlugins.GUITVSeries
             this.button1.Size = new System.Drawing.Size(881, 14);
             this.button1.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
-                    "ing progress of Import");
+        "ing progress of Import");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -1202,7 +1203,7 @@ namespace WindowPlugins.GUITVSeries
             this.nudParentalControlTimeout.Size = new System.Drawing.Size(54, 20);
             this.nudParentalControlTimeout.TabIndex = 11;
             this.toolTip_Help.SetToolTip(this.nudParentalControlTimeout, "Set number of minutes for Parental Control Lock to re-enable.\r\nNext time you ente" +
-                    "r the view, Pin Code will be requested.");
+        "r the view, Pin Code will be requested.");
             this.nudParentalControlTimeout.Value = new decimal(new int[] {
             1,
             0,
@@ -1230,13 +1231,13 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seriesFormat_Col1.TabIndex = 2;
             this.richTextBox_seriesFormat_Col1.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seriesFormat_Col1, "Enter in the field(s) to be displayed in column one of the series view.\r\nYou can " +
-                    "right click on this textbox to bring up a menu of available fields from the data" +
-                    "base.\r\n\r\nDefault: Empty");
+        "right click on this textbox to bring up a menu of available fields from the data" +
+        "base.\r\n\r\nDefault: Empty");
             // 
             // richTextBox_seriesFormat_Title
             // 
-            this.richTextBox_seriesFormat_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seriesFormat_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seriesFormat_Title.Location = new System.Drawing.Point(97, 47);
@@ -1249,8 +1250,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_seriesFormat_Col2
             // 
-            this.richTextBox_seriesFormat_Col2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seriesFormat_Col2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seriesFormat_Col2.Location = new System.Drawing.Point(276, 25);
@@ -1263,8 +1264,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_seriesFormat_Subtitle
             // 
-            this.richTextBox_seriesFormat_Subtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seriesFormat_Subtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seriesFormat_Subtitle.Location = new System.Drawing.Point(97, 68);
@@ -1277,8 +1278,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_seriesFormat_Main
             // 
-            this.richTextBox_seriesFormat_Main.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seriesFormat_Main.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seriesFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seriesFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seriesFormat_Main.Location = new System.Drawing.Point(97, 89);
@@ -1313,13 +1314,13 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_episodeFormat_Col1.TabIndex = 1;
             this.richTextBox_episodeFormat_Col1.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_episodeFormat_Col1, "Enter in the field(s) to be displayed in column one of the episode view.\r\nYou can" +
-                    " right click on this textbox to bring up a menu of available fields from the dat" +
-                    "abase.\r\n\r\nDefault: Empty");
+        " right click on this textbox to bring up a menu of available fields from the dat" +
+        "abase.\r\n\r\nDefault: Empty");
             // 
             // richTextBox_episodeFormat_Title
             // 
-            this.richTextBox_episodeFormat_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_episodeFormat_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_episodeFormat_Title.Location = new System.Drawing.Point(97, 44);
@@ -1332,8 +1333,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_episodeFormat_Subtitle
             // 
-            this.richTextBox_episodeFormat_Subtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_episodeFormat_Subtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_episodeFormat_Subtitle.Location = new System.Drawing.Point(97, 66);
@@ -1346,8 +1347,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_episodeFormat_Main
             // 
-            this.richTextBox_episodeFormat_Main.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_episodeFormat_Main.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_episodeFormat_Main.Location = new System.Drawing.Point(97, 88);
@@ -1360,8 +1361,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_episodeFormat_Col2
             // 
-            this.richTextBox_episodeFormat_Col2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_episodeFormat_Col2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_episodeFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_episodeFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_episodeFormat_Col2.Location = new System.Drawing.Point(275, 22);
@@ -1387,8 +1388,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_seasonFormat_Title
             // 
-            this.richTextBox_seasonFormat_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seasonFormat_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Title.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Title.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seasonFormat_Title.Location = new System.Drawing.Point(97, 45);
@@ -1401,8 +1402,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_seasonFormat_Col2
             // 
-            this.richTextBox_seasonFormat_Col2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seasonFormat_Col2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Col2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Col2.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seasonFormat_Col2.Location = new System.Drawing.Point(276, 23);
@@ -1415,8 +1416,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // richTextBox_seasonFormat_Subtitle
             // 
-            this.richTextBox_seasonFormat_Subtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seasonFormat_Subtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Subtitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Subtitle.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seasonFormat_Subtitle.Location = new System.Drawing.Point(97, 66);
@@ -1438,13 +1439,13 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Col1.TabIndex = 2;
             this.richTextBox_seasonFormat_Col1.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Col1, "Enter in the field(s) to be displayed in column one of the season view.\r\nYou can " +
-                    "right click on this textbox to bring up a menu of available fields from the data" +
-                    "base.\r\n\r\nDefault: Empty");
+        "right click on this textbox to bring up a menu of available fields from the data" +
+        "base.\r\n\r\nDefault: Empty");
             // 
             // richTextBox_seasonFormat_Main
             // 
-            this.richTextBox_seasonFormat_Main.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_seasonFormat_Main.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_seasonFormat_Main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox_seasonFormat_Main.ContextMenuStrip = this.contextMenuStrip_InsertFields;
             this.richTextBox_seasonFormat_Main.Location = new System.Drawing.Point(97, 87);
@@ -1467,8 +1468,8 @@ namespace WindowPlugins.GUITVSeries
             this.richTextBox_seasonFormat_Col3.TabIndex = 4;
             this.richTextBox_seasonFormat_Col3.Text = "";
             this.toolTip_InfoHelp.SetToolTip(this.richTextBox_seasonFormat_Col3, "Enter in the field(s) to be displayed in column three of the season view.\r\nYou ca" +
-                    "n right click on this textbox to bring up a menu of available fields from the da" +
-                    "tabase.\r\n\r\nDefault: Empty");
+        "n right click on this textbox to bring up a menu of available fields from the da" +
+        "tabase.\r\n\r\nDefault: Empty");
             // 
             // chkUseRegionalDateFormatString
             // 
@@ -1479,7 +1480,7 @@ namespace WindowPlugins.GUITVSeries
             this.chkUseRegionalDateFormatString.TabIndex = 15;
             this.chkUseRegionalDateFormatString.Text = "&Use Regional Settings to Display Dates";
             this.toolTip_InfoHelp.SetToolTip(this.chkUseRegionalDateFormatString, "Enable this option to convert all date formats yyyy-MM-dd to format defined in th" +
-                    "e Windows Control Panel\r\nunder Regional and Language options.");
+        "e Windows Control Panel\r\nunder Regional and Language options.");
             this.chkUseRegionalDateFormatString.UseVisualStyleBackColor = true;
             this.chkUseRegionalDateFormatString.CheckedChanged += new System.EventHandler(this.chkUseRegionalDateFormatString_CheckedChanged);
             // 
@@ -1541,13 +1542,56 @@ namespace WindowPlugins.GUITVSeries
             this.numericUpDownImportDelay.Size = new System.Drawing.Size(50, 20);
             this.numericUpDownImportDelay.TabIndex = 10;
             this.toolTip_InfoHelp.SetToolTip(this.numericUpDownImportDelay, "Set the delay before the Importer starts in GUI, this can help reduce load of CPU" +
-                    " on startup.");
+        " on startup.");
             this.numericUpDownImportDelay.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.numericUpDownImportDelay.ValueChanged += new System.EventHandler(this.numericUpDownImportDelay_ValueChanged);
+            // 
+            // dbOptChkBoxPlayOutOfOrderCheck
+            // 
+            this.dbOptChkBoxPlayOutOfOrderCheck.AutoSize = true;
+            this.dbOptChkBoxPlayOutOfOrderCheck.Location = new System.Drawing.Point(404, 354);
+            this.dbOptChkBoxPlayOutOfOrderCheck.Name = "dbOptChkBoxPlayOutOfOrderCheck";
+            this.dbOptChkBoxPlayOutOfOrderCheck.Option = "CheckPlayOutOfOrder";
+            this.dbOptChkBoxPlayOutOfOrderCheck.Size = new System.Drawing.Size(255, 17);
+            this.dbOptChkBoxPlayOutOfOrderCheck.TabIndex = 41;
+            this.dbOptChkBoxPlayOutOfOrderCheck.Text = "Check on playback of episode is not out of order";
+            this.dbOptChkBoxPlayOutOfOrderCheck.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxPlayOutOfOrderCheck, "Enabled this option to ensure that when you playback an episode that it is the ne" +
+        "xt unwatched episode. \r\nA prompt will be shown if trying to playback out of orde" +
+        "r.");
+            this.dbOptChkBoxPlayOutOfOrderCheck.UseVisualStyleBackColor = true;
+            // 
+            // dbOptionSQLLogging
+            // 
+            this.dbOptionSQLLogging.AutoSize = true;
+            this.dbOptionSQLLogging.Location = new System.Drawing.Point(404, 23);
+            this.dbOptionSQLLogging.Name = "dbOptionSQLLogging";
+            this.dbOptionSQLLogging.Option = "SQLLoggingEnabled";
+            this.dbOptionSQLLogging.Size = new System.Drawing.Size(166, 17);
+            this.dbOptionSQLLogging.TabIndex = 28;
+            this.dbOptionSQLLogging.Text = "Enable Verbose SQL Logging";
+            this.dbOptionSQLLogging.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptionSQLLogging, "Enable verbose SQL Logging, WARNING!!! This will impact performance if enabled.");
+            this.dbOptionSQLLogging.UseVisualStyleBackColor = true;
+            this.dbOptionSQLLogging.CheckStateChanged += new System.EventHandler(this.dbOptionSQLLogging_CheckStateChanged);
+            // 
+            // dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay
+            // 
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.AutoSize = true;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Location = new System.Drawing.Point(404, 330);
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Name = "dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Option = "SubCentral_SubtitleDownloadOnPlay";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Size = new System.Drawing.Size(281, 17);
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 40;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
+        "sn\'t have any.\r\nNote: appliable only when using SubCentral.");
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
             // 
             // dbOptChkBoxCountEmptyFutureEps
             // 
@@ -1562,15 +1606,13 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
             this.dbOptChkBoxCountEmptyFutureEps.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
-                    "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
-                    "an see when browsing GUI.");
+        "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
+        "an see when browsing GUI.");
             this.dbOptChkBoxCountEmptyFutureEps.UseVisualStyleBackColor = true;
             // 
             // dbOptionCheckBoxMarkRatedEpsAsWatched
             // 
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Checked = true;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 215);
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
             this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
@@ -1594,37 +1636,9 @@ namespace WindowPlugins.GUITVSeries
             this.optionAsk2Rate.Text = "&Popup Rate Dialog after episode is watched";
             this.optionAsk2Rate.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, "Tick this to have the plugin automatically pop-up a rating\'s windows after you ha" +
-                    "ve watched an episodes which hasn\'t been rated yet.");
+        "ve watched an episodes which hasn\'t been rated yet.");
             this.optionAsk2Rate.UseVisualStyleBackColor = true;
             this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
-            // 
-            // dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay
-            // 
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.AutoSize = true;
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Location = new System.Drawing.Point(404, 330);
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Name = "dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay";
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Option = "SubCentral_SubtitleDownloadOnPlay";
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Size = new System.Drawing.Size(281, 17);
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 40;
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
-                    "sn\'t have any.\r\nNote: appliable only when using SubCentral.");
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionSQLLogging
-            // 
-            this.dbOptionSQLLogging.AutoSize = true;
-            this.dbOptionSQLLogging.Location = new System.Drawing.Point(404, 23);
-            this.dbOptionSQLLogging.Name = "dbOptionSQLLogging";
-            this.dbOptionSQLLogging.Option = "SQLLoggingEnabled";
-            this.dbOptionSQLLogging.Size = new System.Drawing.Size(166, 17);
-            this.dbOptionSQLLogging.TabIndex = 28;
-            this.dbOptionSQLLogging.Text = "Enable Verbose SQL Logging";
-            this.dbOptionSQLLogging.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptionSQLLogging, "Enable verbose SQL Logging, WARNING!!! This will impact performance if enabled.");
-            this.dbOptionSQLLogging.UseVisualStyleBackColor = true;
-            this.dbOptionSQLLogging.CheckStateChanged += new System.EventHandler(this.dbOptionSQLLogging_CheckStateChanged);
             // 
             // splitMain_Log
             // 
@@ -1708,9 +1722,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // treeView_Library
             // 
-            this.treeView_Library.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView_Library.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView_Library.ContextMenuStrip = this.contextMenuStrip_DetailsTree;
             this.treeView_Library.ForeColor = System.Drawing.SystemColors.WindowText;
             this.treeView_Library.FullRowSelect = true;
@@ -1754,9 +1768,9 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Window;
@@ -1824,8 +1838,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // pictureBox_Series
             // 
-            this.pictureBox_Series.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox_Series.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox_Series.BackColor = System.Drawing.Color.White;
             this.pictureBox_Series.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox_Series.ErrorImage = null;
@@ -1839,8 +1853,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // comboBox_BannerSelection
             // 
-            this.comboBox_BannerSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_BannerSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox_BannerSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_BannerSelection.FormattingEnabled = true;
             this.comboBox_BannerSelection.Location = new System.Drawing.Point(88, 25);
@@ -1987,9 +2001,9 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Expressions.AllowUserToResizeRows = false;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_Expressions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
-            this.dataGridView_Expressions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView_Expressions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView_Expressions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_Expressions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_Expressions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -2128,8 +2142,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label68
             // 
-            this.label68.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label68.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label68.Location = new System.Drawing.Point(1, 117);
             this.label68.Name = "label68";
             this.label68.Size = new System.Drawing.Size(393, 39);
@@ -2142,8 +2156,8 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_ImportPathes.AllowUserToResizeRows = false;
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView_ImportPathes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle14;
-            this.dataGridView_ImportPathes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView_ImportPathes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView_ImportPathes.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView_ImportPathes.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView_ImportPathes.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -2194,9 +2208,9 @@ namespace WindowPlugins.GUITVSeries
             // listView_ParsingResults
             // 
             this.listView_ParsingResults.AllowColumnReorder = true;
-            this.listView_ParsingResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView_ParsingResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listView_ParsingResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.FileName,
             this.ParsedSeriesName,
@@ -2253,9 +2267,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox12
             // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox12.Controls.Add(this.panel_OnlineData);
             this.groupBox12.Location = new System.Drawing.Point(3, 3);
             this.groupBox12.Name = "groupBox12";
@@ -2266,9 +2280,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // panel_OnlineData
             // 
-            this.panel_OnlineData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_OnlineData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OnlineData.AutoScroll = true;
             this.panel_OnlineData.Controls.Add(this.buttonArtworkDownloadLimits);
             this.panel_OnlineData.Controls.Add(this.dbOptionCheckBox1);
@@ -2331,7 +2345,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox1.TabIndex = 23;
             this.dbOptionCheckBox1.Text = "Download Series WideBanners containing \'Text\' name";
             this.dbOptionCheckBox1.ToolTip = "Enable to download series widebanners that do not contain a graphical series name" +
-                ".";
+    ".";
             this.dbOptionCheckBox1.UseVisualStyleBackColor = true;
             // 
             // label18
@@ -2540,9 +2554,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // follwitSettingsPanel1
             // 
-            this.follwitSettingsPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.follwitSettingsPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.follwitSettingsPanel1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.follwitSettingsPanel1.Location = new System.Drawing.Point(8, 6);
             this.follwitSettingsPanel1.Name = "follwitSettingsPanel1";
@@ -2565,9 +2579,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.dbOptChkBoxPlayOutOfOrderCheck);
             this.groupBox1.Controls.Add(this.dbOptionSQLLogging);
             this.groupBox1.Controls.Add(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox3);
@@ -2628,7 +2643,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox3.TabIndex = 32;
             this.dbOptionCheckBox3.Text = "Sort Specials at end of season list.";
             this.dbOptionCheckBox3.ToolTip = "Enable this option to sort specials at end of season list rather than first item." +
-                "";
+    "";
             this.dbOptionCheckBox3.UseVisualStyleBackColor = true;
             // 
             // lblRecentAddedDays
@@ -2852,8 +2867,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // playlistSettings
             // 
-            this.playlistSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.playlistSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.playlistSettings.AutoScroll = true;
             this.playlistSettings.Location = new System.Drawing.Point(-1, 353);
             this.playlistSettings.Name = "playlistSettings";
@@ -2862,8 +2877,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox8
             // 
-            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox8.Controls.Add(this.nudParentalControlTimeout);
             this.groupBox8.Controls.Add(this.label19);
             this.groupBox8.Controls.Add(this.buttonViewTemplates);
@@ -3034,14 +3049,14 @@ namespace WindowPlugins.GUITVSeries
             this.label65.Size = new System.Drawing.Size(592, 26);
             this.label65.TabIndex = 11;
             this.label65.Text = "Logo Rules will be overridden by skin if defined, to override set the Import attr" +
-                "ibute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin director" +
-                "y.\r\n";
+    "ibute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin director" +
+    "y.\r\n";
             // 
             // groupBox7
             // 
-            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox7.Controls.Add(this.btnLogoDeleteAll);
             this.groupBox7.Controls.Add(this.btnLogoDown);
             this.groupBox7.Controls.Add(this.btnlogoUp);
@@ -3091,14 +3106,14 @@ namespace WindowPlugins.GUITVSeries
             this.label64.Size = new System.Drawing.Size(617, 26);
             this.label64.TabIndex = 11;
             this.label64.Text = "Formatting Rules will be overridden by skin if defined, to override set the Impor" +
-                "t attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin di" +
-                "rectory.\r\n";
+    "t attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin di" +
+    "rectory.\r\n";
             // 
             // formattingConfiguration1
             // 
-            this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.formattingConfiguration1.Location = new System.Drawing.Point(8, 44);
             this.formattingConfiguration1.Name = "formattingConfiguration1";
             this.formattingConfiguration1.Size = new System.Drawing.Size(780, 593);
@@ -3128,13 +3143,13 @@ namespace WindowPlugins.GUITVSeries
             this.label37.Size = new System.Drawing.Size(644, 26);
             this.label37.TabIndex = 10;
             this.label37.Text = "Listing Format Settings will be overridden by skin if defined, to override set th" +
-                "e Import attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your " +
-                "skin directory.\r\n";
+    "e Import attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your " +
+    "skin directory.\r\n";
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Col3);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.richTextBox_seasonFormat_Main);
@@ -3190,8 +3205,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col3);
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Col2);
             this.groupBox4.Controls.Add(this.richTextBox_episodeFormat_Main);
@@ -3247,8 +3262,8 @@ namespace WindowPlugins.GUITVSeries
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Col3);
             this.groupBox2.Controls.Add(this.richTextBox_seriesFormat_Main);
@@ -3318,9 +3333,9 @@ namespace WindowPlugins.GUITVSeries
             // 
             // aboutScreen
             // 
-            this.aboutScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.aboutScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.aboutScreen.AutoScroll = true;
             this.aboutScreen.BackColor = System.Drawing.Color.White;
             this.aboutScreen.Location = new System.Drawing.Point(2, 3);
@@ -3651,5 +3666,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label19;
         private WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay;
         private Configuration.DBOptionCheckBox dbOptionSQLLogging;
+        private Configuration.DBOptionCheckBox dbOptChkBoxPlayOutOfOrderCheck;
     }
 }

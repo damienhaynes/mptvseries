@@ -28,6 +28,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
@@ -114,6 +115,38 @@ namespace WindowPlugins.GUITVSeries
                 // don't have this file !
                 if (episode[DBEpisode.cFilename].ToString().Length == 0)
                     return false;
+
+                // check that we are not playing an episode out of episode if unwatched
+                // ignore specials as they can be pretty out of wack!
+                #region PlayBack Order
+                if (DBOption.GetOptions(DBOption.cCheckPlayOutOfOrder) && !episode[DBOnlineEpisode.cWatched] && episode[DBOnlineEpisode.cSeasonIndex] > 0)
+                {
+                    // first get the next unwatched episode from previously played
+                    // API for GetNextUnwatched is not desirable as that works from Date Watched, we only care about watched here
+                    var conditions = new SQLCondition();
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineSeries.cSeriesID], SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, 0, SQLConditionType.GreaterThan);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 0, SQLConditionType.Equal);
+                    var episodes = DBEpisode.Get(conditions, false);
+
+                    if (episodes != null && episodes.Count > 0)
+                    {
+                        // set logical playback order
+                        episodes.Sort();
+
+                        if (!episodes.First().Equals(episode))
+                        {
+                            GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                            dlgYesNo.SetHeading(Translation.Warning);
+                            dlgYesNo.SetLine(1, Translation.PlaybackOutOfOrderLine1);
+                            dlgYesNo.SetLine(2, episodes.First().ToString());
+                            dlgYesNo.SetLine(3, Translation.PlaybackOutOfOrderLine2);
+                            dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
+                            if (!dlgYesNo.IsConfirmed) return false;
+                        }
+                    }
+                }
+                #endregion
 
                 m_previousEpisode = m_currentEpisode;
                 m_currentEpisode = episode;
