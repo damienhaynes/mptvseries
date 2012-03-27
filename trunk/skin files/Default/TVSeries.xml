@@ -441,9 +441,20 @@
         <onleft>50</onleft>
         <onright>50</onright>
         <onup>21</onup>
+        <ondown>10</ondown>
+				<width>200</width>
+      </control>
+			<control>
+        <description>Filters</description>
+        <type>button</type>
+        <id>10</id>
+        <label>Filters</label>
+        <onleft>50</onleft>
+        <onright>50</onright>
+        <onup>2</onup>
         <ondown>3</ondown>
 				<width>200</width>
-      </control> 
+			</control>			
 			<control>
         <description>Change Layout</description>
         <type>button</type>
@@ -451,7 +462,7 @@
         <label>Change Layout</label>
         <onleft>50</onleft>
         <onright>50</onright>
-        <onup>2</onup>
+        <onup>10</onup>
         <ondown>5</ondown>
 				<width>200</width>
 			</control>
