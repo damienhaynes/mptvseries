@@ -551,7 +551,7 @@ namespace WindowPlugins.GUITVSeries
                     progressDialog.DisableCancel(true);
                     progressDialog.SetHeading(Translation.Delete);
                     progressDialog.Percentage = 0;
-                    progressDialog.SetLine(1, string.Format("{0} {1}", seriesName, this[DBSeason.cIndex]));
+                    progressDialog.SetLine(1, string.Format("{0} {1} {2}", seriesName, Translation.Season, this[DBSeason.cIndex]));
                     progressDialog.SetLine(2, string.Empty);
                 }
                 // only show progress dialog if we have local files in season
