@@ -1527,10 +1527,14 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Next Episode Helpers
-
         public static List<DBEpisode> GetNextWatchingEpisodes()
         {
-            return GetNextWatchingEpisodes(3);
+            return GetNextWatchingEpisodes(false);
+        }
+
+        public static List<DBEpisode> GetNextWatchingEpisodes(bool ignoreSpecials)
+        {
+            return GetNextWatchingEpisodes(3, ignoreSpecials);
         }
 
         /// <summary>
@@ -1538,6 +1542,11 @@ namespace WindowPlugins.GUITVSeries
         /// Will only return unique series that have next episodes to watch
         /// </summary>
         public static List<DBEpisode> GetNextWatchingEpisodes(int limit)
+        {
+            return GetNextWatchingEpisodes(limit, false);
+        }
+
+        public static List<DBEpisode> GetNextWatchingEpisodes(int limit, bool ignoreSpecials)
         {
             List<DBEpisode> nextEpisodes = new List<DBEpisode>(limit);
 
@@ -1549,7 +1558,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (int seriesId in episodesWatched.Select(e => (int)e[DBEpisode.cSeriesID]).Distinct())
             {
                 // get next unwatched episode
-                var episode = DBEpisode.GetNextUnWatched(seriesId);
+                var episode = DBEpisode.GetNextUnWatched(seriesId, ignoreSpecials);
                 if (episode != null) nextEpisodes.Add(episode);
                 if (nextEpisodes.Count == limit) break;
             }
@@ -1562,12 +1571,18 @@ namespace WindowPlugins.GUITVSeries
         /// Will return null if no unwatched episodes air next
         /// This works best when user enables to download all 
         /// episode information from theTVDB.com
-        /// </summary>   
+        /// </summary>
         public static DBEpisode GetNextUnWatched(int seriesId)
+        {
+            return GetNextUnWatched(seriesId, false);
+        }
+        
+        public static DBEpisode GetNextUnWatched(int seriesId, bool ignoreSpecials)
         {
             // get all episodes for the series
             var conditions = new SQLCondition();
             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, seriesId, SQLConditionType.Equal);
+            if (ignoreSpecials) conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, 0, SQLConditionType.GreaterThan);
             var episodes = DBEpisode.Get(conditions, false);
             if (episodes.Count == 0) return null;
 

@@ -335,4 +335,8 @@
   <string Field="ViewTagExistsMessage" Original="The view '{0}' already exists">The view '{0}' already exists</string>
   <string Field="LayoutListThumbs" Original="List Panels">List Panels</string>
   <string Field="LayoutCoverflow" Original="Coverflow">Coverflow</string>
+
+  <string Field="Warning" Original="Warning">Warning</string>
+  <string Field="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">The next unwatched episode is:</string>
+  <string Field="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Are you sure you want to continue?</string>
 </strings>

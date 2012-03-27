@@ -346,6 +346,10 @@ namespace WindowPlugins.GUITVSeries
         public static string SearchActorInMovies = "Search for Actor in Movies";
 
         public static string AddToCustomList = "Add {0} to Custom List...";
+
+        public static string Warning = "Warning";
+        public static string PlaybackOutOfOrderLine1 = "The next unwatched episode is:";
+        public static string PlaybackOutOfOrderLine2 = "Are you sure you want to continue?";
         #endregion
 
         #region Private variables
