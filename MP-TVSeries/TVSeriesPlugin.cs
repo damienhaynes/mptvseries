@@ -257,6 +257,9 @@ namespace WindowPlugins.GUITVSeries
         [SkinControlAttribute(9)]
         protected GUIButtonControl LoadPlaylistButton = null;
 
+        [SkinControlAttribute(10)]
+        protected GUIButtonControl filterButton = null;
+
         [SkinControlAttribute(50)]
         protected GUIFacadeControl m_Facade = null;
 
@@ -348,7 +351,8 @@ namespace WindowPlugins.GUITVSeries
             showActorsGUI,
             trakt,
             downloadTorrent,
-            downloadNZB
+            downloadNZB,
+            filterUnwatched
         }
 
         enum eContextMenus
@@ -360,7 +364,8 @@ namespace WindowPlugins.GUITVSeries
             switchView,
             switchLayout,
             addToView,
-            removeFromView
+            removeFromView,
+            filters
         }
 
         public enum DeleteMenuItems
@@ -731,6 +736,9 @@ namespace WindowPlugins.GUITVSeries
             if (viewMenuButton != null)
                 viewMenuButton.Label = Translation.ButtonSwitchView;
 
+            if (filterButton != null)
+                filterButton.Label = Translation.Filters;
+
             if (ImportButton != null)
                 ImportButton.Label = Translation.ButtonRunImport;
 
@@ -999,6 +1007,10 @@ namespace WindowPlugins.GUITVSeries
                         pItem = new GUIListItem(Translation.Actions + " ...");
                         dlg.Add(pItem);
                         pItem.ItemId = (int)eContextMenus.action;
+
+                        pItem = new GUIListItem(Translation.Filters + " ...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextMenus.filters;
                     }
 
                     pItem = new GUIListItem(Translation.Options + " ...");
@@ -1187,6 +1199,11 @@ namespace WindowPlugins.GUITVSeries
                                     bExitMenu = true;
                                 return;
                             }
+                        
+                        case (int)eContextMenus.filters:
+                            dlg.Reset();
+                            ShowFiltersMenu();
+                            return;
 
                         default:
                             bExitMenu = true;
@@ -2178,6 +2195,13 @@ namespace WindowPlugins.GUITVSeries
                 return;
             }
 
+            if (control == this.filterButton)
+            {
+                ShowFiltersMenu();
+                GUIControl.UnfocusControl(GetID, filterButton.GetID);
+                GUIControl.FocusControl(GetID, m_Facade.GetID);
+            }
+
             if (control == this.LayoutMenuButton)
             {
                 ShowLayoutMenu();
@@ -2599,6 +2623,14 @@ namespace WindowPlugins.GUITVSeries
                 }
                 setNewListLevelOfCurrView(m_CurrViewStep);
 
+                if (filterButton != null)
+                {
+                    if (this.listLevel != Listlevel.Group)
+                        GUIControl.EnableControl(this.GetID, filterButton.GetID);
+                    else
+                        GUIControl.DisableControl(this.GetID, filterButton.GetID);
+                }
+
             }
             catch (Exception ex)
             {
@@ -2992,6 +3024,14 @@ namespace WindowPlugins.GUITVSeries
                             // Get list of series for current view
                             seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
 
+                            // Apply Filters
+                            #region Unwatched
+                            if (DBOption.GetOptions(DBOption.cFilterUnwatched))
+                            {
+                                seriesList.RemoveAll(s => s[DBOnlineSeries.cEpisodesUnWatched] == 0);
+                            }
+                            #endregion
+
                             // Sort Series List if Title has been user edited
                             string titleField = DBOption.GetOptions(DBOption.cSeries_UseSortName) ? DBOnlineSeries.cSortName : DBOnlineSeries.cPrettyName;
                             seriesList.Sort(new Comparison<DBSeries>((x, y) =>
@@ -3117,6 +3157,14 @@ namespace WindowPlugins.GUITVSeries
                             // view handling                               
                             List<DBSeason> seasons = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
                             seasons.Sort();
+
+                            // Apply Filters
+                            #region Unwatched
+                            if (DBOption.GetOptions(DBOption.cFilterUnwatched))
+                            {
+                                seasons.RemoveAll(s => s[DBSeason.cEpisodesUnWatched] == 0);
+                            }
+                            #endregion
 
                             bool canBeSkipped = (seasons.Count == 1) && DBOption.GetOptions(DBOption.cSkipSeasonViewOnSingleSeason);
                             if (!canBeSkipped)
@@ -3304,6 +3352,17 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                             #endregion
+
+                            // Apply Filter, ignore if using episode loading parameter
+                            if (m_LoadingParameter.Type != LoadingParameterType.Episode)
+                            {
+                                #region Unwatched
+                                if (DBOption.GetOptions(DBOption.cFilterUnwatched))
+                                {
+                                    episodesToDisplay.RemoveAll(e => e[DBOnlineEpisode.cWatched]);
+                                }
+                                #endregion
+                            }
 
                             int watchedCount = 0;
                             int unwatchedCount = 0;
@@ -3887,6 +3946,35 @@ namespace WindowPlugins.GUITVSeries
 
             item.Commit();
         }
+
+        #region Filters Menu
+        private void ShowFiltersMenu()
+        {
+            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+            dlg.Reset();
+            dlg.SetHeading(Translation.Filters);
+
+            bool unWatchedFilter = DBOption.GetOptions(DBOption.cFilterUnwatched);
+
+            GUIListItem pItem = new GUIListItem(unWatchedFilter ? Translation.AllEpisodes : Translation.UnwatchedEpisodes);
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.filterUnwatched;
+           
+            dlg.DoModal(GUIWindowManager.ActiveWindow);
+
+            if (dlg.SelectedId >= 0)
+            {
+                switch (dlg.SelectedId)
+                {
+                    case (int)eContextItems.filterUnwatched:
+                        DBOption.SetOptions(DBOption.cFilterUnwatched, !unWatchedFilter);
+                        break;
+                }
+                // reflect changes in facade
+                LoadFacade();
+            }
+        }
+        #endregion
 
         #region Layout Menu
         private void ShowLayoutMenu()

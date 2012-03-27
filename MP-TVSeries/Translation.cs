@@ -350,6 +350,9 @@ namespace WindowPlugins.GUITVSeries
         public static string Warning = "Warning";
         public static string PlaybackOutOfOrderLine1 = "The next unwatched episode is:";
         public static string PlaybackOutOfOrderLine2 = "Are you sure you want to continue?";
+        public static string Filters = "Filters";
+        public static string UnwatchedEpisodes = "UnWatched Episodes";
+        public static string AllEpisodes = "All Episodes";
         #endregion
 
         #region Private variables

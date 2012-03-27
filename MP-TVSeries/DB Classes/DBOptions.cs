@@ -222,6 +222,8 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cCheckPlayOutOfOrder = "CheckPlayOutOfOrder";
 
+        public const String cFilterUnwatched = "FilterUnwatched";
+
         private static Dictionary<string, DBValue> optionsCache = new Dictionary<string, DBValue>();
 
         private const string cCreateTableQuery = "CREATE TABLE options (option_id integer primary key, property text, value text)";       
@@ -618,6 +620,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cCheckPlayOutOfOrder) == null)
                     SetOptions(cCheckPlayOutOfOrder, false);
+
+                if (GetOptions(cFilterUnwatched) == null)
+                    SetOptions(cFilterUnwatched, false);
 
             }
             catch (Exception ex)
