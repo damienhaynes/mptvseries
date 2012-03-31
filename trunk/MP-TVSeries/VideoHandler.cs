@@ -127,6 +127,7 @@ namespace WindowPlugins.GUITVSeries
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineSeries.cSeriesID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, 0, SQLConditionType.GreaterThan);
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 0, SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, string.Empty, SQLConditionType.NotEqual);
                     var episodes = DBEpisode.Get(conditions, false);
 
                     if (episodes != null && episodes.Count > 0)
