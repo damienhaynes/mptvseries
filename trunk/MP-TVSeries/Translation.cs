@@ -348,7 +348,7 @@ namespace WindowPlugins.GUITVSeries
         public static string AddToCustomList = "Add {0} to Custom List...";
 
         public static string Warning = "Warning";
-        public static string PlaybackOutOfOrderLine1 = "The next unwatched episode is:";
+        public static string PlaybackOutOfOrderLine1 = "You have not yet watched/collected";
         public static string PlaybackOutOfOrderLine2 = "Are you sure you want to continue?";
         public static string Filters = "Filters";
         public static string UnwatchedEpisodes = "UnWatched Episodes";
