@@ -121,26 +121,35 @@ namespace WindowPlugins.GUITVSeries
                 #region PlayBack Order
                 if (DBOption.GetOptions(DBOption.cCheckPlayOutOfOrder) && !episode[DBOnlineEpisode.cWatched] && episode[DBOnlineEpisode.cSeasonIndex] > 0)
                 {
+                    // check sort order so our check is accurate
+                    var series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                    bool dvdSortOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+
+                    string seasonField = dvdSortOrder ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+                    string episodeField = dvdSortOrder ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+
                     // first get the next unwatched episode from previously played
+                    // we are only interested in current season (could be multi-user watching multiple seasons)
                     // API for GetNextUnwatched is not desirable as that works from Date Watched, we only care about watched here
                     var conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineSeries.cSeriesID], SQLConditionType.Equal);
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, 0, SQLConditionType.GreaterThan);
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 0, SQLConditionType.Equal);
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cFirstAired, string.Empty, SQLConditionType.NotEqual);
+                    conditions.Add(new DBOnlineEpisode(), seasonField, episode[seasonField], SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), episodeField, episode[episodeField], SQLConditionType.LessThan);
                     var episodes = DBEpisode.Get(conditions, false);
 
                     if (episodes != null && episodes.Count > 0)
                     {
-                        // set logical playback order
+                        // set logical playback order based on sort order
                         episodes.Sort();
 
-                        if (!episodes.First().Equals(episode))
+                        // if the previous found episode is not watched then we are playing out of order
+                        // if we have a gap in episode collection then assume it has not been watched (this check is needed when user does not download all episode info)
+                        if (!episodes.Last()[DBOnlineEpisode.cWatched] || (episode[episodeField] - episodes.Last()[episodeField]) > 1)
                         {
                             GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
                             dlgYesNo.SetHeading(Translation.Warning);
                             dlgYesNo.SetLine(1, Translation.PlaybackOutOfOrderLine1);
-                            dlgYesNo.SetLine(2, episodes.First().ToString());
+                            dlgYesNo.SetLine(2, string.Format("{0} - {1}x{2}", series.ToString(), episode[seasonField], episode[episodeField] - 1));
                             dlgYesNo.SetLine(3, Translation.PlaybackOutOfOrderLine2);
                             dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
                             if (!dlgYesNo.IsConfirmed) return false;
