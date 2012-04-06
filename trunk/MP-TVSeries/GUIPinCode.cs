@@ -118,6 +118,16 @@ namespace WindowPlugins.GUITVSeries {
 					EnteredPinCode = EnteredPinCode + "0";
 					UpdatePinCode(EnteredPinCode.Length);
 					break;
+                case Action.ActionType.ACTION_KEY_PRESSED:
+                    // some types of remotes send ACTION_KEY_PRESSED instead of REMOTE_0 - REMOTE_9 commands
+                    if (EnteredPinCode.Length >= 4) return;
+                    if (action.m_key != null && action.m_key.KeyChar >= '0' && action.m_key.KeyChar <= '9')
+                    {
+                        char key = (char)action.m_key.KeyChar;
+                        EnteredPinCode = EnteredPinCode + key;
+                        UpdatePinCode(EnteredPinCode.Length);
+                    }
+                    break;
 				case Action.ActionType.ACTION_DELETE_ITEM:
 				case Action.ActionType.ACTION_MOVE_DOWN:
 				case Action.ActionType.ACTION_MOVE_LEFT:
@@ -126,12 +136,12 @@ namespace WindowPlugins.GUITVSeries {
 						UpdatePinCode(EnteredPinCode.Length);
 					}
 					break;
-				case Action.ActionType.ACTION_SELECT_ITEM:					
+				case Action.ActionType.ACTION_SELECT_ITEM:
 					PageDestroy();
 					return;
 				case Action.ActionType.ACTION_PREVIOUS_MENU:
 				case Action.ActionType.ACTION_CLOSE_DIALOG:
-				case Action.ActionType.ACTION_CONTEXT_MENU:					
+				case Action.ActionType.ACTION_CONTEXT_MENU:
 					PageDestroy();
 					return;
 			}
