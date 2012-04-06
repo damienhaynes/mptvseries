@@ -5,6 +5,7 @@ using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 using Action = MediaPortal.GUI.Library.Action;
 using System.ComponentModel;
+using System.Threading;
 
 namespace WindowPlugins.GUITVSeries {
 	public class GUIPinCode : GUIDialogWindow {
@@ -121,8 +122,7 @@ namespace WindowPlugins.GUITVSeries {
                 case Action.ActionType.ACTION_KEY_PRESSED:
                     // some types of remotes send ACTION_KEY_PRESSED instead of REMOTE_0 - REMOTE_9 commands
                     if (EnteredPinCode.Length >= 4) return;
-                    if (action.m_key != null && action.m_key.KeyChar >= '0' && action.m_key.KeyChar <= '9')
-                    {
+                    if (action.m_key != null && action.m_key.KeyChar >= '0' && action.m_key.KeyChar <= '9') {
                         char key = (char)action.m_key.KeyChar;
                         EnteredPinCode = EnteredPinCode + key;
                         UpdatePinCode(EnteredPinCode.Length);
@@ -149,7 +149,7 @@ namespace WindowPlugins.GUITVSeries {
 			base.OnAction(action);
 		}
 
-		protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType) {
+		protected override void OnClicked(int controlId, GUIControl control, Action.ActionType actionType) {
 			base.OnClicked(controlId, control, actionType);			
 		}
 
@@ -189,10 +189,17 @@ namespace WindowPlugins.GUITVSeries {
 			// otherwise nothing more to do, exit
 			if (EnteredPinCode != MasterCode) {
 				if (labelFeedback != null) labelFeedback.Label = Message;
-			} else {
-				IsCorrect = true;
-				PageDestroy();
-				return;
+			} 
+            else {
+                IsCorrect = true;
+
+                // delay shutting down the dialog so the user gets visual confirmation of the last input
+                Thread delay = new Thread((obj) => {
+                    Thread.Sleep(500);
+                    PageDestroy();
+                    return;
+                });
+                delay.Start();
 			}
 		}
 
