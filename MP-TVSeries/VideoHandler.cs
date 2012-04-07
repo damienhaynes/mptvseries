@@ -119,15 +119,16 @@ namespace WindowPlugins.GUITVSeries
                 // check that we are not playing an episode out of episode if unwatched
                 // ignore specials as they can be pretty out of wack!
                 #region PlayBack Order
-                if (DBOption.GetOptions(DBOption.cCheckPlayOutOfOrder) && !episode[DBOnlineEpisode.cWatched] && episode[DBOnlineEpisode.cSeasonIndex] > 0)
+
+                // check sort order so our check is accurate
+                var series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                bool dvdSortOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+
+                string seasonField = dvdSortOrder ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+                string episodeField = dvdSortOrder ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+
+                if (DBOption.GetOptions(DBOption.cCheckPlayOutOfOrder) && !episode[DBOnlineEpisode.cWatched] && episode[seasonField] > 0 && episode[episodeField] > 1)
                 {
-                    // check sort order so our check is accurate
-                    var series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                    bool dvdSortOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
-
-                    string seasonField = dvdSortOrder ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
-                    string episodeField = dvdSortOrder ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
-
                     // first get the next unwatched episode from previously played
                     // we are only interested in current season (could be multi-user watching multiple seasons)
                     // API for GetNextUnwatched is not desirable as that works from Date Watched, we only care about watched here
@@ -135,6 +136,7 @@ namespace WindowPlugins.GUITVSeries
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineSeries.cSeriesID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), seasonField, episode[seasonField], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), episodeField, episode[episodeField], SQLConditionType.LessThan);
+                    conditions.Add(new DBOnlineEpisode(), episodeField, 0, SQLConditionType.GreaterThan);
                     var episodes = DBEpisode.Get(conditions, false);
 
                     if (episodes != null && episodes.Count > 0)
