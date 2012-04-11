@@ -4020,6 +4020,8 @@ namespace WindowPlugins.GUITVSeries
                     if (menuItem.Length > 0)
                     {
                         GUIListItem pItem = new GUIListItem(menuItem);
+                        if (item.Equals(currentLayout))
+                            pItem.Selected = true;
                         dlg.Add(pItem);
                         pItem.ItemId = counter++;
                     }
@@ -4163,12 +4165,11 @@ namespace WindowPlugins.GUITVSeries
             dlg.SetHeading(Translation.ChangeView);
 
             int counter = 0;
-            int preSelect = 0;
             foreach (logicalView view in m_allViews)
             {
                 GUIListItem pItem = new GUIListItem(view.prettyName);
                 if (view.Equals(this.m_CurrLView))
-                    preSelect = counter;
+                    pItem.Selected = true;
                 dlg.Add(pItem);
                 pItem.ItemId = counter++;
             }
