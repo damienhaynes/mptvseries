@@ -4170,6 +4170,8 @@ namespace WindowPlugins.GUITVSeries
                 GUIListItem pItem = new GUIListItem(view.prettyName);
                 if (view.Equals(this.m_CurrLView))
                     pItem.Selected = true;
+                if (view.ParentalControl)
+                    pItem.IconImage = "lock.png";
                 dlg.Add(pItem);
                 pItem.ItemId = counter++;
             }
