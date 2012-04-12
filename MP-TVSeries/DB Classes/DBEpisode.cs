@@ -1195,13 +1195,18 @@ namespace WindowPlugins.GUITVSeries
 
         public static void GetSeasonEpisodeCounts(DBSeason season, out int epsTotal, out int epsUnWatched)
         {
+            // consider episode sort order when calculating episodes in season
+            // some series have different number of episodes per season for different orders e.g. Futurama
+            DBSeries series = Helper.getCorrespondingSeries(int.Parse(season[DBSeason.cSeriesID]));
+            string seasonIndex = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+            cond.Add(new DBOnlineEpisode(), seasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
             {
-                //don't include hidden episodes unless the ShowHiddenItems option is set
+                // don't include hidden episodes unless the ShowHiddenItems option is set
                 cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
             }
             string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired");
