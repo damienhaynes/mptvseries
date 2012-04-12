@@ -4553,6 +4553,13 @@ namespace WindowPlugins.GUITVSeries
             // commit selection
             series.Commit();
 
+            // re-calculate episode counts for each season as they can differ
+            // with different sort orders
+            if (!ChangeMatchingOrder)
+            {
+                DBSeries.UpdateEpisodeCounts(series);
+            }
+
             // Re-load the facade to re-sort episodes
             LoadFacade();
         }
