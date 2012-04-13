@@ -1,0 +1,1280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Items>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Skins">
+            <DisplayName>Skins</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Skins</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ExternalPlugins">
+            <DisplayName>ExternalPlugins</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ExternalPlugins</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>1</Minor>
+          <Build>0</Build>
+          <Revision>1824</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Created new MPEI Installer, supports external SubCentral and Trakt external extensions.
+* Improved OnImportCompleted event handler for external plugins. Parameter now only gets set if there is any new files added during import.
+* Fixed facade issues in external windows when tvseries importer is running.</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.0.1824.mpe1</OnlineLocation>
+        <ReleaseDate>2011-09-07T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\MP-TVSeries.mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>1</Minor>
+          <Build>1</Build>
+          <Revision>1864</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Fixed issue where incorrect number of episodes were shown after playback is stopped, also fixes issue where sometimes no episodes were displayed.
+
+* Fixed crash in cache when navigating views. Typically seen if using Filmstrip/Coverflow layouts in season view.
+
+* Added Trakt Main Menu, Rate and Add to Watchlist items in context menu.
+
+* Updated Trakt MPEI package to v1.1.3.
+
+* Added a button to DefaultWide skins HiddenMenu which allows you to upgrade TVSereis via the Extensions plugin if an update is available.</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.1.1864.mpe1</OnlineLocation>
+        <ReleaseDate>2011-09-22T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>1</Minor>
+          <Build>2</Build>
+          <Revision>1881</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Fixed textures leak on Fanart Chooser window.
+
+* Fixed duplicate translations in English en-US.xml.
+
+* Updated Russian Translations, thanks Undel.
+
+* Improved image handling when creating and loading, fixes most common errors seen.
+
+* Fixed a loading exception in that could occur when populating the facade.
+
+* Fixed potential exceptions to do with Fanart thumbnail handling.
+
+* [API] Fixed a bug where the parameter in the OnlineParsingCompleted event was not being cleared. Was only being reset if a LocalParse action was done, but that doesn't happen all the time.
+
+* [API] Added API to get list of episodes that are next to watch. This can be done per series to get the next episode or get a list of episodes from the last set of unique series you have been watching recently (this could be used to display on BasicHome).
+
+* Fixed some focus issues with facade when using Hidden Menu buttons.
+
+* Fixed an error in log after closing tvseries configuration which was launched from desktop shortcut.
+
+* Added Trakt Related Shows to context menu. You can view related/similar shows that you may also be interested in.
+
+* Updated Trakt MPEI package to v1.3.0.
+
+* Updated SubCentral MPEI package to v1.1.2.</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.2.1881.mpe1</OnlineLocation>
+        <ReleaseDate>2011-11-11T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>1</Minor>
+          <Build>3</Build>
+          <Revision>1888</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Fixed Season artwork not being displayed in Filmstrip and Coverflow layouts.
+
+* Updated Danish translations, thanks Steffansp.</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.1.3.1888.mpe1</OnlineLocation>
+        <ReleaseDate>2011-11-12T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>2</Minor>
+          <Build>0</Build>
+          <Revision>1909</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Added support to directly loading into series via loading parameters.
+* Added MyTorrents search for selected series/episodes. Thanks edalex86.
+* Added NZB Search via mpNZB plugin.
+* Added Actor search on movies from Actors window, requires MovingPictures 1.3.0.
+* Added 'Add to Custom List' in Trakt context menu entry.
+* Added checking for unique import paths.This will prevent users encountering an error when navigating in ImportWizard,
+* Fixed duplicate action for EpisodeCounts during import.
+* Fixed ImportWizard not being able to identify episodes even though they are online. Cache was not being cleared before this action.
+* Updated French translations, thanks ubela64.
+</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.2.0.1909.mpe1</OnlineLocation>
+        <ReleaseDate>2012-01-19T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>2</Minor>
+          <Build>1</Build>
+          <Revision>1928</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Fixed detection of fullscreen video to also include Live TV when doing period check for new files.
+* Fixed file scan schedule being off by one minute.
+* Fixed logging/progress for episode thumbnail downloads.
+* Fixed an issue where the online_episode table was not being cleared properly on season delete.
+* Fixed uTorrent Search season/episode number format.
+* Added support for language changes from GUI Settings.
+* Added a progress dialog when deleting episodes from a season/series view. Typically this can be a lengthy operation esp. for network drives.
+* Updated Dutch translations, thanks powermarcel10.
+* Updated Trakt Plugin to v1.5.1.
+* Removed TVSeries Logging setting and use MediaPortal Logging settings.
+* Removed TVSeries GUI Language setting and use MediaPortal Language settings.
+* Changed default value for 'MarkRatedEpisodeAsWatched' to false so it doesn't conflict with online 'unseen' syncing.</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.2.1.1928.mpe1</OnlineLocation>
+        <ReleaseDate>2012-03-06T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultSkin">
+            <DisplayName>DefaultSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="DefaultWideSkin">
+            <DisplayName>DefaultWideSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>DefaultWideSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="SubCentralPlugin">
+            <DisplayName>SubCentralPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>SubCentralPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>1</Major>
+              <Minor>1</Minor>
+              <Build>6</Build>
+              <Revision>27644</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+            <Name>MediaPortal</Name>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items>
+          <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+            <CompatibleVersion>
+              <Items>
+                <CompatibleVersionItem>
+                  <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+                  <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+                </CompatibleVersionItem>
+              </Items>
+            </CompatibleVersion>
+            <SubSystemsUsed>
+              <Items />
+            </SubSystemsUsed>
+          </PluginDependencyItem>
+        </Items>
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+        <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+        <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>3</Major>
+          <Minor>3</Minor>
+          <Build>0</Build>
+          <Revision>1943</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Added new option in configuration which checks playback of episode is not out of order.
+* Added global filter for 'Unwatched Episodes', this can be applied to any view. Filter can be applied from Context Menu or on supported skins in the Hidden menu.
+* Added small delay before closing PinCode dialog.
+* Added an icon to Views context menu to indicate which views are Parental Controlled.
+* Added colour highligting in the View/Layout context menus to indicate which is the current on screen.
+* Fixed PinCode dialog not working with some remote controls.
+* Fixed missing 'Season' text from the Season delete dialog.
+* Fixed episode counts in Season view being incorrect for some series when sorting by DVD order.
+* Fixing sorting of episodes in Configuration Details tab when using DVD sort order.
+* [API] Small enhancement to 'GetNextUnwatchedEpisodes' API, can now optionally filter out specials.
+
+
+
+</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.3.0.1943.mpe1</OnlineLocation>
+        <ReleaseDate>2012-04-13T15:25:06</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
+  </Items>
+</ExtensionCollection>

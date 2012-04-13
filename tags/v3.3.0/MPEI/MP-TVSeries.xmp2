@@ -1,0 +1,2528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Version>2.0</Version>
+  <Groups>
+    <Items>
+      <GroupItem Name="Main">
+        <ParentGroup />
+        <DisplayName>Main</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>This feature contains the main program files and dependencies for MP-TVSeries plugin.</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\bin\release\MP-TVSeries.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0bc8f04c-4da4-4299-bad4-aa3444d3aa57}-MP-TVSeries.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Windows\MP-TVSeries.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\External\PluginConfigLoader.exe</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8d0ae75d-52d4-4cd2-9331-0a97dd48078d}-PluginConfigLoader.exe</ZipFileName>
+              <DestinationFilename>%Base%\PluginConfigLoader.exe</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\External\MP-TVSeries-Configuration.exe</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3d9275ec-fc9a-4e26-8db4-b9ebfa215b27}-MP-TVSeries-Configuration.exe</ZipFileName>
+              <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="DefaultSkin">
+        <ParentGroup />
+        <DisplayName>Default Skin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Default Skin (4:3) for MP-TVSeries.</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\common.window.TVseries.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ae446312-2695-4470-abd4-bfde24b44d53}-common.window.TVseries.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\common.window.TVseries.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.dummy.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{52051632-5ce2-42bc-b865-4c4d5452404e}-TVSeries.dummy.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.dummy.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.FanArt.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5fc6bcf5-a4a0-4eba-be5c-b6d7a18f1650}-TVSeries.FanArt.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.FanArt.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.PinCodeDialog.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c8615dc1-9c48-4c41-8d57-005b5bc16a33}-TVSeries.PinCodeDialog.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.PinCodeDialog.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.Playlist.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7da839d7-266d-4115-aeb8-38368b680e0b}-TVSeries.Playlist.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.Playlist.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.RatingDialog.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9d76db99-cf0d-4d96-bb20-7199ee58ec01}-TVSeries.RatingDialog.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.RatingDialog.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.SkinSettings.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ce8e2371-6bf7-42b8-8b77-9fcf56d38fbf}-TVSeries.SkinSettings.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.SkinSettings.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\TVSeries.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{268e438e-5572-409d-ac08-35639834bf4e}-TVSeries.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Default\TVSeries.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\hover_my tv series.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b25e638c-2ca2-4b14-87da-78038069f9ce}-hover_my tv series.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\hover_my tv series.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\Lock.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a060ffd9-e58c-468b-a8fc-20d0c7b80855}-Lock.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\Lock.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\thumbborder.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ca456e37-dc31-4e01-8afe-cb4a7ca80a28}-thumbborder.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\thumbborder.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_newlabel.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fbcc9117-b9d6-4566-a413-f5cc8142dbc8}-tvseries_newlabel.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_newlabel.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_SeasonListIcon.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8bfcf652-7c5a-45b4-803f-035d8e86e68b}-tvseries_SeasonListIcon.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_SeasonListIcon.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_SeriesListIcon.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7b1b5409-0f7e-4b6a-904c-38de5f6e4d50}-tvseries_SeriesListIcon.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_SeriesListIcon.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_UnWatched.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{07e487ee-ac78-49ca-b17b-7e8c96270dfd}-tvseries_UnWatched.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_UnWatched.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_UnWatchedNA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b843cab5-836e-46f6-aa69-54f8b7520eca}-tvseries_UnWatchedNA.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_UnWatchedNA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_Watched.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fb3883d0-ebf5-45d9-8af7-183d91c2c0a2}-tvseries_Watched.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_Watched.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\tvseries_WatchedNA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d96e9332-475b-45f9-aa4f-72376d7975af}-tvseries_WatchedNA.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\tvseries_WatchedNA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\UserRatingStarOff.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{eb35e4c2-145b-49fc-80a8-7c7d108617fe}-UserRatingStarOff.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\UserRatingStarOff.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\UserRatingStarOn.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0d7feb15-c8b1-469a-87d1-ea4ce71ef655}-UserRatingStarOn.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\UserRatingStarOn.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5f6d5233-9325-4944-a2e6-4eb0b9f20dd7}-star.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star0.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2c9eba74-e9ff-44b9-a636-7e9ff49e6fb4}-star0.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star0.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star10.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c1c841a9-be25-4148-81d7-06a705be2a33}-star10.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star10.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star100.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5c132e6f-fdcf-46cb-a06b-618a7b04036d}-star100.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star100.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star15.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f2fa0a91-6f3c-4018-be9d-12e461dbea57}-star15.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star15.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star20.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2bcb6421-7031-4858-b391-2ee7d1b70ea4}-star20.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star20.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star25.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{305b71a2-ecc1-4c65-aeb3-4b534cc67682}-star25.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star25.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star30.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{32be5cc1-8685-4733-a25b-aeff2b5dfd10}-star30.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star30.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star35.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c9ed5aab-bc3f-475a-8f3f-b146bbf36b7e}-star35.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star35.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star40.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3f010448-5568-4bd4-9da1-abc8dc42cab5}-star40.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star40.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star45.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ebdad7fc-769f-489a-8300-4d5412009e8d}-star45.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star45.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star5.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{aa51b827-2d42-4a2f-8c81-efd53222afc9}-star5.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star5.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star50.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fbb149a0-4aeb-44aa-971e-0ebb79f7939f}-star50.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star50.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star55.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7be8f2b4-95d3-4c22-b27f-f4156ed97093}-star55.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star55.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star60.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{18f8a924-1735-4eda-b5e8-ef8bccf329cd}-star60.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star60.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star65.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6557146b-910e-41ea-87a4-cafaf7df3fb0}-star65.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star65.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star70.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9e0f5970-8e2b-4ab7-8d21-ef26018739be}-star70.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star70.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star75.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{89bb84e5-69d3-4e91-9d8a-f2e4ad8ff51b}-star75.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star75.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star80.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0a672a57-41b6-41bb-9505-28b6df6547d6}-star80.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star80.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star85.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2bef6252-00fe-4179-ab75-d30a11cbc9b9}-star85.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star85.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star90.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fc1ff2a4-7799-4644-94d3-c105fa91966e}-star90.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star90.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\TVSeries\star95.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fc93fe2d-85e3-444f-8add-e3b047dfbd06}-star95.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\TVSeries\star95.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Default\Media\Logos\tvseries.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{89ebd1ce-4e1b-4bba-b0d8-eae9a479b2b7}-tvseries.png</ZipFileName>
+              <DestinationFilename>%Skin%\Default\Media\Logos\tvseries.png</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="DefaultWideSkin">
+        <ParentGroup />
+        <DisplayName>DefaultWide Skin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Default Wide Skin (16:9) for MP-TVSeries.</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Actors.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{21c9d78c-b01a-48e4-b15e-a878666004af}-TVSeries.Actors.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Actors.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Coverflow.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8bd1a1b6-eff9-4dd6-9fb5-b781a0f0437d}-TVSeries.Coverflow.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Coverflow.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Dummy.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ec20a7bc-a15f-4c1c-b15a-8251b3365670}-TVSeries.Dummy.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Dummy.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.EpisodeList.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{75ae5593-6acf-4260-ad42-9b1730ae2971}-TVSeries.EpisodeList.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.EpisodeList.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Facade.2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8e2b7e41-ca28-4d68-95aa-3ce5dcf1227d}-TVSeries.Facade.2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Facade.2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Facade.3.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9b0a0bf9-728a-4eb9-a196-7b7b8d8a6d8e}-TVSeries.Facade.3.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Facade.3.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Facade.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{cc19bbd8-0c8f-414d-b699-a83773916688}-TVSeries.Facade.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Facade.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.FanArt.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{01d9efdf-b6f1-4c16-8405-6d37d24c9666}-TVSeries.FanArt.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.FanArt.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.GroupList.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6e948b6c-0102-422d-b647-f0448b3e5f4e}-TVSeries.GroupList.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.GroupList.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.HiddenMenu.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b8b6b7a0-ee86-4cd4-b393-e848f2a5e361}-TVSeries.HiddenMenu.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.HiddenMenu.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Overlay.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{549f6138-9d8f-4002-999f-e594d46bd66f}-TVSeries.Overlay.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Overlay.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.PinCodeDialog.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2f136ada-fd29-4173-859b-8c9f73a66ae7}-TVSeries.PinCodeDialog.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.PinCodeDialog.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.Playlist.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{38dcf740-24be-45d7-9648-6ee53f9280cf}-TVSeries.Playlist.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.Playlist.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.RatingDialog.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{58a69449-a96f-473d-997c-896237ce76e9}-TVSeries.RatingDialog.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.RatingDialog.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesAndSeasonFilmstrip.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{09795321-0339-4250-9b42-ca2148105b0b}-TVSeries.SeriesAndSeasonFilmstrip.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesAndSeasonFilmstrip.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesAndSeasonListPosters.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e3bbc93a-cd6f-4f7b-a1c1-8f049e81c7a4}-TVSeries.SeriesAndSeasonListPosters.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesAndSeasonListPosters.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesWideBanners.2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c45e8f0e-bb09-47e1-8a04-a7264c55ac90}-TVSeries.SeriesWideBanners.2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesWideBanners.2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesWideBanners.3.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2400e0a6-6912-41ee-b052-6ece6788f1cf}-TVSeries.SeriesWideBanners.3.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesWideBanners.3.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesWideBanners.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{adab048d-8ad1-48f4-919a-420e43ea690f}-TVSeries.SeriesWideBanners.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesWideBanners.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.SkinSettings.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e0bc6e8f-15f1-4323-b7b8-272ace05966c}-TVSeries.SkinSettings.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.SkinSettings.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.TopBar.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4280117f-afe2-43a1-a855-726181f439fc}-TVSeries.TopBar.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.TopBar.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\TVSeries.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f4bc26db-b9ae-4e77-b5ba-b2b82a2fc835}-TVSeries.xml</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\TVSeries.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\background_tvseries.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b30f661c-b88b-4875-9f14-ea34852b7566}-background_tvseries.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\background_tvseries.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\defaultActor.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8b475198-19cb-491c-9014-48488875dca9}-defaultActor.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\defaultActor.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\dialogprogressbg.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a9c977b3-aef8-481a-b4f5-6221e507b12f}-dialogprogressbg.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\dialogprogressbg.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\filmstrip_overlay.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9e313469-c04f-45ec-bac1-02dbb7825ec8}-filmstrip_overlay.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\filmstrip_overlay.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\glassoverlay2.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{be09868c-deb7-4f9b-8957-b2b9ecc69f62}-glassoverlay2.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\glassoverlay2.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\hover_my tv series.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2f2c1bc3-3143-45c1-b6be-72d9c38115b5}-hover_my tv series.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\hover_my tv series.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\Lock.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0d4d6c1a-b2d6-4b6f-95b8-fe00d02e5c81}-Lock.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\Lock.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\mainoverlay.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{418a72b4-acba-4839-b04b-aa9693fc5956}-mainoverlay.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\mainoverlay.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\overlaywubg.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{1e748538-25d0-4e96-acd5-1636b9e31455}-overlaywubg.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\overlaywubg.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star0.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2fb8d56f-ca74-462d-922a-e0465d82dcd0}-star0.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star0.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star1.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d5062b22-6d85-4a6b-b1cd-8a601e8b7e34}-star1.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star1.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star10.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6b9b14c2-2c84-4dc6-9811-01ff35613647}-star10.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star10.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star2.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3a52dbf0-ffaa-4d06-9cf9-c0956999f7c5}-star2.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star2.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star3.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{115ac01b-2a6b-4aba-9367-9fcb1be73510}-star3.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star3.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star4.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f3901135-cfdd-40a8-86cd-0b690b7086ad}-star4.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star4.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star5.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d8295751-3228-4f64-abcf-39f7e60c15c6}-star5.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star5.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star6.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4eeecce9-1d92-4d46-9e44-d3f214ad98ee}-star6.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star6.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star7.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{21ca9948-34e2-46e3-a6b0-9848ee7fb5f0}-star7.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star7.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star8.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9961ef3f-48fc-437b-b6c3-e91b5f2144ec}-star8.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star8.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\star9.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b955a41b-cb1b-49fb-9e92-9d216d670730}-star9.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\star9.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\thumbborder.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f4e99910-6cc9-498a-a8c3-2edb27704143}-thumbborder.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\thumbborder.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_defaultEpThumb.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5f3c23bf-85c6-42ee-9ffe-54cc38725717}-tvseries_defaultEpThumb.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_defaultEpThumb.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_newlabel.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c29ce7d3-0b45-4909-bce5-26600fba5c16}-tvseries_newlabel.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_newlabel.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_SeasonListIcon.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4c57fa1d-642b-4247-9811-8a6d473f7ff1}-tvseries_SeasonListIcon.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_SeasonListIcon.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_SeriesListIcon.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{59f6d86c-73bd-47c2-8d5c-1643a24405e4}-tvseries_SeriesListIcon.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_SeriesListIcon.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_UnWatched.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{835a68db-1b68-47c0-8af6-c18c71ffc5c6}-tvseries_UnWatched.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_UnWatched.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_UnWatchedNA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{907df208-d550-4753-b739-b60bf266a7b2}-tvseries_UnWatchedNA.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_UnWatchedNA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_Watched.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c425a0a7-51bf-423d-90be-c181c9b3e722}-tvseries_Watched.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_Watched.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\tvseries_WatchedNA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4b2d642b-6053-4ec2-a978-ad0817bff782}-tvseries_WatchedNA.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_WatchedNA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\UserRatingStarOff.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5728bba1-740c-4b83-8491-c4f7fb7b50f8}-UserRatingStarOff.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\UserRatingStarOff.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\UserRatingStarOn.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{08e6a93b-54ac-443a-b2fd-5ff9c0cd063d}-UserRatingStarOn.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\UserRatingStarOn.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\DefaultWide\Media\Logos\tvseries.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{784efd0d-00c7-4334-a780-f9c0bae751da}-tvseries.png</ZipFileName>
+              <DestinationFilename>%Skin%\DefaultWide\Media\Logos\tvseries.png</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="TraktPlugin">
+        <ParentGroup />
+        <DisplayName>Trakt Plugin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Trakt for MediaPortal actively keeps a record of what TV shows and movies you are watching. Based on your favorites, your friends, and the community, trakt recommends other TV shows and movies.
+
+Trakt can also help you keep your watched flags in sync across multiple computers.</Description>
+        <Files>
+          <Items />
+        </Files>
+      </GroupItem>
+      <GroupItem Name="SubCentralPlugin">
+        <ParentGroup />
+        <DisplayName>SubCentral Plugin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>The purpose of the plugin is to allow user to search and download subtitles for movies or TV shows managed by popular Moving Pictures and MP-TVSeries plugins. It also has the interfaces to allow easy implementation and integration in any other plugin. </Description>
+        <Files>
+          <Items />
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Language">
+        <ParentGroup />
+        <DisplayName>Languages</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>This feature contains translations for MP-TVSeries plugin.</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\cs.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{bede3b13-20de-469f-86ad-0fe5fa96ca6f}-cs.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\cs.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\da.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{be8e2cb3-6213-4ac8-ac7b-5bc379480c37}-da.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\da.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\de.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0a9a0e99-af58-46a7-8e64-cd96bd9a2605}-de.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\de.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\el.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ccbe2e4a-e4c2-41d7-ad9b-bba2a72422df}-el.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\el.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\es.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7b31dd9d-3d02-484a-b7be-eb68ccd1cda2}-es.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\es.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\fi.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7a22ddca-4179-4382-b656-040bf30c1275}-fi.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\fi.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\fr.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a114cc09-1a26-445f-95da-dd1832b3559d}-fr.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\fr.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\he.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3f6ce1d1-88c8-4be7-bdcf-f917c23f00eb}-he.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\he.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\it.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8de1f990-c432-45f0-a368-f48b7ccfe04c}-it.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\it.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\ko.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8a9ec9ca-95cf-4dfd-aa0c-6f633d682b7c}-ko.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\ko.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\nl.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{942b7cd2-f582-4c35-8bec-1f7b8b39e3f3}-nl.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\nl.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\no.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3202f32e-4587-4f35-a2b1-e8dbed251bc4}-no.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\no.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\pl.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{20f2f0e4-47b7-49ce-aac6-cc0590c48bc3}-pl.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\pl.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\pt-BR.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{393f0d12-a328-4614-a92e-f11c34d48f00}-pt-BR.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\pt-BR.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\ru.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c81375ff-3a4f-4a64-96ed-4ba59654ba78}-ru.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\ru.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\sv.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fc30db1d-2c79-4ce4-b198-6f0b30febb31}-sv.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\sv.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{74e996c3-c6a3-4817-8a7a-d68dd93bf439}-en-US.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\en-US.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\no-NB.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b1be31e0-483f-4222-bc0b-25e42e5e01bb}-no-NB.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\no-NB.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\pt.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e8422b30-c967-4874-a9b1-5b854b1cae48}-pt.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\pt.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\ru_iso1251.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{bc57b91c-aa65-40c6-b2f7-3fac05451a1f}-ru_iso1251.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\ru_iso1251.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="LaunchConfig">
+        <ParentGroup />
+        <DisplayName>Launch MP-TVSeries Configuration</DisplayName>
+        <DefaulChecked>false</DefaulChecked>
+        <Description>Launch MP-TVSeries Configuration.</Description>
+        <Files>
+          <Items />
+        </Files>
+      </GroupItem>
+      <GroupItem Name="ShortcutUrls">
+        <DisplayName>ShortcutUrls</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>ShortcutUrls</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>OnlineLinks\Forums.url</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fd44e554-eb4f-4001-8e9f-cc14de2468dd}-Forums.url</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Web\Forums.url</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>OnlineLinks\Home.url</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c42e74fe-7172-4a98-be2b-4d25e9fe493d}-Home.url</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Web\Home.url</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>OnlineLinks\Issues.url</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{232d9eb4-842d-48cd-bcef-bece5a1a416e}-Issues.url</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Web\Issues.url</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>OnlineLinks\Updates.url</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{13fb74ad-9e6f-4a16-8f45-37989a837180}-Updates.url</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Web\Updates.url</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>OnlineLinks\Wiki.url</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e9ade0e4-eaf5-4a7a-93d6-a1ff34187141}-Wiki.url</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Web\Wiki.url</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+    </Items>
+  </Groups>
+  <Sections>
+    <Items>
+      <SectionItem Guid="cd50d7bf-3234-4d38-9917-798093405c6a" Name="Welcome Screen" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>Welcome to the Setup Wizard for [Name]</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Description">
+              <Value>This will install [Name] v[Version] on your computer.
+It is recommended that you close all other applications before continuing. 
+
+Click Next to continue or Cancel to exit Setup.
+</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value>..\MP-TVSeries\Resources\Images\sidebanner.bmp</Value>
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Welcome Screen</PanelName>
+        <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="e555714f-3793-4fc8-9f17-b6dde913716b" Name="Tree View Selector" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header Title">
+              <Value>Select Features</Value>
+              <ValueType>String</ValueType>
+              <Description>Header title</Description>
+            </SectionParam>
+            <SectionParam Name="Header description">
+              <Value>Select the features setup will install</Value>
+              <ValueType>String</ValueType>
+              <Description>Description of section, shown in under section title</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\MP-TVSeries\Resources\Images\icon.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+            <SectionParam Name="Description ">
+              <Value>Select the features you want to install, and deselect the features you do not want to install.</Value>
+              <ValueType>String</ValueType>
+              <Description>Description of this operation</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
+        </Actions>
+        <IncludedGroups>
+          <string>Language</string>
+          <string>DefaultSkin</string>
+          <string>DefaultWideSkin</string>
+          <string>TraktPlugin</string>
+          <string>SubCentralPlugin</string>
+        </IncludedGroups>
+        <PanelName>Tree View Selector</PanelName>
+        <WizardButtonsEnum>BackNextCancel</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="8f883bf2-4118-4384-ac6a-95e9f66a4e73" Name="Install Section" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header Title">
+              <Value>Status</Value>
+              <ValueType>String</ValueType>
+              <Description>Header title</Description>
+            </SectionParam>
+            <SectionParam Name="Header description">
+              <Value>Please wait while MP-TVSeries is being installed</Value>
+              <ValueType>String</ValueType>
+              <Description>Description of section, shown in under section title</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\MP-TVSeries\Resources\Images\icon.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items>
+            <ActionItem Name="InstallFiles" ActionType="InstallFiles" ConditionGroup="">
+              <Params>
+                <Items />
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Extension Installer" ActionType="Extension Installer" ConditionGroup="SubCentralPlugin">
+              <Params>
+                <Items>
+                  <SectionParam Name="Extension package">
+                    <Value>ExternalPlugins\SubCentral.mpe1</Value>
+                    <ValueType>File</ValueType>
+                    <Description>Location of the extension package</Description>
+                  </SectionParam>
+                  <SectionParam Name="Silent Install">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Silent install, No wizard screen will be displayed </Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Extension Installer" ActionType="Extension Installer" ConditionGroup="TraktPlugin">
+              <Params>
+                <Items>
+                  <SectionParam Name="Extension package">
+                    <Value>ExternalPlugins\TraktPlugin.mpe1</Value>
+                    <ValueType>File</ValueType>
+                    <Description>Location of the extension package</Description>
+                  </SectionParam>
+                  <SectionParam Name="Silent Install">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Silent install, No wizard screen will be displayed </Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="ClearSkinCache" ActionType="ClearSkinCache" ConditionGroup="DefaultWideSkin">
+              <Params>
+                <Items />
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Script" ActionType="Script" ConditionGroup="Main">
+              <Params>
+                <Items>
+                  <SectionParam Name="Script">
+                    <Value>//css_reference "MpeCore.dll";
+
+using MpeCore.Classes;
+using MpeCore;
+using System;
+using System.IO;
+
+public class Script
+{
+    public static void Main(PackageClass packageClass, ActionItem actionItem)
+    {
+        string dbPath = Path.Combine(MpeInstaller.TransformInRealPath("%Database%"), "TVSeriesDatabase4.db3");
+        if (!File.Exists(dbPath)) return;
+        string backupPath = Path.Combine(MpeInstaller.TransformInRealPath("%Database%"), "MP-TVSeries_Backup");
+        backupPath = Path.Combine(backupPath, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        string backupFile = Path.Combine(backupPath, "TVSeriesDatabase4.db3");
+        try
+        {
+          Directory.CreateDirectory(backupPath);
+          File.Copy(dbPath, backupFile, false);
+        }
+        catch { }
+        return;
+    }
+}
+</Value>
+                    <ValueType>Script</ValueType>
+                    <Description />
+                  </SectionParam>
+                  <SectionParam Name="Uninstall Script">
+                    <Value>//css_reference "MpeCore.dll";
+
+using MpeCore.Classes;
+using MpeCore;
+
+public class Script
+{
+    public static void Main(PackageClass packageClass, UnInstallItem item)
+    {
+        return;
+    }
+}
+</Value>
+                    <ValueType>Script</ValueType>
+                    <Description />
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="Main">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Desktop%\MP-TVSeries Configuration.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Configuration</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateFolder" ActionType="CreateFolder" ConditionGroup="Main">
+              <Params>
+                <Items>
+                  <SectionParam Name="Folder location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of folder</Description>
+                  </SectionParam>
+                  <SectionParam Name="Remove on Uninstall">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Remove on UnInstall</Description>
+                  </SectionParam>
+                  <SectionParam Name="Question on UnInstall">
+                    <Value />
+                    <ValueType>String</ValueType>
+                    <Description>Quetion asked from user when UnInstall.
+ With Yes response the folder will be deleted
+ If empty no question will be asked and no folder will be deleted</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Forums.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Forums.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Forums</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Home.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Home.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Home page</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Issues.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Issues.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Issue Tracker</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Updates.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Updates.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Downloads Page</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Wiki.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Wiki.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Wiki</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Configuration.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Configuration</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+          </Items>
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Install Section</PanelName>
+        <WizardButtonsEnum>Next</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="7e2531c2-4962-4688-aa36-2d8c2926079d" Name="Setup Complete" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>The Setup Wizard has successfully installed [Name].</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value>..\MP-TVSeries\Resources\Images\sidebanner.bmp</Value>
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Show radio buttons">
+              <Value />
+              <ValueType>Bool</ValueType>
+              <Description>Use radiobutton in place of combobox</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items>
+            <ActionItem Name="RunApplication" ActionType="RunApplication" ConditionGroup="LaunchConfig">
+              <Params>
+                <Items>
+                  <SectionParam Name="Path to application">
+                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Path to the application like 
+ %Base%\MediaPortal.exe</Description>
+                  </SectionParam>
+                  <SectionParam Name="Parameters for application">
+                    <Value />
+                    <ValueType>String</ValueType>
+                    <Description>Command line parameters</Description>
+                  </SectionParam>
+                  <SectionParam Name="Wait for exit">
+                    <Value>NO</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Wait for exit </Description>
+                  </SectionParam>
+                  <SectionParam Name="Don't run when silent install">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>If set to Yes the aplication don't run when the istalation is silent </Description>
+                  </SectionParam>
+                  <SectionParam Name="Path to uninstall application">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Path to the application which should be executed when uninstall</Description>
+                  </SectionParam>
+                  <SectionParam Name="Parameters for uninstall application">
+                    <Value />
+                    <ValueType>String</ValueType>
+                    <Description>Command line parameters for uninstall app</Description>
+                  </SectionParam>
+                  <SectionParam Name="Wait for exit on uninstall">
+                    <Value />
+                    <ValueType>Bool</ValueType>
+                    <Description>Wait for exit on uninstall </Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelHide</ExecuteLocation>
+            </ActionItem>
+          </Items>
+        </Actions>
+        <IncludedGroups>
+          <string>LaunchConfig</string>
+        </IncludedGroups>
+        <PanelName>Setup Complete</PanelName>
+        <WizardButtonsEnum>Finish</WizardButtonsEnum>
+      </SectionItem>
+    </Items>
+  </Sections>
+  <Dependencies>
+    <Items>
+      <DependencyItem>
+        <Type>MediaPortal</Type>
+        <Id />
+        <MinVersion>
+          <Major>1</Major>
+          <Minor>1</Minor>
+          <Build>6</Build>
+          <Revision>27644</Revision>
+        </MinVersion>
+        <MaxVersion>
+          <Major>1</Major>
+          <Minor>1</Minor>
+          <Build>6</Build>
+          <Revision>27644</Revision>
+        </MaxVersion>
+        <WarnOnly>false</WarnOnly>
+        <Message>This version of MP-TVSeries is only compatible with MediaPortal 1.2 RC1 or greater. Please download version that is supported by your version of MediaPortal from the MP-TVSeries homepage.</Message>
+        <Name>MediaPortal</Name>
+      </DependencyItem>
+    </Items>
+  </Dependencies>
+  <PluginDependencies>
+    <Items>
+      <PluginDependencyItem AssemblyName="MP-TVSeries.dll">
+        <CompatibleVersion>
+          <Items>
+            <CompatibleVersionItem>
+              <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+              <DesignedForVersion>1.1.6.27644</DesignedForVersion>
+            </CompatibleVersionItem>
+          </Items>
+        </CompatibleVersion>
+        <SubSystemsUsed>
+          <Items />
+        </SubSystemsUsed>
+      </PluginDependencyItem>
+    </Items>
+  </PluginDependencies>
+  <GeneralInfo>
+    <Name>MP-TVSeries</Name>
+    <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+    <Author>ltfearme</Author>
+    <HomePage>http://code.google.com/p/mptvseries/</HomePage>
+    <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+    <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
+    <Version>
+      <Major>3</Major>
+      <Minor>3</Minor>
+      <Build>0</Build>
+      <Revision>1943</Revision>
+    </Version>
+    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+    <VersionDescription>* Added new option in configuration which checks playback of episode is not out of order.
+* Added global filter for 'Unwatched Episodes', this can be applied to any view. Filter can be applied from Context Menu or on supported skins in the Hidden menu.
+* Added small delay before closing PinCode dialog.
+* Added an icon to Views context menu to indicate which views are Parental Controlled.
+* Added colour highlighting in the View/Layout context menus to indicate which is the current on screen.
+* Fixed PinCode dialog not working with some remote controls.
+* Fixed missing 'Season' text from the Season delete dialog.
+* Fixed episode counts in Season view being incorrect for some series when sorting by DVD order.
+* Fixing sorting of episodes in Configuration Details tab when using DVD sort order.
+* [API] Small enhancement to 'GetNextUnwatchedEpisodes' API, can now optionally filter out specials.
+
+
+
+</VersionDescription>
+    <DevelopmentStatus>Stable</DevelopmentStatus>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.3.0.1943.mpe1</OnlineLocation>
+    <ReleaseDate>2012-04-13T15:25:06</ReleaseDate>
+    <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+    <Location>.\Release\[Name]-[Version].mpe1</Location>
+    <Params>
+      <Items>
+        <SectionParam Name="Icon">
+          <Value>..\MP-TVSeries\Resources\Images\icon.png</Value>
+          <ValueType>File</ValueType>
+          <Description>The icon file of the package (jpg,png,bmp)</Description>
+        </SectionParam>
+        <SectionParam Name="Online Icon">
+          <Value>https://mptvseries.googlecode.com/svn/trunk/MP-TVSeries/Resources/Images/icon.png</Value>
+          <ValueType>String</ValueType>
+          <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+        </SectionParam>
+        <SectionParam Name="Configuration file">
+          <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+          <ValueType>Template</ValueType>
+          <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+        </SectionParam>
+        <SectionParam Name="Online Screenshots">
+          <Value>http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_Filmstrip.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_WideBanners.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_WideBanners_thumb.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_ListPoster.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Season_List.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Episode_Fanart.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Blue3wide_Series_FanartChooser.jpg;http://mptvseries.googlecode.com/svn/wiki/Images/Streamedmp_Series_FanartChooser.jpg</Value>
+          <ValueType>String</ValueType>
+          <Description>Online stored screenshot urls separated by ; </Description>
+        </SectionParam>
+        <SectionParam Name="Force to uninstall on update">
+          <Value>YES</Value>
+          <ValueType>Bool</ValueType>
+          <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+        </SectionParam>
+      </Items>
+    </Params>
+  </GeneralInfo>
+  <UniqueFileList>
+    <Items>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\bin\release\MP-TVSeries.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0bc8f04c-4da4-4299-bad4-aa3444d3aa57}-MP-TVSeries.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Windows\MP-TVSeries.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\External\PluginConfigLoader.exe</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8d0ae75d-52d4-4cd2-9331-0a97dd48078d}-PluginConfigLoader.exe</ZipFileName>
+        <DestinationFilename>%Base%\PluginConfigLoader.exe</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\External\MP-TVSeries-Configuration.exe</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3d9275ec-fc9a-4e26-8db4-b9ebfa215b27}-MP-TVSeries-Configuration.exe</ZipFileName>
+        <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\common.window.TVseries.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ae446312-2695-4470-abd4-bfde24b44d53}-common.window.TVseries.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\common.window.TVseries.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.dummy.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{52051632-5ce2-42bc-b865-4c4d5452404e}-TVSeries.dummy.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.dummy.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.FanArt.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5fc6bcf5-a4a0-4eba-be5c-b6d7a18f1650}-TVSeries.FanArt.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.FanArt.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.PinCodeDialog.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c8615dc1-9c48-4c41-8d57-005b5bc16a33}-TVSeries.PinCodeDialog.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.PinCodeDialog.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.Playlist.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7da839d7-266d-4115-aeb8-38368b680e0b}-TVSeries.Playlist.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.Playlist.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.RatingDialog.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9d76db99-cf0d-4d96-bb20-7199ee58ec01}-TVSeries.RatingDialog.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.RatingDialog.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.SkinSettings.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ce8e2371-6bf7-42b8-8b77-9fcf56d38fbf}-TVSeries.SkinSettings.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.SkinSettings.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\TVSeries.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{268e438e-5572-409d-ac08-35639834bf4e}-TVSeries.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Default\TVSeries.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\hover_my tv series.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b25e638c-2ca2-4b14-87da-78038069f9ce}-hover_my tv series.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\hover_my tv series.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\Lock.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a060ffd9-e58c-468b-a8fc-20d0c7b80855}-Lock.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\Lock.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\thumbborder.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ca456e37-dc31-4e01-8afe-cb4a7ca80a28}-thumbborder.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\thumbborder.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_newlabel.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fbcc9117-b9d6-4566-a413-f5cc8142dbc8}-tvseries_newlabel.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_newlabel.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_SeasonListIcon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8bfcf652-7c5a-45b4-803f-035d8e86e68b}-tvseries_SeasonListIcon.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_SeasonListIcon.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_SeriesListIcon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7b1b5409-0f7e-4b6a-904c-38de5f6e4d50}-tvseries_SeriesListIcon.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_SeriesListIcon.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_UnWatched.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{07e487ee-ac78-49ca-b17b-7e8c96270dfd}-tvseries_UnWatched.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_UnWatched.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_UnWatchedNA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b843cab5-836e-46f6-aa69-54f8b7520eca}-tvseries_UnWatchedNA.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_UnWatchedNA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_Watched.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fb3883d0-ebf5-45d9-8af7-183d91c2c0a2}-tvseries_Watched.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_Watched.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\tvseries_WatchedNA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d96e9332-475b-45f9-aa4f-72376d7975af}-tvseries_WatchedNA.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\tvseries_WatchedNA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\UserRatingStarOff.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{eb35e4c2-145b-49fc-80a8-7c7d108617fe}-UserRatingStarOff.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\UserRatingStarOff.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\UserRatingStarOn.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0d7feb15-c8b1-469a-87d1-ea4ce71ef655}-UserRatingStarOn.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\UserRatingStarOn.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5f6d5233-9325-4944-a2e6-4eb0b9f20dd7}-star.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star0.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2c9eba74-e9ff-44b9-a636-7e9ff49e6fb4}-star0.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star0.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star10.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c1c841a9-be25-4148-81d7-06a705be2a33}-star10.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star10.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star100.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5c132e6f-fdcf-46cb-a06b-618a7b04036d}-star100.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star100.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star15.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f2fa0a91-6f3c-4018-be9d-12e461dbea57}-star15.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star15.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star20.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2bcb6421-7031-4858-b391-2ee7d1b70ea4}-star20.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star20.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star25.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{305b71a2-ecc1-4c65-aeb3-4b534cc67682}-star25.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star25.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star30.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{32be5cc1-8685-4733-a25b-aeff2b5dfd10}-star30.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star30.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star35.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c9ed5aab-bc3f-475a-8f3f-b146bbf36b7e}-star35.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star35.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star40.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3f010448-5568-4bd4-9da1-abc8dc42cab5}-star40.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star40.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star45.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ebdad7fc-769f-489a-8300-4d5412009e8d}-star45.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star45.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star5.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{aa51b827-2d42-4a2f-8c81-efd53222afc9}-star5.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star5.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star50.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fbb149a0-4aeb-44aa-971e-0ebb79f7939f}-star50.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star50.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star55.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7be8f2b4-95d3-4c22-b27f-f4156ed97093}-star55.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star55.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star60.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{18f8a924-1735-4eda-b5e8-ef8bccf329cd}-star60.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star60.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star65.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6557146b-910e-41ea-87a4-cafaf7df3fb0}-star65.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star65.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star70.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9e0f5970-8e2b-4ab7-8d21-ef26018739be}-star70.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star70.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star75.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{89bb84e5-69d3-4e91-9d8a-f2e4ad8ff51b}-star75.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star75.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star80.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0a672a57-41b6-41bb-9505-28b6df6547d6}-star80.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star80.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star85.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2bef6252-00fe-4179-ab75-d30a11cbc9b9}-star85.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star85.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star90.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fc1ff2a4-7799-4644-94d3-c105fa91966e}-star90.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star90.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\TVSeries\star95.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fc93fe2d-85e3-444f-8add-e3b047dfbd06}-star95.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\TVSeries\star95.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Default\Media\Logos\tvseries.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{89ebd1ce-4e1b-4bba-b0d8-eae9a479b2b7}-tvseries.png</ZipFileName>
+        <DestinationFilename>%Skin%\Default\Media\Logos\tvseries.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Actors.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{21c9d78c-b01a-48e4-b15e-a878666004af}-TVSeries.Actors.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Actors.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Coverflow.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8bd1a1b6-eff9-4dd6-9fb5-b781a0f0437d}-TVSeries.Coverflow.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Coverflow.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Dummy.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ec20a7bc-a15f-4c1c-b15a-8251b3365670}-TVSeries.Dummy.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Dummy.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.EpisodeList.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{75ae5593-6acf-4260-ad42-9b1730ae2971}-TVSeries.EpisodeList.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.EpisodeList.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Facade.2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8e2b7e41-ca28-4d68-95aa-3ce5dcf1227d}-TVSeries.Facade.2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Facade.2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Facade.3.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9b0a0bf9-728a-4eb9-a196-7b7b8d8a6d8e}-TVSeries.Facade.3.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Facade.3.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Facade.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{cc19bbd8-0c8f-414d-b699-a83773916688}-TVSeries.Facade.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Facade.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.FanArt.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{01d9efdf-b6f1-4c16-8405-6d37d24c9666}-TVSeries.FanArt.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.FanArt.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.GroupList.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6e948b6c-0102-422d-b647-f0448b3e5f4e}-TVSeries.GroupList.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.GroupList.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.HiddenMenu.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b8b6b7a0-ee86-4cd4-b393-e848f2a5e361}-TVSeries.HiddenMenu.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.HiddenMenu.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Overlay.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{549f6138-9d8f-4002-999f-e594d46bd66f}-TVSeries.Overlay.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Overlay.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.PinCodeDialog.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2f136ada-fd29-4173-859b-8c9f73a66ae7}-TVSeries.PinCodeDialog.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.PinCodeDialog.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.Playlist.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{38dcf740-24be-45d7-9648-6ee53f9280cf}-TVSeries.Playlist.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.Playlist.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.RatingDialog.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{58a69449-a96f-473d-997c-896237ce76e9}-TVSeries.RatingDialog.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.RatingDialog.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesAndSeasonFilmstrip.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{09795321-0339-4250-9b42-ca2148105b0b}-TVSeries.SeriesAndSeasonFilmstrip.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesAndSeasonFilmstrip.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesAndSeasonListPosters.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e3bbc93a-cd6f-4f7b-a1c1-8f049e81c7a4}-TVSeries.SeriesAndSeasonListPosters.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesAndSeasonListPosters.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesWideBanners.2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c45e8f0e-bb09-47e1-8a04-a7264c55ac90}-TVSeries.SeriesWideBanners.2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesWideBanners.2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesWideBanners.3.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2400e0a6-6912-41ee-b052-6ece6788f1cf}-TVSeries.SeriesWideBanners.3.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesWideBanners.3.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.SeriesWideBanners.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{adab048d-8ad1-48f4-919a-420e43ea690f}-TVSeries.SeriesWideBanners.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.SeriesWideBanners.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.SkinSettings.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e0bc6e8f-15f1-4323-b7b8-272ace05966c}-TVSeries.SkinSettings.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.SkinSettings.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.TopBar.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4280117f-afe2-43a1-a855-726181f439fc}-TVSeries.TopBar.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.TopBar.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\TVSeries.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f4bc26db-b9ae-4e77-b5ba-b2b82a2fc835}-TVSeries.xml</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\TVSeries.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\background_tvseries.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b30f661c-b88b-4875-9f14-ea34852b7566}-background_tvseries.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\background_tvseries.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\defaultActor.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8b475198-19cb-491c-9014-48488875dca9}-defaultActor.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\defaultActor.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\dialogprogressbg.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a9c977b3-aef8-481a-b4f5-6221e507b12f}-dialogprogressbg.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\dialogprogressbg.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\filmstrip_overlay.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9e313469-c04f-45ec-bac1-02dbb7825ec8}-filmstrip_overlay.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\filmstrip_overlay.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\glassoverlay2.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{be09868c-deb7-4f9b-8957-b2b9ecc69f62}-glassoverlay2.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\glassoverlay2.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\hover_my tv series.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2f2c1bc3-3143-45c1-b6be-72d9c38115b5}-hover_my tv series.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\hover_my tv series.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\Lock.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0d4d6c1a-b2d6-4b6f-95b8-fe00d02e5c81}-Lock.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\Lock.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\mainoverlay.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{418a72b4-acba-4839-b04b-aa9693fc5956}-mainoverlay.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\mainoverlay.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\overlaywubg.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{1e748538-25d0-4e96-acd5-1636b9e31455}-overlaywubg.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\overlaywubg.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star0.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2fb8d56f-ca74-462d-922a-e0465d82dcd0}-star0.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star0.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star1.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d5062b22-6d85-4a6b-b1cd-8a601e8b7e34}-star1.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star1.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star10.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6b9b14c2-2c84-4dc6-9811-01ff35613647}-star10.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star10.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star2.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3a52dbf0-ffaa-4d06-9cf9-c0956999f7c5}-star2.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star2.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star3.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{115ac01b-2a6b-4aba-9367-9fcb1be73510}-star3.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star3.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star4.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f3901135-cfdd-40a8-86cd-0b690b7086ad}-star4.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star4.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star5.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d8295751-3228-4f64-abcf-39f7e60c15c6}-star5.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star5.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star6.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4eeecce9-1d92-4d46-9e44-d3f214ad98ee}-star6.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star6.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star7.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{21ca9948-34e2-46e3-a6b0-9848ee7fb5f0}-star7.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star7.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star8.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9961ef3f-48fc-437b-b6c3-e91b5f2144ec}-star8.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star8.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\star9.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b955a41b-cb1b-49fb-9e92-9d216d670730}-star9.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\star9.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\thumbborder.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f4e99910-6cc9-498a-a8c3-2edb27704143}-thumbborder.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\thumbborder.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_defaultEpThumb.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5f3c23bf-85c6-42ee-9ffe-54cc38725717}-tvseries_defaultEpThumb.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_defaultEpThumb.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_newlabel.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c29ce7d3-0b45-4909-bce5-26600fba5c16}-tvseries_newlabel.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_newlabel.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_SeasonListIcon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4c57fa1d-642b-4247-9811-8a6d473f7ff1}-tvseries_SeasonListIcon.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_SeasonListIcon.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_SeriesListIcon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{59f6d86c-73bd-47c2-8d5c-1643a24405e4}-tvseries_SeriesListIcon.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_SeriesListIcon.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_UnWatched.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{835a68db-1b68-47c0-8af6-c18c71ffc5c6}-tvseries_UnWatched.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_UnWatched.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_UnWatchedNA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{907df208-d550-4753-b739-b60bf266a7b2}-tvseries_UnWatchedNA.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_UnWatchedNA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_Watched.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c425a0a7-51bf-423d-90be-c181c9b3e722}-tvseries_Watched.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_Watched.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\tvseries_WatchedNA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4b2d642b-6053-4ec2-a978-ad0817bff782}-tvseries_WatchedNA.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\tvseries_WatchedNA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\UserRatingStarOff.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5728bba1-740c-4b83-8491-c4f7fb7b50f8}-UserRatingStarOff.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\UserRatingStarOff.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\UserRatingStarOn.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{08e6a93b-54ac-443a-b2fd-5ff9c0cd063d}-UserRatingStarOn.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\UserRatingStarOn.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\DefaultWide\Media\Logos\tvseries.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{784efd0d-00c7-4334-a780-f9c0bae751da}-tvseries.png</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide\Media\Logos\tvseries.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\cs.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{bede3b13-20de-469f-86ad-0fe5fa96ca6f}-cs.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\cs.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\da.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{be8e2cb3-6213-4ac8-ac7b-5bc379480c37}-da.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\da.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\de.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0a9a0e99-af58-46a7-8e64-cd96bd9a2605}-de.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\de.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\el.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ccbe2e4a-e4c2-41d7-ad9b-bba2a72422df}-el.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\el.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\es.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7b31dd9d-3d02-484a-b7be-eb68ccd1cda2}-es.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\es.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\fi.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7a22ddca-4179-4382-b656-040bf30c1275}-fi.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\fi.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\fr.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a114cc09-1a26-445f-95da-dd1832b3559d}-fr.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\fr.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\he.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3f6ce1d1-88c8-4be7-bdcf-f917c23f00eb}-he.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\he.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\it.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8de1f990-c432-45f0-a368-f48b7ccfe04c}-it.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\it.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\ko.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8a9ec9ca-95cf-4dfd-aa0c-6f633d682b7c}-ko.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\ko.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\nl.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{942b7cd2-f582-4c35-8bec-1f7b8b39e3f3}-nl.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\nl.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\no.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3202f32e-4587-4f35-a2b1-e8dbed251bc4}-no.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\no.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\pl.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{20f2f0e4-47b7-49ce-aac6-cc0590c48bc3}-pl.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\pl.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\pt-BR.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{393f0d12-a328-4614-a92e-f11c34d48f00}-pt-BR.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\pt-BR.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\ru.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c81375ff-3a4f-4a64-96ed-4ba59654ba78}-ru.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\ru.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\sv.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fc30db1d-2c79-4ce4-b198-6f0b30febb31}-sv.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\sv.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{74e996c3-c6a3-4817-8a7a-d68dd93bf439}-en-US.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\en-US.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\no-NB.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b1be31e0-483f-4222-bc0b-25e42e5e01bb}-no-NB.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\no-NB.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\pt.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e8422b30-c967-4874-a9b1-5b854b1cae48}-pt.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\pt.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\ru_iso1251.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{bc57b91c-aa65-40c6-b2f7-3fac05451a1f}-ru_iso1251.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\ru_iso1251.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>OnlineLinks\Forums.url</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fd44e554-eb4f-4001-8e9f-cc14de2468dd}-Forums.url</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Web\Forums.url</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>OnlineLinks\Home.url</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c42e74fe-7172-4a98-be2b-4d25e9fe493d}-Home.url</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Web\Home.url</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>OnlineLinks\Issues.url</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{232d9eb4-842d-48cd-bcef-bece5a1a416e}-Issues.url</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Web\Issues.url</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>OnlineLinks\Updates.url</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{13fb74ad-9e6f-4a16-8f45-37989a837180}-Updates.url</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Web\Updates.url</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>OnlineLinks\Wiki.url</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e9ade0e4-eaf5-4a7a-93d6-a1ff34187141}-Wiki.url</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Web\Wiki.url</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b3558ead-79f7-4282-b39a-af66a116c0b4}-sidebanner.bmp</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e8bb10d9-fe66-4d66-be86-2fabd1e472d3}-icon.png</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8633add6-c756-4515-9f28-3d55cb0404b3}-SubCentral.mpe1</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{65c4dd60-bc62-4b9b-a6aa-01e79d31937a}-TraktPlugin.mpe1</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
+    </Items>
+  </UniqueFileList>
+  <ProjectSettings>
+    <FolderGroups>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{8fd2624d-4132-4aa7-bf01-f82628835cb8}-</ZipFileName>
+        <DestinationFilename>%Skin%\Default</DestinationFilename>
+        <Folder>..\skin files\Default</Folder>
+        <Group>DefaultSkin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{bd752b89-ea6b-4b58-8e20-bea130ff6672}-</ZipFileName>
+        <DestinationFilename>%Skin%\DefaultWide</DestinationFilename>
+        <Folder>..\skin files\DefaultWide</Folder>
+        <Group>DefaultWideSkin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{d1a53e40-cb96-4f99-91a2-5d07414ed2f5}-</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries</DestinationFilename>
+        <Folder>..\MP-TVSeries\Resources\Languages</Folder>
+        <Group>Language</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{bac86622-b146-4699-a6e3-2ebe337aaf74}-</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Web</DestinationFilename>
+        <Folder>OnlineLinks</Folder>
+        <Group>ShortcutUrls</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+    </FolderGroups>
+    <ProjectFilename>MP-TVSeries.xmp2</ProjectFilename>
+    <UpdatePath1>.\update.xml</UpdatePath1>
+    <UpdatePath2 />
+    <UpdatePath3 />
+  </ProjectSettings>
+  <IsSkin>false</IsSkin>
+</PackageClass>
