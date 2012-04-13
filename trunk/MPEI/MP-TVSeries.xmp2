@@ -1511,28 +1511,30 @@ public class Script
     <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>3</Major>
-      <Minor>2</Minor>
-      <Build>1</Build>
-      <Revision>1928</Revision>
+      <Minor>3</Minor>
+      <Build>0</Build>
+      <Revision>1943</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed detection of fullscreen video to also include Live TV when doing period check for new files.
-* Fixed file scan schedule being off by one minute.
-* Fixed logging/progress for episode thumbnail downloads.
-* Fixed an issue where the online_episode table was not being cleared properly on season delete.
-* Fixed uTorrent Search season/episode number format.
-* Added support for language changes from GUI Settings.
-* Added a progress dialog when deleting episodes from a season/series view. Typically this can be a lengthy operation esp. for network drives.
-* Updated Dutch translations, thanks powermarcel10.
-* Updated Trakt Plugin to v1.5.1.
-* Removed TVSeries Logging setting and use MediaPortal Logging settings.
-* Removed TVSeries GUI Language setting and use MediaPortal Language settings.
-* Changed default value for 'MarkRatedEpisodeAsWatched' to false so it doesn't conflict with online 'unseen' syncing.</VersionDescription>
+    <VersionDescription>* Added new option in configuration which checks playback of episode is not out of order.
+* Added global filter for 'Unwatched Episodes', this can be applied to any view. Filter can be applied from Context Menu or on supported skins in the Hidden menu.
+* Added small delay before closing PinCode dialog.
+* Added an icon to Views context menu to indicate which views are Parental Controlled.
+* Added colour highlighting in the View/Layout context menus to indicate which is the current on screen.
+* Fixed PinCode dialog not working with some remote controls.
+* Fixed missing 'Season' text from the Season delete dialog.
+* Fixed episode counts in Season view being incorrect for some series when sorting by DVD order.
+* Fixing sorting of episodes in Configuration Details tab when using DVD sort order.
+* [API] Small enhancement to 'GetNextUnwatchedEpisodes' API, can now optionally filter out specials.
+
+
+
+</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.2.1.1928.mpe1</OnlineLocation>
-    <ReleaseDate>2012-03-06T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.3.0.1943.mpe1</OnlineLocation>
+    <ReleaseDate>2012-04-13T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
