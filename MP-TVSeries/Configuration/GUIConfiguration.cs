@@ -624,7 +624,7 @@ namespace WindowPlugins.GUITVSeries
                 if (series[DBSeries.cHidden])
                     seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
 
-                int seriesID = series[DBSeries.cID];            
+                int seriesID = series[DBSeries.cID];
                 foreach (DBSeason season in altSeasonList)
                 {
                     if (season[DBSeason.cSeriesID] == seriesID)
@@ -1882,14 +1882,24 @@ namespace WindowPlugins.GUITVSeries
             foreach (TreeNode childNode in node.Nodes) {
                 // Check if we have already loaded episodes into season nodes
                 if (childNode.Nodes.Count == 0) {
+                    // ensure we use the correct season field for DVD sort order
+                    string seasonField = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+                    string episodeField = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+
                     DBSeason season = (DBSeason)childNode.Tag;
                     int seasonIndex = season[DBSeason.cIndex];
 
-                    List<DBEpisode> episodes = DBEpisode.Get(seriesID, seasonIndex);
+                    SQLCondition conditions = new SQLCondition();
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), seasonField, seasonIndex, SQLConditionType.Equal);
+                    List<DBEpisode> episodes = DBEpisode.Get(conditions);
+
+                    // sort by correct order
+                    episodes.Sort();
 
                     foreach (DBEpisode episode in episodes) {
                         String episodeName = (String)episode[DBEpisode.cEpisodeName];
-                        TreeNode episodeNode = new TreeNode(episode[DBEpisode.cSeasonIndex] + "x" + episode[DBEpisode.cEpisodeIndex] + " - " + episodeName);
+                        TreeNode episodeNode = new TreeNode(episode[seasonField] + "x" + episode[episodeField] + " - " + episodeName);
                         episodeNode.Name = DBEpisode.cTableName;
                         episodeNode.Tag = (DBEpisode)episode;
 
