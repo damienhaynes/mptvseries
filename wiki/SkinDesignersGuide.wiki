@@ -13,6 +13,11 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 <wiki:toc max_depth="3" />
 
 = Skinner's Change Log =
+== v3.3.0 ==
+ * Added new skin button to enable filters e.g. Unwatched Episodes.
+|| *Control Type* || *ID* || *Description* ||
+|| Button || 10 || Displays menu of available filters ||
+
 == v3.2.0 ==
  * Added extra loading parameter support to jump to a particular Series or Season. Can also specify an episode which will filter out the list of episodes, typically you would just specify a series and a season as user might want to play the next episode. Below are some examples:
 
