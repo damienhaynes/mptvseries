@@ -18,6 +18,8 @@ If you are new to skinning, please check out the [http://www.team-mediaportal.co
 || *Control Type* || *ID* || *Description* ||
 || Button || 10 || Displays menu of available filters ||
 
+ * Views menu will now show a lock icon to indicate if a view is parental controlled, the image loaded is *media\lock.png*
+
 == v3.2.0 ==
  * Added extra loading parameter support to jump to a particular Series or Season. Can also specify an episode which will filter out the list of episodes, typically you would just specify a series and a season as user might want to play the next episode. Below are some examples:
 
