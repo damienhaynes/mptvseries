@@ -1771,7 +1771,7 @@ namespace WindowPlugins.GUITVSeries
             string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
             string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
-            if (ep[seasonIndex] == 0)
+            if (ep[seasonIndex] == 0 && !Settings.isConfig)
             {
                 if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
                 {
