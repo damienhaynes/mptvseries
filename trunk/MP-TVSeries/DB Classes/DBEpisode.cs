@@ -1197,9 +1197,12 @@ namespace WindowPlugins.GUITVSeries
         {
             // consider episode sort order when calculating episodes in season
             // some series have different number of episodes per season for different orders e.g. Futurama
+            string seasonIndex = DBOnlineEpisode.cSeasonIndex;
             DBSeries series = Helper.getCorrespondingSeries(int.Parse(season[DBSeason.cSeriesID]));
-            string seasonIndex = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
-
+            if (series != null)
+            {
+                seasonIndex = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+            }
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
