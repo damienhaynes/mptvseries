@@ -274,7 +274,7 @@
   <string Field="Votes">Stemmen</string>
   <string Field="LayoutCoveflow">Coverflow</string>
   <string Field="ResumeEpisode">Bekijk aflevering van het laatste moment?</string>
-  <string Field="SummaryNotAvailable">Geen ovrzicht beschikbaar</string>
+  <string Field="SummaryNotAvailable">Geen overzicht beschikbaar</string>
   <string Field="Timeout">Timeout</string>
   <string Field="NoActors">Er zijn geen acteurs voor deze series</string>
   <string Field="GettingActors">Download acteurs info online</string>
