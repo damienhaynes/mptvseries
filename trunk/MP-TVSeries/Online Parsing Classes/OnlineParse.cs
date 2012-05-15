@@ -473,8 +473,10 @@ namespace WindowPlugins.GUITVSeries
                         if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
+                        {
                             tUserRatings = new BackgroundWorker();
                             UpdateUserRatings(tUserRatings);
+                        }
                         break;
 
                     case ParsingAction.UpdateUserFavourites:
