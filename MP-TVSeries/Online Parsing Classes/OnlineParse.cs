@@ -1663,8 +1663,9 @@ namespace WindowPlugins.GUITVSeries
                     string thumbFilename = Helper.PathCombine(seriesFolder, string.Format(@"Episodes\{0}x{1}.jpg", episode[DBOnlineEpisode.cSeasonIndex], episode[DBOnlineEpisode.cEpisodeIndex]));
                     string completePath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), thumbFilename);
 
-                    // if it doesn't exist or is damaged add to download list
-                    if (!File.Exists(completePath) || ImageAllocator.LoadImageFastFromFile(completePath) == null)
+                    // if it doesn't exist 
+                    // image check takes too long as we check every thumbnail in config
+                    if (!File.Exists(completePath)) //|| ImageAllocator.LoadImageFastFromFile(completePath) == null) 
                     {
                         episodesToDownload.Add(episode);
                     }
