@@ -272,6 +272,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private void listBoxOnline_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listBoxLocal.SelectedIndex < 0) return; // maybe already matched all local
+
             var series = listBoxSeries.SelectedItem as DBSeries;
             var localEp = displayedEps[listBoxLocal.SelectedIndex];
             var onlineEp = displayedOEps[listBoxOnline.SelectedIndex];
