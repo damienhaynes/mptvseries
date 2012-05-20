@@ -217,7 +217,7 @@ namespace WindowPlugins.GUITVSeries
                                 m_LogStream = File.AppendText(m_filename);
                             else
                                 m_LogStream = File.CreateText(m_filename);
-                                                        
+
                             if (singleLine)
                                 m_LogStream.WriteLine(sPrefix + entry);
                             else
@@ -228,19 +228,13 @@ namespace WindowPlugins.GUITVSeries
                             m_LogStream.Dispose();
 
                         }
-                        catch (Exception ex)
-                        {
-                            // well we can't write...maybe no file access or something....and we can't even log the error
-                            Log_Write(entry);
-                            Log_Write(ex.Message);                           
-                            //m_LogStream.Close();
-                            //m_LogStream.Dispose(); //Crash
-                        }
+                        catch { }
                     }
+
+                    // don't log debug msgs to Configuration Logger
+                    if (level < LogLevel.Debug)
+                        Log_Write(entry);
                 }
-                // Dont log debug msgs to Configuration Logger
-                if (level != LogLevel.Debug)
-                    Log_Write(entry);
             }
         }
 
