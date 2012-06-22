@@ -270,9 +270,9 @@ Typically if you are importing videos not available on theTVDB.com such as sport
 
  * In your thumbs\MPTVSeriesBanners\ folder create the *Show Name* if it doesnt already exist (this should match your series name, replace invalid filename characters with underscore) and then create the following directory structure:
   http://mptvseries.googlecode.com/svn/wiki/Images/FAQ/CustomArtworkExplorerFolderStructure.jpg
- * In the *episode* folder create artwork in the following format: custom-{seasonindex}x{episodeindex}.jpg e.g. *custom-2001x1.jpg*
- * In the *season* folder create artwork in the following format: custom-{seasonindex}.jpg e.g *custom-2011.jpg*
- * In the *widebanner* and *poster* folders create artwork in the following format: *custom.jpg*
+ * In the *episodes* folder create artwork in the following format: custom-{seasonindex}x{episodeindex}.jpg e.g. *custom-2001x1.jpg*
+ * In the *seasons* folder create artwork in the following format: custom-{seasonindex}.jpg e.g *custom-2011.jpg*
+ * In the *widebanner* and *posters* folders create artwork in the following format: *custom.jpg*
  * For *fanart*, you must first find the *Online Series ID* which is located in the configuration details tab for the selected series. This is typically a negative number e.g. *-70*. Now simply drop a fanart file into your fanart directory e.g. *thumbs\Fan Art\fanart\original\-70.jpg*
 
 Now in Configuration, select the series and pick the *custom* artwork from the drop down list.
