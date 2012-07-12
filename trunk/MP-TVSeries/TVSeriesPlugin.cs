@@ -4238,27 +4238,27 @@ namespace WindowPlugins.GUITVSeries
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
             {
-                List<DBSeries> AllSeries = null;
-                SQLCondition condEmpty = null;
-
                 switch (dlg.SelectedId)
                 {
                     case (int)eContextItems.optionsOnlyShowLocal:
                         DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
-                        // Update Episode counts...this is going to be expensive                        
-                        condEmpty = new SQLCondition();
-                        AllSeries = DBSeries.Get(condEmpty);
-                        foreach (DBSeries series in AllSeries)
-                            DBSeries.UpdateEpisodeCounts(series);
+                        var episodesForCount = DBSeries.GetEpisodesForCount();
+                        var allSeries = DBSeries.Get(new SQLCondition());
+                        foreach (DBSeries series in allSeries)
+                        {
+                            DBSeries.UpdateEpisodeCounts(series, episodesForCount);
+                        }
                         LoadFacade();
                         break;
 
                     case (int)eContextItems.optionsShowHiddenItems:
                         DBOption.SetOptions(DBOption.cShowHiddenItems, !DBOption.GetOptions(DBOption.cShowHiddenItems));
-                        condEmpty = new SQLCondition();
-                        AllSeries = DBSeries.Get(condEmpty);
-                        foreach (DBSeries series in AllSeries)
-                            DBSeries.UpdateEpisodeCounts(series);
+                        episodesForCount = DBSeries.GetEpisodesForCount();
+                        allSeries = DBSeries.Get(new SQLCondition());
+                        foreach (DBSeries series in allSeries)
+                        {
+                            DBSeries.UpdateEpisodeCounts(series, episodesForCount);
+                        }
                         LoadFacade();
                         break;
 
