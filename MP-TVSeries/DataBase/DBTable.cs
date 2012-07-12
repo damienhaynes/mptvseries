@@ -523,65 +523,7 @@ namespace WindowPlugins.GUITVSeries
                 dbUpdateOccured(obj.m_tableName);
         }
 
-        protected static string getRandomBanner(List<string> BannerList)
-        {
-            const string graphicalBannerRecognizerSubstring = "-g";
-            string langIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelLanguageAsString + "-";
-
-            // random banners are prefered in the following order
-            // 1) own lang + graphical
-            // 2) own lang but not graphical
-            // 3) english + graphical (english really is any other language banners that are in db)
-            // 4) english but not graphical
-
-            string randImage = null;
-            if (BannerList == null || BannerList.Count == 0) return string.Empty;
-            if (BannerList.Count == 1) randImage = BannerList[0];
-
-            if (randImage == null)
-            {
-                List<string> langG = new List<string>();
-                List<string> lang = new List<string>();
-                List<string> engG = new List<string>();
-                List<string> eng = new List<string>();
-                for (int i = 0; i < BannerList.Count; i++)
-                {
-                    if (File.Exists(BannerList[i]))
-                    {
-                        if (BannerList[i].Contains(graphicalBannerRecognizerSubstring))
-                        {
-                            if (BannerList[i].Contains(langIdentifier))
-                                langG.Add(BannerList[i]);
-                            else
-                                engG.Add(BannerList[i]);
-                        }
-                        else
-                        {
-                            if (BannerList[i].Contains(langIdentifier))
-                                lang.Add(BannerList[i]);
-                            else
-                                eng.Add(BannerList[i]);
-                        }
-                    }
-                }
-
-                try
-                {
-                    if (langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
-                    else if (lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
-                    else if (engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
-                    else if (eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
-                    else return string.Empty;
-                }
-                catch
-                {
-                    MPTVSeriesLog.Write("Error getting random Image", MPTVSeriesLog.LogLevel.Normal);
-                    return string.Empty;
-                }
-            }
-            return System.IO.File.Exists(randImage) ? randImage : string.Empty;
-        }
-
+        
         public static List<DBValue> GetSingleField(string field, SQLCondition conds, DBTable obj)
         {
 

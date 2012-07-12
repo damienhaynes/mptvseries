@@ -1771,14 +1771,15 @@ namespace WindowPlugins.GUITVSeries
 
         void asyncEpisodeCounts(object sender, DoWorkEventArgs e)
         {
-            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
+            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             List<DBSeries> allSeries = (List<DBSeries>)e.Argument;
             BackgroundWorker worker = sender as BackgroundWorker;
             int nIndex = 1;
+            var episodesForCount = DBSeries.GetEpisodesForCount();
             foreach (DBSeries series in allSeries)
             {
                 worker.ReportProgress(0, new object[] { series, nIndex++ });
-                DBSeries.UpdateEpisodeCounts(series);
+                DBSeries.UpdateEpisodeCounts(series, episodesForCount);
             }
             e.Result = allSeries.Count;
         }

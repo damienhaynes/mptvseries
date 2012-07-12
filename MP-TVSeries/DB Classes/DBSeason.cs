@@ -233,7 +233,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return getRandomBanner(BannerList);
+                if (DBOption.GetOptions(DBOption.cRandomBanner) == true) return ImageAllocator.GetRandomBanner(BannerList);
                 if (String.IsNullOrEmpty(this[cCurrentBannerFileName]))
                     return String.Empty;
                 string filename;
@@ -492,7 +492,8 @@ namespace WindowPlugins.GUITVSeries
             int epsUnWatched = 0;
 
             // Updated Season count
-            DBEpisode.GetSeasonEpisodeCounts(season, out epsTotal, out epsUnWatched);
+            DBEpisode.GetSeasonEpisodeCounts(series, season, out epsTotal, out epsUnWatched);
+    
             season[DBSeason.cEpisodeCount] = epsTotal;
             season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
             //UpdateUnWatched - faster than method
@@ -505,6 +506,7 @@ namespace WindowPlugins.GUITVSeries
             epsUnWatched = 0;
 
             DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+          
             series[DBOnlineSeries.cEpisodeCount] = epsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
             //UpdateUnWatched - faster than method
