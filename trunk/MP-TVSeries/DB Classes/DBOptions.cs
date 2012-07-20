@@ -30,6 +30,14 @@ using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
+    enum NewEpisodeIndicatorType
+    {
+        none,
+        unwatched,
+        recentlyadded,
+        recentlyaddedunwatched
+    }
+
     public class DBOption
     {
         public static bool bTableUpdateDone = false;
@@ -536,7 +544,7 @@ namespace WindowPlugins.GUITVSeries
                     SetOptions(cOnPlaySeriesOrSeasonAction, 2); // set first unwatched as default
                 
                 if (GetOptions(cNewEpisodeThumbType) == null)
-                    SetOptions(cNewEpisodeThumbType, 2); // Recently Added Episodes
+                    SetOptions(cNewEpisodeThumbType, (int)NewEpisodeIndicatorType.recentlyadded); // Recently Added Episodes
 
                 if (GetOptions(cNewEpisodeRecentDays) == null)
                     SetOptions(cNewEpisodeRecentDays, 7);

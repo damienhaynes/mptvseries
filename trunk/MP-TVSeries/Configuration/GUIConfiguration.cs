@@ -368,7 +368,9 @@ namespace WindowPlugins.GUITVSeries
             this.cbNewEpisodeThumbIndicator.SelectedIndex = (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
             this.nudRecentlyAddedDays.Value = DBOption.GetOptions(DBOption.cNewEpisodeRecentDays);
 			
-            if ((int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType) != 2)
+            // only enable days options if using a 'true' new episode type
+            if ((int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType) == (int)NewEpisodeIndicatorType.none ||
+                (int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType) == (int)NewEpisodeIndicatorType.unwatched)
             {
                 this.nudRecentlyAddedDays.Enabled = false;
                 this.lblRecentAddedDays.Enabled = false;
@@ -4279,7 +4281,8 @@ namespace WindowPlugins.GUITVSeries
         {
             DBOption.SetOptions(DBOption.cNewEpisodeThumbType, cbNewEpisodeThumbIndicator.SelectedIndex);
 
-            if (cbNewEpisodeThumbIndicator.SelectedIndex == 2)
+            if (cbNewEpisodeThumbIndicator.SelectedIndex == (int)NewEpisodeIndicatorType.recentlyadded ||
+                cbNewEpisodeThumbIndicator.SelectedIndex == (int)NewEpisodeIndicatorType.recentlyaddedunwatched)
             {
                 nudRecentlyAddedDays.Enabled = true;
                 lblRecentAddedDays.Enabled = true;

@@ -520,7 +520,12 @@ namespace WindowPlugins.GUITVSeries
 
         private void UpdateRecentlyAdded()
         {
-            // Clear setting for all series            
+            // no need to update fields if we wont use them
+            if (DBOption.GetOptions(DBOption.cNewEpisodeRecentDays) < 2) return;
+
+            MPTVSeriesLog.Write(bigLogMessage("Updating Recently Added"));
+
+            // Clear setting for all series
             DBSeries.GlobalSet(DBOnlineSeries.cHasNewEpisodes, (DBValue)"0");
 
             // Calculate date for querying database
