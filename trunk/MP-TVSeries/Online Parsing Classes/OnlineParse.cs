@@ -521,7 +521,8 @@ namespace WindowPlugins.GUITVSeries
         private void UpdateRecentlyAdded()
         {
             // no need to update fields if we wont use them
-            if (DBOption.GetOptions(DBOption.cNewEpisodeRecentDays) < 2) return;
+            if (DBOption.GetOptions(DBOption.cNewEpisodeThumbType) == (int)NewEpisodeIndicatorType.none ||
+                DBOption.GetOptions(DBOption.cNewEpisodeThumbType) == (int)NewEpisodeIndicatorType.unwatched) return;
 
             MPTVSeriesLog.Write(bigLogMessage("Updating Recently Added"));
 
