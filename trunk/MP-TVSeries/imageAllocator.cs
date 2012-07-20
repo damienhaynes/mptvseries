@@ -297,11 +297,11 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (newEpisodeThumbType == NewEpisodeIndicatorType.unwatched)
             {
-                ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
+                ShowNewImage = series[DBOnlineSeries.cUnwatchedItems];
             }
             else if (newEpisodeThumbType == NewEpisodeIndicatorType.recentlyaddedunwatched)
             {
-                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes] && series[DBOnlineSeries.cEpisodesUnWatched];
+                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes] && series[DBOnlineSeries.cUnwatchedItems];
             }
 
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) 
@@ -357,11 +357,11 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (newEpisodeThumbType == NewEpisodeIndicatorType.unwatched)
             {
-                ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
+                ShowNewImage = series[DBOnlineSeries.cUnwatchedItems];
             }
             else if (newEpisodeThumbType == NewEpisodeIndicatorType.recentlyaddedunwatched)
             {
-                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes] && series[DBOnlineSeries.cEpisodesUnWatched];
+                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes] && series[DBOnlineSeries.cUnwatchedItems];
             }
 
             Size size = isCoverflow ? reqSeriesPosterCFSize : reqSeriesPosterSize;

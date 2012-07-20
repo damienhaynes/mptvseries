@@ -866,6 +866,7 @@ namespace WindowPlugins.GUITVSeries
 
                     season[DBSeason.cEpisodeCount] = count;
                     season[DBSeason.cEpisodesUnWatched] = unWatchedCount;
+                    season[DBSeason.cUnwatchedItems] = unWatchedCount > 0;
                     season.Commit();
 
                     seriesEpsTotal += count;
@@ -875,6 +876,7 @@ namespace WindowPlugins.GUITVSeries
                 // update series counts
                 series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
                 series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
+                series[DBOnlineSeries.cUnwatchedItems] = seriesEpsUnWatched > 0;
                 series.Commit();
             }
         }
@@ -904,10 +906,7 @@ namespace WindowPlugins.GUITVSeries
                 DBEpisode.GetSeasonEpisodeCounts(series, season, out epsTotal, out epsUnWatched);
                 season[DBSeason.cEpisodeCount] = epsTotal; seriesEpsTotal += epsTotal;
                 season[DBSeason.cEpisodesUnWatched] = epsUnWatched; seriesEpsUnWatched += epsUnWatched;
-                if (epsUnWatched == 0)
-                    season[DBSeason.cUnwatchedItems] = false;
-                else
-                    season[DBSeason.cUnwatchedItems] = true;
+                season[DBSeason.cUnwatchedItems] = epsUnWatched > 0;
                 season.Commit();
 
                 MPTVSeriesLog.Write(string.Format("Series \"{0} Season {1}\" has {2}/{3} unwatched episodes", series.ToString(), season[DBSeason.cIndex], epsUnWatched, epsTotal), MPTVSeriesLog.LogLevel.Debug);
@@ -917,10 +916,7 @@ namespace WindowPlugins.GUITVSeries
          
             series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
-            if (seriesEpsUnWatched == 0)
-                series[DBOnlineSeries.cUnwatchedItems] = false;
-            else
-                series[DBOnlineSeries.cUnwatchedItems] = true;
+            series[DBOnlineSeries.cUnwatchedItems] = seriesEpsUnWatched > 0;
             series.Commit();
         }
 

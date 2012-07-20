@@ -538,12 +538,17 @@ namespace WindowPlugins.GUITVSeries
             conditions.Add(new DBEpisode(), DBEpisode.cFileDateCreated, date, SQLConditionType.GreaterEqualThan);            
             List<DBEpisode> episodes = DBEpisode.Get(conditions, false);
             
-            // set series 'HasNewEpisodes' field if it contains new episodes
-            foreach (var seriesID in episodes.Select(e=>e[DBOnlineEpisode.cSeriesID]).Distinct().ToList())
+            // Get unique series list
+            var seriesIdList = episodes.Select(e => e[DBOnlineEpisode.cSeriesID].ToString()).Distinct().ToList();
+
+            // Set series 'HasNewEpisodes' field if it contains new episodes
+            int i = 0;
+            foreach (var seriesId in seriesIdList)
             {
-                DBSeries series = Helper.getCorrespondingSeries(seriesID);
+                DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesId));
                 if (series != null)
                 {
+                    MPTVSeriesLog.Write("progress recieved: UpdateRecentlyAdded [{0}/{1}] {2}", ++i, seriesIdList.Count, series.ToString());
                     series[DBOnlineSeries.cHasNewEpisodes] = "1";
                     series.Commit();
                 }
