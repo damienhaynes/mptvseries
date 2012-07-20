@@ -16,7 +16,7 @@ using MediaPortal.Common.Utils;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
-[assembly: AssemblyCopyright("Copyright © 2011")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

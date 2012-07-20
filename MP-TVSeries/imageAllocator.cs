@@ -42,14 +42,7 @@ namespace WindowPlugins.GUITVSeries
             widebanner,
             poster,
         }
-
-        enum NewEpisodeThumbType
-        {
-            none,
-            unwatched,
-            recentlyadded
-        }
-
+        
         static String s_sFontName;
         static List<String> s_SeriesImageList = new List<string>();
         static List<String> s_SeasonsImageList = new List<string>();
@@ -296,15 +289,19 @@ namespace WindowPlugins.GUITVSeries
             
             bool ShowNewImage = false;
 
-            NewEpisodeThumbType newEpisodeThumbType = (NewEpisodeThumbType)(int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
+            NewEpisodeIndicatorType newEpisodeThumbType = (NewEpisodeIndicatorType)(int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
 
-            if (newEpisodeThumbType == NewEpisodeThumbType.recentlyadded)
+            if (newEpisodeThumbType == NewEpisodeIndicatorType.recentlyadded)
             {
                 ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes];
             }
-            else if (newEpisodeThumbType == NewEpisodeThumbType.unwatched)
+            else if (newEpisodeThumbType == NewEpisodeIndicatorType.unwatched)
             {
                 ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
+            }
+            else if (newEpisodeThumbType == NewEpisodeIndicatorType.recentlyaddedunwatched)
+            {
+                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes] && series[DBOnlineSeries.cEpisodesUnWatched];
             }
 
             if (sFileName.Length > 0 && System.IO.File.Exists(sFileName)) 
@@ -352,15 +349,19 @@ namespace WindowPlugins.GUITVSeries
 
             bool ShowNewImage = false;
 
-            NewEpisodeThumbType newEpisodeThumbType = (NewEpisodeThumbType)(int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
+            NewEpisodeIndicatorType newEpisodeThumbType = (NewEpisodeIndicatorType)(int)DBOption.GetOptions(DBOption.cNewEpisodeThumbType);
 
-            if (newEpisodeThumbType == NewEpisodeThumbType.recentlyadded)
+            if (newEpisodeThumbType == NewEpisodeIndicatorType.recentlyadded)
             {
                 ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes];
             }
-            else if (newEpisodeThumbType == NewEpisodeThumbType.unwatched)
+            else if (newEpisodeThumbType == NewEpisodeIndicatorType.unwatched)
             {
                 ShowNewImage = series[DBOnlineSeries.cEpisodesUnWatched];
+            }
+            else if (newEpisodeThumbType == NewEpisodeIndicatorType.recentlyaddedunwatched)
+            {
+                ShowNewImage = series[DBOnlineSeries.cHasNewEpisodes] && series[DBOnlineSeries.cEpisodesUnWatched];
             }
 
             Size size = isCoverflow ? reqSeriesPosterCFSize : reqSeriesPosterSize;
