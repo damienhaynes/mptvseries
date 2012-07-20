@@ -496,9 +496,7 @@ namespace WindowPlugins.GUITVSeries
     
             season[DBSeason.cEpisodeCount] = epsTotal;
             season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
-            //UpdateUnWatched - faster than method
-            if (epsUnWatched == 0) season[DBSeason.cUnwatchedItems] = false;
-            else season[DBSeason.cUnwatchedItems] = true;
+            season[DBSeason.cUnwatchedItems] = epsUnWatched > 0;            
             season.Commit();
 
             // Now Update the series count
@@ -509,9 +507,7 @@ namespace WindowPlugins.GUITVSeries
           
             series[DBOnlineSeries.cEpisodeCount] = epsTotal;
             series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-            //UpdateUnWatched - faster than method
-            if (epsUnWatched == 0) series[DBOnlineSeries.cUnwatchedItems] = false;
-            else series[DBOnlineSeries.cUnwatchedItems] = true;
+            series[DBOnlineSeries.cUnwatchedItems] = epsUnWatched > 0;
             series.Commit();
         }
 
