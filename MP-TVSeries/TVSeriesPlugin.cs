@@ -2187,6 +2187,8 @@ namespace WindowPlugins.GUITVSeries
 
         protected override void OnClicked(int controlId, GUIControl control, MediaPortal.GUI.Library.Action.ActionType actionType)
         {
+            if (control == null) return; // may enter tvs from another window via click
+
             if (control == this.viewMenuButton)
             {
                 showViewSwitchDialog();                
