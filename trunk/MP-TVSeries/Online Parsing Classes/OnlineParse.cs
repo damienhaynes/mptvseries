@@ -548,7 +548,7 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesId));
                 if (series != null)
                 {
-                    MPTVSeriesLog.Write("progress recieved: UpdateRecentlyAdded [{0}/{1}] {2}", ++i, seriesIdList.Count, series.ToString());
+                    MPTVSeriesLog.Write("progress received: UpdateRecentlyAdded [{0}/{1}] {2}", ++i, seriesIdList.Count, series.ToString());
                     series[DBOnlineSeries.cHasNewEpisodes] = "1";
                     series.Commit();
                 }
