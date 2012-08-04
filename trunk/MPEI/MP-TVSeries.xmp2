@@ -744,15 +744,6 @@ Trakt can also help you keep your watched flags in sync across multiple computer
           <Items />
         </Files>
       </GroupItem>
-      <GroupItem Name="SubCentralPlugin">
-        <ParentGroup />
-        <DisplayName>SubCentral Plugin</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
-        <Description>The purpose of the plugin is to allow user to search and download subtitles for movies or TV shows managed by popular Moving Pictures and MP-TVSeries plugins. It also has the interfaces to allow easy implementation and integration in any other plugin. </Description>
-        <Files>
-          <Items />
-        </Files>
-      </GroupItem>
       <GroupItem Name="Language">
         <ParentGroup />
         <DisplayName>Languages</DisplayName>
@@ -1059,23 +1050,6 @@ Click Next to continue or Cancel to exit Setup.
             <ActionItem Name="InstallFiles" ActionType="InstallFiles" ConditionGroup="">
               <Params>
                 <Items />
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="Extension Installer" ActionType="Extension Installer" ConditionGroup="SubCentralPlugin">
-              <Params>
-                <Items>
-                  <SectionParam Name="Extension package">
-                    <Value>ExternalPlugins\SubCentral.mpe1</Value>
-                    <ValueType>File</ValueType>
-                    <Description>Location of the extension package</Description>
-                  </SectionParam>
-                  <SectionParam Name="Silent Install">
-                    <Value>YES</Value>
-                    <ValueType>Bool</ValueType>
-                    <Description>Silent install, No wizard screen will be displayed </Description>
-                  </SectionParam>
-                </Items>
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
@@ -1512,25 +1486,18 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>3</Minor>
-      <Build>1</Build>
-      <Revision>1954</Revision>
+      <Build>2</Build>
+      <Revision>1964</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed a possible crash when updating season episode counts.
-* Fixed a possible crash in the Import Wizard's episode match panel.
-* Fixed a crash during import whilst updating user ratings if no download mirrors are available.
-* Fixed a crash in configuration when deleteing series or season(s) from disk.
-* Improved speed of episode thumbnail processing during import whilst in configuration. Was extremely slow for larger collections.
-* Updated Dutch translations, thanks HomeY.
-* Updated Czech translations, thanks Kucheek.
-
+    <VersionDescription>
 
 </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.3.1.1954.mpe1</OnlineLocation>
-    <ReleaseDate>2012-05-18T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.3.2.1964.mpe1</OnlineLocation>
+    <ReleaseDate>2012-08-04T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2454,13 +2421,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{e8bb10d9-fe66-4d66-be86-2fabd1e472d3}-icon.png</ZipFileName>
-        <DestinationFilename />
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>ExternalPlugins\SubCentral.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{8633add6-c756-4515-9f28-3d55cb0404b3}-SubCentral.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
