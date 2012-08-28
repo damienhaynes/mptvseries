@@ -3620,9 +3620,9 @@ namespace WindowPlugins.GUITVSeries
             // Series & Season List Images
             string sListFilename = string.Empty;
             if (this.listLevel == Listlevel.Series)
-                sListFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_SeriesListIcon.png";
+                sListFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_SeriesListIcon.png");
             if (this.listLevel == Listlevel.Season)
-                sListFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_SeasonListIcon.png";
+                sListFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_SeasonListIcon.png");
 
             if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
             {
@@ -3635,12 +3635,12 @@ namespace WindowPlugins.GUITVSeries
             // Episode List Images
 
             // Available (Files are Local) Images
-            string sWatchedFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_Watched.png";
-            string sUnWatchedFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatched.png";
+            string sWatchedFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_Watched.png");
+            string sUnWatchedFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_UnWatched.png");
 
             // Not Available (Files are not Local) Images
-            string sWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_WatchedNA.png";
-            string sUnWatchedNAFilename = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatchedNA.png";
+            string sWatchedNAFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_WatchedNA.png");
+            string sUnWatchedNAFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_UnWatchedNA.png");
 
             // return if images dont exists
             if (!(System.IO.File.Exists(sWatchedFilename) &&
@@ -4173,7 +4173,7 @@ namespace WindowPlugins.GUITVSeries
                 if (view.Equals(this.m_CurrLView))
                     pItem.Selected = true;
                 if (view.ParentalControl)
-                    pItem.IconImage = "lock.png";
+                    pItem.IconImage = Helper.GetThemedSkinFile(ThemeType.Image, "lock.png");
                 dlg.Add(pItem);
                 pItem.ItemId = counter++;
             }
@@ -6550,7 +6550,7 @@ namespace WindowPlugins.GUITVSeries
             if (pDlgNotify == null) return;
 
             // if image is empty, attempt to load the default
-            string defaultLogo = Path.Combine(GUIGraphicsContext.Skin, @"Media\Logos\tvseries.png");
+            string defaultLogo = Helper.GetThemedSkinFile(ThemeType.Image, "Logos\\tvseries.png");
             if (File.Exists(defaultLogo))
             {
                 image = defaultLogo;

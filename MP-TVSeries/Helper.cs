@@ -144,6 +144,12 @@ namespace WindowPlugins.GUITVSeries
 
     #endregion
 
+    public enum ThemeType
+    {
+        File,
+        Image
+    }
+
     public class Helper
     {
         #region List<T> Methods
@@ -774,6 +780,48 @@ namespace WindowPlugins.GUITVSeries
                 return false;
             }
         }
+        #endregion
+
+        #region Skin Themes
+
+        public static string GetThemedSkinFile(ThemeType type, string filename)
+        {
+            string originalFile = string.Empty;
+            string themedFile = string.Empty;
+
+            if (type == ThemeType.Image)
+                originalFile = GUIGraphicsContext.Skin + "\\Media\\" + filename;
+            else
+                originalFile = GUIGraphicsContext.Skin + "\\" + filename;
+
+            if (!Settings.SkinThemesSupported)
+                return originalFile;
+
+            string currentTheme = GetCurrrentSkinTheme();
+
+            if (string.IsNullOrEmpty(currentTheme))
+                return originalFile;
+
+            if (type == ThemeType.Image)
+                themedFile = GUIGraphicsContext.Skin + "\\Themes\\" + currentTheme + "\\Media\\" + filename;
+            else
+                themedFile = GUIGraphicsContext.Skin + "\\Themes\\" + currentTheme + "\\" + filename;
+
+            // if the theme does not contain file return original
+            if (!File.Exists(themedFile))
+                return originalFile;
+
+            return themedFile;
+        }
+
+        public static string GetCurrrentSkinTheme()
+        {
+            if (GUIThemeManager.CurrentThemeIsDefault)
+                return null;
+
+            return GUIThemeManager.CurrentTheme;
+        }
+
         #endregion
     }
 }

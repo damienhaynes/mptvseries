@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -86,7 +87,7 @@ namespace WindowPlugins.GUITVSeries {
         public static void Init()
         {
             // Import Skin Settings
-            string xmlSkinSettings = GUIGraphicsContext.Skin + @"\TVSeries.SkinSettings.xml";
+            string xmlSkinSettings = Helper.GetThemedSkinFile(ThemeType.File, "TVSeries.SkinSettings.xml");
             Load(xmlSkinSettings);
 
             #region Display Format Strings
@@ -113,7 +114,14 @@ namespace WindowPlugins.GUITVSeries {
             #endregion
 
             // Load all Skin Fields being used
-            string[] skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml");
+            var skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml").ToList();
+
+            string currentTheme = Helper.GetCurrrentSkinTheme();
+            if (currentTheme != null)
+            {
+                skinFiles = skinFiles.Union(Directory.GetFiles(GUIGraphicsContext.Skin + @"\Themes\" + currentTheme, "TVSeries*.xml").ToList()).ToList();
+            }
+
             foreach (string skinFile in skinFiles)
             {
                 MPTVSeriesLog.Write("Loading Skin Properties in: " + skinFile);
