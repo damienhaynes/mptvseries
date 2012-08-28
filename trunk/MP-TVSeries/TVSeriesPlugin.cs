@@ -4913,7 +4913,11 @@ namespace WindowPlugins.GUITVSeries
                             return false;
                         }
                         else
+                        {
+                            // reset timer
+                            ResetParentalControlTimer();
                             logicalView.IsLocked = false;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -4955,6 +4959,9 @@ namespace WindowPlugins.GUITVSeries
                                 // Cease to prompt for PinCode for remainder of session
                                 logicalView.IsLocked = false;
                                 pinInCorrect = false;
+
+                                // reset timer
+                                ResetParentalControlTimer();
                             }
                         }
                         else
@@ -5140,6 +5147,12 @@ namespace WindowPlugins.GUITVSeries
         {
             MPTVSeriesLog.Write("Resetting Parental Control Lock");
             logicalView.IsLocked = true;
+        }
+
+        private void ResetParentalControlTimer()
+        {
+            long interval = DBOption.GetOptions(DBOption.cParentalControlResetInterval) * 60 * 1000;
+            m_ParentalControlTimer = new System.Threading.Timer(new TimerCallback(ParentalControlTimerEvent), null, interval, interval);
         }
 
         private bool CheckSkinFanartSettings()
