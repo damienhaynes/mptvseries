@@ -111,7 +111,7 @@ namespace WindowPlugins.GUITVSeries
                 return null;
             }
 
-            string newStampLocation = GUIGraphicsContext.Skin + @"\Media\tvseries_newlabel.png";
+            string newStampLocation = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_newlabel.png");
             Image newImage = LoadImageFastFromFile(newStampLocation);
 
             Graphics gph = Graphics.FromImage(origBanner);

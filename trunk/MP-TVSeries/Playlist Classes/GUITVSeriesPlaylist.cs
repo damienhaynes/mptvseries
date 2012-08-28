@@ -530,12 +530,12 @@ namespace WindowPlugins.GUITVSeries
                     if (item.IsWatched)
                     {
                         pItem.IsPlayed = true; // facade colours...dont seem to work!
-                        pItem.IconImage = GUIGraphicsContext.Skin + @"\Media\tvseries_Watched.png";
+                        pItem.IconImage = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_Watched.png");
                     }
                     else
                     {
                         pItem.IsPlayed = false;
-                        pItem.IconImage = GUIGraphicsContext.Skin + @"\Media\tvseries_UnWatched.png";
+                        pItem.IconImage = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_UnWatched.png");
                     }
 
                     if (item.Duration > 0)

@@ -148,6 +148,15 @@ namespace WindowPlugins.GUITVSeries
 
         public static string UserAgent
         { get { return _userAgent; } }
+
+        /// <summary>
+        /// Use this property to determine if the version
+        /// of MediaPortal installed supports skin themes.
+        /// This is needed to change the path of skin images
+        /// </summary>
+        public static bool SkinThemesSupported
+        { get { return _mpVersion >= new Version(1, 2, 100); } }
+
         #endregion
 
         #region Public Methods
