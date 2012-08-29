@@ -116,10 +116,13 @@ namespace WindowPlugins.GUITVSeries {
             // Load all Skin Fields being used
             var skinFiles = Directory.GetFiles(GUIGraphicsContext.Skin, "TVSeries*.xml").ToList();
 
-            string currentTheme = Helper.GetCurrrentSkinTheme();
-            if (currentTheme != null)
+            if (Settings.SkinThemesSupported)
             {
-                skinFiles = skinFiles.Union(Directory.GetFiles(GUIGraphicsContext.Skin + @"\Themes\" + currentTheme, "TVSeries*.xml").ToList()).ToList();
+                string currentTheme = Helper.GetCurrrentSkinTheme();
+                if (currentTheme != null)
+                {
+                    skinFiles = skinFiles.Union(Directory.GetFiles(GUIGraphicsContext.Skin + @"\Themes\" + currentTheme, "TVSeries*.xml").ToList()).ToList();
+                }
             }
 
             foreach (string skinFile in skinFiles)
