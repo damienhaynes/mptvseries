@@ -1273,7 +1273,7 @@ namespace WindowPlugins.GUITVSeries
             if (!bUpdateNewSeries && seriesList.Count > 0)
             {
                 // let's check which of these we have any interest in
-                seriesList.RemoveAll(s => !updatedSeries.Contains(s[DBOnlineSeries.cSeriesID]));
+                seriesList.RemoveAll(s => !updatedSeries.Contains(s[DBOnlineSeries.cID]));
             }
 
             int nIndex = 0;
