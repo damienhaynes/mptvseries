@@ -297,8 +297,9 @@
       <id>1</id>
       <posX>920</posX>
       <posY>161</posY>
-      <label>#TVSeries.Episode.DataPanelLine31Value (#(L(205)) #TVSeries.Episode.RatingCount)</label>
-      <font>font11</font>
+      <label>#TVSeries.Episode.DataPanelLine31Value #(string.format('({0} {1}{2})',L(205),'#TVSeries.Episode.RatingCount',iif(eq(#TVSeries.Episode.myRating,''),'',', #TVSeries.Translation.Rated.Label: #TVSeries.Episode.myRating')))</label>
+      <width>320</width>
+			<font>font11</font>
       <align>left</align>
       <textcolor>ivory</textcolor>
       <visible>[facadeview.list|facadeview.playlist]+!string.equals(#TVSeries.Episode.RatingCount,0)+!string.equals(#selecteditem,)</visible>

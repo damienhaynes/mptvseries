@@ -149,7 +149,8 @@
       <id>1</id>
       <posX>920</posX>
       <posY>161</posY>
-      <label>#TVSeries.Series.DataPanelLine41Value (#(L(205)) #TVSeries.Series.RatingCount)</label>
+      <label>#TVSeries.Series.DataPanelLine41Value #(string.format('({0} {1}{2})',L(205),'#TVSeries.Series.RatingCount',iif(eq(#TVSeries.Series.myRating,''),'',', #TVSeries.Translation.Rated.Label: #TVSeries.Series.myRating')))</label>
+			<width>320</width>
       <font>font11</font>
       <align>left</align>
       <textcolor>ivory</textcolor>
@@ -408,7 +409,8 @@
       <id>1</id>
       <posX>920</posX>
       <posY>161</posY>
-      <label>#TVSeries.Episode.DataPanelLine31Value (#(L(205)) #TVSeries.Episode.RatingCount)</label>
+      <label>#TVSeries.Episode.DataPanelLine31Value #(string.format('({0} {1}{2})',L(205),'#TVSeries.Episode.RatingCount',iif(eq(#TVSeries.Episode.myRating,''),'',', #TVSeries.Translation.Rated.Label: #TVSeries.Episode.myRating')))</label>
+			<width>320</width>
       <font>font11</font>
       <align>left</align>
       <textcolor>ivory</textcolor>
