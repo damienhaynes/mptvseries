@@ -101,7 +101,7 @@ namespace WindowPlugins.GUITVSeries
             expression[DBExpression.cEnabled] = "1";
             expression[DBExpression.cIndex] = "0";
             expression[DBExpression.cType] = DBExpression.cType_Regexp;
-            expression[DBExpression.cExpression] = @"^(?:.*\\)?(?<series>[^\\]+?)[ _.\-\[]+(?:[s]?(?<season>\d+)[ _.\-\[\]]*[ex](?<episode>\d+)|(?:\#|\-\s)(?<season>\d+)\.(?<episode>\d+))(?:[ _.+-]+(?:[s]?\k<season>[ _.\-\[\]]*[ex](?<episode2>\d+)|(?:\#|\-\s)\k<season>\.(?<episode2>\d+))|(?:[ _.+-]*[ex+-]+(?<episode2>\d+)))*[ _.\-\[\]]*(?<title>(?![^\\].*?(?<!the)[ .(-]sample[ .)-]).*?)\.(?<ext>[^.]*)$";
+            expression[DBExpression.cExpression] = @"^(?:.*\\)?(?<series>[^\\]+?)[ _.\-\[]+(?:[s]?(?<season>\d+)[ _.\-\[\]]*[ex](?<episode>\d+)|(?:\#|\-\s)(?<season>(?!(?:\d{4}.\d{2}.\d{2}|\d{2}.\d{2}.\d{4}))\d+)\.(?<episode>\d+))(?:[ _.+-]+(?:[s]?\k<season>[ _.\-\[\]]*[ex](?<episode2>\d+)|(?:\#|\-\s)\k<season>\.(?<episode2>\d+))|(?:[ _.+-]*[ex+-]+(?<episode2>\d+)))*[ _.\-\[\]]*(?<title>(?![^\\].*?(?<!the)[ .(-]sample[ .)-]).*?)\.(?<ext>[^.]*)$";
             expression.Commit();
 
             expression[DBExpression.cIndex] = "1";
