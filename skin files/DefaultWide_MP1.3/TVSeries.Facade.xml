@@ -45,30 +45,29 @@
           <onright>2</onright>
           <posX>50</posX>
           <posY>170</posY>
-          <width>650</width>
+          <width>670</width>
           <height>450</height>
-          <zoomXPixels>50</zoomXPixels>
-					<zoomYPixels>20</zoomYPixels>
-					<thumbZoom>yes</thumbZoom>
-					<textXOff>0</textXOff>
+          <textXOff>0</textXOff>
 					<textYOff>0</textYOff>
 					<frame>-</frame>
 					<frameFocus>tvseries_listbanner_focus.png</frameFocus>
-					<frameNoFocus>tvseries_listbanner_nofocus.png</frameNoFocus>
+					<frameNoFocus>-</frameNoFocus>
 					<textureMask>tvseries_listbanner_mask.png</textureMask>
 					<keepaspectratio>no</keepaspectratio>
-					<enableFocusZoom>yes</enableFocusZoom>
+					<enableFocusZoom>no</enableFocusZoom>
+					<zoomXPixels>40</zoomXPixels>
+          <zoomYPixels>10</zoomYPixels>
           <scrollOffset>1</scrollOffset>
           <dimColor>30ffffff</dimColor>
-          <itemWidthBig>304</itemWidthBig>
-          <itemHeightBig>70</itemHeightBig>
-          <textureWidthBig>304</textureWidthBig>
-          <textureHeightBig>76</textureHeightBig>
-          <thumbWidthBig>294</thumbWidthBig>
-          <thumbHeightBig>66</thumbHeightBig>
-          <thumbPosXBig>5</thumbPosXBig>
-          <thumbPosYBig>5</thumbPosYBig>
-          <thumbZoom>yes</thumbZoom>
+          <itemWidthBig>330</itemWidthBig>
+          <itemHeightBig>74</itemHeightBig>
+          <textureWidthBig>305</textureWidthBig>
+          <textureHeightBig>68</textureHeightBig>
+          <thumbWidthBig>305</thumbWidthBig>
+          <thumbHeightBig>68</thumbHeightBig>
+          <thumbPosXBig>0</thumbPosXBig>
+          <thumbPosYBig>0</thumbPosYBig>
+          <thumbZoom>no</thumbZoom>
           <textXOff>0</textXOff>
           <textYOff>0</textYOff>
 					<onright>2</onright>
