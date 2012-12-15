@@ -584,30 +584,34 @@ namespace WindowPlugins.GUITVSeries
         /// <returns>A .NET Image object</returns>
         public static Image LoadImageFastFromFile(string filename)
         {
-            IntPtr image = IntPtr.Zero;
-            Image i = null;
+            IntPtr imagePtr = IntPtr.Zero;
+            Image imageFile = null;
             try
             {
                 // We are not using ICM at all, fudge that, this should be FAAAAAST!
-                if (GdipLoadImageFromFile(filename, out image) != 0)
+                if (GdipLoadImageFromFile(filename, out imagePtr) != 0)
                 {
                     MPTVSeriesLog.Write("Reverting to slow ImageLoading for: " + filename, MPTVSeriesLog.LogLevel.Debug);
-                    i = Image.FromFile(filename);
+                    imageFile = Image.FromFile(filename);
                 }
-                else i = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { image });
+                else
+                {
+                    imageFile = (Image)imageType.InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { imagePtr });
+                }
 
             }
-            catch (System.IO.FileNotFoundException fe)
+            catch (FileNotFoundException fe)
             {
-                MPTVSeriesLog.Write("Image does not exist: " + filename + " - " + fe.Message);
+                MPTVSeriesLog.Write("Image does not exist: " + filename + " - " + fe.Message, MPTVSeriesLog.LogLevel.Debug);
+                return null;
             }
             catch (Exception e)
             {
                 // this probably means the image is bad
-                MPTVSeriesLog.Write("Unable to load Imagefile (corrupt?): " + filename + " - " + e.Message);
+                MPTVSeriesLog.Write("Unable to load Imagefile (corrupt?): " + filename + " - " + e.Message, MPTVSeriesLog.LogLevel.Debug);
                 return null;
             }
-            return i;
+            return imageFile;
         }
         #endregion
 
