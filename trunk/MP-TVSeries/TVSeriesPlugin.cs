@@ -2641,7 +2641,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         SkipSeasonCodes SkipSeasonCode = SkipSeasonCodes.none;
-        List<GUIListItem> itemsForDelayedImgLoading = null;
+        Dictionary<int, GUIListItem> itemsForDelayedImgLoading = null;
         private void bg_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             try
@@ -2678,12 +2678,18 @@ namespace WindowPlugins.GUITVSeries
                                 if (arg.Type == BackGroundLoadingArgumentType.ElementForDelayedImgLoading)
                                 {
                                     if (itemsForDelayedImgLoading == null)
-                                        itemsForDelayedImgLoading = new List<GUIListItem>();
-                                    itemsForDelayedImgLoading.Add(gli);
+                                        itemsForDelayedImgLoading = new Dictionary<int, GUIListItem>();
+                                    itemsForDelayedImgLoading.Add(arg.IndexArgument, gli);
                                 }
                             }
+                            else
+                            {
+                                MPTVSeriesLog.Write(string.Format("ElementForDelayedImgLoading: Facade or GUIListItem was null. Skipping index: {0}", arg.IndexArgument), MPTVSeriesLog.LogLevel.Debug);
+                            }
+
                             PerfWatcher.GetNamedWatch("FacadeLoading addElem").Stop();
                         }
+
                         break;
 
                     case BackGroundLoadingArgumentType.DelayedImgLoading:
@@ -2692,20 +2698,23 @@ namespace WindowPlugins.GUITVSeries
                             if (itemsForDelayedImgLoading != null && itemsForDelayedImgLoading.Count > arg.IndexArgument)
                             {
                                 string image = arg.Argument as string;
-                                if (itemsForDelayedImgLoading[arg.IndexArgument] != null)
-                                    itemsForDelayedImgLoading[arg.IndexArgument].IconImageBig = image;
-                            }
-                            /*if (itemsForDelayedImgLoading != null) {
-                                string image = arg.Argument as string;
-                                foreach (var item in itemsForDelayedImgLoading) {
-                                    DBSeries seriesOfListItem = item.TVTag as DBSeries;
-                                    if (seriesOfListItem != null && seriesOfListItem[DBSeries.cID] == arg.IndexArgument) {
-                                        //MPTVSeriesLog.Write(string.Format("series:{0}, image:{1}", Helper.getCorrespondingSeries(seriesOfListItem[DBSeries.cID]).ToString(), image));
-                                        item.IconImageBig = image;
-                                        break;
+                                GUIListItem guiListItem = null;
+                                if (itemsForDelayedImgLoading.TryGetValue(arg.IndexArgument, out guiListItem))
+                                {
+                                    if (guiListItem != null)
+                                    {
+                                        guiListItem.IconImageBig = image;
+                                    }
+                                    else
+                                    {
+                                        MPTVSeriesLog.Write(string.Format("DelayedImgLoading: GUIListItem was null. Skipping index: {0}", arg.IndexArgument));
                                     }
                                 }
-                            }*/
+                                else
+                                {
+                                    MPTVSeriesLog.Write(string.Format("DelayedImgLoading: Could not find GUIListItem with index: {0}", arg.IndexArgument));
+                                }
+                            }
                             PerfWatcher.GetNamedWatch("FacadeLoading addDelayedImage").Stop();
                         }
                         break;
@@ -3130,7 +3139,7 @@ namespace WindowPlugins.GUITVSeries
                                     else
                                     {
                                         if (!sSeriesDisplayMode.Contains("List"))
-                                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.ElementForDelayedImgLoading, count, item);
+                                            ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.ElementForDelayedImgLoading, seriesList.FindIndex(s => s[DBSeries.cID] == series[DBSeries.cID]), item);
                                         else
                                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, count, item);
                                     }
@@ -3574,7 +3583,7 @@ namespace WindowPlugins.GUITVSeries
                                     else
                                         img = ImageAllocator.GetSeriesBanner(stateSeries.Value);
                                     //ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Value[DBSeries.cID], img);
-                                    ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, stateSeries.Key, img);
+                                    ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.DelayedImgLoading, seriesList.FindIndex(s => s[DBSeries.cID] == stateSeries.Value[DBSeries.cID]), img);
                                     Interlocked.Increment(ref done);
                                 }, keySeriesValue);
                             }
@@ -6639,6 +6648,3 @@ namespace WindowPlugins.GUITVSeries
         public string ViewName { get; set; }
     }
 }
-
-
-
