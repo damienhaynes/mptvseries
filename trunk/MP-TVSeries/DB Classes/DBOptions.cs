@@ -157,6 +157,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cAutoDownloadFanartResolution = "AutoDownloadFanartResolution";
         public const String cAutoDownloadFanartSeriesNames = "AutoDownloadFanartSeriesNames";
 
+        public const String cAutoDownloadActors = "AutoDownloadActors";
+
         public const String cFanartThumbnailResolutionFilter = "FanartThumbnailResolutionFilter";
         public const String cFanartCurrentView = "FanartCurrentView";
        
@@ -639,6 +641,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cFilterUnwatched) == null)
                     SetOptions(cFilterUnwatched, false);
+
+                if (GetOptions(cAutoDownloadActors) == null)
+                    SetOptions(cAutoDownloadActors, true);
 
             }
             catch (Exception ex)
