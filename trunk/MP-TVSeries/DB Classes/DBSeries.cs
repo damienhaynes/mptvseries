@@ -498,16 +498,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_onlineSeries != null)
                 {
-                    String sIn = String.Empty;
+                    var imageList = new List<string>();
+
                     for (int i = 0; i < value.Count; i++)
                     {
-                        value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                        if (String.IsNullOrEmpty(String.Empty))
-                            sIn += value[i];
-                        else
-                            sIn += "," + value[i];
+                        imageList.Add(value[i].Replace(Settings.GetPath(Settings.Path.banners), string.Empty));
                     }
-                    m_onlineSeries[DBOnlineSeries.cBannerFileNames] = sIn;
+                    m_onlineSeries[DBOnlineSeries.cBannerFileNames] = string.Join("|", imageList.ToArray());
                 }
             }
         }
@@ -541,16 +538,13 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (m_onlineSeries != null)
                 {
-                    String sIn = String.Empty;
+                    var imageList = new List<string>();
+
                     for (int i = 0; i < value.Count; i++)
                     {
-                        value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                        if (String.IsNullOrEmpty(String.Empty))
-                            sIn += value[i];
-                        else
-                            sIn += "," + value[i];
+                        imageList.Add(value[i].Replace(Settings.GetPath(Settings.Path.banners), string.Empty));
                     }
-                    m_onlineSeries[DBOnlineSeries.cPosterFileNames] = sIn;
+                    m_onlineSeries[DBOnlineSeries.cPosterFileNames] = string.Join("|", imageList.ToArray()); ;
                 }
             }
         }
