@@ -203,5 +203,24 @@ namespace WindowPlugins.GUITVSeries
         }
 
         #endregion
+
+        internal static List<int> GetSeriesWithActors()
+        {
+            List<int> seriesids = new List<int>();
+
+            string sqlQuery = "SELECT DISTINCT seriesID FROM Actors";
+            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+
+            if (results.Rows.Count > 0)
+            {
+                for (int index = 0; index < results.Rows.Count; index++)
+                {
+                    int result = 0;
+                    if (int.TryParse(results.Rows[index].fields[0], out result))
+                        seriesids.Add(result);
+                }
+            }
+            return seriesids;
+        }
     }
 }

@@ -60,6 +60,7 @@ namespace WindowPlugins.GUITVSeries
 
         GetNewBanners,
         GetNewFanArt,
+        GetNewActors,
         UpdateEpisodeThumbNails,
         UpdateUserFavourites,
 
@@ -109,7 +110,8 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.UpdateBanners, 
             ParsingAction.UpdateFanart, 
             ParsingAction.GetNewBanners, 
-            ParsingAction.GetNewFanArt, 
+            ParsingAction.GetNewFanArt,
+            ParsingAction.GetNewActors,
             ParsingAction.UpdateEpisodeThumbNails,
             ParsingAction.UpdateUserFavourites,
             ParsingAction.UpdateRecentlyAdded,
@@ -467,6 +469,13 @@ namespace WindowPlugins.GUITVSeries
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
                             UpdateFanart(false, null);
+                        break;
+
+                    case ParsingAction.GetNewActors:
+                        if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
+                            UpdateOnlineMirror();
+                        if (DBOnlineMirror.IsMirrorsAvailable)
+                            UpdateActors(false, null);
                         break;
 
                     case ParsingAction.UpdateEpisodeThumbNails:
@@ -1520,6 +1529,76 @@ namespace WindowPlugins.GUITVSeries
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets Actors From Online
+        /// </summary>
+        /// <param name="updatesOnly">set to true when processing online updates</param>
+        /// <param name="updatedSeries">list of series that have had updates online, set to null if updatesOnly is false</param>
+        private void UpdateActors(bool updatesOnly, List<DBValue> updatedSeries)
+        {
+            // exit if we dont want to automatically download fanart
+            if (!DBOption.GetOptions(DBOption.cAutoDownloadActors))
+                return;
+
+            // get all series in database
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
+
+            // process updates on series we have locally
+            // remove series not of interest
+            if (updatesOnly)
+            {
+                MPTVSeriesLog.Write(bigLogMessage("Processing Actors from Online Updates"));
+                seriesList.RemoveAll(s => !updatedSeries.Contains(s[DBSeries.cID]));
+            }
+
+            // updating fanart for all series
+            if (!updatesOnly)
+            {
+                MPTVSeriesLog.Write(bigLogMessage("Downloading new and missing Actors for Series"));
+
+                List<int> seriesids = DBActor.GetSeriesWithActors();
+                seriesList.RemoveAll(s => seriesids.Contains(s[DBSeries.cID]));
+            }
+
+            int nIndex = 0;
+            foreach (DBSeries series in seriesList)
+            {
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, series.ToString(), ++nIndex, seriesList.Count, series, null));
+
+                try
+                {
+                    // get available banners and add to database
+                    Online_Parsing_Classes.GetActors ga = new Online_Parsing_Classes.GetActors(series[DBSeries.cID]);
+                    foreach (DBActor a in ga.Actors)
+                    {
+                        a.Commit();
+
+                        string remoteThumb = a.ImageRemotePath;
+                        if (string.IsNullOrEmpty(remoteThumb)) continue;
+
+                        string localThumb = a.Image;
+                        if (string.IsNullOrEmpty(localThumb)) continue;
+
+                        if (Helper.DownloadFile(remoteThumb, localThumb))
+                        {
+                            // notify that thumbnail image has been downloaded
+                            a.ThumbnailImage = localThumb;
+                            a.NotifyPropertyChanged("ThumbnailImage");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write("Failed to update Actor: " + ex.Message);
+                }
+            }
+            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, seriesList.Count));
         }
 
         /// <summary>
