@@ -114,6 +114,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cGetBlankBanners = "getBlankBanners";
         public const String cGetTextBanners = "getTextBanners";
         public const String cGetEpisodeSnapshots = "getEpisodeSnapshots";
+        public const String cCheckArtwork = "checkArtwork";
 
         public const String cWatchedAfter = "watchedAfter";
 
@@ -207,6 +208,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cArtworkLimitSeriesWideBanners = "ArtworkLimitSeriesWideBanners";
         public const String cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
         public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
+        public const String cMaxConsecutiveDownloadErrors = "MaxConsecutiveDownloadErrors";
 
         public const String cTraktUsername = "TraktUsername";
         public const String cTraktPassword = "TraktPassword";
@@ -301,6 +303,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cImport_DontClearMissingLocalFiles) == null)
                     SetOptions(cImport_DontClearMissingLocalFiles, 0);
+
+                if (GetOptions(cCheckArtwork) == null) 
+                    SetOptions(cCheckArtwork, 1);
                 
                 if (GetOptions(cView_PluginName) == null)
                     SetOptions(cView_PluginName, "My TV Series");
@@ -590,6 +595,9 @@ namespace WindowPlugins.GUITVSeries
 
                 if (GetOptions(cArtworkLimitSeasonPosters) == null)
                     SetOptions(cArtworkLimitSeasonPosters, 2); // 20 seasons = 40 posters
+
+                if (GetOptions(cMaxConsecutiveDownloadErrors) == null)
+                    SetOptions(cMaxConsecutiveDownloadErrors, 3);
 
                 if (GetOptions(cFollwitEnabled) == null)
                     SetOptions(cFollwitEnabled, false);

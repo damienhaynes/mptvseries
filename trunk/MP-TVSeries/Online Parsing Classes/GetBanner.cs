@@ -295,11 +295,25 @@ namespace WindowPlugins.GUITVSeries
 
         public void DownloadBanners(string bannerLang)
         {
+            int maxConsecutiveDownloadErrors;
+            var consecutiveDownloadErrors = 0;
+            if (!int.TryParse(DBOption.GetOptions(DBOption.cMaxConsecutiveDownloadErrors).ToString(), out maxConsecutiveDownloadErrors))
+            {
+                maxConsecutiveDownloadErrors = 3;
+            }
+            
             // now that we have all the paths, download all the files
             foreach (SeriesBannersMap map in SeriesBannersMap)
             {
+                var seriesWideBannersToKeep = new List<WideBannerSeries>();
                 foreach (WideBannerSeries bannerSeries in map.SeriesWideBanners)
                 {
+                    if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
+                    {
+                        MPTVSeriesLog.Write("Too many consecutive download errors. Aborting.");
+                        return;
+                    }
+
                     if (bannerLang == bannerSeries.Language || "en" == bannerSeries.Language || "" == bannerSeries.Language) //also always english ones
                     {
                         // mark the filename with the language                        
@@ -307,24 +321,60 @@ namespace WindowPlugins.GUITVSeries
                         
                         string file = OnlineAPI.DownloadBanner(bannerSeries.OnlinePath, Settings.Path.banners, bannerSeries.FileName);
                         if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);                      
+                        {
+                            BannerDownloadDone(file);
+                            seriesWideBannersToKeep.Add(bannerSeries);
+                            consecutiveDownloadErrors = 0;
+                        } 
+                        else
+                        {
+                            consecutiveDownloadErrors++;
+                        }
                     }
                 }
-            
+
+                map.SeriesWideBanners = seriesWideBannersToKeep;
+
+                var seriesPostersToKeep = new List<PosterSeries>();
                 foreach (PosterSeries posterSeries in map.SeriesPosters)
                 {
+                    if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
+                    {
+                        MPTVSeriesLog.Write("Too many consecutive download errors. Aborting.");
+                        return;
+                    }
+
                     if (bannerLang == posterSeries.Language || "en" == posterSeries.Language || "" == posterSeries.Language) //also always english ones
                     {
                         // mark the filename with the language                        
                         posterSeries.FileName = Helper.cleanLocalPath(posterSeries.SeriesName) + @"\-lang" + posterSeries.Language + "-" + posterSeries.OnlinePath;                        
                         string file = OnlineAPI.DownloadBanner(posterSeries.OnlinePath, Settings.Path.banners, posterSeries.FileName);
                         if (BannerDownloadDone != null)
+                        {
                             BannerDownloadDone(file);
+                            seriesPostersToKeep.Add(posterSeries);
+                            consecutiveDownloadErrors = 0;
+                        }
+                        else
+                        {
+                            consecutiveDownloadErrors++;
+                        }
                     }
                 }
+
+                map.SeriesPosters = seriesPostersToKeep;
+
                 List<DBSeason> localSeasons = DBSeason.Get(new SQLCondition(new DBSeason(), DBSeason.cSeriesID, map.SeriesID, SQLConditionType.Equal), false);
+
+                var posterSeasonToKeep = new List<PosterSeason>();
                 foreach (PosterSeason bannerSeason in map.SeasonPosters)
                 {
+                    if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
+                    {
+                        MPTVSeriesLog.Write("Too many consecutive download errors. Aborting.");
+                        return;
+                    }
+
                     // only download season banners if we have online season in database
                     if (!localSeasons.Any(s => s[DBSeason.cIndex] == bannerSeason.SeasonIndex)) continue;
 
@@ -334,9 +384,19 @@ namespace WindowPlugins.GUITVSeries
                         
                         string file = OnlineAPI.DownloadBanner(bannerSeason.OnlinePath, Settings.Path.banners, bannerSeason.FileName);
                         if (BannerDownloadDone != null)
-                            BannerDownloadDone(file);                        
+                        {
+                            BannerDownloadDone(file);
+                            posterSeasonToKeep.Add(bannerSeason);
+                            consecutiveDownloadErrors = 0;
+                        }
+                        else
+                        {
+                            consecutiveDownloadErrors++;
+                        }             
                     }
                 }
+
+                map.SeasonPosters = posterSeasonToKeep;
             }
         }
     }

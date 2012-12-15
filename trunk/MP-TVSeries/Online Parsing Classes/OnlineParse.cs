@@ -48,6 +48,7 @@ namespace WindowPlugins.GUITVSeries
         MediaInfo,
         IdentifyNewSeries,
         IdentifyNewEpisodes,
+        CheckArtwork,
 
         GetOnlineUpdates,
         UpdateSeries,
@@ -96,7 +97,8 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.MediaInfo,
             ParsingAction.IdentifyNewSeries, 
             ParsingAction.IdentifyNewEpisodes,
-            ParsingAction.UpdateEpisodeCounts
+            ParsingAction.UpdateEpisodeCounts,
+            ParsingAction.CheckArtwork
         };
 
         private static List<ParsingAction> OnlineRefreshActions = new List<ParsingAction> { 
@@ -399,6 +401,11 @@ namespace WindowPlugins.GUITVSeries
                         m_worker.ReportProgress(30);
                         break;
                     
+                    case ParsingAction.CheckArtwork:
+                        if (DBOption.GetOptions(DBOption.cCheckArtwork) == 1)
+                        this.CheckBanners();
+                        break;
+
                     case ParsingAction.GetOnlineUpdates:
                         if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
                             UpdateOnlineMirror();
@@ -1336,7 +1343,17 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // Check if current set series widebanner exists
-                bool currentArtworkExists = File.Exists(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), series[DBOnlineSeries.cCurrentBannerFileName].ToString()));
+                string currentArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), series[DBOnlineSeries.cCurrentBannerFileName].ToString());
+                bool currentArtworkExists = File.Exists(currentArtwork);
+
+                // if the current artwork exists, but not in the list of available artwork then add it
+                if (currentArtworkExists && !series.BannerList.Exists(b => b.Equals(currentArtwork)))
+                {
+                    var imageList = new List<string>(series.BannerList);
+                    imageList.Add(currentArtwork);
+                    series.BannerList = imageList;
+                    imageList = null;
+                }
 
                 // Don't override user selection of banner
                 if ((series[DBOnlineSeries.cCurrentBannerFileName].ToString().Trim().Length == 0 || !currentArtworkExists) && seriesArtwork.SeriesWideBanners.Count > 0)
@@ -1365,7 +1382,17 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // Check if current set series poster exists
-                currentArtworkExists = File.Exists(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), series[DBOnlineSeries.cCurrentPosterFileName].ToString()));
+                currentArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), series[DBOnlineSeries.cCurrentPosterFileName].ToString());
+                currentArtworkExists = File.Exists(currentArtwork);
+
+                // if the current artwork exists, but not in the list of available artwork then add it
+                if (currentArtworkExists && !series.PosterList.Exists(b => b.Equals(currentArtwork)))
+                {
+                    var imageList = new List<string>(series.PosterList);
+                    imageList.Add(currentArtwork);
+                    series.PosterList = imageList;
+                    imageList = null;
+                }
 
                 // Don't override user selection of poster
                 if ((series[DBOnlineSeries.cCurrentPosterFileName].ToString().Trim().Length == 0 || !currentArtworkExists) && seriesArtwork.SeriesPosters.Count > 0)
@@ -1406,7 +1433,17 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // Check if current set season poster exists
-                    currentArtworkExists = File.Exists(Helper.PathCombine(Settings.GetPath(Settings.Path.banners), season[DBSeason.cCurrentBannerFileName].ToString()));
+                    currentArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), season[DBSeason.cCurrentBannerFileName].ToString());
+                    currentArtworkExists = File.Exists(currentArtwork);
+
+                    // if the current artwork exists, but not in the list of available artwork then add it
+                    if (currentArtworkExists && !season.BannerList.Exists(b => b.Equals(currentArtwork)))
+                    {
+                        var imageList = new List<string>(season.BannerList);
+                        imageList.Add(currentArtwork);
+                        season.BannerList = imageList;
+                        imageList = null;
+                    }
 
                     // Don't override user selection of season poster
                     if ((season[DBSeason.cCurrentBannerFileName].ToString().Trim().Length == 0 || !currentArtworkExists) && seasonPosters.Count > 0)
@@ -1420,6 +1457,69 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
             }
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, seriesList.Count));
+        }
+
+        /// <summary>
+        /// Check Banners & Posters for existence and corruption. Remove non-existent or corrupt banners from database (to re-download on UpdateBanners)
+        /// </summary>
+        private void CheckBanners()
+        {
+            MPTVSeriesLog.Write(bigLogMessage("Verifying ArtWork"));
+            var condition = new SQLCondition();
+
+            // all series that have an onlineID ( > 0)
+            condition.Add(new DBOnlineSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            
+            // and that already had data imported from the online DB
+            condition.beginGroup();
+            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cBannerFileNames, string.Empty, SQLConditionType.NotEqual);
+            condition.nextIsOr = true;
+            condition.Add(new DBOnlineSeries(), DBOnlineSeries.cPosterFileNames, string.Empty, SQLConditionType.NotEqual);
+            condition.nextIsOr = false;
+            condition.endGroup();
+
+            var seriesList = DBSeries.Get(condition, false, false);
+            if (seriesList.Count <= 0)
+            {
+                MPTVSeriesLog.Write("No Artwork found to verify.");
+                return;
+            }
+
+            int i = 0;
+            foreach (var series in seriesList)
+            {
+                MPTVSeriesLog.Write("progress received: VerifyArtwork [{0}/{1}] {2}", ++i, seriesList.Count, series.ToString());
+                series.BannerList = series.BannerList.Where(this.CheckArtwork).ToList();
+                series.PosterList = series.PosterList.Where(this.CheckArtwork).ToList();
+                series.Commit();
+            }
+        }
+
+        /// <summary>
+        /// Check Artwork for existence and corruption
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns>OK, not OK</returns>
+        private bool CheckArtwork(string path)
+        {
+            if (File.Exists(path))
+            {
+                var image = ImageAllocator.LoadImageFastFromFile(path);
+                if (image == null)
+                {
+                    MPTVSeriesLog.Write("Removing corrupt artwork from database: {0}.", path);
+                    return false;
+                }
+            }
+            else
+            {
+                MPTVSeriesLog.Write("Removing missing artwork from database: {0}.", path);
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -1462,6 +1562,13 @@ namespace WindowPlugins.GUITVSeries
             }
 
             int nIndex = 0;
+            int maxConsecutiveDownloadErrors;
+            var consecutiveDownloadErrors = 0;
+            if (!int.TryParse(DBOption.GetOptions(DBOption.cMaxConsecutiveDownloadErrors).ToString(), out maxConsecutiveDownloadErrors))
+            {
+                maxConsecutiveDownloadErrors = 3;
+            }
+
             foreach (DBSeries series in seriesList)
             {
                 m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series.ToString(), ++nIndex, seriesList.Count, series, null));
@@ -1482,6 +1589,12 @@ namespace WindowPlugins.GUITVSeries
                     // download fanart
                     foreach (DBFanart download in fanarts)
                     {
+                        if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
+                        {
+                            MPTVSeriesLog.Write("Too many consecutive download errors. Aborting.");
+                            return;
+                        }
+
                         string onlineFilename = download[DBFanart.cBannerPath];
                         string localFilename = onlineFilename.Replace("/", @"\");
                         
@@ -1494,12 +1607,14 @@ namespace WindowPlugins.GUITVSeries
                             download.Commit();
 
                             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, string.Format("{0} - {1}", series.ToString(), Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename)), nIndex, seriesList.Count, series, result));
+                            consecutiveDownloadErrors = 0;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     MPTVSeriesLog.Write("Failed to update Fanart: " + ex.Message);
+                    consecutiveDownloadErrors++;
                 }
             }
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, seriesList.Count));

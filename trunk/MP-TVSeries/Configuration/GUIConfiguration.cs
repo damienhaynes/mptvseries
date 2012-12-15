@@ -250,6 +250,7 @@ namespace WindowPlugins.GUITVSeries
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
 			numericUpDownArtworkDelay.Value = DBOption.GetOptions(DBOption.cArtworkLoadingDelay);
 			numericUpDownBackdropDelay.Value = DBOption.GetOptions(DBOption.cBackdropLoadingDelay);
+            nudConsecFailures.Value = DBOption.GetOptions(DBOption.cMaxConsecutiveDownloadErrors);
 
 			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
 				checkboxRatingDisplayStars.Checked = true;
@@ -4328,9 +4329,9 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.InitLogLevel();
         }
 
-        private void dbOptionSQLLogging_CheckedChanged(object sender, EventArgs e)
+        private void nudConsecFailures_ValueChanged(object sender, EventArgs e)
         {
-
+            DBOption.SetOptions(DBOption.cMaxConsecutiveDownloadErrors, (int)nudConsecFailures.Value);
         }
     }
     
