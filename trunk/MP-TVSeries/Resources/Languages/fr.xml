@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- MP-TV-Series translation file -->
-<!-- English (US) r1887 vs francais-->
-<!-- Last Updated: 08 janvier 2012 -->
-<!-- Note: English is the fallback for any strings not found in other languages  -->
+<!-- French -->
+<!-- Note: English is the fallback for any strings not found in other languages -->
 <strings>
   <string Field="Series" Original="Series">Séries</string>
-  <string Field="Series_Plural" Original="Series (Plr)">Séries</string><!-- plural -->
+  <string Field="Series_Plural" Original="Series (Plr)">Séries</string>
   <string Field="Season" Original="Season">Saison</string>
   <string Field="Seasons" Original="Seasons">Saisons</string>
   <string Field="Episode" Original="Episode">Episode</string>
@@ -67,9 +66,9 @@
   <string Field="ChangeViewFast" Original="Immediatly Change Views">Changement immédiat de l'affichage</string>
   <string Field="FanArt" Original="Fanart">Gestion des Fanarts (fond d'écran)</string>
   <string Field="FanListAll" Original="List all Fanart for this Series">Liste complète de tous Fanarts pour cette série</string>
-  <string Field="FanArtGetAndUse" Original="Download Fanart and Use">Télécharger et utiliser</string>
-  <string Field="FanArtUse" Original="Set Fanart as Default">Fanart par défaut</string>
+  <string Field="FanArtGetAndUse" Original="Download Fanart and Use">Télécharger le Fanart et l'utiliser</string>
   <string Field="FanArtGet" Original="Download Fanart">Télécharger le Fanart</string>
+  <string Field="FanArtUse" Original="Set Fanart as Default">Fanart par défaut</string>
   <string Field="FanArtDelete" Original="Delete Fanart">Effacer le Fanart</string>
   <string Field="FanDownloadingStatus" Original="Downloading {0} Fanart...">Téléchargement de {0} Fanart</string>
   <string Field="FanArtLocal" Original="Local">Présent</string>
@@ -111,7 +110,7 @@
   <string Field="FanartDisableLabel" Original="Disabled">Désactivé</string>
   <string Field="FanartMenuEnable" Original="Enable">Activer le Fanart</string>
   <string Field="FanartMenuDisable" Original="Disable">Désactiver le Fanart</string>
-  <string Field="SortByStrings" Original="SortByStrings">the|a|an|le|les</string><!--Additional ones should be added for other languages, dont translate existing ones as they will used as well-->
+  <string Field="SortByStrings" Original="SortByStrings">the|a|an|le|les</string>
   <string Field="LayoutList" Original="List">Liste</string>
   <string Field="LayoutListBanners" Original="List Banners">Liste de Bannières</string>
   <string Field="LayoutListPosters" Original="List Posters">Liste d'Affiches</string>
@@ -135,14 +134,11 @@
   <string Field="DeleteFromFileDatabase" Original="Delete from Disk and Database">Effacer du disque et de la base de données</string>
   <string Field="RateDialogLabel" Original="Select Your Rating for {0}">Votre classement pour l'{0}</string>
   <string Field="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Cacher la vignette du résumé</string>
-
-  <!-- Rate Descriptions - 5 Stars-->
   <string Field="RateFiveStarOne" Original="Terrible">Affreux</string>
   <string Field="RateFiveStarTwo" Original="Mediocre">Médiocre</string>
   <string Field="RateFiveStarThree" Original="Good">Bon</string>
   <string Field="RateFiveStarFour" Original="Superb">Excellent</string>
   <string Field="RateFiveStarFive" Original="Perfect">Parfait</string>
-  <!-- Rate Descriptions - 10 Stars-->
   <string Field="RateTenStarOne" Original="Abysmal">Lamentable</string>
   <string Field="RateTenStarTwo" Original="Terrible">Affreux</string>
   <string Field="RateTenStarThree" Original="Bad">Mauvais</string>
@@ -153,7 +149,6 @@
   <string Field="RateTenStarEight" Original="Great">Super</string>
   <string Field="RateTenStarNine" Original="Superb">Excellent</string>
   <string Field="RateTenStarTen" Original="Perfect">Parfait</string>
-
   <string Field="ContentRating" Original="Content Rating">Par type de public</string>
   <string Field="ViewTags" Original="View Tags">Voir les infos</string>
   <string Field="AddViewTag" Original="Add Series to View Tag">Ajouter cette série à l'affichage</string>
@@ -195,13 +190,11 @@
   <string Field="AdultSeries" Original="Adult Series">Séries pour Adultes</string>
   <string Field="KidsSeries" Original="Kids Series">Séries pour Enfants</string>
   <string Field="ClearFanartCache" Original="Clear Fanart Cache">Effacer le cache de Fanart</string>
-
   <string Field="DeleteThumbnailsHeading" Original="Delete Thumbnails">Effacer les vignettes</string>
   <string Field="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Voulez vous effacer puis re-télécharger</string>
   <string Field="DeleteThumbnailsLine2" Original="all episode thumbnails?">Toutes les vignettes des épisodes?</string>
   <string Field="RateDialog" Original="Rate Dialog">Classement</string>
   <string Field="PinCodeDialog" Original="Pin Code Dialog">Code PIN</string>
-
   <string Field="Aired" Original="Aired">Diffusé</string>
   <string Field="AiredStatusContinuing" Original="Continuing">En cours de diffusion</string>
   <string Field="AiredStatusEnded" Original="Ended">Terminé(e)</string>
@@ -232,22 +225,17 @@
   <string Field="Watched" Original="Watched">Vu</string>
   <string Field="Writer" Original="Writer">Scénariste</string>
   <string Field="Writers" Original="Writers">Scénaristes</string>
-
   <string Field="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TVDB est indsiponible</string>
   <string Field="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">SVP, essayer ultérieurement</string>
   <string Field="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Connection internet impossible</string>
   <string Field="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Vérifier votre connection et réessayer</string>
-
   <string Field="Playlist" Original="Playlist">Playlists</string>
   <string Field="LastOnlineUpdate" Original="LastOnlineUpdate">Dernière mise à jour via le web</string>
-
   <string Field="ResetIgnoredDownloadedFiles" Original="Reset Ignored Downloaded Files">La réinitialisation a ignoré les fichiers téléchargés</string>
-
   <string Field="GetSubtitlesFrom" Original="Get subtitles from?">Obtenir le sous-titre via?</string>
   <string Field="EnabledSubtitleSites" Original="Enabled subtitle sites:">Sites de sous-titres:</string>
   <string Field="PlayNow" Original="Play Now">Lecture</string>
   <string Field="NoSubtitleDownload" Original="No Subtitle Download">Aucun sous-titre téléchargé</string>
-
   <string Field="DeleteSubtitles" Original="Delete Subtitles">Supprimer le sous-titre</string>
   <string Field="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Le nom de l'épisode n'existe pas dans la base de données</string>
   <string Field="UnableToDeleteSubtitleFile" Original="Unable to Delete Subtitle File: {0}">Impossible de supprimer le fichier sous-titre: {0}</string>
@@ -256,10 +244,8 @@
   <string Field="ErrorClear" Original="Error">Erreur</string>
   <string Field="UnableToRetrieveSubtitles" Original="Unable to retrieve subtitles">Impossible de récupérer le sous-titre</string>
   <string Field="NoSubtitlesFoundOrRetrieved" Original="No subtitles found or retrieved">Aucun sous-titre trouvé ou récupéré</string>
-
   <string Field="UnableToDelete" Original="Unable to Delete">Impossible de supprimer</string>
   <string Field="UnableToDeleteFile" Original="Unable to Delete File: {0}">Impossible de supprimer le fichier: {0}</string>
-
   <string Field="PlaySomething" Original="Play...">Lecture...</string>
   <string Field="PlayError" Original="Play error">Erreur de lecture</string>
   <string Field="RandomEpisode" Original="random episode">Episode au hasard</string>
@@ -268,44 +254,31 @@
   <string Field="LatestEpisode" Original="latest episode">Dernier épisode</string>
   <string Field="UnableToFindAny" Original="Unable to find any {0}">Impossible de trouver un {0}</string>
   <string Field="UnableToFindAnyEpisode" Original="Unable to find any episode">Aucun épisode trouvé</string>
-
   <string Field="SortBy" Original="Sort By">Trier</string>
   <string Field="DVDOrder" Original="DVD Order">Dans l'ordre du DVD</string>
   <string Field="AiredOrder" Original="Aired Order">Par date de diffusion</string>
   <string Field="AbsoluteOrder" Original="Absolute Order">Dans l'ordre</string>
   <string Field="Title" Original="Title">Titre</string>
   <string Field="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Autre méthode de recherche d'appariement sur le web</string>
-
   <string Field="InsertDiskMessageLine1" Original="The media for the episode you have selected">Le média, support de l'épisode, que vous avez sélectionné</string>
   <string Field="InsertDiskMessageLine2" Original="is currently not available.">n'est pas disponible actuellement.</string>
   <string Field="InsertDiskMessageLine3" Original="Please insert or connect media">SVP, inserer ou connecter votre support de médias</string>
   <string Field="InsertDiskMessageLine4" Original="labeled: {0}">nommé: {0}</string>
-
-  <string Field="ShowHiddenItems" Original="Show Hidden Items">Afficher les items cachés</string>
+  <string Field="ShowHiddenItems" Original="Show Hidden Items">Afficher les éléments cachés</string>
   <string Field="UnHide" Original="UnHide">Afficher</string>
-
   <string Field="CFS_Skip" Original="Skip">Passer</string>
   <string Field="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">Pas de correspondance trouvée, recherche manuelle ..</string>
   <string Field="CFS_Local_Series" Original="Local Series:">Séries local:</string>
-
   <string Field="AvailableMedia" Original="Available Media">Média disponible</string>
-
   <string Field="Votes" Original="votes">votes</string>
-  
   <string Field="LayoutCoveflow" Original="Coveflow">Coverflow</string>
-  
   <string Field="ResumeEpisode" Original="Resume episode from last time?">Reprendre la lecture?</string>
-	
   <string Field="SummaryNotAvailable" Original="No summary is currently available.">Aucun résumé n'est actuellement disponible.</string>
-	
   <string Field="Timeout" Original="Timeout">Temps expiré</string>
   <string Field="NoActors" Original="There are no Actors for this series.">Il n'existe pas d'info concernant les acteurs pour cette série.</string>
   <string Field="GettingActors" Original="Getting Actors from Online">Chercher des infos concernant les acteurs via le Web</string>
-	
   <string Field="ShowAllEpisodes" Original="Show all Episodes">Afficher épisodes non vus et à venir</string>
-	
   <string Field="DownloadAllEpisodeInfo" Original="Download All Episode Info">Télécharger toutes les infos concernant l'épisode</string>
-	
   <string Field="Calendar" Original="Calendar">Calendrier</string>
   <string Field="Recommendations" Original="Recommendations">Recommandations</string>
   <string Field="Trending" Original="Trending">Tendances</string>
@@ -313,11 +286,28 @@
   <string Field="Shouts" Original="Shouts">Messages</string>
   <string Field="MainMenu" Original="Main Menu">Menu Principal</string>
   <string Field="AddToWatchList" Original="Add {0} to Watchlist">Ajouter {0} à la liste</string>
-   <string Field="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Impossible à réaliser sans être\nconnecté. Voulez vous vous connecter\nà trakt.tv maintenant?</string>
-   <string Field="RelatedSeries" Original="RelatedSeries">Related Series</string>
-   
+  <string Field="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Impossible à réaliser sans être\nconnecté. Voulez vous vous connecter\nà trakt.tv maintenant?</string>
+  <string Field="RelatedSeries" Original="RelatedSeries">Series Liés</string>
   <string Field="SearchTorrent" Original="Torrent Search">Recherche de Torrents</string>
   <string Field="SearchNZB" Original="NZB Search">Recherche de NZB</string>
   <string Field="SearchActorInMovies" Original="Search for Actor in Movies">Rechercher Acteur dans les films</string>
-   
-   </strings>
+  <string Field="AddToCustomList">Ajouter {0} à la liste personnalisée</string>
+  <string Field="insertDisk">Insérer le disque</string>
+  <string Field="InsertDiskMessage1">Insérer le support de l'épisode séléctionné</string>
+  <string Field="InsertDiskMessage2">n'est pas disponible localement</string>
+  <string Field="InsertDiskMessage3">Insérer ou connecter le support</string>
+  <string Field="OK">Ok</string>
+  <string Field="Cancel">Annuler</string>
+  <string Field="Ignore">Ignorer</string>
+  <string Field="CycleSeriesThumb">Cycle Series Panel</string>
+  <string Field="Update">Mettre à jour</string>
+  <string Field="ViewTagExistsMessage">L'affichage '{0} exsite déja</string>
+  <string Field="LayoutListThumbs">Listes</string>
+  <string Field="LayoutCoverflow">Coverflow</string>
+  <string Field="Warning">Attention</string>
+  <string Field="PlaybackOutOfOrderLine1">Episode(s) non visionné(s)</string>
+  <string Field="PlaybackOutOfOrderLine2">Etes sûr de vouloir continuer?</string>
+  <string Field="Filters">Filtres</string>
+  <string Field="UnwatchedEpisodes">Episodes non visionnée</string>
+  <string Field="AllEpisodes">Tous les épisodes</string>
+</strings>
