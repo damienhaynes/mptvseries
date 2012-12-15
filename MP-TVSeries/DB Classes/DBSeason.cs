@@ -298,17 +298,13 @@ namespace WindowPlugins.GUITVSeries
             }
             set
             {
-                String sIn = String.Empty;                
-                for(int i=0; i<value.Count; i++)
-                {
-                    value[i] = value[i].Replace(Settings.GetPath(Settings.Path.banners), "");
-                    if (String.IsNullOrEmpty(sIn))
-                        sIn += value[i];
-                    else
-                        sIn += "," + value[i];
-                }
-                this[cBannerFileNames] = sIn;
+                var imageList = new List<string>();
 
+                for (int i = 0; i < value.Count; i++)
+                {
+                    imageList.Add(value[i].Replace(Settings.GetPath(Settings.Path.banners), string.Empty));
+                }
+                this[cBannerFileNames] = string.Join("|", imageList.ToArray());
             }
         }
 
