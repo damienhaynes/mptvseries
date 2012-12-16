@@ -118,11 +118,11 @@
       <type>imagelist</type>
       <id>1</id>
       <posX>547</posX>
-      <posY>165</posY>
+      <posY>167</posY>
       <width>226</width>
       <height>37</height>
-      <textureWidth>12</textureWidth>
-      <textureHeight>17</textureHeight>
+      <textureWidth>13</textureWidth>
+      <textureHeight>13</textureHeight>
       <subitems>
         <subitem>greystar.png</subitem>
         <subitem>star.png</subitem>
@@ -172,10 +172,10 @@
       <description>New Series Indicator</description>
       <id>0</id>
       <type>image</type>
-      <posX>855</posX>
-      <posY>198</posY>
-      <width>75</width>
-      <height>108</height>
+      <posX>880</posX>
+      <posY>200</posY>
+      <width>50</width>
+      <height>54</height>
       <texture>tvseries_newlabel.png</texture>
       <visible>[facadeview.list|facadeview.largeicons]+string.equals(#TVSeries.Series.HasNewEpisodes,1)+[control.isvisible(1237)|control.isvisible(1238)]</visible>
     </control>
