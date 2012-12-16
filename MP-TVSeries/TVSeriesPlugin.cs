@@ -1397,8 +1397,10 @@ namespace WindowPlugins.GUITVSeries
 
                             // look for it again
                             m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.NoExactMatch, null, true, false));
+
                             // Start Import if delayed
-                            m_scanTimer.Change(1000, 1000);
+                            ChangeImportTimer(1000, 1000);
+
                         }
                         break;
                     #endregion
@@ -1513,8 +1515,9 @@ namespace WindowPlugins.GUITVSeries
                         {
                             m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
                         }
+                        
                         // Start Import if delayed
-                        m_scanTimer.Change(1000, 1000);
+                        ChangeImportTimer(1000, 1000);
                         break;
 
                     case (int)eContextItems.actionFullRefresh:
@@ -1523,8 +1526,9 @@ namespace WindowPlugins.GUITVSeries
                         {
                             m_parserUpdaterQueue.Add(new CParsingParameters(false, true));
                         }
+
                         // Start Import if delayed
-                        m_scanTimer.Change(1000, 1000);
+                        ChangeImportTimer(1000, 1000);
                         break;
                     #endregion
 
@@ -2226,8 +2230,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
                 }
+                
                 // Start Import if delayed
-                m_scanTimer.Change(1000, 1000);
+                ChangeImportTimer(1000, 1000);
 
                 GUIControl.UnfocusControl(GetID, ImportButton.GetID);
                 GUIControl.FocusControl(GetID, m_Facade.GetID);
@@ -5256,19 +5261,23 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitImporter()
         {
+            InitImporter(false);
+        }
+        private void InitImporter(bool manualImportTriggered)
+        {
             int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
-            MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
-
+            
             // Get Last Time Update Scan was run and how often it should be run
             DateTime.TryParse(DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime).ToString(), out m_LastUpdateScan);
-            if (DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData))
+            if (DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData) && !manualImportTriggered)
             {
                 m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
             }
 
             // do a local scan when starting up the app if enabled - later on the watcher will monitor changes            
-            if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup))
+            if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup) && !manualImportTriggered)
             {
+                MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
                 // if online updates are required then this will be picked up 
                 // in ImporterQueueMonitor where last update time is compared
                 m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
@@ -5283,6 +5292,24 @@ namespace WindowPlugins.GUITVSeries
             {
                 DeviceManager.StartMonitor();
                 setUpFolderWatches();
+            }
+        }
+
+        private void ChangeImportTimer(int dueTime, int period)
+        {
+            try
+            {
+                m_scanTimer.Change(dueTime, period);
+            }
+            catch (ObjectDisposedException)
+            {
+                MPTVSeriesLog.Write("An error occured when changing the import timer, check motherboard bios and chipset drivers are up to date.", MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("The import timer will now be re-initialized.", MPTVSeriesLog.LogLevel.Debug);
+
+                // This is a workaround for some motherboards not
+                // recieving the resume from standby event
+                InitImporter(true);
+                m_scanTimer.Change(dueTime, period);
             }
         }
 
