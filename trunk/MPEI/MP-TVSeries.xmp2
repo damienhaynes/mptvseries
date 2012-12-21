@@ -2016,22 +2016,24 @@ public class Script
       <Major>3</Major>
       <Minor>4</Minor>
       <Build>0</Build>
-      <Revision>1988</Revision>
+      <Revision>1994</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Support for new DetaultWide (16:9) and Default (4:3) skins in MediaPortal 1.3 Beta.
-* Updated default regular expressions to better handle date formats in filenames.
-* Fixed an issue where the incorrect banner could appear during/after import of new episodes.
+    <VersionDescription>* Fixed an issue where the incorrect banner could appear during/after import of new episodes.
 * Fixed failed downloads of images being incorrectly added to database.
+* Fixed an issue where manual import did not work on some systems after resume from standby.
+* Added support for new DetaultWide (16:9) and Default (4:3) skins in MediaPortal 1.3 Beta.
+* Added configurable option to automatically download Actors for series.
 * Added new configurable option to clean up invalid database references to image files on disk. Only on series posters and banners.
 * Added configurable option to cancel image downloads after a number of consecutive failures.
+* Updated default regular expressions to better handle date formats in filenames.
 * Updated French translations.
 </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.4.0.1988.mpe1</OnlineLocation>
-    <ReleaseDate>2012-12-16T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.4.0.1994.mpe1</OnlineLocation>
+    <ReleaseDate>2012-12-22T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
