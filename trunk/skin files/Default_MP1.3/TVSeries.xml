@@ -378,11 +378,11 @@
       <type>imagelist</type>
       <id>1</id>
       <posX>547</posX>
-      <posY>165</posY>
+      <posY>167</posY>
       <width>226</width>
       <height>37</height>
-      <textureWidth>12</textureWidth>
-      <textureHeight>17</textureHeight>
+      <textureWidth>13</textureWidth>
+      <textureHeight>13</textureHeight>
       <subitems>
         <subitem>greystar.png</subitem>
         <subitem>star.png</subitem>
@@ -413,8 +413,8 @@
       <posX>787</posX>
       <posY>200</posY>
       <width>150</width>
-      <height>113</height>
-      <texture>LCD.png</texture>
+      <height>94</height>
+			<texture>LCD.png</texture>
       <visible>facadeview.list+control.isvisible(1239)</visible>
     </control>
     <control>
@@ -424,7 +424,7 @@
       <posX>794</posX>
       <posY>209</posY>
       <width>135</width>
-      <height>93</height>
+      <height>75</height>
       <keepaspectratio>yes</keepaspectratio>
       <zoom>yes</zoom>
       <texture>#TVSeries.EpisodeImage</texture>
