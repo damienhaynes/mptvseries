@@ -79,6 +79,7 @@
       <height>720</height>
       <texture>general_overlay.png</texture>
     </control>
+		<import>common.window.xml</import>
     <import>common.time.xml</import>
     <control>
       <type>actiongroup</type>
@@ -141,27 +142,15 @@
         </control>
       </control>
     </control>
-    <import>common.facade.video.Title.xml</import>
-    <control>
-      <description>Selected item Label</description>
-      <type>fadelabel</type>
-      <id>1</id>
-      <posX>0</posX>
-      <posY>95</posY>
-      <width>960</width>
-      <label>#selecteditem</label>
-      <font>font14</font>
-      <align>center</align>
-      <textcolor>ff6FAFE1</textcolor>
-    </control>
+    <import>common.facade.video.Title.xml</import>    
     <control>
       <description>Series Default image</description>
       <id>0</id>
       <type>image</type>
       <posX>615</posX>
       <posY>180</posY>
-      <width>228</width>
-      <height>423</height>
+      <width>250</width>
+      <height>375</height>
       <texture mask="videothumbmask.png">missing_Coverart_video.png</texture>
       <visible>facadeview.list+!control.hasthumb(500)</visible>
     </control>
@@ -171,8 +160,8 @@
       <type>image</type>
       <posX>615</posX>
       <posY>180</posY>
-      <width>228</width>
-      <height>423</height>
+      <width>250</width>
+      <height>375</height>
       <texture mask="videothumbmask.png">#selectedthumb</texture>
       <visible>facadeview.list</visible>
     </control>
@@ -182,8 +171,8 @@
       <id>1</id>
       <posX>615</posX>
       <posY>180</posY>
-      <width>228</width>
-      <height>423</height>
+      <width>250</width>
+      <height>375</height>
       <texture>Videothumbframe.png</texture>
       <visible>facadeview.list</visible>
     </control>

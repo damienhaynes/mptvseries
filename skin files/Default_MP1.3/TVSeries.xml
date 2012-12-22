@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!--version="1.0" encoding="utf-8" standalone="yes"-->
 <window>
   <id>9811</id>
   <defaultcontrol>50</defaultcontrol>
@@ -20,9 +19,9 @@
       <description>Fanart Background #1</description>
       <type>image</type>
       <id>524</id>
-      <posX>0</posX>
+      <posX>-240</posX>
       <posY>0</posY>
-      <width>960</width>
+      <width>1440</width>
       <height>720</height>
       <texture>#TVSeries.Fanart.1</texture>
       <animation effect="fade" time="300">visible</animation>
@@ -32,9 +31,9 @@
       <description>Fanart Background #2</description>
       <type>image</type>
       <id>525</id>
-      <posX>0</posX>
+      <posX>-240</posX>
       <posY>0</posY>
-      <width>960</width>
+      <width>1440</width>
       <height>720</height>
       <texture>#TVSeries.Fanart.2</texture>
       <animation effect="fade" time="300">visible</animation>
