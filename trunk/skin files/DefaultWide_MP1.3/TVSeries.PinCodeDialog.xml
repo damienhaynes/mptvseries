@@ -27,7 +27,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>101</onup>
-		<texture>UserRatingStarOff.png</texture>		
+		<texture>pinSmall.png</texture>		
     </control>
     <control>
 		<description>PinCode Item 1</description>
@@ -38,7 +38,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>101</onup>
-		<texture>UserRatingStarOn.png</texture>		
+		<texture>pinLarge.png</texture>		
     </control>
 
 	<control>
@@ -50,7 +50,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>101</onup>
-		<texture>UserRatingStarOff.png</texture>		
+		<texture>pinSmall.png</texture>		
     </control>
     <control>
 		<description>PinCode Item 2</description>
@@ -61,7 +61,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>102</onup>
-		<texture>UserRatingStarOn.png</texture>
+		<texture>pinLarge.png</texture>
     </control>
 
 	<control>
@@ -73,7 +73,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>101</onup>
-		<texture>UserRatingStarOff.png</texture>		
+		<texture>pinSmall.png</texture>		
     </control>
     <control>
 		<description>PinCode Item 3</description>
@@ -84,7 +84,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>103</onup>
-		<texture>UserRatingStarOn.png</texture>
+		<texture>pinLarge.png</texture>
     </control>
 
 	<control>
@@ -96,7 +96,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>101</onup>
-		<texture>UserRatingStarOff.png</texture>		
+		<texture>pinSmall.png</texture>		
     </control>
     <control>
 		<description>PinCode Item 4</description>
@@ -107,7 +107,7 @@
 		<width>32</width>
 		<height>32</height>
 		<onup>104</onup>
-		<texture>UserRatingStarOn.png</texture>
+		<texture>pinLarge.png</texture>
     </control>
 		
 	<control>
