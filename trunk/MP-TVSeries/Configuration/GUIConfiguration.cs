@@ -1560,7 +1560,7 @@ namespace WindowPlugins.GUITVSeries
                                 
                                 case DBEpisode.cVolumeLabel:
                                     if (!String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
 
                                 case DBOnlineEpisode.cAirsAfterSeason:
@@ -1587,18 +1587,14 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cAudioBitrate:
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
+                                case DBEpisode.cTextCount:
                                     if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
                                 
                                 case DBEpisode.cLocalPlaytime:
                                     if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, Helper.MSToMMSS(episode[key]));
-                                    break;
-
-                                case DBEpisode.cTextCount:
-                                    if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, Helper.MSToMMSS(episode[key]), false);
                                     break;
 
                                 default:
