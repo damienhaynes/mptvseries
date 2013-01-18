@@ -1034,7 +1034,7 @@ namespace WindowPlugins.GUITVSeries
                                     if (!key.EndsWith(DBTable.cUserEditPostFix))
                                     {
                                         localSeries.AddColumn(key, new DBField(DBField.cTypeString));
-                                        localSeries[key] = updatedSeries[key];
+                                        localSeries[key] = updatedSeries[key].ToString().RemapHighOrderChars();
                                     }
                                     break;
                             }
@@ -1171,7 +1171,7 @@ namespace WindowPlugins.GUITVSeries
                                         if (!key.EndsWith(DBTable.cUserEditPostFix))
                                         {
                                             newOnlineEpisode.AddColumn(key, new DBField(DBField.cTypeString));
-                                            newOnlineEpisode[key] = onlineEpisode[key];
+                                            newOnlineEpisode[key] = onlineEpisode[key].ToString().RemapHighOrderChars();
                                         }
                                         break;
                                 }
