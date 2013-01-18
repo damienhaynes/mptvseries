@@ -1,4 +1,4 @@
-#region GNU license
+﻿#region GNU license
 // MP-TVSeries - Plugin for Mediaportal
 // http://www.team-mediaportal.com
 // Copyright (C) 2006-2007
@@ -32,6 +32,7 @@ using MediaPortal.Ripper;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Linq;
 using System.Net;
 using System.IO;
 using System.Xml;
@@ -90,7 +91,28 @@ namespace WindowPlugins.GUITVSeries
 
             return new string(newLenghtChars);
         }
-        
+
+        public static string RemapHighOrderChars(this string input)
+        {
+            if (string.IsNullOrEmpty(input)) return string.Empty;
+
+            // hack to remap high order unicode characters with a low order equivalents
+            // for now, this allows better usage of clipping. This can be removed, once the skin engine can properly render unicode without falling back to sprites
+            // as unicode is more widely used, this will hit us more with existing font rendering only allowing cached font textures with clipping
+          
+            input = input.Replace((char)8211, '-');  //	–
+            input = input.Replace((char)8212, '-');  //	—
+            input = input.Replace((char)8216, '\''); //	‘
+            input = input.Replace((char)8217, '\''); //	’
+            input = input.Replace((char)8220, '"');  //	“
+            input = input.Replace((char)8221, '"');  //	”
+            input = input.Replace((char)8223, '"');  // ‟
+            input = input.Replace((char)8226, '*');  //	•
+            input = input.Replace(((char)8230).ToString(), "...");  //	…
+
+            return input;
+        }
+
         /// <summary>
         /// TitleCases a string
         /// </summary>
