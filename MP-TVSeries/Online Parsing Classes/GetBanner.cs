@@ -293,7 +293,7 @@ namespace WindowPlugins.GUITVSeries
          
         }
 
-        public void DownloadBanners(string bannerLang)
+        public void DownloadBanners(string onlineLanguage)
         {
             int maxConsecutiveDownloadErrors;
             var consecutiveDownloadErrors = 0;
@@ -305,8 +305,19 @@ namespace WindowPlugins.GUITVSeries
             // now that we have all the paths, download all the files
             foreach (SeriesBannersMap map in SeriesBannersMap)
             {
+                #region Series Wide Banners
+
+                var seriesWideBanners = new List<WideBannerSeries>(map.SeriesWideBanners);
                 var seriesWideBannersToKeep = new List<WideBannerSeries>();
-                foreach (WideBannerSeries bannerSeries in map.SeriesWideBanners)
+
+                // if localized and english banners exist then only get them
+                // if none exist, then get what's left over
+                if (seriesWideBanners.Exists(b => b.Language == onlineLanguage || b.Language == "en" || b.Language == string.Empty))
+                {
+                    seriesWideBanners.RemoveAll(b => b.Language != onlineLanguage && b.Language != "en" && b.Language != string.Empty);
+                }
+
+                foreach (var seriesWideBanner in seriesWideBanners)
                 {
                     if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
                     {
@@ -314,29 +325,39 @@ namespace WindowPlugins.GUITVSeries
                         return;
                     }
 
-                    if (bannerLang == bannerSeries.Language || "en" == bannerSeries.Language || "" == bannerSeries.Language) //also always english ones
-                    {
-                        // mark the filename with the language                        
-                        bannerSeries.FileName = Helper.cleanLocalPath(bannerSeries.SeriesName) + @"\-lang" + bannerSeries.Language + "-" + bannerSeries.OnlinePath;
+                    // mark the filename with the language
+                    seriesWideBanner.FileName = Helper.cleanLocalPath(seriesWideBanner.SeriesName) + @"\-lang" + seriesWideBanner.Language + "-" + seriesWideBanner.OnlinePath;
                         
-                        string file = OnlineAPI.DownloadBanner(bannerSeries.OnlinePath, Settings.Path.banners, bannerSeries.FileName);
-                        if (BannerDownloadDone != null)
-                        {
-                            BannerDownloadDone(file);
-                            seriesWideBannersToKeep.Add(bannerSeries);
-                            consecutiveDownloadErrors = 0;
-                        } 
-                        else
-                        {
-                            consecutiveDownloadErrors++;
-                        }
+                    string file = OnlineAPI.DownloadBanner(seriesWideBanner.OnlinePath, Settings.Path.banners, seriesWideBanner.FileName);
+                    if (BannerDownloadDone != null)
+                    {
+                        BannerDownloadDone(file);
+                        seriesWideBannersToKeep.Add(seriesWideBanner);
+                        consecutiveDownloadErrors = 0;
+                    } 
+                    else
+                    {
+                        consecutiveDownloadErrors++;
                     }
                 }
 
                 map.SeriesWideBanners = seriesWideBannersToKeep;
 
+                #endregion
+
+                #region Series Posters
+
+                var seriesPosters = new List<PosterSeries>(map.SeriesPosters);
                 var seriesPostersToKeep = new List<PosterSeries>();
-                foreach (PosterSeries posterSeries in map.SeriesPosters)
+
+                // if localized and english banners exist then only get them
+                // if none exist, then get what's left over
+                if (seriesPosters.Exists(p => p.Language == onlineLanguage || p.Language == "en" || p.Language == string.Empty))
+                {
+                    seriesPosters.RemoveAll(p => p.Language != onlineLanguage && p.Language != "en" && p.Language != string.Empty);
+                }
+
+                foreach (var seriesPoster in seriesPosters)
                 {
                     if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
                     {
@@ -344,30 +365,40 @@ namespace WindowPlugins.GUITVSeries
                         return;
                     }
 
-                    if (bannerLang == posterSeries.Language || "en" == posterSeries.Language || "" == posterSeries.Language) //also always english ones
+                    // mark the filename with the language
+                    seriesPoster.FileName = Helper.cleanLocalPath(seriesPoster.SeriesName) + @"\-lang" + seriesPoster.Language + "-" + seriesPoster.OnlinePath;                        
+                    string file = OnlineAPI.DownloadBanner(seriesPoster.OnlinePath, Settings.Path.banners, seriesPoster.FileName);
+                    if (BannerDownloadDone != null)
                     {
-                        // mark the filename with the language                        
-                        posterSeries.FileName = Helper.cleanLocalPath(posterSeries.SeriesName) + @"\-lang" + posterSeries.Language + "-" + posterSeries.OnlinePath;                        
-                        string file = OnlineAPI.DownloadBanner(posterSeries.OnlinePath, Settings.Path.banners, posterSeries.FileName);
-                        if (BannerDownloadDone != null)
-                        {
-                            BannerDownloadDone(file);
-                            seriesPostersToKeep.Add(posterSeries);
-                            consecutiveDownloadErrors = 0;
-                        }
-                        else
-                        {
-                            consecutiveDownloadErrors++;
-                        }
+                        BannerDownloadDone(file);
+                        seriesPostersToKeep.Add(seriesPoster);
+                        consecutiveDownloadErrors = 0;
+                    }
+                    else
+                    {
+                        consecutiveDownloadErrors++;
                     }
                 }
 
                 map.SeriesPosters = seriesPostersToKeep;
 
+                #endregion
+
+                #region Season Posters
+
                 List<DBSeason> localSeasons = DBSeason.Get(new SQLCondition(new DBSeason(), DBSeason.cSeriesID, map.SeriesID, SQLConditionType.Equal), false);
 
-                var posterSeasonToKeep = new List<PosterSeason>();
-                foreach (PosterSeason bannerSeason in map.SeasonPosters)
+                var seasonPosters = new List<PosterSeason>(map.SeasonPosters);
+                var seasonPostersToKeep = new List<PosterSeason>();
+
+                // if localized and english banners exist then only get them
+                // if none exist, then get what's left over
+                if (seasonPosters.Exists(p => p.Language == onlineLanguage || p.Language == "en" || p.Language == string.Empty))
+                {
+                    seasonPosters.RemoveAll(p => p.Language != onlineLanguage && p.Language != "en" && p.Language != string.Empty);
+                }
+
+                foreach (var seasonPoster in seasonPosters)
                 {
                     if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
                     {
@@ -376,27 +407,26 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // only download season banners if we have online season in database
-                    if (!localSeasons.Any(s => s[DBSeason.cIndex] == bannerSeason.SeasonIndex)) continue;
+                    if (!localSeasons.Any(s => s[DBSeason.cIndex] == seasonPoster.SeasonIndex)) continue;
 
-                    if (bannerLang == bannerSeason.Language || "en" == bannerSeason.Language || "" == bannerSeason.Language)
-                    {
-                        bannerSeason.FileName = Helper.cleanLocalPath(bannerSeason.SeriesName) + @"\-lang" + bannerSeason.Language + "-" + bannerSeason.OnlinePath;
+                    seasonPoster.FileName = Helper.cleanLocalPath(seasonPoster.SeriesName) + @"\-lang" + seasonPoster.Language + "-" + seasonPoster.OnlinePath;
                         
-                        string file = OnlineAPI.DownloadBanner(bannerSeason.OnlinePath, Settings.Path.banners, bannerSeason.FileName);
-                        if (BannerDownloadDone != null)
-                        {
-                            BannerDownloadDone(file);
-                            posterSeasonToKeep.Add(bannerSeason);
-                            consecutiveDownloadErrors = 0;
-                        }
-                        else
-                        {
-                            consecutiveDownloadErrors++;
-                        }             
+                    string file = OnlineAPI.DownloadBanner(seasonPoster.OnlinePath, Settings.Path.banners, seasonPoster.FileName);
+                    if (BannerDownloadDone != null)
+                    {
+                        BannerDownloadDone(file);
+                        seasonPostersToKeep.Add(seasonPoster);
+                        consecutiveDownloadErrors = 0;
+                    }
+                    else
+                    {
+                        consecutiveDownloadErrors++;
                     }
                 }
 
-                map.SeasonPosters = posterSeasonToKeep;
+                map.SeasonPosters = seasonPostersToKeep;
+
+                #endregion
             }
         }
     }
