@@ -560,7 +560,7 @@ namespace WindowPlugins.GUITVSeries
                     if (!Settings.isConfig) progressDialog.SetLine(2, episodeName);
                     if (!Settings.isConfig) GUIWindowManager.Process();
 
-                    resultMsg.AddRange(episode.deleteEpisode(type));
+                    resultMsg.AddRange(episode.deleteEpisode(type, true));
 
                     if (!Settings.isConfig) progressDialog.Percentage = Convert.ToInt32(((double)++counter / (double)episodes.Count) * 100.0);
                     if (!Settings.isConfig) GUIWindowManager.Process();
