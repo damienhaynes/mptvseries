@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 using System.ComponentModel;
+using System.Linq;
 using MediaPortal.Configuration;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
@@ -4745,7 +4746,7 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Gets the loading parameter from the hyperlinkparameter property of skin button control
         /// </summary>        
-        private LoadingParameter  GetLoadingParameter()
+        private LoadingParameter GetLoadingParameter()
         {
             LoadingParameter loadingParameter = new LoadingParameter
             {
@@ -4835,9 +4836,10 @@ namespace WindowPlugins.GUITVSeries
             // If view does not exist, default to 'ALL' internal view
             // If 'ALL' view does not exist use first view
             if (String.IsNullOrEmpty(viewName))
-                viewName = Translation.All;
+                viewName = "All";
 
-            return switchView(Helper.getElementFromList<logicalView, string>(viewName, "Name", 0, m_allViews));
+            var view = m_allViews.Find(v => v.Name == viewName || v.prettyName == viewName);
+            return switchView(view);
         }
 
         private bool switchView(logicalView view)
