@@ -649,6 +649,48 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public bool IsDoubleEpisode
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this[DBEpisode.cCompositeID2]);
+            }
+                        
+        }
+
+        public bool IsSecondOfDoubleEpisode
+        {
+            get
+            {
+                if (!IsDoubleEpisode) return false;
+                return (this[DBEpisode.cCompositeID] == this[DBEpisode.cCompositeID2]);
+            }
+        }
+
+        public bool HasDuplicateEpisode
+        {
+            get
+            {
+                var condition = new SQLCondition();
+                if (!this.IsSecondOfDoubleEpisode)
+                {
+                    condition.Add(new DBEpisode(), DBEpisode.cCompositeID, this[DBEpisode.cCompositeID], SQLConditionType.Equal);
+                }
+                else
+                {
+                    condition.Add(new DBEpisode(), DBEpisode.cCompositeID2, this[DBEpisode.cCompositeID2], SQLConditionType.Equal);
+                }
+                var episodes = DBEpisode.Get(condition, false);
+
+                // duplicate non-double episode
+                if (episodes != null && episodes.Count > 1 && !this.IsDoubleEpisode) return true;
+                // duplicate double episode
+                if (episodes != null && episodes.Count > 2 && this.IsDoubleEpisode) return true;
+
+                return false;
+            }
+        }
+
         public bool checkHasSubtitles()
         {
             return checkHasSubtitles(true);
@@ -745,31 +787,50 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
-        public List<string> deleteEpisode(TVSeriesPlugin.DeleteMenuItems type)
+        public List<string> deleteEpisode(TVSeriesPlugin.DeleteMenuItems type, bool deleteFromSeasonOrSeries = false)
         {
-            List<string> resultMsg = new List<string>(); 
+            List<string> resultMsg = new List<string>();
 
-            // Always delete from Local episode table if deleting from disk or database
+            /*
+             Note: Delete From 'Database' and 'Database + Disk' is not available
+                   if episode is detected as a duplicate from the Episode level.
+                   For Season/Series views we need to handle this with care as
+                   we could end up with orphan records in the local episode table
+            */
+
             SQLCondition condition = new SQLCondition();
-            condition.Add(new DBEpisode(), DBEpisode.cFilename, this[DBEpisode.cFilename], SQLConditionType.Equal);
 
+            if (deleteFromSeasonOrSeries && this.HasDuplicateEpisode)
+            {
+                condition.Add(new DBEpisode(), DBEpisode.cCompositeID, this[DBEpisode.cCompositeID], SQLConditionType.Equal);
+            }
+            else
+            {
+                condition.Add(new DBEpisode(), DBEpisode.cFilename, this[DBEpisode.cFilename], SQLConditionType.Equal);
+            }
+            
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             if (episodes != null)
             {
                 if (episodes.Count > 0)
                 {
                     string file = this[DBEpisode.cFilename];
-                    // there can only be one file reference, even with multiple online references  e.g double episodes
                     if ((type != TVSeriesPlugin.DeleteMenuItems.database && !episodes.First().isWritable()) || type == TVSeriesPlugin.DeleteMenuItems.database)
                     {
+                        // clear from the local episode table
                         DBEpisode.Clear(condition);
 
                         if (type != TVSeriesPlugin.DeleteMenuItems.database)
                         {
                             try
                             {
-                                MPTVSeriesLog.Write(string.Format("Deleting file: {0}", file));
-                                System.IO.File.Delete(file);
+                                // support for duplicate episodes - this will only happen from series/season deletes
+                                var files = episodes.Select(e => e[DBEpisode.cFilename].ToString()).Distinct();
+                                foreach (var f in files)
+                                {
+                                    MPTVSeriesLog.Write(string.Format("Deleting file: {0}", f));
+                                    File.Delete(f);
+                                }
                             }
                             catch (Exception ex)
                             {

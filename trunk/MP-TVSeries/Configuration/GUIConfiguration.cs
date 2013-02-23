@@ -582,17 +582,16 @@ namespace WindowPlugins.GUITVSeries
             if (initLoading) return;
             if (null == load) load = new loadingDisplay();
            
-            TreeView root = this.treeView_Library;
-            root.Nodes.Clear();
+            this.treeView_Library.Nodes.Clear();
             SQLCondition condition = new SQLCondition();
             List<DBSeries> seriesList = DBSeries.Get(condition);
             load.updateStats(seriesList.Count, 0, 0);
-            List<DBSeason> altSeasonList = DBSeason.Get(new SQLCondition(), false);
-            load.updateStats(seriesList.Count, altSeasonList.Count, 0);            
+            List<DBSeason> allSeasons = DBSeason.Get(new SQLCondition(), false);
+            load.updateStats(seriesList.Count, allSeasons.Count, 0);            
             SQLiteResultSet results = DBTVSeries.Execute("select count(*) from online_episodes");
 
-            load.updateStats(seriesList.Count, altSeasonList.Count, int.Parse(results.GetRow(0).fields[0]));
-            aboutScreen.setUpLocalInfo(seriesList.Count, altSeasonList.Count, int.Parse(results.GetRow(0).fields[0]));
+            load.updateStats(seriesList.Count, allSeasons.Count, int.Parse(results.GetRow(0).fields[0]));
+            aboutScreen.setUpLocalInfo(seriesList.Count, allSeasons.Count, int.Parse(results.GetRow(0).fields[0]));
 
             if (seriesList.Count == 0)
             {
@@ -602,65 +601,95 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // sort specials at end of season list if needed
-            altSeasonList.Sort();
+            allSeasons.Sort();
 
+            int index = 0;
             foreach (DBSeries series in seriesList)
             {
-                string sName = (DBOption.GetOptions(DBOption.cSeries_UseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
-                TreeNode seriesNode = new TreeNode(sName);
-                seriesNode.Name = DBSeries.cTableName;
-                seriesNode.Tag = (DBSeries)series;
-                root.Nodes.Add(seriesNode);
-                Font fontDefault = treeView_Library.Font;
-
-                // set color for non-local files
-                if (series[DBOnlineSeries.cEpisodeCount] == 0) {
-                    seriesNode.ForeColor = System.Drawing.SystemColors.GrayText;
-                } 
-                else {
-                    // set color for watched items
-                    if (series[DBOnlineSeries.cUnwatchedItems] == 0)
-                        seriesNode.ForeColor = System.Drawing.Color.DarkBlue;
-                }
-                
-                // set FontStyle
-                if (series[DBSeries.cHidden])
-                    seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-
-                int seriesID = series[DBSeries.cID];
-                foreach (DBSeason season in altSeasonList)
-                {
-                    if (season[DBSeason.cSeriesID] == seriesID)
-                    {
-                        TreeNode seasonNode = null;
-                        if (season[DBSeason.cIndex] == 0)
-                            seasonNode = new TreeNode(Translation.specials);
-                        else
-                            seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
-                        
-                        seasonNode.Name = DBSeason.cTableName;
-                        seasonNode.Tag = (DBSeason)season;
-                        seriesNode.Nodes.Add(seasonNode);
-                        
-                        // set no local files color
-                        if (season[DBSeason.cEpisodeCount] == 0) {
-                            seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
-                        }
-                        else {
-                            // set color for watched season
-                            if (season[DBSeason.cUnwatchedItems] == 0)
-                                seasonNode.ForeColor = System.Drawing.Color.DarkBlue;
-                        }
-
-                        // set FontStyle
-                        if (season[DBSeason.cHidden])
-                            seasonNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
-                    }
-                }
+                var seasons = allSeasons.Where(s => s[DBSeason.cSeriesID] == series[DBSeries.cID]).ToList();
+                CreateSeriesNode(series, seasons, index++);
             }
             this.ResumeLayout();
             load.Close();
             load = null;
+        }
+
+        private void CreateSeriesNode(DBSeries series, int index)
+        {
+            CreateSeriesNode(series, null, index);
+        }
+        private void CreateSeriesNode(DBSeries series, List<DBSeason> seasons, int index)
+        {
+            if (series == null) return;
+
+            string sName = (DBOption.GetOptions(DBOption.cSeries_UseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
+            TreeNode seriesNode = new TreeNode(sName);
+            seriesNode.Name = DBSeries.cTableName;
+            seriesNode.Tag = (DBSeries)series;
+            this.treeView_Library.Nodes.Insert(index, seriesNode);
+            Font fontDefault = treeView_Library.Font;
+
+            // set color for non-local files
+            if (series[DBOnlineSeries.cEpisodeCount] == 0)
+            {
+                seriesNode.ForeColor = System.Drawing.SystemColors.GrayText;
+            }
+            else
+            {
+                // set color for watched items
+                if (series[DBOnlineSeries.cUnwatchedItems] == 0)
+                    seriesNode.ForeColor = System.Drawing.Color.DarkBlue;
+            }
+
+            // set FontStyle
+            if (series[DBSeries.cHidden])
+                seriesNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
+
+            int seriesID = series[DBSeries.cID];
+
+            if (seasons == null)
+            {
+                seasons = DBSeason.Get(new SQLCondition(new DBSeason(), DBSeason.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal), false);
+                if (seasons == null) return;
+                
+                seasons.Sort();
+            }
+
+            foreach (DBSeason season in seasons)
+            {
+                CreateSeasonTree(seriesNode, season);
+            }
+        }
+
+        private void CreateSeasonTree(TreeNode seriesNode, DBSeason season)
+        {
+            Font fontDefault = treeView_Library.Font;
+
+            TreeNode seasonNode = null;
+            if (season[DBSeason.cIndex] == 0)
+                seasonNode = new TreeNode(Translation.specials);
+            else
+                seasonNode = new TreeNode(Translation.Season + " " + season[DBSeason.cIndex]);
+
+            seasonNode.Name = DBSeason.cTableName;
+            seasonNode.Tag = (DBSeason)season;
+            seriesNode.Nodes.Add(seasonNode);
+
+            // set no local files color
+            if (season[DBSeason.cEpisodeCount] == 0)
+            {
+                seasonNode.ForeColor = System.Drawing.SystemColors.GrayText;
+            }
+            else
+            {
+                // set color for watched season
+                if (season[DBSeason.cUnwatchedItems] == 0)
+                    seasonNode.ForeColor = System.Drawing.Color.DarkBlue;
+            }
+
+            // set FontStyle
+            if (season[DBSeason.cHidden])
+                seasonNode.NodeFont = new Font(fontDefault.Name, fontDefault.Size, FontStyle.Italic);
         }
 
         public void SetTreeFonts()
@@ -2369,14 +2398,43 @@ namespace WindowPlugins.GUITVSeries
                 string msgDlgCaption = string.Empty;
 
                 bool hasSubtitles = false;
-                if (nodeDeleted.Name == DBEpisode.cTableName)
+                bool hasDuplicateEpisode = false;
+                bool hasLocalFiles = false;
+
+                TreeNode seriesNode = null;
+
+                DBEpisode episode = null;
+                DBSeason season = null;
+                DBSeries series = null;
+
+                if (nodeDeleted.Name == DBSeries.cTableName)
                 {
-                    DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
-                    if (episode != null && episode.checkHasLocalSubtitles())
-                        hasSubtitles = true;
+                    series = (DBSeries)nodeDeleted.Tag;
+                    seriesNode = nodeDeleted;
+                    if (series != null) hasLocalFiles = series[DBOnlineSeries.cHasLocalFiles];
+                }
+                else if (nodeDeleted.Name == DBSeason.cTableName)
+                {
+                    season = (DBSeason)nodeDeleted.Tag;
+                    series = (DBSeries)nodeDeleted.Parent.Tag;
+                    seriesNode = nodeDeleted.Parent;
+                    if (season != null) hasLocalFiles = season[DBSeason.cHasLocalFiles];
+                }
+                else if (nodeDeleted.Name == DBEpisode.cTableName)
+                {
+                    episode = (DBEpisode)nodeDeleted.Tag;
+                    season = (DBSeason)nodeDeleted.Parent.Tag;
+                    series = (DBSeries)nodeDeleted.Parent.Parent.Tag;
+                    seriesNode = nodeDeleted.Parent.Parent;
+                    if (episode != null)
+                    {
+                        hasSubtitles = episode.checkHasLocalSubtitles();
+                        hasDuplicateEpisode = episode.HasDuplicateEpisode;
+                        hasLocalFiles = !string.IsNullOrEmpty(episode[DBEpisode.cFilename]);
+                    }
                 }
 
-                DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles);
+                DeleteDialog deleteDialog = new DeleteDialog(hasSubtitles, hasDuplicateEpisode, hasLocalFiles);
                 DialogResult result = deleteDialog.ShowDialog(this);
 
                 // nothing to do exit
@@ -2389,7 +2447,7 @@ namespace WindowPlugins.GUITVSeries
                     switch (nodeDeleted.Name)
                     {
                         case DBEpisode.cTableName:
-                            DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
+                            episode = (DBEpisode)nodeDeleted.Tag;
                             if (episode == null) return;
                             resultMsg = episode.deleteLocalSubTitles();
                             break;
@@ -2416,7 +2474,6 @@ namespace WindowPlugins.GUITVSeries
                         case DBSeries.cTableName:
                             if (result == DialogResult.OK)
                             {
-                                DBSeries series = (DBSeries)nodeDeleted.Tag;
                                 resultMsg = series.deleteSeries(deleteDialog.DeleteMode);
                             }
                             break;
@@ -2426,7 +2483,6 @@ namespace WindowPlugins.GUITVSeries
                         case DBSeason.cTableName:
                             if (result == DialogResult.OK)
                             {
-                                DBSeason season = (DBSeason)nodeDeleted.Tag;
                                 resultMsg = season.deleteSeason(deleteDialog.DeleteMode);
                             }
                             break;
@@ -2436,18 +2492,131 @@ namespace WindowPlugins.GUITVSeries
                         case DBEpisode.cTableName:
                             if (result == DialogResult.OK)
                             {
-                                DBEpisode episode = (DBEpisode)nodeDeleted.Tag;
                                 resultMsg = episode.deleteEpisode(deleteDialog.DeleteMode);
                             }
                             break;
                         #endregion
                     }
 
-                    // Delete tree node
-                    if (resultMsg.Count == 0 && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
-                        treeView_Library.Nodes.Remove(nodeDeleted);
+                    #region Cleanup Nodes
+                    // update nodes so that local episode data is removed
+                    if (deleteDialog.DeleteMode == TVSeriesPlugin.DeleteMenuItems.disk)
+                    {
+                        // get the current series node index
+                        int index = this.treeView_Library.Nodes.IndexOf(seriesNode);
 
-                    if (treeView_Library.Nodes.Count == 0)
+                        // delete the series node
+                        this.treeView_Library.Nodes.Remove(seriesNode);
+
+                        // create new series node
+                        CreateSeriesNode(DBSeries.Get(series[DBSeries.cID], false), null, index);
+
+                        // find previously selected node
+                        // it will still exist as we only deleted from disk
+                        seriesNode = treeView_Library.Nodes[index];
+                        seriesNode.Expand();
+                        var selectedNode = seriesNode;
+
+                        if (season != null)
+                        {
+                            foreach (TreeNode seasonNode in seriesNode.Nodes)
+                            {
+                                if ((seasonNode.Tag as DBSeason)[DBSeason.cIndex] == season[DBSeason.cIndex])
+                                {
+                                    seasonNode.Expand();
+                                    selectedNode = seasonNode;
+                                    
+                                    if (episode != null)
+                                    {
+                                        foreach (TreeNode episodeNode in seasonNode.Nodes)
+                                        {
+                                            if ((episodeNode.Tag as DBEpisode)[DBEpisode.cEpisodeIndex] == episode[DBEpisode.cEpisodeIndex])
+                                            {
+                                                selectedNode = episodeNode;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // select the last deleted node
+                        this.treeView_Library.SelectedNode = selectedNode;
+                        this.treeView_Library.Select();
+                    }
+
+                    // always delete tree node if removing from database
+                    if (resultMsg.Count == 0 && deleteDialog.DeleteMode != TVSeriesPlugin.DeleteMenuItems.disk)
+                    {
+                        this.treeView_Library.Nodes.Remove(nodeDeleted);
+
+                        // get new selected node
+                        TreeNode selectedNode = this.treeView_Library.SelectedNode;
+
+                        // if we deleted a double episode from the database
+                        // then find the 2nd or 1st episode and delete that node as well
+                        if (selectedNode != null && selectedNode.Name == DBEpisode.cTableName && episode.IsDoubleEpisode)
+                        {
+                            string filename = episode[DBEpisode.cFilename];
+
+                            if (episode.IsSecondOfDoubleEpisode)
+                            {
+                                // check current selected node
+                                if ((selectedNode.Tag as DBEpisode)[DBEpisode.cFilename] == filename)
+                                {
+                                    this.treeView_Library.Nodes.Remove(selectedNode);
+                                }
+                                // check the previous node
+                                else if (selectedNode.PrevNode != null && (selectedNode.PrevNode.Tag as DBEpisode)[DBEpisode.cFilename] == filename)
+                                {
+                                    this.treeView_Library.Nodes.Remove(selectedNode.PrevNode);
+                                }
+                            }
+                            else
+                            {
+                                // check current selected node
+                                if ((selectedNode.Tag as DBEpisode)[DBEpisode.cFilename] == filename)
+                                {
+                                    this.treeView_Library.Nodes.Remove(selectedNode);
+                                }
+                                // check the next node
+                                else if (selectedNode.NextNode != null && (selectedNode.NextNode.Tag as DBEpisode)[DBEpisode.cFilename] == filename)
+                                {
+                                    this.treeView_Library.Nodes.Remove(selectedNode.NextNode);
+                                }
+                            }
+
+                            // get new selected node
+                            selectedNode = this.treeView_Library.SelectedNode;
+                        }
+
+                        // see if need to delete season/series tree nodes
+                        // i.e. they're no underlying seasons/episodes
+                        if (selectedNode != null && selectedNode.Name == DBSeason.cTableName)
+                        {
+                            // we may have removed the last episode of a season
+                            // leaving no episode nodes for the selected season
+                            if (selectedNode.GetNodeCount(false) == 0)
+                            {
+                                // delete selected season node
+                                this.treeView_Library.Nodes.Remove(selectedNode);
+                                // get new selected node - maybe a series now
+                                selectedNode = this.treeView_Library.SelectedNode;
+                            }
+                        }
+
+                        if (selectedNode != null && selectedNode.Name == DBSeries.cTableName)
+                        {
+                            if (selectedNode.GetNodeCount(true) == 0)
+                            {
+                                this.treeView_Library.Nodes.Remove(selectedNode);
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region Clear Selected Images
+                    if (this.treeView_Library.Nodes.Count == 0)
                     {
                         // also clear the data pane
                         this.detailsPropertyBindingSource.Clear();
@@ -2457,10 +2626,18 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 this.pictureBox_Series.Image.Dispose();
                                 this.pictureBox_Series.Image = null;
+                                this.comboBox_BannerSelection.Items.Clear();
+                            }
+                            if (this.pictureBox_SeriesPoster != null)
+                            {
+                                this.pictureBox_SeriesPoster.Image.Dispose();
+                                this.pictureBox_SeriesPoster.Image = null;
+                                this.comboBox_PosterSelection.Items.Clear();
                             }
                         }
                         catch { }
                     }
+                    #endregion
                 }
                 #endregion
 
@@ -2468,8 +2645,7 @@ namespace WindowPlugins.GUITVSeries
                 if (resultMsg != null && resultMsg.Count > 0)
                 {
                     MessageBox.Show(string.Join("\n", resultMsg.ToArray()), msgDlgCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                
+                }   
             }
         }
 

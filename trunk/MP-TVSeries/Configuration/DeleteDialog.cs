@@ -11,11 +11,34 @@ namespace WindowPlugins.GUITVSeries.Configuration {
     public partial class DeleteDialog : Form {
 
         public TVSeriesPlugin.DeleteMenuItems DeleteMode { get; set; }
-
-        public DeleteDialog(bool hasSubtitles)
+        
+        public DeleteDialog(bool hasSubtitles = false, bool hasDuplicateEpisodes = false, bool hasLocalFiles = false)
         {
             InitializeComponent();
-            if (!hasSubtitles) radioDeleteSubtitles.Enabled = false;
+
+            DeleteMode = TVSeriesPlugin.DeleteMenuItems.database;
+            radioDeleteFromDatabase.Checked = true;
+
+            if (!hasSubtitles)
+                radioDeleteSubtitles.Enabled = false;
+            
+            if (!hasLocalFiles)
+            {
+                radioDeleteFromDisk.Checked = false;
+                radioDeleteFromDisk.Enabled = false;
+                radioDeleteFromDiskAndDatabase.Enabled = false;
+            }
+            
+            if (hasDuplicateEpisodes)
+            {
+                // doesn't make sense to delete online episode record
+                // if there is going to be a duplicate local episode left over
+                radioDeleteFromDatabase.Enabled = false;
+                radioDeleteFromDiskAndDatabase.Enabled = false;
+
+                DeleteMode = TVSeriesPlugin.DeleteMenuItems.disk;
+                radioDeleteFromDisk.Checked = true;
+            }            
         }
 
         public DeleteDialog() {
@@ -23,8 +46,6 @@ namespace WindowPlugins.GUITVSeries.Configuration {
         }
 
         protected override void OnLoad(EventArgs e) {
-            DeleteMode = TVSeriesPlugin.DeleteMenuItems.database;
-            radioDeleteFromDatabase.Checked = true;
             base.OnLoad(e);
         }
 

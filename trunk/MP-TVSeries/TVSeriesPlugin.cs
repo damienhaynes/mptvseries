@@ -4620,22 +4620,52 @@ namespace WindowPlugins.GUITVSeries
             dlg.Reset();
             dlg.SetHeading(sDialogHeading);
 
+            bool hasSubtitles = false;
+            bool hasDuplicateEpisode = false;
+            bool hasLocalFiles = false;
+
+            if (this.listLevel == Listlevel.Series && series != null)
+            {
+                hasLocalFiles = series[DBOnlineSeries.cHasLocalFiles];
+            }
+            else if (this.listLevel == Listlevel.Season && season != null)
+            {
+                hasLocalFiles = season[DBSeason.cHasLocalFiles];
+            }
+            else if (this.listLevel == Listlevel.Episode && episode != null)
+            {
+                hasSubtitles = episode.checkHasLocalSubtitles();
+                hasDuplicateEpisode = episode.HasDuplicateEpisode;
+                hasLocalFiles = !string.IsNullOrEmpty(episode[DBEpisode.cFilename]);
+            }
+
             // Add Menu items
             GUIListItem pItem = null;
 
-            pItem = new GUIListItem(Translation.DeleteFromDisk);
-            dlg.Add(pItem);
-            pItem.ItemId = (int)DeleteMenuItems.disk;
+            if (hasLocalFiles)
+            {
+                pItem = new GUIListItem(Translation.DeleteFromDisk);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)DeleteMenuItems.disk;
+            }
 
-            pItem = new GUIListItem(Translation.DeleteFromDatabase);
-            dlg.Add(pItem);
-            pItem.ItemId = (int)DeleteMenuItems.database;
+            if (!hasDuplicateEpisode)
+            {
+                // dont allow delete from database for duplicate episodes
+                // we still want to see remaining episode in view
+                pItem = new GUIListItem(Translation.DeleteFromDatabase);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)DeleteMenuItems.database;
 
-            pItem = new GUIListItem(Translation.DeleteFromFileDatabase);
-            dlg.Add(pItem);
-            pItem.ItemId = (int)DeleteMenuItems.diskdatabase;
+                if (hasLocalFiles)
+                {
+                    pItem = new GUIListItem(Translation.DeleteFromFileDatabase);
+                    dlg.Add(pItem);
+                    pItem.ItemId = (int)DeleteMenuItems.diskdatabase;
+                }
+            }
 
-            if (this.listLevel == Listlevel.Episode && episode != null && episode.checkHasLocalSubtitles())
+            if (hasSubtitles)
             {
                 pItem = new GUIListItem(Translation.DeleteSubtitles);
                 dlg.Add(pItem);
