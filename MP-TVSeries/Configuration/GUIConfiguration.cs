@@ -612,6 +612,13 @@ namespace WindowPlugins.GUITVSeries
             this.ResumeLayout();
             load.Close();
             load = null;
+
+            // select the first node
+            if (this.treeView_Library.Nodes.Count > 0)
+            {
+                this.treeView_Library.SelectedNode = this.treeView_Library.Nodes[0];
+                this.treeView_Library.Select();
+            }
         }
 
         private void CreateSeriesNode(DBSeries series, int index)
