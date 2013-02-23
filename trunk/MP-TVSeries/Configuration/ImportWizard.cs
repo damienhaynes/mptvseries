@@ -68,6 +68,8 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
                 if (this.ImportFinished != null)
                     ImportFinished(this, new EventArgs());
+
+                owner.EnableImportButtonState(true);
             }
         }
 

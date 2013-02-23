@@ -1228,6 +1228,8 @@ namespace WindowPlugins.GUITVSeries
 
         private void buttonStartImport_Click(object sender, EventArgs e)
         {
+            EnableImportButtonState(false);
+
             if (m_parser != null)
             {
                 AbortImport();
@@ -1397,7 +1399,7 @@ namespace WindowPlugins.GUITVSeries
             switch (requestAction)
             {
                 case UserFinishedRequestedAction.Cancel:                   
-                    ParsingWizardProgress.DeInit();                    
+                    ParsingWizardProgress.DeInit();
                     break;
 
                 case UserFinishedRequestedAction.Next:
@@ -1424,6 +1426,7 @@ namespace WindowPlugins.GUITVSeries
             // user clicked finished (can only do this after import wizard is complete)
             ParsingWizardProgress.DeInit();
             this.tabPage_Import.Controls.Remove(ParsingWizardHost);
+            EnableImportButtonState(true);
         }
         #endregion
 
@@ -1462,6 +1465,8 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Next, false);
                 ParsingWizardHost.SetButtonState(ImportWizard.WizardButton.Prev, false);
             }
+
+            EnableImportButtonState(true);
         }        
 
         #region Series Details Tab Handling
