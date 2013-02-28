@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="iso-8859-1"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- MP-TV-Series translation file -->
 <!-- Finnish -->
 <!-- Last Updated: 10th May 2011 -->
@@ -289,7 +289,7 @@
 
   <string Field="AvailableMedia" Original="Available Media">Saatavilla olevat tallennusmediat</string>
 
-  <string Field="Votes" Original="votes">ääniä</string>
+  <string Field="Votes" Original="votes">Ääntä</string>
   
   <string Field="LayoutCoveflow" Original="Coveflow">Kansivirta</string>
 
