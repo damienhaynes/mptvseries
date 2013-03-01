@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="Series" Original="Series">Þáttaraðir</string>
+  <string name="Series_Plural" Original="Series (Plr)">Þáttaraðir</string>
+  <!--plural-->
+  <string name="Season" Original="Season">Þáttaröð</string>
+  <string name="Seasons" Original="Seasons">Þáttaraðir</string>
+  <string name="Episode" Original="Episode">Þáttanúmer</string>
+  <string name="Confirm" Original="Confirm">Staðfesta</string>
+  <string name="Completed" Original="Completed">Búið</string>
+  <string name="No_subtitles_found" Original="No subtitles found">Enginn texti fannst</string>
+  <string name="Yes" Original="Yes">Já</string>
+  <string name="No" Original="No">Nei</string>
+  <string name="Unknown" Original="Unknown">óþekkt</string>
+  <string name="Download" Original="Download">Sækja</string>
+  <string name="Genres" Original="Genres">Flokkar</string>
+  <string name="All" Original="All">Allir</string>
+  <string name="ChangeView" Original="Change View">Breyta röðun</string>
+  <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string name="LayoutList" Original="List">Listi</string>
+  <string name="FanArtFilterAll" Original="All">Allir</string>
+  <string name="LabelChosen" Original="Chosen">Sjálfgefið</string>
+  <!--Rate Descriptions - 5 Stars-->
+  <string name="RateFiveStarOne" Original="Terrible">Léleg</string>
+  <string name="RateFiveStarTwo" Original="Mediocre">Í lagi</string>
+  <string name="RateFiveStarThree" Original="Good">Góð</string>
+  <string name="RateFiveStarFour" Original="Superb">Mjög góð</string>
+  <string name="RateFiveStarFive" Original="Perfect">Frábær</string>
+  <!--Rate Descriptions - 10 Stars-->
+  <string name="RateTenStarTwo" Original="Terrible">Léleg</string>
+  <string name="RateTenStarFour" Original="Poor">Léleg</string>
+  <string name="RateTenStarFive" Original="Mediocre">Í lagi</string>
+  <string name="RateTenStarSeven" Original="Good">Góð</string>
+  <string name="RateTenStarNine" Original="Superb">Mjög góð</string>
+  <string name="RateTenStarTen" Original="Perfect">Frábær</string>
+  <string name="Subtitles" Original="Subtitles">Textar</string>
+  <string name="Actors" Original="Actors">Leikarar</string>
+  <string name="Certification" Original="Certification">Aldurstakmark</string>
+  <string name="Director" Original="Director">Leikstjórn</string>
+  <string name="Directors" Original="Directors">Leikstjórn</string>
+  <string name="Genre" Original="Genre">Flokkur</string>
+  <string name="Rated" Original="Rated">Einkunn</string>
+  <string name="Runtime" Original="Runtime">Sýningart:</string>
+  <string name="Watched" Original="Watched">Séð</string>
+  <string name="Writer" Original="Writer">Handrit</string>
+  <string name="Writers" Original="Writers">Handrit</string>
+  <string name="ErrorClear" Original="Error">Villa</string>
+  <string name="SortBy" Original="Sort By">Röðun</string>
+  <string name="Title" Original="Title">Heiti</string>
+  <string name="Votes" Original="votes">atkvæði</string>
+  <string name="Calendar" Original="Calendar">Dagatal</string>
+  <string name="OK" Original="OK">Í lagi</string>
+  <string name="Cancel" Original="Cancel">Hætta við</string>
+  <string name="Update" Original="Update">Uppfæra</string>
+  <string name="Warning" Original="Warning">Aðvörun</string>
+</resources>

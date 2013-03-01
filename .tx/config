@@ -1,0 +1,8 @@
+[main]
+host=https://www.transifex.com
+[MP1_CommunityPlugins.mp-tvseries]
+file_filter=MP-TVSeries\Resources\Languages\<lang>.xml
+source_file=MP-TVSeries\Resources\Languages\en-US.xml
+source_lang=en
+lang_map = en: en-US
+type=ANDROID
