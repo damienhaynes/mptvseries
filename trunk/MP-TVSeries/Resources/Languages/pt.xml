@@ -1,61 +1,87 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- MP-TV-Series translation file -->
-<!-- Portuguese -->
-<!-- Note: English is the fallback for any strings not found in other languages -->
-
-<strings>
-	<string Field="Series" Original="Series">Série</string>
-	<string Field="Series_Plural" Original="Series (Plr)">Séries</string> <!-- plural -->
-	<string Field="Season" Original="Season">Temporada</string>
-	<string Field="Seasons" Original="Seasons">Temporadas</string>
-	<string Field="Episode" Original="Episode">Episódio</string>
-	<string Field="Episodes" Original="Episodes">Episódios</string>
-	<string Field="Toggle_watched_flag" Original="Toggle watched flag">Definir visto/não-visto</string>
-	<string Field="Retrieve_Subtitle" Original="Retrieve Subtitle">Procurar legendas</string>
-	<string Field="Load_via_Torrent" Original="Load via Torrent">Carregar via torrent</string>
-	<string Field="Mark_all_as_watched" Original="Mark all as watched">Definir todos como visto</string>
-	<string Field="Mark_all_as_unwatched" Original="Mark all as unwatched">Definir todos como não-visto</string>
-	<string Field="Hide" Original="Hide">Ocultar</string>
-	<string Field="Delete" Original="Delete">Apagar</string>
-	<string Field="Remove_series_from_Favourites" Original="Remove series from Favourites">Remover dos favoritos</string>
-	<string Field="Add_series_to_Favourites" Original="Add series to Favourites">Adicionar aos favoritos</string>
-	<string Field="Force_Local_Scan" Original="Force Local Scan ">Forçar actualização local </string>
-	<string Field="Force_Online_Refresh" Original="Force Online Refresh ">Forçar actualização online</string>
-	<string Field="In_Progress_with_Barracks" Original="(In Progress)">(Em curso)</string>
-	<string Field="Only_show_episodes_with_a_local_file" Original="Only show episodes with a local file">Mostrar apenas episódios com ficheiros locais</string>
-	<string Field="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Ocultar o sumário dos episódios não-vistos</string>
-	<string Field="on" Original="on">Ligado</string>
-	<string Field="off" Original="off">Desligado</string>
-	<string Field="Play_Random_Episode" Original="Play Random Episode">Reproduzir episódio aleatório</string>
-	<string Field="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproduzir primeiro episódio não-visto aleatoriamente</string>
-	<string Field="Delete_that_series" Original="Delete that series?">Apagar esta série?</string>
-	<string Field="Delete_that_season" Original="Delete that season?">Apagar esta temporada?</string>
-	<string Field="Delete_that_episode" Original="Delete that episode?">Apagar este episódio?</string>
-	<string Field="Confirm" Original="Confirm">Confirmar</string>
-	<string Field="Completed" Original="Completed">Concluído</string>
-	<string Field="No_subtitles_found" Original="No subtitles found">Legendas não encontradas</string>
-	<string Field="CFS_Skip_Never_Ask_Again" Original="skip / Never ask again">Saltar / Não perguntar novamente</string>
-	<string Field="CFS_No_Results_Found" Original="no results found!">Nenhum resultado encontrado!</string>
-	<string Field="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Escondido até ver o episódio *</string>
-	<string Field="Yes" Original="Yes">Sim</string>
-	<string Field="No" Original="No">Não</string>
-	<string Field="Error" Original="#Error">#Erro</string>
-	<string Field="No_items" Original="No items!">Sem itens!</string>
-	<string Field="Unknown" Original="Unknown">Desconhecido</string>
-	<string Field="wrongSkin" Original="Wrong Skin file">Ficheiro de skin errado</string>
-	<string Field="special" Original="Special">Especial</string>
-	<string Field="specials" Original="Specials">Especiais</string>
-	<string Field="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).\nWould you like to proceed?">"Vai apagar {0} ficheiro(s) físico(s).\ Continuar?"</string>
-	<string Field="Force_Online_Match" Original="Forcer Online Match">Forçar actualização online</string>
-	<string Field="Load_via_NewsLeecher" Original="Load via NewsLeecher">Carregar via NewsLeecher</string>
-	<string Field="Download" Original="Download">Download</string>
-	<string Field="Actions" Original="Actions">Acções</string>
-	<string Field="Options" Original="Options">Opções</string>
-	<string Field="Genres" Original="Genres">Géneros</string>
-	<string Field="All" Original="All">Todos</string>
-	<string Field="Latest" Original="Latest Aired">Recentes</string>
-	<string Field="Channels" Original="Channels">Canais</string>
-	<string Field="Unwatched" Original="Unwatched">Não-vistos</string>
-	<string Field="Favourites" Original="Favourites">Favoritos</string>
-	<string Field="updateMI" Original="Update Mediainfo of local file">Actualização do Mediainfo do ficheiro local</string>
-</strings>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="Series" Original="Series">SÃ©rie</string>
+  <string name="Series_Plural" Original="Series (Plr)">SÃ©ries</string>
+  <!--plural-->
+  <string name="Season" Original="Season">Temporada</string>
+  <string name="Seasons" Original="Seasons">Temporadas</string>
+  <string name="Episode" Original="Episode">EpisÃ³dio</string>
+  <string name="Episodes" Original="Episodes">EpisÃ³dios</string>
+  <string name="Toggle_watched_flag" Original="Toggle watched flag">Definir visto/nÃ£o-visto</string>
+  <string name="Retrieve_Subtitle" Original="Retrieve Subtitle">Procurar legendas</string>
+  <string name="Load_via_Torrent" Original="Load via Torrent">Carregar via torrent</string>
+  <string name="Mark_all_as_watched" Original="Mark all as watched">Definir todos como visto</string>
+  <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Definir todos como nÃ£o-visto</string>
+  <string name="Hide" Original="Hide">Ocultar</string>
+  <string name="Delete" Original="Delete">Apagar</string>
+  <string name="Remove_series_from_Favourites" Original="Remove series from Favourites">Remover dos favoritos</string>
+  <string name="Add_series_to_Favourites" Original="Add series to Favourites">Adicionar aos favoritos</string>
+  <string name="Force_Local_Scan" Original="Force Local Scan ">ForÃ§ar actualizaÃ§Ã£o local </string>
+  <string name="Force_Online_Refresh" Original="Force Online Refresh ">ForÃ§ar actualizaÃ§Ã£o online</string>
+  <string name="In_Progress_with_Barracks" Original="(In Progress)">(Em curso)</string>
+  <string name="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Ocultar o sumÃ¡rio dos episÃ³dios nÃ£o-vistos</string>
+  <string name="on" Original="on">Ligado</string>
+  <string name="off" Original="off">Desligado</string>
+  <string name="Play_Random_Episode" Original="Play Random Episode">Reproduzir episÃ³dio aleatÃ³rio</string>
+  <string name="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Reproduzir primeiro episÃ³dio nÃ£o-visto aleatoriamente</string>
+  <string name="Delete_that_series" Original="Delete that series?">Apagar esta sÃ©rie?</string>
+  <string name="Delete_that_season" Original="Delete that season?">Apagar esta temporada?</string>
+  <string name="Delete_that_episode" Original="Delete that episode?">Apagar este episÃ³dio?</string>
+  <string name="Confirm" Original="Confirm">Confirmar</string>
+  <string name="Completed" Original="Completed">ConcluÃ­do</string>
+  <string name="No_subtitles_found" Original="No subtitles found">Legendas nÃ£o encontradas</string>
+  <string name="CFS_No_Results_Found" Original="No Results Found!">Nenhum resultado encontrado!</string>
+  <string name="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Escondido atÃ© ver o episÃ³dio *</string>
+  <string name="Yes" Original="Yes">Sim</string>
+  <string name="No" Original="No">NÃ£o</string>
+  <string name="Error" Original="#Error">#Erro</string>
+  <string name="No_items" Original="No items!">Sem itens!</string>
+  <string name="Unknown" Original="Unknown">Desconhecido</string>
+  <string name="wrongSkin" Original="Wrong Skin file">Ficheiro de skin errado</string>
+  <string name="special" Original="Special">Especial</string>
+  <string name="specials" Original="Specials">Especiais</string>
+  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Vai apagar {0} ficheiro(s) fÃ­sico(s).\ Continuar?</string>
+  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">ForÃ§ar actualizaÃ§Ã£o online</string>
+  <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Carregar via NewsLeecher</string>
+  <string name="Download" Original="Download">Download</string>
+  <string name="Actions" Original="Actions">AcÃ§Ãµes</string>
+  <string name="Options" Original="Options">OpÃ§Ãµes</string>
+  <string name="Genres" Original="Genres">GÃ©neros</string>
+  <string name="All" Original="All">Todos</string>
+  <string name="Latest" Original="Latest Aired">Recentes</string>
+  <string name="Channels" Original="Channels">Canais</string>
+  <string name="Unwatched" Original="Unwatched">NÃ£o-vistos</string>
+  <string name="Favourites" Original="Favourites">Favoritos</string>
+  <string name="updateMI" Original="Update Mediainfo of local file">ActualizaÃ§Ã£o do Mediainfo do ficheiro local</string>
+  <string name="ChangeView" Original="Change View">Trocar visualizaÃ§Ã£o</string>
+  <string name="CFS_Skip_Never_Ask_Again" Original="Skip / Never Ask Again">Saltar / NÃ£o perguntar novamente</string>
+  <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string name="ButtonOptions" Original="Options">OpÃ§Ãµes</string>
+  <string name="FanArtFilterAll" Original="All">Todos</string>
+  <!--Rate Descriptions - 5 Stars-->
+  <string name="RateFiveStarOne" Original="Terrible">PÃ©ssima</string>
+  <string name="RateFiveStarTwo" Original="Mediocre">Mediocre</string>
+  <string name="RateFiveStarThree" Original="Good">Boa</string>
+  <string name="RateFiveStarFour" Original="Superb">MagnÃ­fica</string>
+  <string name="RateFiveStarFive" Original="Perfect">Perfeita</string>
+  <!--Rate Descriptions - 10 Stars-->
+  <string name="RateTenStarTwo" Original="Terrible">PÃ©ssima</string>
+  <string name="RateTenStarFive" Original="Mediocre">Mediocre</string>
+  <string name="RateTenStarSeven" Original="Good">Boa</string>
+  <string name="RateTenStarNine" Original="Superb">MagnÃ­fica</string>
+  <string name="RateTenStarTen" Original="Perfect">Perfeita</string>
+  <string name="Actors" Original="Actors">Actores</string>
+  <string name="Certification" Original="Certification">QualificaÃ§Ã£o</string>
+  <string name="Director" Original="Director">Director</string>
+  <string name="Directors" Original="Directors">Directores</string>
+  <string name="Genre" Original="Genre">GÃ©nero</string>
+  <string name="Rated" Original="Rated">PontuaÃ§Ã£o feita</string>
+  <string name="Runtime" Original="Runtime">DuraÃ§Ã£o</string>
+  <string name="Writer" Original="Writer">Guionista</string>
+  <string name="Writers" Original="Writers">Guionistas</string>
+  <string name="ErrorClear" Original="Error">Erro</string>
+  <string name="SortBy" Original="Sort By">Ordenar por</string>
+  <string name="Title" Original="Title">TÃ­tulo</string>
+  <string name="Cancel" Original="Cancel">Cancelar</string>
+  <string name="Update" Original="Update">Atualizar</string>
+</resources>

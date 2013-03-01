@@ -468,7 +468,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     try
                     {
-                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("Field").Value, stringEntry.InnerText);
+                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("name").Value, stringEntry.InnerText);
                     }
                     catch (Exception ex)
                     {
@@ -484,7 +484,7 @@ namespace WindowPlugins.GUITVSeries
                 if (TranslatedStrings != null && TranslatedStrings.ContainsKey(fi.Name))
                     TransType.InvokeMember(fi.Name, BindingFlags.SetField, null, TransType, new object[] { TranslatedStrings[fi.Name] });
                 else
-                    MPTVSeriesLog.Write("Translation not found for field: {0}. Using hard-coded English default.", fi.Name);
+                    MPTVSeriesLog.Write("Translation not found for name: {0}. Using hard-coded English default.", fi.Name);
             }
             return TranslatedStrings.Count;
         }
