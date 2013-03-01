@@ -468,7 +468,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     try
                     {
-                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("name").Value, stringEntry.InnerText);
+                        TranslatedStrings.Add(stringEntry.Attributes.GetNamedItem("name").Value, stringEntry.InnerText.NormalizeTranslation());
                     }
                     catch (Exception ex)
                     {
@@ -514,6 +514,18 @@ namespace WindowPlugins.GUITVSeries
             {
                 input = input.Replace(match.Value, GetByName(match.Groups[1].Value));
             }
+            return input;
+        }
+
+        /// <summary>
+        /// Temp workaround to remove unwatched chars from Transifex
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string NormalizeTranslation(this string input)
+        {
+            input = input.Replace("\\'", "'");
+            input = input.Replace("\\\"", "\"");
             return input;
         }
 
