@@ -87,6 +87,7 @@
   <string name="ErrorClear" Original="Error">Feil</string>
   <string name="SortBy" Original="Sort By">Sorter etter</string>
   <string name="Title" Original="Title">Title</string>
+  <string name="Votes" Original="votes">votes</string>
   <string name="Timeout" Original="Timeout">Tiden gikk ut</string>
   <string name="Calendar" Original="Calendar">Kalender</string>
   <string name="Recommendations" Original="Recommendations">Anbefalinger</string>
