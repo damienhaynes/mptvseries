@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--plural-->
+  <string name="Unknown" Original="Unknown">Neznano</string>
+  <string name="Genres" Original="Genres">Žanri</string>
+  <string name="ChangeView" Original="Change View">Spremeni pogled</string>
+  <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <!--Rate Descriptions - 5 Stars-->
+  <string name="RateFiveStarOne" Original="Terrible">Strašno</string>
+  <string name="RateFiveStarTwo" Original="Mediocre">Povprecno</string>
+  <string name="RateFiveStarThree" Original="Good">Dobro</string>
+  <string name="RateFiveStarFour" Original="Superb">Krasno</string>
+  <string name="RateFiveStarFive" Original="Perfect">Popolno</string>
+  <!--Rate Descriptions - 10 Stars-->
+  <string name="RateTenStarTwo" Original="Terrible">Strašno</string>
+  <string name="RateTenStarFive" Original="Mediocre">Povprecno</string>
+  <string name="RateTenStarSeven" Original="Good">Dobro</string>
+  <string name="RateTenStarNine" Original="Superb">Krasno</string>
+  <string name="RateTenStarTen" Original="Perfect">Popolno</string>
+  <string name="Actors" Original="Actors">Igralci</string>
+  <string name="Certification" Original="Certification">Certifikacija</string>
+  <string name="Director" Original="Director">Režiser</string>
+  <string name="Directors" Original="Directors">Režiserji</string>
+  <string name="Genre" Original="Genre">Žanr</string>
+  <string name="Rated" Original="Rated">Ocenjeno</string>
+  <string name="Runtime" Original="Runtime">Dolžina</string>
+  <string name="Writer" Original="Writer">Pisec</string>
+  <string name="Writers" Original="Writers">Pisci</string>
+  <string name="ErrorClear" Original="Error">Napaka</string>
+  <string name="SortBy" Original="Sort By">Sortiraj po</string>
+  <string name="Title" Original="Title">Naslov</string>
+  <string name="Votes" Original="votes">Glasovi</string>
+  <string name="Cancel" Original="Cancel">Preklici</string>
+</resources>

@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="Series" Original="Series">Serie</string>
+  <string name="Series_Plural" Original="Series (Plr)">Serie</string>
+  <!--plural-->
+  <string name="Season" Original="Season">Stagione</string>
+  <string name="Seasons" Original="Seasons">Stagioni</string>
+  <string name="Episode" Original="Episode">Episodio</string>
+  <string name="Episodes" Original="Episodes">Episodi</string>
+  <string name="Toggle_watched_flag" Original="Toggle watched flag">Cambia Visto/Da vedere</string>
+  <string name="Retrieve_Subtitle" Original="Retrieve Subtitle">Scarica i sottotitoli</string>
+  <string name="Load_via_Torrent" Original="Load via Torrent">Scarica da Torrent</string>
+  <string name="Mark_all_as_watched" Original="Mark all as watched">Contrassegna tutti come già visti</string>
+  <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Contrassegna tutti come da vedere</string>
+  <string name="Hide" Original="Hide">Nascondi</string>
+  <string name="Delete" Original="Delete">Cancella</string>
+  <string name="Remove_series_from_Favourites" Original="Remove series from Favourites">Rimuovi la serie dai preferiti</string>
+  <string name="Add_series_to_Favourites" Original="Add series to Favourites">Aggiungi la serie ai preferiti</string>
+  <string name="Force_Local_Scan" Original="Force Local Scan ">Forza l\'aggiornamento dei i contenuti locali</string>
+  <string name="Force_Online_Refresh" Original="Force Online Refresh ">Forza l\'aggiornamento dei i contenuti on-line</string>
+  <string name="In_Progress_with_Barracks" Original="(In Progress)">(Attendere...)</string>
+  <string name="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Nascondi il riassunto degli episodi non visti</string>
+  <string name="on" Original="on">on</string>
+  <string name="off" Original="off">off</string>
+  <string name="Play_Random_Episode" Original="Play Random Episode">Riproduci causalmente</string>
+  <string name="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Riproduci un episodio non visto</string>
+  <string name="Delete_that_series" Original="Delete that series?">Rimuovere la serie?</string>
+  <string name="Delete_that_season" Original="Delete that season?">Rimuovere la stagione?</string>
+  <string name="Delete_that_episode" Original="Delete that episode?">Rimuovere l\'episodio?</string>
+  <string name="Confirm" Original="Confirm">Conferma</string>
+  <string name="Completed" Original="Completed">Completato</string>
+  <string name="No_subtitles_found" Original="No subtitles found">Nessun sottotitolo disponibile</string>
+  <string name="CFS_No_Results_Found" Original="No Results Found!">Nessun risultato trovato!</string>
+  <string name="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *">* Nascosto per evitare spoiler *</string>
+  <string name="Yes" Original="Yes">Si</string>
+  <string name="No" Original="No">No</string>
+  <string name="Error" Original="#Error">#Errore</string>
+  <string name="No_items" Original="No items!">Nessun elemento!</string>
+  <string name="Unknown" Original="Unknown">Sconosciuto</string>
+  <string name="wrongSkin" Original="Wrong Skin file">Skin non disponibile</string>
+  <string name="special" Original="Special">Speciale</string>
+  <string name="specials" Original="Specials">Speciali</string>
+  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Stai per cancellare in modo definitivo {0} file(s).\nVuoi continuare?</string>
+  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Forza corrispondenza on-line</string>
+  <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Scarica da NewsLeecher</string>
+  <string name="Download" Original="Download">Download</string>
+  <string name="Actions" Original="Actions">Azioni</string>
+  <string name="Options" Original="Options">Opzioni</string>
+  <string name="Genres" Original="Genres">Generi</string>
+  <string name="All" Original="All">Tutti</string>
+  <string name="Latest" Original="Latest Aired">Recenti</string>
+  <string name="Channels" Original="Channels">Canali</string>
+  <string name="Unwatched" Original="Unwatched">Non visti</string>
+  <string name="Favourites" Original="Favourites">Preferiti</string>
+  <string name="updateMI" Original="Update Mediainfo of local file">Aggiorna le informazioni multimediali del file locale</string>
+  <string name="RateSeries" Original="Rate this Series">Vota questa serie</string>
+  <string name="RateEpisode" Original="Rate this Episode">Vota questo episodio</string>
+  <string name="ResetRating" Original="Reset Rating">Reset dei Voti</string>
+  <string name="AskToRate" Original="Ask me to rate unrated episodes">Chiedi il voto per un episodio senza voto</string>
+  <string name="DontAskToRate" Original="Don't ask me to rate again">Non chiedermi più di dare i voti</string>
+  <string name="RatingStar" Original="Star">Stella</string>
+  <string name="RatingStars" Original="Stars">Stelle</string>
+  <string name="ChangeView" Original="Change View">Cambia visuale</string>
+  <string name="ChangeViewFast" Original="Immediatly Change Views">Cambia immediatamente le visuali</string>
+  <string name="FanArt" Original="Fanart">Fanart</string>
+  <string name="FanListAll" Original="List all Fanart for this Series">Mostra tutte le Fanart per questa serie</string>
+  <string name="FanArtGetAndUse" Original="Download Fanart and Use">Scarica ed usa la Fanart</string>
+  <string name="FanArtGet" Original="Download Fanart">Scarica la Fanart</string>
+  <string name="FanArtUse" Original="Set Fanart as Default">Imposta la Fanart come predefinita</string>
+  <string name="FanArtDelete" Original="Delete Fanart">Cancella la Fanart</string>
+  <string name="FanDownloadingStatus" Original="Downloading {0} Fanart...">Scaricamento di {0} Fanart...</string>
+  <string name="FanArtLocal" Original="Local">Locale</string>
+  <string name="FanArtOnline" Original="Remote">Remoto</string>
+  <string name="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Caricamento Fanart {0} di {1}...</string>
+  <string name="FanArtRandom" Original="Display random Fanart">Visualizza Fanart casuale</string>
+  <string name="FanArtNoneFound" Original="No Fanart could be found">Nessuna Fanart trovata</string>
+  <string name="CFS_Choose_Item" Original="Choose item">Scegli</string>
+  <string name="CFS_Select_Matching_Item" Original="Select matching item:">Scegli il corrispondente:</string>
+  <string name="CFS_Search_Again" Original="Search again">Cerca ancora</string>
+  <string name="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Seleziona il file di sottotitoli</string>
+  <string name="CFS_Subtitle_Episode" Original="Choose item">Episodio:</string>
+  <string name="CFS_Matching_Subtitles" Original="Matching Subtitles">Sottotitoli corrispondenti</string>
+  <string name="CFS_Choose_Correct_Series" Original="Choose Correct Series">Scegli la serie corretta</string>
+  <string name="CFS_Available_Series" Original="Available Series">Serie disponibili</string>
+  <string name="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Scegli i sottotitoli</string>
+  <string name="CFS_Select_Version" Original="Version:">Versione:</string>
+  <string name="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Scegli l\'episodio corretto</string>
+  <string name="CFS_Local_Episode_Index" Original="Local Episiode index:">Indice degli episodi locali:</string>
+  <string name="CFS_Available_Episode_List" Original="Available Episode list:">Lista degli episodi disponibili:</string>
+  <string name="CFS_Choose_Search_Site" Original="Choose search site:">Scegli il sito di ricerca:</string>
+  <string name="CFS_List_Search_Site" Original="List of search sites:">Elenco dei siti di ricerca:</string>
+  <string name="CFS_Found_Torrents" Original="Found torrents:">Torrent trovati:</string>
+  <string name="CFS_Looking_For" Original="Looking for:">Cerca per:</string>
+  <string name="CFS_Choose_Correct_Season" Original="Choose correct season">Scegli la stagione corretta</string>
+  <string name="CFS_Local_Season_Index" Original="Local Season index:">Indice delle stagioni locali:</string>
+  <string name="CFS_Available_Seasons" Original="Available Seasons list:">Lista delle stagioni disponibili:</string>
+  <string name="CFS_Skip_Never_Ask_Again" Original="Skip / Never Ask Again">Salta / Non chiedere più</string>
+  <string name="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Sostituisce il file di sottotitoli</string>
+  <string name="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">File di sottotitoli già presente: sovrascrivere?</string>
+  <string name="RecentlyAdded" Original="Recently Added">Aggiunti di recente</string>
+  <string name="TVDB_ERROR_TITLE" Original="theTVDB Error">Errore theTVDB</string>
+  <string name="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
+  <string name="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">ID account non impostato</string>
+  <string name="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Inserisci il tuo online ID nella configurazione</string>
+  <string name="ChangeLayout" Original="Change Layout">Cambia Layout</string>
+  <string name="UseOnlineFavourites" Original="Use Online Favourites">Usa i Preferiti Online</string>
+  <string name="AddToPlaylist" Original="Add To Playlist">Aggiungi alla Playlist</string>
+  <string name="FanartDisableLabel" Original="Disabled">Disabilitato</string>
+  <string name="FanartMenuEnable" Original="Enable Fanart">Abilita Fanart</string>
+  <string name="FanartMenuDisable" Original="Disable Fanart">Disabilita Fanart</string>
+  <string name="SortByStrings" Original="SortByStrings">the|a|an|il|la|uno|un</string>
+  <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string name="LayoutList" Original="List">Elenco</string>
+  <string name="LayoutListBanners" Original="List Banners">Elenca Banner</string>
+  <string name="LayoutListPosters" Original="List Posters">Elenca Poster</string>
+  <string name="LayoutWideBanners" Original="Wide Banners">Banner larghi</string>
+  <string name="LayoutFilmstrip" Original="Filmstrip">Pellicola</string>
+  <string name="LayoutSmallIcons" Original="Small Icons">Icone piccole</string>
+  <string name="ButtonAutoPlay" Original="Auto Play">Auto Play</string>
+  <string name="ButtonSwitchView" Original="Switch View">Cambia vista</string>
+  <string name="ButtonRunImport" Original="Run Import">Esegui importazione</string>
+  <string name="ButtonChangeLayout" Original="Change Layout">Cambia Layout</string>
+  <string name="ButtonOptions" Original="Options">Opzioni</string>
+  <string name="FanArtFilter" Original="Filter">Filtro</string>
+  <string name="FanArtFilterAll" Original="All">Tutti</string>
+  <string name="ButtonRandomFanart" Original="Random Fanart">Fanart casuale</string>
+  <string name="LabelResolution" Original="Resolution">Risoluzione</string>
+  <string name="LabelChosen" Original="Chosen">Predefinito</string>
+  <string name="LabelDisabled" Original="Disabled">Disabilitato</string>
+  <string name="ResetUserSelections" Original="Reset User Selections">Resetta Selezioni utente</string>
+  <string name="DeleteFromDisk" Original="Delete from Disk">Cancella dal Disco</string>
+  <string name="DeleteFromDatabase" Original="Delete from Database">Cancella dal Database</string>
+  <string name="DeleteFromFileDatabase" Original="Delete from Disk and Database">Cancella dal Disco e dal Database</string>
+  <string name="RateDialogLabel" Original="Select Your Rating for {0}">Scegli la tua valutazione per {0}</string>
+  <string name="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">Nascondi le anteprime non viste</string>
+  <!--Rate Descriptions - 5 Stars-->
+  <string name="RateFiveStarOne" Original="Terrible">Terribile</string>
+  <string name="RateFiveStarTwo" Original="Mediocre">Mediocre</string>
+  <string name="RateFiveStarThree" Original="Good">Buono</string>
+  <string name="RateFiveStarFour" Original="Superb">Superbo</string>
+  <string name="RateFiveStarFive" Original="Perfect">Perfetto</string>
+  <!--Rate Descriptions - 10 Stars-->
+  <string name="RateTenStarOne" Original="Abysmal">Pessimo</string>
+  <string name="RateTenStarTwo" Original="Terrible">Terribile</string>
+  <string name="RateTenStarThree" Original="Bad">Brutto</string>
+  <string name="RateTenStarFour" Original="Poor">Scarso</string>
+  <string name="RateTenStarFive" Original="Mediocre">Mediocre</string>
+  <string name="RateTenStarSix" Original="Fair">Decente</string>
+  <string name="RateTenStarSeven" Original="Good">Buono</string>
+  <string name="RateTenStarEight" Original="Great">Grande</string>
+  <string name="RateTenStarNine" Original="Superb">Superbo</string>
+  <string name="RateTenStarTen" Original="Perfect">Perfetto</string>
+  <string name="ContentRating" Original="Content Rating">Classificazione del contenuto</string>
+  <string name="ViewTags" Original="View Tags">Vista Etichette</string>
+  <string name="AddViewTag" Original="Add Series to View Tag">Aggiungi Serie alla Vista</string>
+  <string name="RemoveViewTag" Original="Remove Series from View Tag">Togli Serie dalla Vista</string>
+  <string name="NewViewTag" Original="New Tag">Nuova Vista</string>
+  <string name="CycleSeriesBanner" Original="Cycle Series Banner">Cicla Banner delle Serie</string>
+  <string name="CycleSeasonBanner" Original="Cycle Season Poster">Cicla Poster delle Stagioni</string>
+  <string name="CycleSeriesPoster" Original="Cycle Series Poster">Cicla Poster delle Serie</string>
+  <string name="FanartRandomInterval" Original="Fanart Timer Interval">Intervallo di tempo delle Fanart</string>
+  <string name="FanartIntervalFiveSeconds" Original="5 Seconds">5 Secondi</string>
+  <string name="FanartIntervalTenSeconds" Original="10 Seconds">10 Secondi</string>
+  <string name="FanartIntervalFifteenSeconds" Original="15 Seconds">15 Secondi</string>
+  <string name="FanartIntervalThirtySeconds" Original="30 Seconds">30 Secondi</string>
+  <string name="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 Secondi</string>
+  <string name="FanartIntervalSixtySeconds" Original="60 Seconds">60 Secondi</string>
+  <string name="NoPlaylistsFound" Original="No Playlists found in:">Nessuna Playlist trovata in:</string>
+  <string name="PinCode" Original="Pin Code">Codice Pin</string>
+  <string name="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">Il Pin inserito non è corretto</string>
+  <string name="PinCodeIncorrectLine2" Original="Press OK to try again">Premi OK per riprovare</string>
+  <string name="ParentalControlLocked" Original="Lock Views">Blocca Viste</string>
+  <string name="ViewIsLocked" Original="View Locked">Vista bloccata</string>
+  <string name="PinCodeDlgLabel1" Original="The view {0} is locked">La Vista \"{0}\" è bloccata</string>
+  <string name="PinCodeDlgLabel2" Original="Enter in 4 Digit Pin Code to proceed:">Inserisci un Codice Pin a 4 cifre per procedere:</string>
+  <string name="PinCodeMessageIncorrect" Original="Pin Incorrect">Pin errato</string>
+  <string name="Continuing" Original="Continuing Series">Serie in produzione</string>
+  <string name="Ended" Original="Ended Series">Serie terminata</string>
+  <string name="HighDefinition" Original="High Definition">Alta Definizione</string>
+  <string name="StandardDefinition" Original="Standard Defintion">Definizione Standard</string>
+  <string name="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
+  <string name="Top10User" Original="Top 10 (User)">Top 10 (Utente)</string>
+  <string name="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
+  <string name="Top25User" Original="Top 25 (User)">Top 25(Utente)</string>
+  <string name="Subtitles" Original="Subtitles">Sottotitoli</string>
+  <string name="MultiAudio" Original="Multiple Audio Tracks">Tracce Audio multiple</string>
+  <string name="OnlineFavourites" Original="Online Favourites">Preferiti Online</string>
+  <string name="Actors" Original="Actors">Attori</string>
+  <string name="RemovableMedia" Original="Removable Media">Supporto Rimovibile</string>
+  <string name="LocalMedia" Original="Local Media">Supporto locale</string>
+  <string name="AdultSeries" Original="Adult Series">Serie per adulti</string>
+  <string name="KidsSeries" Original="Kids Series">Serie per ragazzi</string>
+  <string name="ClearFanartCache" Original="Clear Fanart Cache">Pulisci la Cache delle Fanart</string>
+  <string name="DeleteThumbnailsHeading" Original="Delete Thumbnails">Cancella anteprime</string>
+  <string name="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Vuoi anche cancellare e riscaricare</string>
+  <string name="DeleteThumbnailsLine2" Original="all episode thumbnails?">le anteprime di tutti gli episodi?</string>
+  <string name="RateDialog" Original="Rate Dialog">Finestra di Valutazione</string>
+  <string name="PinCodeDialog" Original="Pin Code Dialog">Finestra del Codice Pin</string>
+  <string name="Aired" Original="Aired">Trasmessa</string>
+  <string name="AiredStatusContinuing" Original="Continuing">In produzione</string>
+  <string name="AiredStatusEnded" Original="Ended">Terminata</string>
+  <string name="AirsDay" Original="Airs Day">Giorni di trasmissione</string>
+  <string name="AirsTime" Original="Airs Time">Orario di trasmissione</string>
+  <string name="Certification" Original="Certification">Certificazione</string>
+  <string name="Director" Original="Director">Regista</string>
+  <string name="Directors" Original="Directors">Registi</string>
+  <string name="FirstAired" Original="First Aired">Trasmesso la prima volta</string>
+  <string name="Genre" Original="Genre">Genere</string>
+  <string name="Group" Original="Groups">Gruppo</string>
+  <string name="Groups" Original="Groups">Gruppi</string>
+  <string name="GuestStar" Original="Guest Star">Guest Star</string>
+  <string name="GuestStars" Original="Guest Stars">Guest Stars</string>
+  <string name="MediaInfo" Original="Media Info">Informazioni supporto</string>
+  <string name="Minutes" Original="Minutes">Minuti</string>
+  <string name="MyRating" Original="My Rating">Mia Valutazione</string>
+  <string name="Network" Original="Network">Rete</string>
+  <string name="Rated" Original="Rated">Valutato</string>
+  <string name="Rating" Original="Rating">Valutazione</string>
+  <string name="Runtime" Original="Runtime">Durata</string>
+  <string name="SeriesDetails" Original="Series Details">Dettagli Serie</string>
+  <string name="SeriesStatus" Original="Series Status">Stato della Serie</string>
+  <string name="Watched" Original="Watched">Visto</string>
+  <string name="Writer" Original="Writer">Autore</string>
+  <string name="Writers" Original="Writers">Autori</string>
+  <string name="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com non è al momento disponibile</string>
+  <string name="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">Per favore riprovare più tardi</string>
+  <string name="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">Connessione di rete non disponibile</string>
+  <string name="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">Controllare la connessione e riprovare</string>
+  <string name="ErrorClear" Original="Error">Errore</string>
+  <string name="SortBy" Original="Sort By">Ordina per</string>
+  <string name="Title" Original="Title">Titolo</string>
+  <string name="Votes" Original="votes">voti</string>
+  <string name="Timeout" Original="Timeout">Scaduto</string>
+  <string name="Calendar" Original="Calendar">Calendario</string>
+  <string name="Recommendations" Original="Recommendations">Consigliati</string>
+  <string name="Trending" Original="Trending">Tendenze</string>
+  <string name="WatchList" Original="WatchList">Liste da Vedere</string>
+  <string name="Shouts" Original="Shouts">Giudizi</string>
+  <string name="OK" Original="OK">OK</string>
+  <string name="Cancel" Original="Cancel">Cancella</string>
+  <string name="Update" Original="Update">Aggiorna</string>
+</resources>
