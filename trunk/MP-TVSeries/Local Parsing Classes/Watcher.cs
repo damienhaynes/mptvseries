@@ -102,13 +102,13 @@ class MPR
 
 namespace WindowPlugins.GUITVSeries
 {
-    enum WatcherItemType
+    public enum WatcherItemType
     {
         Added,
         Deleted
     }
 
-    class WatcherItem
+    public class WatcherItem
     {
         public String m_sFullPathFileName;
         public String m_sParsedFileName;
@@ -191,7 +191,7 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
-    class Watcher
+    public class Watcher
     {
         public BackgroundWorker worker = new BackgroundWorker();
         List<String> m_WatchedFolders = new List<String>();
