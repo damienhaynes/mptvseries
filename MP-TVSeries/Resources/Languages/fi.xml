@@ -280,11 +280,29 @@
   <string name="GettingActors" Original="Getting Actors from Online">Haetaan näyttelijöitä palvelimelta</string>
   <string name="ShowAllEpisodes" Original="Show all Episodes">Näytä kaikki jaksot</string>
   <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Lataa kaikki jakson tiedot</string>
+  <string name="Calendar" Original="Calendar">Kalenteri</string>
+  <string name="Recommendations" Original="Recommendations">Suositukset</string>
+  <string name="WatchList" Original="WatchList">Katsontalista</string>
+  <string name="MainMenu" Original="Main Menu">Päävalikko</string>
+  <string name="AddToWatchList" Original="Add {0} to Watchlist">Lisää {0} Katsontalistaan</string>
+  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Et voi tehdä tätä ilman että olet⏎ kirjautunut sisään. Haluaisitko Liittyä tai Kirjautua⏎ trakt.tv palveluun nyt?</string>
+  <string name="RelatedSeries" Original="RelatedSeries">Liittyvät sarjat</string>
+  <string name="SearchTorrent" Original="Torrent Search">Torrent haku</string>
+  <string name="SearchActorInMovies" Original="Search for Actor in Movies">Etsi näyttelijöitä elokuvista</string>
+  <string name="AddToCustomList" Original="Add {0} to Custom List...">Lisää {0} muokattuun listaan...</string>
+  <string name="insertDisk" Original="Please insert Disk">Aseta levy</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Valitun jakson tallennusmedia</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">ei ole tällä hetkellä saatavilla.</string>
   <string name="InsertDiskMessage3" Original="Please insert or connect media">Liitä tai yhdistä media</string>
   <string name="InsertDiskMessage4" Original="labeled: {0}">nimeltään: {0}</string>
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Peruuta</string>
+  <string name="Ignore" Original="Ignore">Ohita</string>
+  <string name="Update" Original="Update">Päivitä</string>
+  <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">Näkymä \'{0}\' on jo olemassa</string>
   <string name="Warning" Original="Warning">Varoitus</string>
+  <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Haluatko varmasti jatkaa?</string>
+  <string name="Filters" Original="Filters">Suodattimet</string>
+  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Katsomattomat jaksot</string>
+  <string name="AllEpisodes" Original="All Episodes">Kaikki jaksot</string>
 </resources>

@@ -29,5 +29,6 @@
   <string name="ErrorClear" Original="Error">Napaka</string>
   <string name="SortBy" Original="Sort By">Sortiraj po</string>
   <string name="Title" Original="Title">Naslov</string>
+  <string name="Votes" Original="votes">Glasovi</string>
   <string name="Cancel" Original="Cancel">Preklici</string>
 </resources>

@@ -237,13 +237,16 @@
   <string name="Title" Original="Title">Titel</string>
   <string name="Votes" Original="votes">röster</string>
   <string name="Timeout" Original="Timeout">Timeout</string>
+  <string name="ShowAllEpisodes" Original="Show all Episodes">Visa alla avsnitt</string>
   <string name="Calendar" Original="Calendar">Kalender</string>
   <string name="Recommendations" Original="Recommendations">Rekommendationer</string>
   <string name="Trending" Original="Trending">Populärt</string>
   <string name="WatchList" Original="WatchList">Watch List</string>
   <string name="Shouts" Original="Shouts">Shouts</string>
+  <string name="insertDisk" Original="Please insert Disk">Sätt i skiva</string>
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Avbryt</string>
   <string name="Update" Original="Update">Uppdatera</string>
   <string name="Warning" Original="Warning">Varning</string>
+  <string name="AllEpisodes" Original="All Episodes">Alla avsnitt</string>
 </resources>
