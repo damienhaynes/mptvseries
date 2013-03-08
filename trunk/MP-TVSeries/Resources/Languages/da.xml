@@ -295,5 +295,6 @@
   <string name="InsertDiskMessage4" Original="labeled: {0}">mærket: {0}</string>
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Annuller</string>
+  <string name="Update" Original="Update">Opdater</string>
   <string name="Warning" Original="Warning">Advarsel</string>
 </resources>

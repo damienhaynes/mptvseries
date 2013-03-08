@@ -1,10 +1,108 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
+  <string name="Series" Original="Series">Nanizanka</string>
+  <string name="Series_Plural" Original="Series (Plr)">Nanizanke</string>
   <!--plural-->
+  <string name="Season" Original="Season">Sezona</string>
+  <string name="Seasons" Original="Seasons">Sezone</string>
+  <string name="Episode" Original="Episode">Del</string>
+  <string name="Episodes" Original="Episodes">Deli</string>
+  <string name="Toggle_watched_flag" Original="Toggle watched flag">Spremeni označbo \"gledano\"</string>
+  <string name="Retrieve_Subtitle" Original="Retrieve Subtitle">Naloži podnapis</string>
+  <string name="Load_via_Torrent" Original="Load via Torrent">Naloži preko torrenta</string>
+  <string name="Mark_all_as_watched" Original="Mark all as watched">Označi vse kot gledano</string>
+  <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Označi vse kot neogledano</string>
+  <string name="Hide" Original="Hide">Skrij</string>
+  <string name="Delete" Original="Delete">Briši</string>
+  <string name="Remove_series_from_Favourites" Original="Remove series from Favourites">Odstrani iz priljubljenih</string>
+  <string name="Add_series_to_Favourites" Original="Add series to Favourites">Dodaj med priljubljene</string>
+  <string name="Force_Local_Scan" Original="Force Local Scan ">Začni lokalni pregled podatkov</string>
+  <string name="Force_Online_Refresh" Original="Force Online Refresh ">Osveži z interneta</string>
+  <string name="In_Progress_with_Barracks" Original="(In Progress)">(izvajam)</string>
+  <string name="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Skrij spoilerje</string>
+  <string name="on" Original="on">vključeno</string>
+  <string name="off" Original="off">izključeno</string>
+  <string name="Play_Random_Episode" Original="Play Random Episode">Predvajaj naključno epizodo</string>
+  <string name="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Predvajaj naključno neogledano epizodo</string>
+  <string name="Delete_that_series" Original="Delete that series?">Briši to nanizanko?</string>
+  <string name="Delete_that_season" Original="Delete that season?">Briši to sezono?</string>
+  <string name="Delete_that_episode" Original="Delete that episode?">Briši ta del?</string>
+  <string name="Confirm" Original="Confirm">Potrdi</string>
+  <string name="Completed" Original="Completed">Končano</string>
+  <string name="No_subtitles_found" Original="No subtitles found">Nisem našel podnapisov</string>
+  <string name="CFS_No_Results_Found" Original="No Results Found!">Ni rezultatov iskanja!</string>
+  <string name="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *">* skrito zaradi preprečevanja spoilerjev *</string>
+  <string name="Yes" Original="Yes">Ja</string>
+  <string name="No" Original="No">Ne</string>
+  <string name="Error" Original="#Error">#Napaka</string>
+  <string name="No_items" Original="No items!">Ni podatkov!</string>
   <string name="Unknown" Original="Unknown">Neznano</string>
+  <string name="wrongSkin" Original="Wrong Skin file">Napačna datoteka izgleda</string>
+  <string name="special" Original="Special">Posebna epizoda</string>
+  <string name="specials" Original="Specials">Posebne epizode</string>
+  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Trajno boš izbrisal {0} datotek.\nRes želiš nadaljevati?</string>
+  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Zahtevaj osvežitev podatkov z interneta</string>
+  <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Naloži preko NewsLeecher-ja</string>
+  <string name="Download" Original="Download">Naloži</string>
+  <string name="Actions" Original="Actions">Ukrepi</string>
+  <string name="Options" Original="Options">Možnosti</string>
   <string name="Genres" Original="Genres">Žanri</string>
+  <string name="All" Original="All">Vsi</string>
+  <string name="Latest" Original="Latest Aired">Zadnje predvajane</string>
+  <string name="Channels" Original="Channels">Kanali</string>
+  <string name="Unwatched" Original="Unwatched">Neogledani</string>
+  <string name="Favourites" Original="Favourites">Priljubljene</string>
+  <string name="updateMI" Original="Update Mediainfo of local file">Posodobi podatke o epizodi</string>
+  <string name="RateSeries" Original="Rate this Series">Oceni to nanizanko</string>
+  <string name="RateEpisode" Original="Rate this Episode">Oceni to epizodo</string>
+  <string name="ResetRating" Original="Reset Rating">Izbriši oceno</string>
+  <string name="AskToRate" Original="Ask me to rate unrated episodes">Vprašaj me za oceno neocenjenih delov</string>
+  <string name="DontAskToRate" Original="Don't ask me to rate again">Ne vprašaj me več za oceno</string>
+  <string name="RatingStar" Original="Star">Zvezdica</string>
+  <string name="RatingStars" Original="Stars">Zvezdice</string>
   <string name="ChangeView" Original="Change View">Spremeni pogled</string>
+  <string name="ChangeViewFast" Original="Immediatly Change Views">Takoj zamenjaj poglede</string>
+  <string name="FanArt" Original="Fanart">Fanart</string>
+  <string name="FanListAll" Original="List all Fanart for this Series">Prikaži ves fanart za to nanizanko</string>
+  <string name="FanArtGetAndUse" Original="Download Fanart and Use">Naloži fanart in ga uporabi</string>
+  <string name="FanArtGet" Original="Download Fanart">Naloži fanart</string>
+  <string name="FanArtUse" Original="Set Fanart as Default">Nastavi fanart kot privzet</string>
+  <string name="FanArtDelete" Original="Delete Fanart">Briši fanart</string>
+  <string name="FanDownloadingStatus" Original="Downloading {0} Fanart...">Nalagam {0} fanart...</string>
+  <string name="FanArtLocal" Original="Local">Lokalno</string>
+  <string name="FanArtOnline" Original="Remote">Oddaljeno</string>
+  <string name="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Nalagam {0} / {1} fanart...</string>
+  <string name="FanArtRandom" Original="Display random Fanart">Prikaži naključen fanart</string>
+  <string name="FanArtNoneFound" Original="No Fanart could be found">Nisem našel fanart-a</string>
+  <string name="CFS_Choose_Item" Original="Choose item">Izberi element</string>
+  <string name="CFS_Select_Matching_Item" Original="Select matching item:">Izberi ustrezen element</string>
+  <string name="CFS_Search_Again" Original="Search again">Ponovno išči</string>
+  <string name="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Izberi ustrezno datoteko s podnapisi</string>
+  <string name="CFS_Subtitle_Episode" Original="Choose item">Del:</string>
+  <string name="CFS_Matching_Subtitles" Original="Matching Subtitles">Ustrezni podnapisi</string>
+  <string name="CFS_Choose_Correct_Series" Original="Choose Correct Series">Izberi ustrezno nanizanko</string>
+  <string name="CFS_Available_Series" Original="Available Series">Nanizanke na voljo</string>
+  <string name="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Izberi željeno verzijo podnapisov</string>
+  <string name="CFS_Select_Version" Original="Version:">Verzija:</string>
+  <string name="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Izberi ustrezen del</string>
+  <string name="CFS_Local_Episode_Index" Original="Local Episiode index:">Zaporedna številka dela:</string>
+  <string name="CFS_Available_Episode_List" Original="Available Episode list:">Seznam razpoložljivih delov:</string>
+  <string name="CFS_Choose_Search_Site" Original="Choose search site:">Izberi spletno stran za iskanje:</string>
+  <string name="CFS_List_Search_Site" Original="List of search sites:">Seznam iskalnih strani:</string>
+  <string name="CFS_Found_Torrents" Original="Found torrents:">Našel torrente:</string>
+  <string name="CFS_Looking_For" Original="Looking for:">Iščem:</string>
+  <string name="CFS_Choose_Correct_Season" Original="Choose correct season">Izberi ustrezno sezono</string>
+  <string name="CFS_Local_Season_Index" Original="Local Season index:">Zaporedna številka sezone:</string>
+  <string name="CFS_Available_Seasons" Original="Available Seasons list:">Seznam razpoložljivih sezon:</string>
+  <string name="CFS_Skip_Never_Ask_Again" Original="Skip / Never Ask Again">Preskoči / nikoli več ne vprašaj</string>
+  <string name="CYN_Subtitle_File_Replace" Original="Subtitle File Replace">Zamenjava datotek s podnapisi</string>
+  <string name="CYN_Old_Subtitle_Replace" Original="Old subtitle File present: overwrite?">Obstoječa datoteka s podnapisi. Prepišem?</string>
+  <string name="RecentlyAdded" Original="Recently Added">Nedavno dodano</string>
+  <string name="TVDB_ERROR_TITLE" Original="theTVDB Error">Napaka theDVDB</string>
+  <string name="TVDB_INFO_TITLE" Original="theTVDB">theDVDB</string>
   <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string name="ButtonOptions" Original="Options">Možnosti</string>
+  <string name="FanArtFilterAll" Original="All">Vsi</string>
   <!--Rate Descriptions - 5 Stars-->
   <string name="RateFiveStarOne" Original="Terrible">Strašno</string>
   <string name="RateFiveStarTwo" Original="Mediocre">Povprecno</string>

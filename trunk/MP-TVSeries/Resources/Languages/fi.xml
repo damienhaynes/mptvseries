@@ -271,7 +271,7 @@
   <string name="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">Vastaavia kohteita ei löytynyt, hae manuaalisesti...</string>
   <string name="CFS_Local_Series" Original="Local Series:">Paikalliset sarjat:</string>
   <string name="AvailableMedia" Original="Available Media">Saatavilla olevat tallennusmediat</string>
-  <string name="Votes" Original="votes">ääniä</string>
+  <string name="Votes" Original="votes">Ääntä</string>
   <string name="LayoutCoveflow" Original="Coveflow">Kansivirta</string>
   <string name="ResumeEpisode" Original="Resume episode from last time?">Jatketaanko katselua kohdasta mihin viimeksi jäätiin?</string>
   <string name="SummaryNotAvailable" Original="No summary is currently available.">Yhteenvetoa ei ole saatavilla.</string>
@@ -282,12 +282,15 @@
   <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Lataa kaikki jakson tiedot</string>
   <string name="Calendar" Original="Calendar">Kalenteri</string>
   <string name="Recommendations" Original="Recommendations">Suositukset</string>
+  <string name="Trending" Original="Trending">Nousussa</string>
   <string name="WatchList" Original="WatchList">Katsontalista</string>
+  <string name="Shouts" Original="Shouts">Huudot</string>
   <string name="MainMenu" Original="Main Menu">Päävalikko</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Lisää {0} Katsontalistaan</string>
   <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Et voi tehdä tätä ilman että olet⏎ kirjautunut sisään. Haluaisitko Liittyä tai Kirjautua⏎ trakt.tv palveluun nyt?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Liittyvät sarjat</string>
   <string name="SearchTorrent" Original="Torrent Search">Torrent haku</string>
+  <string name="SearchNZB" Original="NZB Search">NZB haku</string>
   <string name="SearchActorInMovies" Original="Search for Actor in Movies">Etsi näyttelijöitä elokuvista</string>
   <string name="AddToCustomList" Original="Add {0} to Custom List...">Lisää {0} muokattuun listaan...</string>
   <string name="insertDisk" Original="Please insert Disk">Aseta levy</string>
@@ -298,9 +301,13 @@
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Peruuta</string>
   <string name="Ignore" Original="Ignore">Ohita</string>
+  <string name="CycleSeriesThumb" Original="Cycle Series Panel">Kierrätä sarjat näkymää</string>
   <string name="Update" Original="Update">Päivitä</string>
   <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">Näkymä \'{0}\' on jo olemassa</string>
+  <string name="LayoutListThumbs" Original="List Panels">Lista näkymät</string>
+  <string name="LayoutCoverflow" Original="Coverflow">Kansivirta</string>
   <string name="Warning" Original="Warning">Varoitus</string>
+  <string name="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">Et ole vielä katsonut/kerännyt</string>
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Haluatko varmasti jatkaa?</string>
   <string name="Filters" Original="Filters">Suodattimet</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Katsomattomat jaksot</string>

@@ -278,16 +278,36 @@
   <string name="Timeout" Original="Timeout">Tiempo Excedido</string>
   <string name="NoActors" Original="There are no Actors for this series.">No hay actores para estas series</string>
   <string name="GettingActors" Original="Getting Actors from Online">Obteniendo actores Online</string>
+  <string name="ShowAllEpisodes" Original="Show all Episodes">Muestra todos los episodios</string>
+  <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Descargar la info de Todos los Capitulos</string>
   <string name="Calendar" Original="Calendar">Calendar</string>
   <string name="Recommendations" Original="Recommendations">Recommendations</string>
   <string name="Trending" Original="Trending">Trending</string>
   <string name="WatchList" Original="WatchList">Watch List</string>
   <string name="Shouts" Original="Shouts">Shouts</string>
+  <string name="MainMenu" Original="Main Menu">Menú Principal</string>
+  <string name="AddToWatchList" Original="Add {0} to Watchlist">Añadir {0} a la Lista de Vistos</string>
+  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">No se puede realizar esta operación, sin que ⏎ este autentificado ¿Quieres Regístrate o inicia sesión para ⏎ trakt.tv ahora?</string>
+  <string name="RelatedSeries" Original="RelatedSeries">Series Relacionadas</string>
+  <string name="SearchTorrent" Original="Torrent Search">Buscador torrents</string>
+  <string name="SearchNZB" Original="NZB Search">Buscador NZB</string>
+  <string name="SearchActorInMovies" Original="Search for Actor in Movies">Buscar los Actores en las Películas</string>
+  <string name="AddToCustomList" Original="Add {0} to Custom List...">Agregar {0} a lista personalizada ...</string>
+  <string name="insertDisk" Original="Please insert Disk">Por favor, inserte o conecte el medio</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">El medio del episodio que ha seleccionado</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">no está disponible en estos momentos</string>
   <string name="InsertDiskMessage3" Original="Please insert or connect media">Por favor, inserte o conecte el medio</string>
   <string name="InsertDiskMessage4" Original="labeled: {0}">etiquetado: {0}</string>
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Cancelar</string>
+  <string name="Ignore" Original="Ignore">ignorar</string>
+  <string name="CycleSeriesThumb" Original="Cycle Series Panel">Panel de Series Cíclico</string>
   <string name="Update" Original="Update">Actualizar</string>
+  <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">La vista \'{0}\' ya existe</string>
+  <string name="LayoutCoverflow" Original="Coverflow">Vista Coverflow</string>
+  <string name="Warning" Original="Warning">Peligro</string>
+  <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">¿Seguro que desea continuar?</string>
+  <string name="Filters" Original="Filters">Filtros</string>
+  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Episodios no Vistos</string>
+  <string name="AllEpisodes" Original="All Episodes">Todos los Capítulos</string>
 </resources>
