@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--plural-->
+  <string name="Yes" Original="Yes">Áno</string>
+  <string name="No" Original="No">Nie</string>
   <string name="Unknown" Original="Unknown">Neznáme</string>
   <string name="Genres" Original="Genres">Žánry</string>
   <string name="ChangeView" Original="Change View">Zmeniť zobrazenie</string>
@@ -24,11 +26,14 @@
   <string name="Genre" Original="Genre">Žáner</string>
   <string name="Rated" Original="Rated">Klasifikácia</string>
   <string name="Runtime" Original="Runtime">Dĺžka</string>
+  <string name="Watched" Original="Watched">Videné</string>
   <string name="Writer" Original="Writer">Scénárista</string>
   <string name="Writers" Original="Writers">Scénáristi</string>
   <string name="ErrorClear" Original="Error">Chyba</string>
   <string name="SortBy" Original="Sort By">Zoradiť podľa</string>
   <string name="Title" Original="Title">Titul</string>
   <string name="Votes" Original="votes">Hlasov</string>
+  <string name="WatchList" Original="WatchList">Zoznam</string>
+  <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Zrušiť</string>
 </resources>
