@@ -1276,7 +1276,7 @@ namespace WindowPlugins.GUITVSeries
             }
             
             // build up a query to get episode counts for series/season
-            string selectFields = "online_episodes.Watched, online_episodes.FirstAired";
+            string selectFields = "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired";
             string query = string.Empty;
             string whereClause = string.Format(@"online_episodes.SeriesID = {0} AND online_episodes.{1} = {2}", season[DBSeason.cSeriesID], seasonIndex, season[DBSeason.cIndex]);
 
