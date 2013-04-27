@@ -91,26 +91,26 @@ namespace WindowPlugins.GUITVSeries {
             Load(xmlSkinSettings);
 
             #region Display Format Strings
-            TVSeriesPlugin.m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cView_Series_Col1);
-            TVSeriesPlugin.m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cView_Series_Col2);
-            TVSeriesPlugin.m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cView_Series_Col3);
-            TVSeriesPlugin.m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cView_Series_Title);
-            TVSeriesPlugin.m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cView_Series_Subtitle);
-            TVSeriesPlugin.m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cView_Series_Main);
+            TVSeriesPlugin.m_sFormatSeriesCol1 = DBOption.GetOptions(DBOption.cViewSeriesColOne);
+            TVSeriesPlugin.m_sFormatSeriesCol2 = DBOption.GetOptions(DBOption.cViewSeriesColTwo);
+            TVSeriesPlugin.m_sFormatSeriesCol3 = DBOption.GetOptions(DBOption.cViewSeriesColThree);
+            TVSeriesPlugin.m_sFormatSeriesTitle = DBOption.GetOptions(DBOption.cViewSeriesTitle);
+            TVSeriesPlugin.m_sFormatSeriesSubtitle = DBOption.GetOptions(DBOption.cViewSeriesSecondTitle);
+            TVSeriesPlugin.m_sFormatSeriesMain = DBOption.GetOptions(DBOption.cViewSeriesMain);
 
-            TVSeriesPlugin.m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cView_Season_Col1);
-            TVSeriesPlugin.m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cView_Season_Col2);
-            TVSeriesPlugin.m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cView_Season_Col3);
-            TVSeriesPlugin.m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cView_Season_Title);
-            TVSeriesPlugin.m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cView_Season_Subtitle);
-            TVSeriesPlugin.m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cView_Season_Main);
+            TVSeriesPlugin.m_sFormatSeasonCol1 = DBOption.GetOptions(DBOption.cViewSeasonColOne);
+            TVSeriesPlugin.m_sFormatSeasonCol2 = DBOption.GetOptions(DBOption.cViewSeasonColTwo);
+            TVSeriesPlugin.m_sFormatSeasonCol3 = DBOption.GetOptions(DBOption.cViewSeasonColThree);
+            TVSeriesPlugin.m_sFormatSeasonTitle = DBOption.GetOptions(DBOption.cViewSeasonTitle);
+            TVSeriesPlugin.m_sFormatSeasonSubtitle = DBOption.GetOptions(DBOption.cViewSeasonSecondTitle);
+            TVSeriesPlugin.m_sFormatSeasonMain = DBOption.GetOptions(DBOption.cViewSeasonMain);
 
-            TVSeriesPlugin.m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cView_Episode_Col1);
-            TVSeriesPlugin.m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cView_Episode_Col2);
-            TVSeriesPlugin.m_sFormatEpisodeCol3 = DBOption.GetOptions(DBOption.cView_Episode_Col3);
-            TVSeriesPlugin.m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
-            TVSeriesPlugin.m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
-            TVSeriesPlugin.m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+            TVSeriesPlugin.m_sFormatEpisodeCol1 = DBOption.GetOptions(DBOption.cViewEpisodeColOne);
+            TVSeriesPlugin.m_sFormatEpisodeCol2 = DBOption.GetOptions(DBOption.cViewEpisodeColTwo);
+            TVSeriesPlugin.m_sFormatEpisodeCol3 = DBOption.GetOptions(DBOption.cViewEpisodeColThree);
+            TVSeriesPlugin.m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cViewEpisodeTitle);
+            TVSeriesPlugin.m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cViewEpisodeSecondTitle);
+            TVSeriesPlugin.m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cViewEpisodeMain);
             #endregion
 
             // Load all Skin Fields being used
@@ -453,27 +453,27 @@ namespace WindowPlugins.GUITVSeries {
                         layout = innerNode.Attributes.GetNamedItem("layout").Value;
                         switch (layout.ToLower()) {
                             case "listposters":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListPosters");
+                                DBOption.SetOptions(DBOption.cViewSeriesListFormat, "ListPosters");
                                 break;
 
                             case "listbanners":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "ListBanners");
+                                DBOption.SetOptions(DBOption.cViewSeriesListFormat, "ListBanners");
                                 break;
 
                             case "filmstrip":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Filmstrip");
+                                DBOption.SetOptions(DBOption.cViewSeriesListFormat, "Filmstrip");
                                 break;
 
                             case "widebanners":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
+                                DBOption.SetOptions(DBOption.cViewSeriesListFormat, "WideBanners");
                                 break;
 
                             case "coverflow":
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "Coverflow");
+                                DBOption.SetOptions(DBOption.cViewSeriesListFormat, "Coverflow");
                                 break;
 
                             default:
-                                DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
+                                DBOption.SetOptions(DBOption.cViewSeriesListFormat, "WideBanners");
                                 break;
                         }
                     }
@@ -483,19 +483,19 @@ namespace WindowPlugins.GUITVSeries {
                         // Set First Supported Type                        
                         layouts = GetViewLayouts("Series");
                         if (layouts == null || layouts.Count == 0)
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, "WideBanners");
+                            DBOption.SetOptions(DBOption.cViewSeriesListFormat, "WideBanners");
                         else
-                            DBOption.SetOptions(DBOption.cView_Series_ListFormat, layouts[0]);
+                            DBOption.SetOptions(DBOption.cViewSeriesListFormat, layouts[0]);
 
                     }
                 }
 
                 innerNode = node.SelectSingleNode("series/item1");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col1, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewSeriesColOne, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("series/item2");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col2, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewSeriesColTwo, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("series/item3");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Series_Col3, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewSeriesColThree, innerNode.InnerText.Trim());
                 #endregion
 
                 #region Season Views
@@ -507,21 +507,21 @@ namespace WindowPlugins.GUITVSeries {
                         layout = innerNode.Attributes.GetNamedItem("layout").Value;
                         switch (layout.ToLower()) {
                             case "list":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                                DBOption.SetOptions(DBOption.cViewSeasonListFormat, "0");
                                 break;
 
                             case "smallicons":
                             case "bigicons":
                             case "filmstrip":                            
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                                DBOption.SetOptions(DBOption.cViewSeasonListFormat, "1");
                                 break;
 
                             case "coverflow":
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "2");
+                                DBOption.SetOptions(DBOption.cViewSeasonListFormat, "2");
                                 break;
 
                             default:
-                                DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                                DBOption.SetOptions(DBOption.cViewSeasonListFormat, "0");
                                 break;
                         }
                     }
@@ -531,30 +531,30 @@ namespace WindowPlugins.GUITVSeries {
                         // Set First Supported Type
                         layouts = GetViewLayouts("Season");
                         if (layouts == null || layouts.Count == 0)
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                            DBOption.SetOptions(DBOption.cViewSeasonListFormat, "0");
                         else
-                            DBOption.SetOptions(DBOption.cView_Season_ListFormat, layouts[0]);
+                            DBOption.SetOptions(DBOption.cViewSeasonListFormat, layouts[0]);
 
                     }
                 }
 
                 innerNode = node.SelectSingleNode("season/item1");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col1, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewSeasonColOne, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("season/item2");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col2, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewSeasonColTwo, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("season/item3");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Season_Col3, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewSeasonColThree, innerNode.InnerText.Trim());
                 #endregion
 
                 #region Episode Views
                 MPTVSeriesLog.Write("Loading Skin Episode View Settings", MPTVSeriesLog.LogLevel.Normal);
 
                 innerNode = node.SelectSingleNode("episode/item1");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col1, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewEpisodeColOne, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("episode/item2");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col2, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewEpisodeColTwo, innerNode.InnerText.Trim());
                 innerNode = node.SelectSingleNode("episode/item3");
-                if (innerNode != null) DBOption.SetOptions(DBOption.cView_Episode_Col3, innerNode.InnerText.Trim());
+                if (innerNode != null) DBOption.SetOptions(DBOption.cViewEpisodeColThree, innerNode.InnerText.Trim());
                 #endregion
 
                 ImportViews = true;
@@ -701,14 +701,14 @@ namespace WindowPlugins.GUITVSeries {
                     break;
 
                 case "Series":
-                    if (layouts.Contains(DBOption.GetOptions(DBOption.cView_Series_ListFormat)))
+                    if (layouts.Contains(DBOption.GetOptions(DBOption.cViewSeriesListFormat)))
                         supported = true;
                     break;
 
                 case "Season":
-                    if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) =="1")
+                    if (DBOption.GetOptions(DBOption.cViewSeasonListFormat) =="1")
                         currentLayout = "Filmstrip";
-                    else if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) =="2")
+                    else if (DBOption.GetOptions(DBOption.cViewSeasonListFormat) =="2")
                         currentLayout = "Coverflow";
                     else
                         currentLayout = "List";

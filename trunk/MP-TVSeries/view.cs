@@ -192,14 +192,14 @@ namespace WindowPlugins.GUITVSeries
             logicalViewStep step = m_steps[stepIndex];
             List<string> items = new List<string>();
             // to ensure we respect on the fly filter settings
-            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && (typeof(DBOnlineEpisode) != step.groupedBy.table.GetType() && typeof(DBEpisode) != step.groupedBy.table.GetType()))
+            if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles) && (typeof(DBOnlineEpisode) != step.groupedBy.table.GetType() && typeof(DBEpisode) != step.groupedBy.table.GetType()))
             {
                 // not generic
                 SQLCondition fullSubCond = new SQLCondition();
                 fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
                 conditions.AddCustom(" exists( " + DBEpisode.stdGetSQL(fullSubCond, false) + " )");
             }
-            else if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            else if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
             {
                 // has to be grouped by something episode
                 conditions.Add(new DBEpisode(), DBEpisode.cFilename, "", SQLConditionType.NotEqual);
