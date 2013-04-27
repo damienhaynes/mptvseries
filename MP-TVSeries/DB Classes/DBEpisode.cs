@@ -1283,13 +1283,13 @@ namespace WindowPlugins.GUITVSeries
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                 whereClause += " AND online_episodes.Hidden = 0";
 
-            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                 whereClause += " AND local_episodes.EpisodeFilename != ''";
 
             if (!DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
                 whereClause += string.Format(" AND online_episodes.FirstAired <= '{0}' AND online_episodes.FirstAired != ''", DateTime.Now.ToString("yyyy-MM-dd"));
 
-            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
             {
                 // if we are only counting episodes that have a file ie. local reference
                 // then we need to join the local and online episode tables
@@ -1420,7 +1420,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 SQLCondition conditions = new SQLCondition();
-                if ((!Settings.isConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                if ((!Settings.isConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                     conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?

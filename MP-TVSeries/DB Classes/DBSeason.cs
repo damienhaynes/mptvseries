@@ -348,7 +348,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
 
-                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                 {
                     SQLCondition fullSubCond = new SQLCondition();
                     fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
@@ -382,7 +382,7 @@ namespace WindowPlugins.GUITVSeries
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeasonIndex), DBSeason.Q(DBSeason.cIndex), SQLConditionType.Equal);
                     //condition.AddCustom(" season.seasonindex in ( " + DBEpisode.stdGetSQL(fullSubCond, false, true, DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID)) + " )");
                     string join = null;
-                    if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                    if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                     {
                         fullSubCond = DBEpisode.stdConditions;
                         condition.AddCustom(fullSubCond.ConditionsSQLString.Replace("where", "and"));

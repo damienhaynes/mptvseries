@@ -78,7 +78,7 @@ namespace WindowPlugins.GUITVSeries
                                        DBEpisode e = item as DBEpisode;
                                        if (null == e) return false;
                                        return field == "<Episode.Summary>" &&
-                                               DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary)
+                                               DBOption.GetOptions(DBOption.cHideUnwatchedSummary)
                                                && !e[DBOnlineEpisode.cWatched];
                                    },
                                    delegate(string value, string field, DBTable item)

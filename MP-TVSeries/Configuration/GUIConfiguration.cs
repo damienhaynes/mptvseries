@@ -195,21 +195,21 @@ namespace WindowPlugins.GUITVSeries
                 treeView_Settings.Nodes.Add(node);
             }
 
-            splitMain_Log.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfig_LogCollapsed);
+            splitMain_Log.Panel2Collapsed = DBOption.GetOptions(DBOption.cConfigLogCollapsed);
             log_window_changed();
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
             nudWatchedAfter.Value = DBOption.GetOptions(DBOption.cWatchedAfter);
-            textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cView_PluginName);
+            textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cPluginName);
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
             checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);            
-            checkBox_Episode_OnlyShowLocalFiles.Checked = !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles);
-            checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary);
-            checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail);
-            checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImport_FolderWatch);
-            checkBox_scanRemoteShares.Checked = DBOption.GetOptions(DBOption.cImport_ScanRemoteShare);
-            nudScanRemoteShareFrequency.Value = DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse);
+            checkBox_Episode_OnlyShowLocalFiles.Checked = !DBOption.GetOptions(DBOption.cOnlyShowLocalFiles);
+            checkBox_Episode_HideUnwatchedSummary.Checked = DBOption.GetOptions(DBOption.cHideUnwatchedSummary);
+            checkBox_Episode_HideUnwatchedThumbnail.Checked = DBOption.GetOptions(DBOption.cHideUnwatchedThumbnail);
+            checkBox_doFolderWatch.Checked = DBOption.GetOptions(DBOption.cImportFolderWatch);
+            checkBox_scanRemoteShares.Checked = DBOption.GetOptions(DBOption.cImportScanRemoteShare);
+            nudScanRemoteShareFrequency.Value = DBOption.GetOptions(DBOption.cImportScanRemoteShareLapse);
 
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
@@ -236,7 +236,7 @@ namespace WindowPlugins.GUITVSeries
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);            
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
-            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImport_ScanOnStartup);
+            checkBox_ScanOnStartup.Checked = DBOption.GetOptions(DBOption.cImportScanOnStartup);
             if (!checkBox_ScanOnStartup.Checked)
             {
                 lblImportDelayCaption.Enabled = false;
@@ -255,9 +255,9 @@ namespace WindowPlugins.GUITVSeries
 			if (DBOption.GetOptions(DBOption.cRatingDisplayStars) == 5)
 				checkboxRatingDisplayStars.Checked = true;
 
-            int nValue = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);            
+            int nValue = DBOption.GetOptions(DBOption.cImportAutoUpdateOnlineDataLapse);            
             numericUpDown_AutoOnlineDataRefresh.Value = nValue;
-            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData);
+            checkBox_AutoOnlineDataRefresh.Checked = DBOption.GetOptions(DBOption.cImportAutoUpdateOnlineData);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
 
             chkAutoDownloadFanart.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanart);
@@ -265,69 +265,69 @@ namespace WindowPlugins.GUITVSeries
             spinMaxFanarts.Value = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
             checkboxAutoDownloadFanartSeriesName.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
 
-            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cSeries_UseSortName);                        
+            checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cUseSortName);                        
             
-            richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cView_Series_Col1, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cViewSeriesColOne, FieldTag.Level.Series);
             richTextBox_seriesFormat_Col1.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seriesFormat_Col1);
 
-            richTextBox_seriesFormat_Col2.Tag = new FieldTag(DBOption.cView_Series_Col2, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Col2.Tag = new FieldTag(DBOption.cViewSeriesColTwo, FieldTag.Level.Series);
             richTextBox_seriesFormat_Col2.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seriesFormat_Col2);
 
-            richTextBox_seriesFormat_Col3.Tag = new FieldTag(DBOption.cView_Series_Col3, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Col3.Tag = new FieldTag(DBOption.cViewSeriesColThree, FieldTag.Level.Series);
             richTextBox_seriesFormat_Col3.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seriesFormat_Col3);
 
-            richTextBox_seriesFormat_Title.Tag = new FieldTag(DBOption.cView_Series_Title, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Title.Tag = new FieldTag(DBOption.cViewSeriesTitle, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Title);
 
-            richTextBox_seriesFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Series_Subtitle, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Subtitle.Tag = new FieldTag(DBOption.cViewSeriesSecondTitle, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Subtitle);
 
-            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cView_Series_Main, FieldTag.Level.Series);
+            richTextBox_seriesFormat_Main.Tag = new FieldTag(DBOption.cViewSeriesMain, FieldTag.Level.Series);
             FieldValidate(ref richTextBox_seriesFormat_Main);          
 
-            richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cView_Season_Col1, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Col1.Tag = new FieldTag(DBOption.cViewSeasonColOne, FieldTag.Level.Season);
             richTextBox_seasonFormat_Col1.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seasonFormat_Col1);
 
-            richTextBox_seasonFormat_Col2.Tag = new FieldTag(DBOption.cView_Season_Col2, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Col2.Tag = new FieldTag(DBOption.cViewSeasonColTwo, FieldTag.Level.Season);
             richTextBox_seasonFormat_Col2.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seasonFormat_Col2);
 
-            richTextBox_seasonFormat_Col3.Tag = new FieldTag(DBOption.cView_Season_Col3, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Col3.Tag = new FieldTag(DBOption.cViewSeasonColThree, FieldTag.Level.Season);
             richTextBox_seasonFormat_Col3.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_seasonFormat_Col3);
 
-            richTextBox_seasonFormat_Title.Tag = new FieldTag(DBOption.cView_Season_Title, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Title.Tag = new FieldTag(DBOption.cViewSeasonTitle, FieldTag.Level.Season);
             FieldValidate(ref richTextBox_seasonFormat_Title);
 
-            richTextBox_seasonFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Season_Subtitle, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Subtitle.Tag = new FieldTag(DBOption.cViewSeasonSecondTitle, FieldTag.Level.Season);
             FieldValidate(ref richTextBox_seasonFormat_Subtitle);
 
-            richTextBox_seasonFormat_Main.Tag = new FieldTag(DBOption.cView_Season_Main, FieldTag.Level.Season);
+            richTextBox_seasonFormat_Main.Tag = new FieldTag(DBOption.cViewSeasonMain, FieldTag.Level.Season);
             FieldValidate(ref richTextBox_seasonFormat_Main);
 
-            richTextBox_episodeFormat_Col1.Tag = new FieldTag(DBOption.cView_Episode_Col1, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Col1.Tag = new FieldTag(DBOption.cViewEpisodeColOne, FieldTag.Level.Episode);
             richTextBox_episodeFormat_Col1.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_episodeFormat_Col1);
 
-            richTextBox_episodeFormat_Col2.Tag = new FieldTag(DBOption.cView_Episode_Col2, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Col2.Tag = new FieldTag(DBOption.cViewEpisodeColTwo, FieldTag.Level.Episode);
             richTextBox_episodeFormat_Col2.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_episodeFormat_Col2);
 
-            richTextBox_episodeFormat_Col3.Tag = new FieldTag(DBOption.cView_Episode_Col3, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Col3.Tag = new FieldTag(DBOption.cViewEpisodeColThree, FieldTag.Level.Episode);
             richTextBox_episodeFormat_Col3.Enabled = !SkinSettings.ImportViews;
             FieldValidate(ref richTextBox_episodeFormat_Col3);
 
-            richTextBox_episodeFormat_Title.Tag = new FieldTag(DBOption.cView_Episode_Title, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Title.Tag = new FieldTag(DBOption.cViewEpisodeTitle, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Title);
 
-            richTextBox_episodeFormat_Subtitle.Tag = new FieldTag(DBOption.cView_Episode_Subtitle, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Subtitle.Tag = new FieldTag(DBOption.cViewEpisodeSecondTitle, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Subtitle);
 
-            richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cView_Episode_Main, FieldTag.Level.Episode);
+            richTextBox_episodeFormat_Main.Tag = new FieldTag(DBOption.cViewEpisodeMain, FieldTag.Level.Episode);
             FieldValidate(ref richTextBox_episodeFormat_Main);              
 
             chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
@@ -629,7 +629,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (series == null) return;
 
-            string sName = (DBOption.GetOptions(DBOption.cSeries_UseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
+            string sName = (DBOption.GetOptions(DBOption.cUseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
             TreeNode seriesNode = new TreeNode(sName);
             seriesNode.Name = DBSeries.cTableName;
             seriesNode.Tag = (DBSeries)series;
@@ -1455,7 +1455,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Online Parsing Completed in " + span);           
             m_parser = null;
             ImportWizardParseParams = null;
-            DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, DateTime.Now.ToString());
+            DBOption.SetOptions(DBOption.cImportOnlineUpdateScanLastTime, DateTime.Now.ToString());
             LoadTree();
 
             if (ParsingWizardHost != null && tabPage_Import.Contains(ParsingWizardHost))
@@ -2220,23 +2220,23 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_Episode_MatchingLocalFile_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);
+            DBOption.SetOptions(DBOption.cOnlyShowLocalFiles, checkBox_Episode_OnlyShowLocalFiles.Checked);
         }
 
         private void checkBox_Episode_HideUnwatchedSummary_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, checkBox_Episode_HideUnwatchedSummary.Checked);
+            DBOption.SetOptions(DBOption.cHideUnwatchedSummary, checkBox_Episode_HideUnwatchedSummary.Checked);
         }
 
         private void checkBox_AutoOnlineDataRefresh_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
+            DBOption.SetOptions(DBOption.cImportAutoUpdateOnlineData, checkBox_AutoOnlineDataRefresh.Checked);
             numericUpDown_AutoOnlineDataRefresh.Enabled = checkBox_AutoOnlineDataRefresh.Checked;
         }
 
         private void numericUpDown_AutoOnlineDataRefresh_ValueChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
+            DBOption.SetOptions(DBOption.cImportAutoUpdateOnlineDataLapse, (int)numericUpDown_AutoOnlineDataRefresh.Value);
         }
 
         private void ScanIgnore(TreeNode nodeScanIgnore)
@@ -3093,13 +3093,13 @@ namespace WindowPlugins.GUITVSeries
 
         private void textBox_PluginHomeName_TextChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_PluginName, textBox_PluginHomeName.Text);
+            DBOption.SetOptions(DBOption.cPluginName, textBox_PluginHomeName.Text);
         }
 
         private void log_window_changed()
         {
             this.splitMain_Log.SplitterDistance = this.Size.Height / 3 * 2;
-            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitMain_Log.Panel2Collapsed);
+            DBOption.SetOptions(DBOption.cConfigLogCollapsed, splitMain_Log.Panel2Collapsed);
 
             if (splitMain_Log.Panel2Collapsed)
             {
@@ -3116,7 +3116,7 @@ namespace WindowPlugins.GUITVSeries
         private void button1_Click(object sender, EventArgs e)
         {
             splitMain_Log.Panel2Collapsed = !splitMain_Log.Panel2Collapsed;
-            DBOption.SetOptions(DBOption.cConfig_LogCollapsed, splitMain_Log.Panel2Collapsed);
+            DBOption.SetOptions(DBOption.cConfigLogCollapsed, splitMain_Log.Panel2Collapsed);
             log_window_changed();
         }
 
@@ -3574,7 +3574,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_doFolderWatch_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_FolderWatch, checkBox_doFolderWatch.Checked);
+            DBOption.SetOptions(DBOption.cImportFolderWatch, checkBox_doFolderWatch.Checked);
             if (checkBox_doFolderWatch.Checked) {
                 checkBox_scanRemoteShares.Enabled = true;
                 if (checkBox_scanRemoteShares.Checked) {
@@ -3595,7 +3595,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_scanRemoteShares_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_ScanRemoteShare, checkBox_scanRemoteShares.Checked);
+            DBOption.SetOptions(DBOption.cImportScanRemoteShare, checkBox_scanRemoteShares.Checked);
             if (checkBox_scanRemoteShares.Checked)
                 nudScanRemoteShareFrequency.Enabled = true;
             else
@@ -3660,9 +3660,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DBOption.SetOptions(DBOption.cUpdateBannersTimeStamp, 0);
             DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
-            
             MPTVSeriesLog.Write("Last updated Timestamps cleared");
         }
 
@@ -3964,7 +3962,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_Series_UseSortName_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cSeries_UseSortName, checkBox_Series_UseSortName.Checked);
+            DBOption.SetOptions(DBOption.cUseSortName, checkBox_Series_UseSortName.Checked);
             LoadTree();
         }
        
@@ -4015,7 +4013,7 @@ namespace WindowPlugins.GUITVSeries
     
         private void checkBox_Episode_OnlyShowLocalFiles_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !checkBox_Episode_OnlyShowLocalFiles.Checked);
+            DBOption.SetOptions(DBOption.cOnlyShowLocalFiles, !checkBox_Episode_OnlyShowLocalFiles.Checked);
         }
 
         private void optionAsk2Rate_CheckedChanged(object sender, EventArgs e)
@@ -4079,7 +4077,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_ScanOnStartup_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_ScanOnStartup, checkBox_ScanOnStartup.Checked);
+            DBOption.SetOptions(DBOption.cImportScanOnStartup, checkBox_ScanOnStartup.Checked);
             lblImportDelaySecs.Enabled = checkBox_ScanOnStartup.Checked;
             lblImportDelayCaption.Enabled = checkBox_ScanOnStartup.Checked;
             numericUpDownImportDelay.Enabled = checkBox_ScanOnStartup.Checked;
@@ -4102,7 +4100,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void checkBox_Episode_HideUnwatchedThumbnail_CheckedChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, checkBox_Episode_HideUnwatchedThumbnail.Checked);
+            DBOption.SetOptions(DBOption.cHideUnwatchedThumbnail, checkBox_Episode_HideUnwatchedThumbnail.Checked);
         }
 
         private void btnRemoveView_Click(object sender, EventArgs e) {
@@ -4447,7 +4445,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void nudScanRemoteShareFrequency_ValueChanged(object sender, EventArgs e)
         {
-            DBOption.SetOptions(DBOption.cImport_ScanRemoteShareLapse, (int)nudScanRemoteShareFrequency.Value);
+            DBOption.SetOptions(DBOption.cImportScanRemoteShareLapse, (int)nudScanRemoteShareFrequency.Value);
         }        
 
         // Set focus on selected item when using Mouse Right Click

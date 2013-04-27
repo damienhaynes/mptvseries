@@ -622,7 +622,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
 
-                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) && !conditions.ConditionsSQLString.Contains(DBEpisode.cTableName))
+                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles) && !conditions.ConditionsSQLString.Contains(DBEpisode.cTableName))
                 {
                     SQLCondition fullSubCond = new SQLCondition();
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
@@ -676,7 +676,7 @@ namespace WindowPlugins.GUITVSeries
             string orderBy = string.Empty;
             if (selectFull)
             {
-                bool bUseSortName = DBOption.GetOptions(DBOption.cSeries_UseSortName);
+                bool bUseSortName = DBOption.GetOptions(DBOption.cUseSortName);
                 orderBy = conditions.customOrderStringIsSet
                       ? conditions.orderString
                       : " order by " + (bUseSortName?"upper(" + DBOnlineSeries.Q(DBOnlineSeries.cSortName) + "),":"") + "upper(" + DBOnlineSeries.Q(DBOnlineSeries.cPrettyName) + ")";
@@ -762,7 +762,7 @@ namespace WindowPlugins.GUITVSeries
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                 wheres.Add("online_episodes.Hidden = 0");
 
-            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                 wheres.Add("local_episodes.EpisodeFilename != ''");
 
             if (!DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
@@ -773,7 +773,7 @@ namespace WindowPlugins.GUITVSeries
                 whereClause = string.Format("WHERE {0}", string.Join(" AND ", wheres.ToArray()));
             }
 
-            if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+            if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
             {
                 // if we are only counting episodes that have a file ie. local reference
                 // then we need to join the local and online episode tables

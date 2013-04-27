@@ -217,7 +217,7 @@ namespace WindowPlugins.GUITVSeries
         public static String m_sFormatEpisodeSubtitle = String.Empty;
         public static String m_sFormatEpisodeMain = String.Empty;
 
-        public static String pluginName = DBOption.GetOptions(DBOption.cView_PluginName);
+        public static String pluginName = DBOption.GetOptions(DBOption.cPluginName);
         public static int logosHeight = 100;
         public static int logosWidth = 250;
         private Control m_localControlForInvoke;
@@ -767,7 +767,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // Push last update time to skin
-            setGUIProperty(guiProperty.LastOnlineUpdate, DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime));
+            setGUIProperty(guiProperty.LastOnlineUpdate, DBOption.GetOptions(DBOption.cImportOnlineUpdateScanLastTime));
 
             MPTVSeriesLog.Write("OnPageLoad() completed.", MPTVSeriesLog.LogLevel.Debug);
 
@@ -1776,7 +1776,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         case Listlevel.Series:
                             selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
-                            string layout = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                            string layout = DBOption.GetOptions(DBOption.cViewSeriesListFormat);
                             switch (this.m_Facade.CurrentLayout)
                             {
                                 case GUIFacadeControl.Layout.LargeIcons:
@@ -2150,7 +2150,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write("MP-TVSeries is entering standby");
 
-                if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+                if (DBOption.GetOptions(DBOption.cImportFolderWatch))
                 {
                     DeviceManager.StopMonitor();
                     stopFolderWatches();
@@ -2244,17 +2244,17 @@ namespace WindowPlugins.GUITVSeries
                     switch (this.listLevel)
                     {
                         case (Listlevel.Series):
-                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
+                            if (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Filmstrip")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to FilmStrip", MPTVSeriesLog.LogLevel.Debug);
                                 this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
                             }
-                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Coverflow")
+                            if (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Coverflow")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to Coverflow", MPTVSeriesLog.LogLevel.Debug);
                                 this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.CoverFlow;
                             }
-                            if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "WideBanners")
+                            if (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "WideBanners")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to WideThumbs", MPTVSeriesLog.LogLevel.Debug);
                                 this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.LargeIcons;
@@ -2263,7 +2263,7 @@ namespace WindowPlugins.GUITVSeries
                         case (Listlevel.Season):
                             // There is no point having BigIcons for SeasonView, as it would need to re-use the WideBanner sizes
                             // Having multiple facades would get around this issue
-                            if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1")
+                            if (DBOption.GetOptions(DBOption.cViewSeasonListFormat) == "1")
                             {
                                 MPTVSeriesLog.Write("FacadeMode: Switching to Filmstrip", MPTVSeriesLog.LogLevel.Debug);
                                 this.m_Facade.CurrentLayout = GUIFacadeControl.Layout.Filmstrip;
@@ -2743,7 +2743,7 @@ namespace WindowPlugins.GUITVSeries
                     #region Series
                     case Listlevel.Series:
                         {
-                            string sSeriesDisplayMode = DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                            string sSeriesDisplayMode = DBOption.GetOptions(DBOption.cViewSeriesListFormat);
 
                             // We dont need to load thumbnails in the facade if using List View types
                             if (!sSeriesDisplayMode.Contains("List"))
@@ -2786,7 +2786,7 @@ namespace WindowPlugins.GUITVSeries
                             #endregion
 
                             // Sort Series List if Title has been user edited
-                            string titleField = DBOption.GetOptions(DBOption.cSeries_UseSortName) ? DBOnlineSeries.cSortName : DBOnlineSeries.cPrettyName;
+                            string titleField = DBOption.GetOptions(DBOption.cUseSortName) ? DBOnlineSeries.cSortName : DBOnlineSeries.cPrettyName;
                             seriesList.Sort(new Comparison<DBSeries>((x, y) =>
                             {
                                 string seriesX = string.Empty;
@@ -2816,7 +2816,7 @@ namespace WindowPlugins.GUITVSeries
                                     else
                                     {
                                         // Adjust Display name to reflect sort order
-                                        if (DBOption.GetOptions(DBOption.cSeries_UseSortName))
+                                        if (DBOption.GetOptions(DBOption.cUseSortName))
                                             m_sFormatSeriesCol2 = m_sFormatSeriesCol2.Replace("Series.Pretty_Name", "Series.SortName");
                                         else
                                             m_sFormatSeriesCol2 = m_sFormatSeriesCol2.Replace("Series.SortName", "Series.Pretty_Name");
@@ -2923,7 +2923,7 @@ namespace WindowPlugins.GUITVSeries
                             if (!canBeSkipped)
                                 MPTVSeriesLog.Write(string.Format("Displaying {0} seasons from {1}", seasons.Count.ToString(), m_SelectedSeries), MPTVSeriesLog.LogLevel.Debug);
 
-                            bool graphicalFacade = DBOption.GetOptions(DBOption.cView_Season_ListFormat) != "0";
+                            bool graphicalFacade = DBOption.GetOptions(DBOption.cViewSeasonListFormat) != "0";
                             ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.SetFacadeMode, 0, (graphicalFacade ? GUIFacadeControl.Layout.AlbumView : GUIFacadeControl.Layout.List));
 
                             foreach (DBSeason season in seasons)
@@ -2937,7 +2937,7 @@ namespace WindowPlugins.GUITVSeries
                                         if (graphicalFacade)
                                         {
                                             item = new GUIListItem();
-                                            bool isCoverFlow = DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "2";
+                                            bool isCoverFlow = DBOption.GetOptions(DBOption.cViewSeasonListFormat) == "2";
                                             string filename = ImageAllocator.GetSeasonBanner(season, false, isCoverFlow);
 
                                             if (filename.Length == 0)
@@ -3318,9 +3318,9 @@ namespace WindowPlugins.GUITVSeries
                                     KeyValuePair<int, DBSeries> stateSeries = (KeyValuePair<int, DBSeries>)state;
 
                                     // Load Series Banners if WideBanners otherwise load Posters for Filmstrip/Coverflow
-                                    if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip")
+                                    if (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Filmstrip")
                                         img = ImageAllocator.GetSeriesPoster(stateSeries.Value, false);
-                                    else if (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Coverflow")
+                                    else if (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Coverflow")
                                         img = ImageAllocator.GetSeriesPoster(stateSeries.Value, true);
                                     else
                                         img = ImageAllocator.GetSeriesBanner(stateSeries.Value);
@@ -3807,12 +3807,12 @@ namespace WindowPlugins.GUITVSeries
                         return "List";
 
                 case Listlevel.Series:
-                    return DBOption.GetOptions(DBOption.cView_Series_ListFormat);
+                    return DBOption.GetOptions(DBOption.cViewSeriesListFormat);
 
                 case Listlevel.Season:
-                    if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "1")
+                    if (DBOption.GetOptions(DBOption.cViewSeasonListFormat) == "1")
                         return "Filmstrip";
-                    else if (DBOption.GetOptions(DBOption.cView_Season_ListFormat) == "2")
+                    else if (DBOption.GetOptions(DBOption.cViewSeasonListFormat) == "2")
                         return "Coverflow";
                     else
                         return "List";
@@ -3892,16 +3892,16 @@ namespace WindowPlugins.GUITVSeries
                     return;
 
                 case Listlevel.Series:
-                    DBOption.SetOptions(DBOption.cView_Series_ListFormat, layout);
+                    DBOption.SetOptions(DBOption.cViewSeriesListFormat, layout);
                     return;
 
                 case Listlevel.Season:
                     if (layout == "List")
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "0");
+                        DBOption.SetOptions(DBOption.cViewSeasonListFormat, "0");
                     else if (layout == "Filmstrip")
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "1");
+                        DBOption.SetOptions(DBOption.cViewSeasonListFormat, "1");
                     else
-                        DBOption.SetOptions(DBOption.cView_Season_ListFormat, "2");
+                        DBOption.SetOptions(DBOption.cViewSeasonListFormat, "2");
                     return;
 
                 default:
@@ -3957,7 +3957,7 @@ namespace WindowPlugins.GUITVSeries
             dlg.Reset();
             dlg.SetHeading(Translation.Options);
 
-            GUIListItem pItem = new GUIListItem(Translation.ShowAllEpisodes + " (" + (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles) ? Translation.off : Translation.on) + ")");
+            GUIListItem pItem = new GUIListItem(Translation.ShowAllEpisodes + " (" + (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles) ? Translation.off : Translation.on) + ")");
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsOnlyShowLocal;
 
@@ -3965,11 +3965,11 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsShowHiddenItems;
 
-            pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
+            pItem = new GUIListItem(Translation.Hide_summary_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cHideUnwatchedSummary) ? Translation.on : Translation.off) + ")");
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilers;
 
-            pItem = new GUIListItem(Translation.Hide_thumbnail_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail) ? Translation.on : Translation.off) + ")");
+            pItem = new GUIListItem(Translation.Hide_thumbnail_on_unwatched + " (" + (DBOption.GetOptions(DBOption.cHideUnwatchedThumbnail) ? Translation.on : Translation.off) + ")");
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsPreventSpoilerThumbnail;
 
@@ -3994,7 +3994,7 @@ namespace WindowPlugins.GUITVSeries
                 switch (dlg.SelectedId)
                 {
                     case (int)eContextItems.optionsOnlyShowLocal:
-                        DBOption.SetOptions(DBOption.cView_Episode_OnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles));
+                        DBOption.SetOptions(DBOption.cOnlyShowLocalFiles, !DBOption.GetOptions(DBOption.cOnlyShowLocalFiles));
                         var episodesForCount = DBSeries.GetEpisodesForCount();
                         var allSeries = DBSeries.Get(new SQLCondition());
                         foreach (DBSeries series in allSeries)
@@ -4016,12 +4016,12 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case (int)eContextItems.optionsPreventSpoilers:
-                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedSummary, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedSummary));
+                        DBOption.SetOptions(DBOption.cHideUnwatchedSummary, !DBOption.GetOptions(DBOption.cHideUnwatchedSummary));
                         LoadFacade();
                         break;
 
                     case (int)eContextItems.optionsPreventSpoilerThumbnail:
-                        DBOption.SetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail, !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail));
+                        DBOption.SetOptions(DBOption.cHideUnwatchedThumbnail, !DBOption.GetOptions(DBOption.cHideUnwatchedThumbnail));
                         LoadFacade();
                         break;
 
@@ -4769,9 +4769,9 @@ namespace WindowPlugins.GUITVSeries
         {
             if (dummyIsSeriesPosters != null)
             {
-                dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Filmstrip"
-                                             || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "ListPosters"
-                                             || DBOption.GetOptions(DBOption.cView_Series_ListFormat) == "Coverflow");
+                dummyIsSeriesPosters.Visible = (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Filmstrip"
+                                             || DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "ListPosters"
+                                             || DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Coverflow");
                 dummyIsSeriesPosters.UpdateVisibility();
             }
 
@@ -5036,14 +5036,14 @@ namespace WindowPlugins.GUITVSeries
             int importDelay = DBOption.GetOptions(DBOption.cImportDelay);
             
             // Get Last Time Update Scan was run and how often it should be run
-            DateTime.TryParse(DBOption.GetOptions(DBOption.cImport_OnlineUpdateScanLastTime).ToString(), out m_LastUpdateScan);
-            if (DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineData) && !manualImportTriggered)
+            DateTime.TryParse(DBOption.GetOptions(DBOption.cImportOnlineUpdateScanLastTime).ToString(), out m_LastUpdateScan);
+            if (DBOption.GetOptions(DBOption.cImportAutoUpdateOnlineData) && !manualImportTriggered)
             {
-                m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImport_AutoUpdateOnlineDataLapse);
+                m_nUpdateScanLapse = DBOption.GetOptions(DBOption.cImportAutoUpdateOnlineDataLapse);
             }
 
             // do a local scan when starting up the app if enabled - later on the watcher will monitor changes            
-            if (DBOption.GetOptions(DBOption.cImport_ScanOnStartup) && !manualImportTriggered)
+            if (DBOption.GetOptions(DBOption.cImportScanOnStartup) && !manualImportTriggered)
             {
                 MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
                 // if online updates are required then this will be picked up 
@@ -5056,7 +5056,7 @@ namespace WindowPlugins.GUITVSeries
             m_scanTimer = new System.Threading.Timer(m_timerDelegate, null, importDelay * 1000, 1000);
 
             // Setup Disk Watcher (DeviceManager) and Folder/File Watcher
-            if (DBOption.GetOptions(DBOption.cImport_FolderWatch))
+            if (DBOption.GetOptions(DBOption.cImportFolderWatch))
             {
                 DeviceManager.StartMonitor();
                 setUpFolderWatches();
@@ -5129,7 +5129,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (m_parserUpdater.UpdateScan)
             {
-                DBOption.SetOptions(DBOption.cImport_OnlineUpdateScanLastTime, m_LastUpdateScan.ToString());
+                DBOption.SetOptions(DBOption.cImportOnlineUpdateScanLastTime, m_LastUpdateScan.ToString());
                 setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
             m_parserUpdaterWorking = false;
@@ -5231,7 +5231,7 @@ namespace WindowPlugins.GUITVSeries
 
                 cond.AddCustom(sql);
 
-                if (DBOption.GetOptions(DBOption.cView_Episode_OnlyShowLocalFiles))
+                if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                 {
                     // not generic
                     SQLCondition fullSubCond = new SQLCondition();
@@ -5765,7 +5765,7 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
-            m_watcherUpdater = new Watcher(importFolders, DBOption.GetOptions(DBOption.cImport_ScanRemoteShareLapse));
+            m_watcherUpdater = new Watcher(importFolders, DBOption.GetOptions(DBOption.cImportScanRemoteShareLapse));
             m_watcherUpdater.WatcherProgress += new Watcher.WatcherProgressHandler(watcherUpdater_WatcherProgress);
             m_watcherUpdater.StartFolderWatch();
         }

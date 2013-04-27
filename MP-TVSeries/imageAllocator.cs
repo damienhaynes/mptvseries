@@ -452,7 +452,7 @@ namespace WindowPlugins.GUITVSeries
         public static String GetEpisodeImage(DBEpisode episode)
         {
             bool HideEpisodeImage = true;
-            if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cView_Episode_HideUnwatchedThumbnail)))
+            if (!localLogos.appendEpImage && (episode[DBOnlineEpisode.cWatched] || !DBOption.GetOptions(DBOption.cHideUnwatchedThumbnail)))
                 HideEpisodeImage = false;
 
             // show episode image

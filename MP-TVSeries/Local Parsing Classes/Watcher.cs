@@ -607,7 +607,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("File Watcher: Performing File Scan on Import Paths for changes", MPTVSeriesLog.LogLevel.Normal);
             
             // Check if Fullscreen Video is active as this can cause stuttering/dropped frames
-            if (!DBOption.GetOptions(DBOption.cImport_ScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
+            if (!DBOption.GetOptions(DBOption.cImportScanWhileFullscreenVideo) &&  Helper.IsFullscreenVideo) {
                 MPTVSeriesLog.Write("File Watcher: Fullscreen Video has been detected, aborting file scan");
                 return;
             }

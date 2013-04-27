@@ -142,12 +142,12 @@ namespace WindowPlugins.GUITVSeries
             {
                 IsMirrorsAvailable = false;
                 // Try again using the Hardcoded mirror
-                if (!sMirror.Equals(DBOption.m_sMainMirror))
+                if (!sMirror.Equals(DBOption.cMainMirrorHardCoded))
                 {
                     MPTVSeriesLog.Write("Attempting to retrieve Mirrors from default location");
-                    if (LoadMirrorList(DBOption.m_sMainMirror))
+                    if (LoadMirrorList(DBOption.cMainMirrorHardCoded))
                     {   
-                        DBOption.SetOptions(DBOption.cMainMirror, DBOption.m_sMainMirror);
+                        DBOption.SetOptions(DBOption.cMainMirror, DBOption.cMainMirrorHardCoded);
                         IsMirrorsAvailable = true;
                     }
                 }

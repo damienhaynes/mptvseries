@@ -194,9 +194,9 @@ namespace WindowPlugins.GUITVSeries
             MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", GUILocalizeStrings.Get(136));
 
             // Episode Formatting
-            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cView_Episode_Title);
-            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cView_Episode_Subtitle);
-            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cView_Episode_Main);
+            m_sFormatEpisodeTitle = DBOption.GetOptions(DBOption.cViewEpisodeTitle);
+            m_sFormatEpisodeSubtitle = DBOption.GetOptions(DBOption.cViewEpisodeSecondTitle);
+            m_sFormatEpisodeMain = DBOption.GetOptions(DBOption.cViewEpisodeMain);
             
             Helper.disableNativeAutoplay();
 
