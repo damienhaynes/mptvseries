@@ -385,21 +385,7 @@ namespace WindowPlugins.GUITVSeries
             Absolute,   // used for matching only
             Title       // used for matching only
         }
-
-        public enum TraktMenuItems
-        {
-            MainMenu = 100,
-            Calendar,
-            Recommendations,
-            Trending,
-            WatchList,
-            Shouts,
-            AddToWatchList,
-            AddToList,
-            Rate,
-            Related
-        }
-
+        
         enum Listlevel
         {
             Episode,
@@ -1020,7 +1006,7 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
 
                     #region trakt.tv menu
-                    if (Helper.IsTraktAvailableAndEnabled)
+                    if (listLevel != Listlevel.Group && Helper.IsTraktAvailableAndEnabled)
                     {
                         pItem = new GUIListItem("Trakt ...");
                         dlg.Add(pItem);
@@ -1921,271 +1907,21 @@ namespace WindowPlugins.GUITVSeries
 
         #region Trakt Menu
 
-        protected bool CheckTraktLogin()
-        {
-            if (TraktPlugin.TraktSettings.AccountStatus != ConnectionState.Connected)
-            {
-                if (TraktPlugin.GUI.GUIUtils.ShowYesNoDialog(TraktPlugin.GUI.Translation.Login, Translation.TraktNotLoggedIn, true))
-                {
-                    // Launch Trakt Account Settings window
-                    GUIWindowManager.ActivateWindow(87272);
-                }
-                return false;
-            }
-            return true;
-        }
-
-        protected void RateTraktItem()
-        {
-            if (!CheckTraktLogin()) return;
-
-            if (listLevel != Listlevel.Episode)
-            {
-                TraktPlugin.GUI.GUIUtils.ShowRateDialog<TraktRateSeries>(BasicHandler.CreateShowRateData(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries[DBSeries.cID]));
-            }
-            else
-            {
-                TraktRateEpisode rateObj = BasicHandler.CreateEpisodeRateData
-                (
-                    m_SelectedSeries[DBOnlineSeries.cPrettyName], 
-                    m_SelectedEpisode[DBOnlineEpisode.cSeriesID], 
-                    m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], 
-                    m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]
-                );
-                TraktPlugin.GUI.GUIUtils.ShowRateDialog<TraktRateEpisode>(rateObj);
-            }
-        }
-
-        protected void AddItemToCustomList()
-        {
-            if (this.listLevel == Listlevel.Series)
-            {
-                TraktPlugin.TraktHelper.AddRemoveShowInUserList(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedSeries[DBSeries.cID], false);
-            }
-            if (this.listLevel == Listlevel.Season)
-            {
-                TraktPlugin.TraktHelper.AddRemoveSeasonInUserList(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedSeason[DBSeason.cIndex], m_SelectedSeries[DBSeries.cID], false);
-            }
-            if (this.listLevel == Listlevel.Episode)
-            {
-                TraktPlugin.TraktHelper.AddRemoveEpisodeInUserList(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], m_SelectedSeries[DBSeries.cID], false);
-            }
-        }
-
-        protected void AddItemToWatchList()
-        {
-            if (!CheckTraktLogin()) return;
-
-            Thread syncThread = new Thread(delegate(object obj)
-            {
-                TraktResponse response = null;
-
-                if (listLevel != Listlevel.Episode)
-                {
-                    response = TraktAPI.SyncShowWatchList(BasicHandler.CreateShowSyncData(m_SelectedSeries[DBOnlineSeries.cPrettyName], m_SelectedSeries.Year, m_SelectedSeries[DBSeries.cID]), TraktSyncModes.watchlist);
-                    if (response != null && response.Status == "success")
-                        TraktPlugin.GUI.GUIWatchListShows.ClearCache(TraktPlugin.TraktSettings.Username);
-                }
-                else
-                {
-                    List<TraktEpisodeSync.Episode> episodeList = new List<TraktEpisodeSync.Episode>();
-                    episodeList.Add(new TraktEpisodeSync.Episode { EpisodeIndex = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], SeasonIndex = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex] });
-
-                    TraktEpisodeSync syncData = new TraktEpisodeSync
-                    {
-                        UserName = TraktPlugin.TraktSettings.Username,
-                        Password = TraktPlugin.TraktSettings.Password,
-                        Title = m_SelectedSeries[DBOnlineSeries.cPrettyName],
-                        Year = m_SelectedSeries.Year,
-                        SeriesID = m_SelectedEpisode[DBOnlineEpisode.cSeriesID],
-                        EpisodeList = episodeList
-                    };
-                    response = TraktAPI.SyncEpisodeWatchList(syncData, TraktSyncModes.watchlist);
-                }
-            })
-            {
-                IsBackground = true,
-                Name = "Adding Item to Watch List"
-            };
-
-            syncThread.Start();
-        }
-
-        protected void ShowRelatedItems()
-        {
-            TraktPlugin.TraktHelper.ShowRelatedShows(m_SelectedSeries[DBSeries.cID], m_SelectedSeries[DBOnlineSeries.cPrettyName]);
-        }
-
-        protected void ShowTraktShouts()
-        {
-            if (listLevel != Listlevel.Episode)
-            {
-                TraktPlugin.GUI.ShowShout seriesInfo = new TraktPlugin.GUI.ShowShout
-                {
-                    TVDbId = m_SelectedSeries[DBSeries.cID],
-                    Title = m_SelectedSeries[DBOnlineSeries.cPrettyName]
-                };
-                TraktPlugin.GUI.GUIShouts.ShoutType = TraktPlugin.GUI.GUIShouts.ShoutTypeEnum.show;
-                TraktPlugin.GUI.GUIShouts.ShowInfo = seriesInfo;
-            }
-            else
-            {
-                TraktPlugin.GUI.EpisodeShout episodeInfo = new TraktPlugin.GUI.EpisodeShout
-                {
-                    TVDbId = m_SelectedEpisode[DBOnlineEpisode.cSeriesID],
-                    Title = m_SelectedSeries[DBOnlineSeries.cPrettyName],
-                    SeasonIdx = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex],
-                    EpisodeIdx = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]
-                };
-                TraktPlugin.GUI.GUIShouts.ShoutType = TraktPlugin.GUI.GUIShouts.ShoutTypeEnum.episode;
-                TraktPlugin.GUI.GUIShouts.EpisodeInfo = episodeInfo;
-            }
-            TraktPlugin.GUI.GUIShouts.Fanart = GUIPropertyManager.GetProperty("#TVSeries.Current.Fanart").Trim();
-            GUIWindowManager.ActivateWindow(87280);
-        }
-
         protected void ShowTraktMenu()
         {
-            IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-            if (dlg == null) return;
+            string title = m_SelectedSeries.ToString();
+            string year = m_SelectedSeries.Year;
+            string tvdbid = m_SelectedSeries[DBOnlineSeries.cID];
+            string fanart = GUIPropertyManager.GetProperty("#TVSeries.Current.Fanart").Trim();
 
-            dlg.Reset();
-            dlg.SetHeading("Trakt");
-
-            GUIListItem listItem = null;
-            
-            // Display TV Show Relavent Windows
-
-            listItem = new GUIListItem(Translation.MainMenu);
-            dlg.Add(listItem);
-            listItem.ItemId = (int)TraktMenuItems.MainMenu;
-
-            listItem = new GUIListItem(Translation.Calendar);
-            dlg.Add(listItem);
-            listItem.ItemId = (int)TraktMenuItems.Calendar;
-
-            listItem = new GUIListItem(Translation.Recommendations);
-            dlg.Add(listItem);
-            listItem.ItemId = (int)TraktMenuItems.Recommendations;
-
-            listItem = new GUIListItem(Translation.Trending);
-            dlg.Add(listItem);
-            listItem.ItemId = (int)TraktMenuItems.Trending;
-
-            listItem = new GUIListItem(Translation.WatchList);
-            dlg.Add(listItem);
-            listItem.ItemId = (int)TraktMenuItems.WatchList;
-
-            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Episode)
+            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
             {
-                listItem = new GUIListItem(Translation.Shouts);
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.Shouts;
-            }
-
-            if (this.listLevel == Listlevel.Series)
-            {
-                listItem = new GUIListItem(string.Format(Translation.AddToWatchList, Translation.Series));
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.AddToWatchList;
-
-                listItem = new GUIListItem(Translation.RateSeries);
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.Rate;
-
-                listItem = new GUIListItem(Translation.RelatedSeries);
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.Related;
+                TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, fanart, true);
             }
             else if (this.listLevel == Listlevel.Episode)
             {
-                listItem = new GUIListItem(string.Format(Translation.AddToWatchList, Translation.Episode));
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.AddToWatchList;
-
-                listItem = new GUIListItem(Translation.RateEpisode);
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.Rate;
+                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, m_SelectedSeason[DBSeason.cIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], tvdbid, fanart);
             }
-
-            if (this.listLevel == Listlevel.Episode)
-            {
-                listItem = new GUIListItem(string.Format(Translation.AddToCustomList, Translation.Episode));
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.AddToList;
-            }
-            if (this.listLevel == Listlevel.Season)
-            {
-                listItem = new GUIListItem(string.Format(Translation.AddToCustomList, Translation.Season));
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.AddToList;
-            }
-            if (this.listLevel == Listlevel.Series)
-            {
-                listItem = new GUIListItem(string.Format(Translation.AddToCustomList, Translation.Series));
-                dlg.Add(listItem);
-                listItem.ItemId = (int)TraktMenuItems.AddToList;
-            }
-
-            // Show Context Menu
-            dlg.DoModal(GUIWindowManager.ActiveWindow);
-            if (dlg.SelectedId < 0) return;
-
-            switch (dlg.SelectedId)
-            {
-                case ((int)TraktMenuItems.MainMenu):
-                    // Jump to Trakt Main Menu Window
-                    GUIWindowManager.ActivateWindow(87258);
-                    break;
-
-                case ((int)TraktMenuItems.Calendar):
-                    // Jump to Trakt Calendar Window
-                    GUIWindowManager.ActivateWindow(87259);
-                    break;
-
-                case ((int)TraktMenuItems.Recommendations):
-                    // Jump to Trakt Show Recommendations Window
-                    GUIWindowManager.ActivateWindow(87262);
-                    break;
-
-                case ((int)TraktMenuItems.Trending):
-                    // Jump to Trakt Shows Trending Window
-                    GUIWindowManager.ActivateWindow(87265);
-                    break;
-
-                case ((int)TraktMenuItems.WatchList):
-                    // Jump to Trakt Shows Watch List Window
-                    GUIWindowManager.ActivateWindow(87268);
-                    break;
-
-                case ((int)TraktMenuItems.Shouts):
-                    // Jump to Trakt Shouts Window
-                    ShowTraktShouts();
-                    break;
-
-                case ((int)TraktMenuItems.AddToWatchList):
-                    // Add series/episode to personal Watchlist
-                    AddItemToWatchList();
-                    break;
-
-                case ((int)TraktMenuItems.AddToList):
-                    // Add series/season/episode to custom list
-                    AddItemToCustomList();
-                    break;
-
-                case ((int)TraktMenuItems.Rate):
-                    // Rate series/episode
-                    RateTraktItem();
-                    break;
-                
-                case ((int)TraktMenuItems.Related):
-                    // Related Series/Episodes
-                    ShowRelatedItems();
-                    break;
-
-                default:
-                    break;
-            }        
         }
 
         #endregion

@@ -331,16 +331,6 @@ namespace WindowPlugins.GUITVSeries
 
         public static string DownloadAllEpisodeInfo = "Download All Episode Info";
         
-        public static string Calendar = "Calendar";
-        public static string Recommendations = "Recommendations";
-        public static string Trending = "Trending";
-        public static string WatchList = "Watch List";
-        public static string Shouts = "Shouts";
-        public static string MainMenu = "Main Menu";
-        public static string AddToWatchList = "Add {0} to Watchlist";
-        public static string TraktNotLoggedIn = "You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?";
-        public static string RelatedSeries = "Related Series";
-
         public static string SearchTorrent = "Torrent Search";
         public static string SearchNZB = "NZB Search";
         public static string SearchActorInMovies = "Search for Actor in Movies";

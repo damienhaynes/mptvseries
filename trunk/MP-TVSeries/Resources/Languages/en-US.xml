@@ -280,15 +280,6 @@
   <string name="GettingActors" Original="Getting Actors from Online">Getting Actors from Online</string>
   <string name="ShowAllEpisodes" Original="Show all Episodes">Show all Episodes</string>
   <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Download All Episode Info</string>
-  <string name="Calendar" Original="Calendar">Calendar</string>
-  <string name="Recommendations" Original="Recommendations">Recommendations</string>
-  <string name="Trending" Original="Trending">Trending</string>
-  <string name="WatchList" Original="WatchList">Watch List</string>
-  <string name="Shouts" Original="Shouts">Shouts</string>
-  <string name="MainMenu" Original="Main Menu">Main Menu</string>
-  <string name="AddToWatchList" Original="Add {0} to Watchlist">Add {0} to Watchlist</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?</string>
-  <string name="RelatedSeries" Original="RelatedSeries">Related Series</string>
   <string name="SearchTorrent" Original="Torrent Search">Torrent Search</string>
   <string name="SearchNZB" Original="NZB Search">NZB Search</string>
   <string name="SearchActorInMovies" Original="Search for Actor in Movies">Search for Actor in Movies</string>

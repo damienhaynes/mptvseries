@@ -212,9 +212,6 @@ namespace WindowPlugins.GUITVSeries
         public const String cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
         public const String cMaxConsecutiveDownloadErrors = "MaxConsecutiveDownloadErrors";
 
-        public const String cTraktUsername = "TraktUsername";
-        public const String cTraktPassword = "TraktPassword";
-
         public const String cFollwitEnabled = "FollwitEnabled";
         public const String cFollwitBaseUrl = "FollwitBaseUrl";
         public const String cFollwitUsername = "FollwitUsername";
@@ -730,7 +727,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (string key in optionsCache.Keys) 
             {
                 // dont log private options
-                if (!key.Equals(DBOption.cTraktPassword) && !key.Equals(DBOption.cOnlineUserID))
+                if (!key.Equals(DBOption.cOnlineUserID))
                 {
                     MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
                 }
