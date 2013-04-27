@@ -191,6 +191,19 @@ namespace WindowPlugins.GUITVSeries
         {
             Write(entry, level, true);
         }
+
+        static string CreatePrefix(LogLevel level)
+        {
+            string logLevelString = "INFO";
+            if (level == LogLevel.Normal)
+                logLevelString = "INFO";
+            else if(level == LogLevel.Debug)
+                logLevelString = "DEBG";
+            else
+                logLevelString = "SQL ";
+
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + String.Format(" [{0}][{1}]", logLevelString, Thread.CurrentThread.ManagedThreadId.ToString().PadLeft(2, '0')) + ": ";
+        }
         #endregion
 
         #region Implementation
@@ -205,7 +218,7 @@ namespace WindowPlugins.GUITVSeries
                         entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
                     #endregion
 
-                    String sPrefix = String.Format("{0:D8} - {1} - ", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
+                    string sPrefix = CreatePrefix(level);
 
                     // note: keep the lock block as small as possible
                     // don't call anything from within that could potentially call for a logwrite itself, or we have a deadlock
@@ -226,7 +239,6 @@ namespace WindowPlugins.GUITVSeries
                             m_LogStream.Flush();
                             m_LogStream.Close();
                             m_LogStream.Dispose();
-
                         }
                         catch { }
                     }
@@ -249,7 +261,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    m_ListLog.Items.Add(DateTime.Now + " - " + entry);
+                    m_ListLog.Items.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + ": " + entry);
                     int nTopIndex = m_ListLog.Items.Count - m_ListLog.Height / m_ListLog.ItemHeight;
                     if (nTopIndex < 0)
                         nTopIndex = 0;
