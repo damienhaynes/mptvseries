@@ -45,25 +45,25 @@ namespace WindowPlugins.GUITVSeries {
 		[SkinControlAttribute(7)]
 		protected GUILabelControl lblRating = null;
         [SkinControlAttribute(100)]
-        protected GUIToggleButtonControl btnStar1 = null;
+        protected GUICheckMarkControl btnStar1 = null;
         [SkinControlAttribute(101)]
-        protected GUIToggleButtonControl btnStar2 = null;
+        protected GUICheckMarkControl btnStar2 = null;
         [SkinControlAttribute(102)]
-        protected GUIToggleButtonControl btnStar3 = null;
+        protected GUICheckMarkControl btnStar3 = null;
         [SkinControlAttribute(103)]
-        protected GUIToggleButtonControl btnStar4 = null;
+        protected GUICheckMarkControl btnStar4 = null;
         [SkinControlAttribute(104)]
-		protected GUIToggleButtonControl btnStar5 = null;
+		protected GUICheckMarkControl btnStar5 = null;
 		[SkinControlAttribute(105)]
-		protected GUIToggleButtonControl btnStar6 = null;
+		protected GUICheckMarkControl btnStar6 = null;
 		[SkinControlAttribute(106)]
-		protected GUIToggleButtonControl btnStar7 = null;
+		protected GUICheckMarkControl btnStar7 = null;
 		[SkinControlAttribute(107)]
-		protected GUIToggleButtonControl btnStar8 = null;
+		protected GUICheckMarkControl btnStar8 = null;
 		[SkinControlAttribute(108)]
-		protected GUIToggleButtonControl btnStar9 = null;
+		protected GUICheckMarkControl btnStar9 = null;
 		[SkinControlAttribute(109)]
-		protected GUIToggleButtonControl btnStar10 = null;
+		protected GUICheckMarkControl btnStar10 = null;
 
         public string Text {
             get {
@@ -259,21 +259,33 @@ namespace WindowPlugins.GUITVSeries {
         }
 
         private void UpdateRating() {
-			GUIToggleButtonControl[] btnStars;
-			if (DisplayStars == StarDisplay.FIVE_STARS) {
-				btnStars = new GUIToggleButtonControl[5] { btnStar1, btnStar2, btnStar3, btnStar4, btnStar5 };
-			} else {
-				btnStars = new GUIToggleButtonControl[10] { btnStar1, btnStar2, btnStar3, btnStar4, btnStar5,
-															btnStar6, btnStar7, btnStar8, btnStar9, btnStar10 };
+			GUICheckMarkControl[] btnStars;
+			if (DisplayStars == StarDisplay.FIVE_STARS)
+            {
+				btnStars = new GUICheckMarkControl[5]
+                { 
+                    btnStar1, btnStar2, btnStar3, btnStar4, btnStar5
+                };
+			} 
+            else
+            {
+				btnStars = new GUICheckMarkControl[10]
+                { 
+                    btnStar1, btnStar2, btnStar3, btnStar4, btnStar5,
+					btnStar6, btnStar7, btnStar8, btnStar9, btnStar10
+                };
 			}
 
-            for (int i = 0; i < (int)DisplayStars; i++) {
+            for (int i = 0; i < (int)DisplayStars; i++)
+            {
+                btnStars[i].Label = string.Empty;
                 btnStars[i].Selected = (Rating >= i + 1);
             }
             btnStars[Rating - 1].Focus = true;
 
 			// Display Rating Description
-			if (lblRating != null) {			
+			if (lblRating != null)
+            {			
 				lblRating.Label = string.Format("({0}) {1} / {2}", GetRatingDescription(), Rating.ToString(), (int)DisplayStars);
 			}
         }

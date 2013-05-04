@@ -46,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
         protected GUIButtonControl buttonFilters = null;
 
         [SkinControlAttribute(13)]
-        protected GUIToggleButtonControl togglebuttonRandom = null;
+        protected GUICheckButton togglebuttonRandom = null;
 
         [SkinControlAttribute(14)]
         protected GUILabelControl labelDisabled = null;

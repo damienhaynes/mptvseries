@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--version="1.0" encoding="utf-8" standalone="yes"-->
 <window>
   <id>9812</id>
   <defaultcontrol>50</defaultcontrol>
   <allowoverlay>yes</allowoverlay>
   <define>#useSelectedFanart:No</define>
-  <!--<define>#selecteditem:#selecteditem [#TVSeries.FanArt.SelectedFanartResolution] #(iif(eq(#TVSeries.FanArt.SelectedFanartIsChosen,#TVSeries.Translation.Yes.Label),string.format('[{0}]',string.rtrim(#TVSeries.Translation.LabelChosen.Label,':')),''))</define>-->
-  <define>#selecteditem: </define>
-	<controls>
+  <define>#selecteditem:</define>
+  <controls>
     <control>
       <description>BG</description>
       <type>image</type>
@@ -20,9 +20,9 @@
       <description>preview</description>
       <id>0</id>
       <type>image</type>
-      <posX>-240</posX>
-      <posY>0</posY>
-      <width>1440</width>
+      <posx>0</posx>
+      <posy>0</posy>
+      <width>960</width>
       <height>720</height>
       <texture>#TVSeries.FanArt.SelectedPreview</texture>
     </control>
@@ -36,41 +36,6 @@
       <height>270</height>
       <texture>overlay_top.png</texture>
       <colordiffuse>ccffffff</colordiffuse>
-    </control>
-		<control>
-      <description>General Overlay</description>
-      <id>0</id>
-      <type>image</type>
-      <posX>0</posX>
-      <posY>30</posY>
-      <width>960</width>
-      <height>720</height>
-      <texture>general_overlay.png</texture>
-    </control>
-		<control>
-      <description>background selecteditem</description>
-      <type>image</type>
-      <id>0</id>
-      <posX>-20</posX>
-      <posY>65</posY>
-      <width>1012</width>
-      <height>60</height>
-      <texture>general_overlay_selecteditem.png</texture>
-      <colordiffuse>bbffffff</colordiffuse>
-    </control>
-		<import>common.window.xml</import>
-    <import>common.time.xml</import>
-		<control>
-      <description>Selected item Label</description>
-      <type>fadelabel</type>
-      <id>1</id>
-      <posX>0</posX>
-      <posY>95</posY>
-      <width>960</width>
-      <label>#selecteditem [#TVSeries.FanArt.SelectedFanartResolution] #(iif(eq(#TVSeries.FanArt.SelectedFanartIsChosen,#TVSeries.Translation.Yes.Label),string.format('[{0}]',string.rtrim(#TVSeries.Translation.LabelChosen.Label,':')),''))</label>
-      <font>font16</font>
-      <align>center</align>
-      <textcolor>ff6FAFE1</textcolor>
     </control>
     <control>
       <type>label</type>
@@ -93,6 +58,41 @@
       <textcolor>ivory</textcolor>
       <font>font10</font>
       <visible>string.equals(#selectedindex)</visible>
+    </control>
+    <control>
+      <description>background selecteditem</description>
+      <type>image</type>
+      <id>0</id>
+      <posX>-20</posX>
+      <posY>65</posY>
+      <width>1012</width>
+      <height>60</height>
+      <texture>general_overlay_selecteditem.png</texture>
+      <colordiffuse>bbffffff</colordiffuse>
+    </control>
+    <control>
+      <description>Selected item Label</description>
+      <type>fadelabel</type>
+      <id>1</id>
+      <posX>0</posX>
+      <posY>95</posY>
+      <width>960</width>
+      <label>#selecteditem [#TVSeries.FanArt.SelectedFanartResolution] #(iif(eq(#TVSeries.FanArt.SelectedFanartIsChosen,#TVSeries.Translation.Yes.Label),string.format('[{0}]',string.rtrim(#TVSeries.Translation.LabelChosen.Label,':')),''))</label>
+      <font>font16</font>
+      <align>center</align>
+      <textcolor>ff6FAFE1</textcolor>
+      <visible>string.equals(#selectedindex)</visible>
+    </control>
+    <import>common.time.xml</import>
+    <control>
+      <description>General Overlay</description>
+      <id>0</id>
+      <type>image</type>
+      <posX>0</posX>
+      <posY>30</posY>
+      <width>960</width>
+      <height>720</height>
+      <texture>general_overlay.png</texture>
     </control>
     <control>
       <type>actiongroup</type>
@@ -120,7 +120,7 @@
         <type>image</type>
         <posX>19</posX>
         <posY>78</posY>
-        <width>287</width>
+        <width>290</width>
         <height>591</height>
         <texture>Backslide.png</texture>
         <colorDiffuse>ffffffff</colorDiffuse>
@@ -156,7 +156,7 @@
         </control>
         <control>
           <description>Random Fanart</description>
-          <type>togglebutton</type>
+          <type>checkbutton</type>
           <id>13</id>
           <label>Random Fanart</label>
           <onleft>50</onleft>
@@ -167,6 +167,8 @@
     <control>
       <description>group element</description>
       <type>group</type>
+      <animation effect="fade" start="0" end="100" time="200">WindowOpen</animation>
+      <animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
       <control>
         <description>composite control consisting of a list control and a thumbnail panel</description>
         <type>facadeview</type>
@@ -183,19 +185,19 @@
           <scrollOffset>1</scrollOffset>
           <onleft>2</onleft>
           <onright>2</onright>
-          <itemWidth>140</itemWidth>
-          <itemHeight>80</itemHeight>
-          <textureWidth>130</textureWidth>
-          <textureHeight>73</textureHeight>
-          <thumbWidth>130</thumbWidth>
-          <thumbHeight>73</thumbHeight>
+          <itemWidth>105</itemWidth>
+          <itemHeight>85</itemHeight>
+          <textureWidth>93</textureWidth>
+          <textureHeight>70</textureHeight>
+          <thumbWidth>93</thumbWidth>
+          <thumbHeight>70</thumbHeight>
           <thumbPosX>0</thumbPosX>
           <thumbPosY>0</thumbPosY>
-          <itemWidthBig>220</itemWidthBig>
+          <itemWidthBig>168</itemWidthBig>
           <itemHeightBig>130</itemHeightBig>
-          <thumbWidthBig>200</thumbWidthBig>
+          <thumbWidthBig>150</thumbWidthBig>
           <thumbHeightBig>113</thumbHeightBig>
-          <textureWidthBig>200</textureWidthBig>
+          <textureWidthBig>150</textureWidthBig>
           <textureHeightBig>113</textureHeightBig>
           <thumbPosXBig>0</thumbPosXBig>
           <thumbPosYBig>0</thumbPosYBig>

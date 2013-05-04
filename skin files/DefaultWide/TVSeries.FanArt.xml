@@ -415,7 +415,7 @@
 					</control>		
 					<control>
 						<description>Random Fanart</description>
-						<type>togglebutton</type>
+						<type>checkbutton</type>
 						<id>13</id>
 						<label>Random Fanart</label>
 						<onleft>50</onleft>
