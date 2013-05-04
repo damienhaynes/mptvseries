@@ -68,8 +68,8 @@ namespace WindowPlugins.GUITVSeries
         [SkinControl(23)] protected GUIButtonControl btnPlay = null;
         [SkinControl(24)] protected GUIButtonControl btnNext = null;
         [SkinControl(25)] protected GUIButtonControl btnPrevious = null;
-        [SkinControl(30)] protected GUIToggleButtonControl btnRepeat = null;
-        [SkinControl(40)] protected GUIToggleButtonControl btnAutoPlay = null;
+        [SkinControl(30)] protected GUICheckButton btnRepeat = null;
+        [SkinControl(40)] protected GUICheckButton btnAutoPlay = null;
         [SkinControl(50)] protected GUIFacadeControl m_Facade = null;
         #endregion
 

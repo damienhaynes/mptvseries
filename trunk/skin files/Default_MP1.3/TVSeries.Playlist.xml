@@ -5,7 +5,6 @@
   <defaultcontrol>50</defaultcontrol>
   <allowoverlay>yes</allowoverlay>
   <define>#useSelectedFanart:No</define>
-	<define>#selecteditem:#TVSeries.Series.Pretty_Name - #TVSeries.Title</define>
   <controls>
     <control>
       <description>BG</description>
@@ -37,7 +36,18 @@
       <align>left</align>
       <textcolor>ff6FAFE1</textcolor>
     </control>
-    
+    <control>
+      <description>Number of Files Label</description>
+      <type>label</type>
+      <id>1</id>
+      <posX>22</posX>
+      <posY>35</posY>
+      <label>#selectedindex/#TVSeries.Playlist.Count</label>
+      <align>left</align>
+      <textcolor>ivory</textcolor>
+      <font>font10</font>
+      <visible>string.equals(#selectedindex)+string.equals(#TVSeries.Playlist.Count)</visible>
+    </control>
     <control>
       <description>background selecteditem</description>
       <type>image</type>
@@ -59,7 +69,6 @@
       <height>720</height>
       <texture>general_overlay.png</texture>
     </control>
-		<import>common.window.xml</import>
     <import>common.time.xml</import>
     <control>
       <type>actiongroup</type>
@@ -127,7 +136,7 @@
         </control>
         <control>
           <description>Repeat on/off button</description>
-          <type>togglebutton</type>
+          <type>checkbutton</type>
           <id>30</id>
           <label>486</label>
           <onleft>50</onleft>
@@ -137,7 +146,7 @@
         </control>
         <control>
           <description>AutoPlay on/off button</description>
-          <type>togglebutton</type>
+          <type>checkbutton</type>
           <id>40</id>
           <label>Auto Play</label>
           <onleft>50</onleft>
@@ -210,6 +219,8 @@
       <description>group element</description>
       <type>group</type>
       <visible>!Control.HasFocus(50)</visible>
+      <animation effect="fade" start="0" end="100" time="200">WindowOpen</animation>
+      <animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
       <control>
         <description>composite control consisting of a list control and a thumbnail panel</description>
         <type>facadeview</type>
@@ -228,13 +239,26 @@
           <onleft>2</onleft>
           <onright>2</onright>
           <scrollOffset>2</scrollOffset>
-          <itemWidth>20</itemWidth>
+          <itemWidth>15</itemWidth>
           <itemHeight>20</itemHeight>
           <IconXOff>6</IconXOff>
           <IconYOff>8</IconYOff>
           <keepaspectratio>yes</keepaspectratio>
         </control>
       </control>
+    </control>
+    <control>
+      <description>Selected item Label</description>
+      <type>fadelabel</type>
+      <id>1</id>
+      <posX>0</posX>
+      <posY>95</posY>
+      <width>960</width>
+      <label>#TVSeries.Series.Pretty_Name - #TVSeries.Title</label>
+      <font>font14</font>
+      <align>center</align>
+      <textcolor>ff6FAFE1</textcolor>
+      <visible>!string.equals(#selecteditem,)</visible>
     </control>
     <control>
       <description>Overlay text right</description>
@@ -253,11 +277,11 @@
       <type>imagelist</type>
       <id>1</id>
       <posX>547</posX>
-      <posY>167</posY>
+      <posY>165</posY>
       <width>226</width>
       <height>37</height>
-      <textureWidth>13</textureWidth>
-      <textureHeight>13</textureHeight>
+      <textureWidth>12</textureWidth>
+      <textureHeight>17</textureHeight>
       <subitems>
         <subitem>greystar.png</subitem>
         <subitem>star.png</subitem>
@@ -288,8 +312,8 @@
       <posX>787</posX>
       <posY>200</posY>
       <width>150</width>
-      <height>94</height>
-			<texture>LCD.png</texture>
+      <height>113</height>
+      <texture>LCD.png</texture>
       <visible>[facadeview.list|facadeview.playlist]+!string.equals(#selecteditem,)</visible>
     </control>
     <control>
@@ -299,7 +323,7 @@
       <posX>794</posX>
       <posY>209</posY>
       <width>135</width>
-      <height>75</height>
+      <height>93</height>
       <keepaspectratio>yes</keepaspectratio>
       <zoom>yes</zoom>
       <texture>#TVSeries.EpisodeImage</texture>
@@ -488,9 +512,10 @@
     <control>
       <description>Episode Logos</description>
       <type>image</type>
+      <id>66</id>
       <posX>547</posX>
       <posY>585</posY>
-      <width>380</width>
+      <width>645</width>
       <height>32</height>
       <texture>#TVSeries.Logos</texture>
       <keepaspectratio>yes</keepaspectratio>

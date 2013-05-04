@@ -135,7 +135,7 @@
 				</control>
 				<control>
 					<description>Repeat on/off button</description>
-					<type>togglebutton</type>
+					<type>checkbutton</type>
 					<id>30</id>
 					<label>486</label>
 					<onleft>50</onleft>
@@ -145,7 +145,7 @@
 				</control>
 				<control>
 					<description>AutoPlay on/off button</description>
-					<type>togglebutton</type>
+					<type>checkbutton</type>
 					<id>40</id>					
 					<label>Auto Play</label>
 					<onleft>50</onleft>
