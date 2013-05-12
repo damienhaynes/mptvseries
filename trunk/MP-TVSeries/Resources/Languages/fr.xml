@@ -86,7 +86,7 @@
   <string name="CFS_Select_Version" Original="Version:">Version: </string>
   <string name="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Choisir l\'épisode désiré</string>
   <string name="CFS_Local_Episode_Index" Original="Local Episiode index:">Episode:</string>
-  <string name="CFS_Available_Episode_List" Original="Available Episode list:">liste des épisodes disponibles: </string>
+  <string name="CFS_Available_Episode_List" Original="Available Episode list:">Liste des épisodes disponibles:</string>
   <string name="CFS_Choose_Search_Site" Original="Choose search site:">Choisir un site de recherche: </string>
   <string name="CFS_List_Search_Site" Original="List of search sites:">liste des sites de recherche: </string>
   <string name="CFS_Found_Torrents" Original="Found torrents:">Torrents trouvés : </string>

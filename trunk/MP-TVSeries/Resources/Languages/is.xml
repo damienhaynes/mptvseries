@@ -20,6 +20,7 @@
   <string name="off" Original="off">af</string>
   <string name="Play_Random_Episode" Original="Play Random Episode">Spila sjónvarpsþátt af handahófi</string>
   <string name="Delete_that_series" Original="Delete that series?">Eyða þessari þáttaröð?</string>
+  <string name="Delete_that_season" Original="Delete that season?">Eyða þessari þáttaröð?</string>
   <string name="Delete_that_episode" Original="Delete that episode?">Eyða þessum þætti?</string>
   <string name="Confirm" Original="Confirm">Staðfesta</string>
   <string name="Completed" Original="Completed">Búið</string>
@@ -28,6 +29,7 @@
   <string name="Yes" Original="Yes">Já</string>
   <string name="No" Original="No">Nei</string>
   <string name="Error" Original="#Error">#Villa</string>
+  <string name="No_items" Original="No items!">Engin gögn!</string>
   <string name="Unknown" Original="Unknown">óþekkt</string>
   <string name="Download" Original="Download">Sækja</string>
   <string name="Actions" Original="Actions">Aðgerðir</string>
@@ -35,6 +37,7 @@
   <string name="Genres" Original="Genres">Flokkar</string>
   <string name="All" Original="All">Allir</string>
   <string name="Latest" Original="Latest Aired">Síðast sjónvarpað</string>
+  <string name="Channels" Original="Channels">Sjónvarpsrásir</string>
   <string name="Unwatched" Original="Unwatched">Óséð</string>
   <string name="Favourites" Original="Favourites">Uppáhald</string>
   <string name="RateSeries" Original="Rate this Series">Gefa þessari þáttaröð einkunn</string>
@@ -44,10 +47,16 @@
   <string name="ChangeView" Original="Change View">Breyta röðun</string>
   <string name="FanArtLocal" Original="Local">Staðbundið</string>
   <string name="CFS_Search_Again" Original="Search again">Leita aftur</string>
+  <string name="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Veljið samsvarandi textaskrá</string>
   <string name="CFS_Subtitle_Episode" Original="Choose item">Þáttur:</string>
   <string name="CFS_Matching_Subtitles" Original="Matching Subtitles">Samsvarandi textar</string>
+  <string name="CFS_Choose_Correct_Series" Original="Choose Correct Series">Veljið rétta þáttaröð</string>
   <string name="CFS_Available_Series" Original="Available Series">Mögulegar þáttaraðir</string>
+  <string name="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Veljið samsvarandi textaútgáfu</string>
   <string name="CFS_Select_Version" Original="Version:">Útgáfa:</string>
+  <string name="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Veljið réttan þátt</string>
+  <string name="CFS_Choose_Search_Site" Original="Choose search site:">Veljið leitarsíðu:</string>
+  <string name="CFS_List_Search_Site" Original="List of search sites:">Yfirlit yfir leitarsíður:</string>
   <string name="CFS_Found_Torrents" Original="Found torrents:">Fann torrent:</string>
   <string name="CFS_Skip_Never_Ask_Again" Original="Skip / Never Ask Again">Sleppa / ekki spyrja aftur</string>
   <string name="RecentlyAdded" Original="Recently Added">Nýlega bætt við</string>
@@ -104,11 +113,13 @@
   <string name="Director" Original="Director">Leikstjórn</string>
   <string name="Directors" Original="Directors">Leikstjórn</string>
   <string name="FileSize" Original="File Size">Stærð skráar</string>
+  <string name="FirstAired" Original="First Aired">Fyrst sjónvarpað</string>
   <string name="Genre" Original="Genre">Flokkur</string>
   <string name="GuestStar" Original="Guest Star">Gestaleikari</string>
   <string name="GuestStars" Original="Guest Stars">Gestaleikarar</string>
   <string name="Minutes" Original="Minutes">mínútur</string>
   <string name="Rated" Original="Rated">Einkunn</string>
+  <string name="Rating" Original="Rating">Einkunnagjöf</string>
   <string name="Runtime" Original="Runtime">Sýningart:</string>
   <string name="Watched" Original="Watched">Séð</string>
   <string name="Writer" Original="Writer">Handrit</string>

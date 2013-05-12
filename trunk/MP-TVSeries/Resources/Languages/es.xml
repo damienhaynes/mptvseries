@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="Series" Original="Series">Serie</string>
+  <string name="Series" Original="Series">Series</string>
   <string name="Series_Plural" Original="Series (Plr)">Series</string>
   <!--plural-->
   <string name="Season" Original="Season">Temporada</string>
@@ -48,7 +48,7 @@
   <string name="Options" Original="Options">Opciones</string>
   <string name="Genres" Original="Genres">Géneros</string>
   <string name="All" Original="All">Todo</string>
-  <string name="Latest" Original="Latest Aired">Último</string>
+  <string name="Latest" Original="Latest Aired">Última Transmisión</string>
   <string name="Channels" Original="Channels">Canales</string>
   <string name="Unwatched" Original="Unwatched">No visto</string>
   <string name="Favourites" Original="Favourites">Favoritos</string>
@@ -108,7 +108,7 @@
   <string name="FanartDisableLabel" Original="Disabled">Desactivado</string>
   <string name="FanartMenuEnable" Original="Enable Fanart">Activar Fanart</string>
   <string name="FanartMenuDisable" Original="Disable Fanart">Desactivar Fanart</string>
-  <string name="SortByStrings" Original="SortByStrings">the|a|an|el|la|un|una</string>
+  <string name="SortByStrings" Original="SortByStrings">a|an|el|la|un|una</string>
   <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
   <string name="LayoutList" Original="List">Lista</string>
   <string name="LayoutListBanners" Original="List Banners">Lista de Banners</string>
@@ -304,8 +304,10 @@
   <string name="CycleSeriesThumb" Original="Cycle Series Panel">Panel de Series Cíclico</string>
   <string name="Update" Original="Update">Actualizar</string>
   <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">La vista \'{0}\' ya existe</string>
+  <string name="LayoutListThumbs" Original="List Panels">Lista de Paneles</string>
   <string name="LayoutCoverflow" Original="Coverflow">Vista Coverflow</string>
   <string name="Warning" Original="Warning">Peligro</string>
+  <string name="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">Todavía no ha visto / recopilada</string>
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">¿Seguro que desea continuar?</string>
   <string name="Filters" Original="Filters">Filtros</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Episodios no Vistos</string>
