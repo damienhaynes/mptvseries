@@ -11,7 +11,7 @@
   <string name="Retrieve_Subtitle" Original="Retrieve Subtitle">Ondertiteling downloaden</string>
   <string name="Load_via_Torrent" Original="Load via Torrent">Via torrent laden</string>
   <string name="Mark_all_as_watched" Original="Mark all as watched">Markeer als bekeken</string>
-  <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Markeer allen als bekeken</string>
+  <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Markeer alles als bekeken</string>
   <string name="Hide" Original="Hide">Verberg</string>
   <string name="Delete" Original="Delete">Verwijder</string>
   <string name="Remove_series_from_Favourites" Original="Remove series from Favourites">Verwijder uit favorieten</string>
@@ -28,8 +28,8 @@
   <string name="Delete_that_season" Original="Delete that season?">Dit seizoen verwijderen?</string>
   <string name="Delete_that_episode" Original="Delete that episode?">Deze aflevering verwijderen?</string>
   <string name="Confirm" Original="Confirm">Bevestig</string>
-  <string name="Completed" Original="Completed">Voltoid</string>
-  <string name="No_subtitles_found" Original="No subtitles found">Geen odertitelingen gevonden</string>
+  <string name="Completed" Original="Completed">Voltooid</string>
+  <string name="No_subtitles_found" Original="No subtitles found">Geen ondertitels gevonden</string>
   <string name="CFS_No_Results_Found" Original="No Results Found!">Geen resultaten gevonden!</string>
   <string name="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Verborgen omwille van spoilers *</string>
   <string name="Yes" Original="Yes">Ja</string>
@@ -41,7 +41,7 @@
   <string name="special" Original="Special">Extra</string>
   <string name="specials" Original="Specials">Extra\'s</string>
   <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">U staat op het punt om {0} bestand(en) permanent te verwijderen.\nWilt u doorgaan?</string>
-  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Forceer online overeenkomst</string>
+  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Forceer online ophalen van series</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Laad via NewsLeecher</string>
   <string name="Download" Original="Download">Download</string>
   <string name="Actions" Original="Actions">Acties</string>
@@ -108,7 +108,7 @@
   <string name="FanartDisableLabel" Original="Disabled">Uitgeschakeld</string>
   <string name="FanartMenuEnable" Original="Enable Fanart">Fanart inschakelen</string>
   <string name="FanartMenuDisable" Original="Disable Fanart">Fanart uitschakelen</string>
-  <string name="SortByStrings" Original="SortByStrings">the|a|an&gt;the|a|an|de|het|een</string>
+  <string name="SortByStrings" Original="SortByStrings">the|a|an</string>
   <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
   <string name="LayoutList" Original="List">Lijst</string>
   <string name="LayoutListBanners" Original="List Banners">Lijst met banners</string>
@@ -199,7 +199,7 @@
   <string name="Aired" Original="Aired">Uitgezonden</string>
   <string name="AiredStatusContinuing" Original="Continuing">Lopend</string>
   <string name="AiredStatusEnded" Original="Ended">Afgelopen</string>
-  <string name="Airs" Original="Airs">Uitzendings</string>
+  <string name="Airs" Original="Airs">Uitzendingen</string>
   <string name="AirsDay" Original="Airs Day">Uitzendingsdag</string>
   <string name="AirsTime" Original="Airs Time">Uitzendingstijd</string>
   <string name="Cast" Original="Cast">Rolverdeling:</string>

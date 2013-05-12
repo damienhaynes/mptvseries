@@ -269,18 +269,22 @@
   <string name="CFS_Local_Series" Original="Local Series:">Lokale Serien:</string>
   <string name="AvailableMedia" Original="Available Media">Verfügbare Medien</string>
   <string name="Votes" Original="votes">Abstimmungen</string>
+  <string name="LayoutCoveflow" Original="Coveflow">Coverflow</string>
   <string name="SummaryNotAvailable" Original="No summary is currently available.">Keine Beschreibung verfügbar</string>
   <string name="Timeout" Original="Timeout">Zeitüberschreitung</string>
   <string name="ShowAllEpisodes" Original="Show all Episodes">Alle Episoden anzeigen</string>
+  <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Lade alle Folgen Informationen herunter</string>
   <string name="Calendar" Original="Calendar">Kalender</string>
   <string name="Recommendations" Original="Recommendations">Vorschläge</string>
   <string name="Trending" Original="Trending">Populär</string>
   <string name="WatchList" Original="WatchList">Beobachtungsliste</string>
   <string name="Shouts" Original="Shouts">Shouts</string>
   <string name="MainMenu" Original="Main Menu">Hauptmenü</string>
+  <string name="AddToWatchList" Original="Add {0} to Watchlist">Füge {0} zur Beobachtungsliste hinzu</string>
   <string name="RelatedSeries" Original="RelatedSeries">Ähnliche Serien</string>
   <string name="SearchTorrent" Original="Torrent Search">Torrent-Suche</string>
   <string name="SearchNZB" Original="NZB Search">NZB-Suche</string>
+  <string name="insertDisk" Original="Please insert Disk">Bitte Disk einlegen</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Episode</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">ist momentan nicht verfügbar.</string>
   <string name="InsertDiskMessage3" Original="Please insert or connect media">Bitte Medium mit der folgenden Bezeichnung</string>
@@ -289,7 +293,9 @@
   <string name="Cancel" Original="Cancel">Abbrechen</string>
   <string name="Ignore" Original="Ignore">Ignorieren</string>
   <string name="Update" Original="Update">Aktualisieren</string>
+  <string name="LayoutCoverflow" Original="Coverflow">Coverflow</string>
   <string name="Warning" Original="Warning">Warnung</string>
+  <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Sind Sie sicher dass Sie fortfahren möchten?</string>
   <string name="Filters" Original="Filters">Filter</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Ungesehene Episoden</string>
   <string name="AllEpisodes" Original="All Episodes">Alle Episoden</string>

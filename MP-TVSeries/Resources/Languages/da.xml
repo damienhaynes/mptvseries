@@ -289,12 +289,27 @@
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Tilføj {0} til setliste</string>
   <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Du kan ikke gøre dette uden, at\nvære logget ind. Ønsker du at logge ind eller oprette\nen bruger til trakt.tv nu?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Relaterede serier</string>
+  <string name="SearchTorrent" Original="Torrent Search">Søg Torrent</string>
+  <string name="SearchNZB" Original="NZB Search">NZB søgning</string>
+  <string name="SearchActorInMovies" Original="Search for Actor in Movies">Søg efter skuespiller i filmene</string>
+  <string name="AddToCustomList" Original="Add {0} to Custom List...">Tilføj {0} til din liste...</string>
+  <string name="insertDisk" Original="Please insert Disk">Indsæt venligt disk</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Det valgte medie for afsnittet</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">er på nuværende tidspunkt ikke tilgængelig.</string>
   <string name="InsertDiskMessage3" Original="Please insert or connect media">Indsæt venligt eller forbind mediet</string>
   <string name="InsertDiskMessage4" Original="labeled: {0}">mærket: {0}</string>
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Annuller</string>
+  <string name="Ignore" Original="Ignore">Ignorer</string>
+  <string name="CycleSeriesThumb" Original="Cycle Series Panel">Roter Serie Panel</string>
   <string name="Update" Original="Update">Opdater</string>
+  <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">Overblikket \"{0}\" findes i forvejen</string>
+  <string name="LayoutListThumbs" Original="List Panels">Vis paneler</string>
+  <string name="LayoutCoverflow" Original="Coverflow">Coverflow</string>
   <string name="Warning" Original="Warning">Advarsel</string>
+  <string name="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">Du har endnu ikke seet / valgt</string>
+  <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Ønsker du at fortsætte?</string>
+  <string name="Filters" Original="Filters">Filter</string>
+  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Usete afsnit</string>
+  <string name="AllEpisodes" Original="All Episodes">Alle afsnit</string>
 </resources>

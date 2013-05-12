@@ -6,7 +6,9 @@
   <string name="Unknown" Original="Unknown">Neznáme</string>
   <string name="Genres" Original="Genres">Žánry</string>
   <string name="ChangeView" Original="Change View">Zmeniť zobrazenie</string>
+  <string name="AddToPlaylist" Original="Add To Playlist">Pridať do zoznamu</string>
   <!--Additional ones should be added for other languages, dont translate existing ones as they will be used as well-->
+  <string name="ButtonAutoPlay" Original="Auto Play">Automatické prehrávanie</string>
   <!--Rate Descriptions - 5 Stars-->
   <string name="RateFiveStarOne" Original="Terrible">Otrasné</string>
   <string name="RateFiveStarTwo" Original="Mediocre">Slabé</string>
@@ -19,6 +21,7 @@
   <string name="RateTenStarSeven" Original="Good">Slušné</string>
   <string name="RateTenStarNine" Original="Superb">Skvelé</string>
   <string name="RateTenStarTen" Original="Perfect">Perfektné</string>
+  <string name="NoPlaylistsFound" Original="No Playlists found in:">Žiadny zoznam nebol nájdený v:</string>
   <string name="Actors" Original="Actors">Herci</string>
   <string name="Certification" Original="Certification">Klasifikácia</string>
   <string name="Director" Original="Director">Režisér</string>
@@ -29,6 +32,7 @@
   <string name="Watched" Original="Watched">Videné</string>
   <string name="Writer" Original="Writer">Scénárista</string>
   <string name="Writers" Original="Writers">Scénáristi</string>
+  <string name="Playlist" Original="Playlist">Zoznam skladieb</string>
   <string name="ErrorClear" Original="Error">Chyba</string>
   <string name="SortBy" Original="Sort By">Zoradiť podľa</string>
   <string name="Title" Original="Title">Titul</string>

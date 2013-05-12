@@ -26,7 +26,7 @@
   <string name="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Slumpmässig uppspelning av nya, osedda avsnitt</string>
   <string name="Delete_that_series" Original="Delete that series?">Ta bort serien?</string>
   <string name="Delete_that_season" Original="Delete that season?">Ta bort denna säsong?</string>
-  <string name="Delete_that_episode" Original="Delete that episode?">Delete this episode?</string>
+  <string name="Delete_that_episode" Original="Delete that episode?">Ta bort det här avsnittet?</string>
   <string name="Confirm" Original="Confirm">Bekräfta</string>
   <string name="Completed" Original="Completed">Färdig</string>
   <string name="No_subtitles_found" Original="No subtitles found">Ingen undertext hittad</string>
@@ -51,7 +51,7 @@
   <string name="Latest" Original="Latest Aired">Senaste</string>
   <string name="Channels" Original="Channels">Kanaler</string>
   <string name="Unwatched" Original="Unwatched">Ej sedda</string>
-  <string name="Favourites" Original="Favourites">Favouriter</string>
+  <string name="Favourites" Original="Favourites">Favoriter</string>
   <string name="updateMI" Original="Update Mediainfo of local file">Uppdatera mediainformation för lokal(a) fil(er)</string>
   <string name="RateSeries" Original="Rate this Series">Betygsätt denna serie</string>
   <string name="RateEpisode" Original="Rate this Episode">Betygsätt detta avsnitt</string>
