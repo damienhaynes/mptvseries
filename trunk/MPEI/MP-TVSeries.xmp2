@@ -2133,18 +2133,24 @@ public class Script
     <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>3</Major>
-      <Minor>4</Minor>
-      <Build>2</Build>
-      <Revision>2018</Revision>
+      <Minor>5</Minor>
+      <Build>0</Build>
+      <Revision>2028</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Added support for Transifex Translations, thanks chefkoch.
-* Updated Trakt plugin to v2.7.0.</VersionDescription>
+    <VersionDescription>* Replaced togglebuttons with checkbuttons in Playlist and Fanart Chooser GUI.
+* Replaced togglebuttons with checkmarks (not checkbuttons) in the Rate Dialog.
+* Updated the Options class so its thread safe. Will prevent issues where external plugins access the tvseries API.
+* Updated the logging prefix format.
+* Updated the Trakt context menu to use the Trakt plugin API rather than duplicate it in TVSeries.
+* Fixed Season watched count not incrementing after watching an episode if season contained episodes with non-unique air-dates. 
+* Updated translations from Transifex.
+* Updated Trakt plugin to v2.9.0.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.4.2.2018.mpe1</OnlineLocation>
-    <ReleaseDate>2013-03-03T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.5.0.2028.mpe1</OnlineLocation>
+    <ReleaseDate>2013-05-12T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
