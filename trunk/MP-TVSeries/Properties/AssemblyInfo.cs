@@ -16,7 +16,7 @@ using MediaPortal.Common.Utils;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
-[assembly: AssemblyCopyright("Copyright © 2012")]
+[assembly: AssemblyCopyright("Copyright © 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,14 +31,6 @@ using MediaPortal.Common.Utils;
 // Version Compatibility
 // http://wiki.team-mediaportal.com/1_MEDIAPORTAL_1/18_Contribute/6_Plugins/Plugin_Related_Changes/1.1.0_to_1.2.0/Version_Compatibility
 [assembly: CompatibleVersion("1.1.6.27644")]
-//[assembly: UsesSubsystem("MP.SkinEngine")]
-//[assembly: UsesSubsystem("MP.Config")]
-//[assembly: UsesSubsystem("MP.Input.Keyboard")]
-//[assembly: UsesSubsystem("MP.Players.DVD")]
-//[assembly: UsesSubsystem("MP.Players.Video")]
-//[assembly: UsesSubsystem("MP.Externals.SQLite")]
-//[assembly: UsesSubsystem("MP.Externals.MediaInfo")]
-//[assembly: UsesSubsystem("MP.Externals.ICSharpCode.SharpZipLib")]
 
 // Version information for an assembly consists of the following four values:
 //
