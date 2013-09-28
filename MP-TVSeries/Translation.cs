@@ -343,6 +343,7 @@ namespace WindowPlugins.GUITVSeries
         public static string Filters = "Filters";
         public static string UnwatchedEpisodes = "UnWatched Episodes";
         public static string AllEpisodes = "All Episodes";
+        public static string Biography = "Biography";
         #endregion
 
         #region Private variables

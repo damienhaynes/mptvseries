@@ -1914,13 +1914,22 @@ namespace WindowPlugins.GUITVSeries
             string tvdbid = m_SelectedSeries[DBOnlineSeries.cID];
             string fanart = GUIPropertyManager.GetProperty("#TVSeries.Current.Fanart").Trim();
 
-            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
+            var people = new TraktPlugin.GUI.SearchPeople
             {
-                TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, fanart, true);
+                Actors = m_SelectedSeries[DBOnlineSeries.cActors].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList()
+            };
+
+            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
+            {              
+                TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, fanart, people, true);
             }
             else if (this.listLevel == Listlevel.Episode)
             {
-                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, m_SelectedSeason[DBSeason.cIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], tvdbid, fanart);
+                people.Directors = m_SelectedEpisode[DBOnlineEpisode.cDirector].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
+                people.Writers = m_SelectedEpisode[DBOnlineEpisode.cWriter].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
+                people.GuestStars = m_SelectedEpisode[DBOnlineEpisode.cGuestStars].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
+
+                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, m_SelectedSeason[DBSeason.cIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], tvdbid, fanart, people, false);
             }
         }
 
@@ -2445,7 +2454,9 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     if (guiListItem != null)
                                     {
+                                        guiListItem.IconImage = image;
                                         guiListItem.IconImageBig = image;
+                                        guiListItem.ThumbnailImage = image;
                                     }
                                     else
                                     {
