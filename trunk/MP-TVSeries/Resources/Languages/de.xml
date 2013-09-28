@@ -190,7 +190,10 @@
   <string name="LocalMedia" Original="Local Media">Lokale Medien</string>
   <string name="AdultSeries" Original="Adult Series">Serie für Erwachsene</string>
   <string name="KidsSeries" Original="Kids Series">Kinderserie</string>
+  <string name="ClearFanartCache" Original="Clear Fanart Cache">Bereinige den Fanart Zwischenspeicher</string>
   <string name="DeleteThumbnailsHeading" Original="Delete Thumbnails">Lösche Vorschaubilder</string>
+  <string name="DeleteThumbnailsLine1" Original="Would you also like to Delete and Re-Download">Willst du löschen und neu herunterladen?</string>
+  <string name="DeleteThumbnailsLine2" Original="all episode thumbnails?">Alle Thunbnails der Folgen?</string>
   <string name="RateDialog" Original="Rate Dialog">Bewertungsdialog</string>
   <string name="PinCodeDialog" Original="Pin Code Dialog">PIN-Dialog</string>
   <string name="Aired" Original="Aired">Ausgestrahlt</string>
@@ -270,8 +273,11 @@
   <string name="AvailableMedia" Original="Available Media">Verfügbare Medien</string>
   <string name="Votes" Original="votes">Abstimmungen</string>
   <string name="LayoutCoveflow" Original="Coveflow">Coverflow</string>
+  <string name="ResumeEpisode" Original="Resume episode from last time?">Die Folge vom letzten Mal fortsetzen?</string>
   <string name="SummaryNotAvailable" Original="No summary is currently available.">Keine Beschreibung verfügbar</string>
   <string name="Timeout" Original="Timeout">Zeitüberschreitung</string>
+  <string name="NoActors" Original="There are no Actors for this series.">Keine Darsteller für diese Serie vorhanden</string>
+  <string name="GettingActors" Original="Getting Actors from Online">Schauspieler werden aus dem Netz geladen</string>
   <string name="ShowAllEpisodes" Original="Show all Episodes">Alle Episoden anzeigen</string>
   <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Lade alle Folgen Informationen herunter</string>
   <string name="Calendar" Original="Calendar">Kalender</string>
@@ -281,9 +287,12 @@
   <string name="Shouts" Original="Shouts">Shouts</string>
   <string name="MainMenu" Original="Main Menu">Hauptmenü</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Füge {0} zur Beobachtungsliste hinzu</string>
+  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Für diese Aktion musst du eingeloggt sein. Willst du dich anmelden oder ein Trakt-Konto erstellen?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Ähnliche Serien</string>
   <string name="SearchTorrent" Original="Torrent Search">Torrent-Suche</string>
   <string name="SearchNZB" Original="NZB Search">NZB-Suche</string>
+  <string name="SearchActorInMovies" Original="Search for Actor in Movies">Suche nach einem Schauspieler in den Filmen</string>
+  <string name="AddToCustomList" Original="Add {0} to Custom List...">{0} zu Benutzerliste hinzufügen</string>
   <string name="insertDisk" Original="Please insert Disk">Bitte Disk einlegen</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Episode</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">ist momentan nicht verfügbar.</string>
@@ -292,9 +301,13 @@
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Abbrechen</string>
   <string name="Ignore" Original="Ignore">Ignorieren</string>
+  <string name="CycleSeriesThumb" Original="Cycle Series Panel">Serienanzeige umschalten</string>
   <string name="Update" Original="Update">Aktualisieren</string>
+  <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">Die Ansicht \'{0}\' besteht schon</string>
+  <string name="LayoutListThumbs" Original="List Panels">Panels Auflistung</string>
   <string name="LayoutCoverflow" Original="Coverflow">Coverflow</string>
   <string name="Warning" Original="Warning">Warnung</string>
+  <string name="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">Noch nicht angesehen/gesammelt</string>
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Sind Sie sicher dass Sie fortfahren möchten?</string>
   <string name="Filters" Original="Filters">Filter</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Ungesehene Episoden</string>
