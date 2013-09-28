@@ -667,6 +667,27 @@ Trakt can also help you keep your watched flags in sync across multiple computer
               <ZipFileName>Installer{CopyFile}\{a31f27b0-57bd-4b25-903f-0c863cf733d9}-zh.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\zh.xml</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml.bak</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{06967c92-72db-42f9-8d9c-8d929350b620}-en-US.xml.bak</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\en-US.xml.bak</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\ku.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8b5f8336-d901-435a-9f46-85f6c0ec63b7}-ku.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\ku.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\vi.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{479905b7-194f-4f7f-af6d-a6266b89a1ac}-vi.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\vi.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -2134,23 +2155,19 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>5</Minor>
-      <Build>0</Build>
-      <Revision>2028</Revision>
+      <Build>1</Build>
+      <Revision>2032</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Replaced togglebuttons with checkbuttons in Playlist and Fanart Chooser GUI.
-* Replaced togglebuttons with checkmarks (not checkbuttons) in the Rate Dialog.
-* Updated the Options class so its thread safe. Will prevent issues where external plugins access the tvseries API.
-* Updated the logging prefix format.
-* Updated the Trakt context menu to use the Trakt plugin API rather than duplicate it in TVSeries.
-* Fixed Season watched count not incrementing after watching an episode if season contained episodes with non-unique air-dates. 
+    <VersionDescription>* Added support to search for actors, writers, directors and guest stars from selected show/episode. This is available under 'Trakt' from the context menu.
+* Added support to search for Actor from the Actors GUI, this will perform a search on trakt so you can view the Actors biography.
 * Updated translations from Transifex.
-* Updated Trakt plugin to v2.9.0.</VersionDescription>
+* Updated Trakt plugin to v3.1.0.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.5.0.2028.mpe1</OnlineLocation>
-    <ReleaseDate>2013-05-12T15:25:06</ReleaseDate>
+    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.5.1.2032.mpe1</OnlineLocation>
+    <ReleaseDate>2013-09-28T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2802,6 +2819,27 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <LocalFileName>..\MP-TVSeries\Resources\Languages\zh.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{a31f27b0-57bd-4b25-903f-0c863cf733d9}-zh.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\zh.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml.bak</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{06967c92-72db-42f9-8d9c-8d929350b620}-en-US.xml.bak</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\en-US.xml.bak</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\ku.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8b5f8336-d901-435a-9f46-85f6c0ec63b7}-ku.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\ku.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\vi.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{479905b7-194f-4f7f-af6d-a6266b89a1ac}-vi.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\vi.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
