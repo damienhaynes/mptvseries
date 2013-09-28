@@ -55,6 +55,7 @@
   <string name="updateMI" Original="Update Mediainfo of local file">עדכן מידע של קובץ מקומי(s)</string>
   <string name="RateSeries" Original="Rate this Series">דרג סדרה</string>
   <string name="RateEpisode" Original="Rate this Episode">דרג פרק</string>
+  <string name="ResetRating" Original="Reset Rating">אפס דירוג</string>
   <string name="AskToRate" Original="Ask me to rate unrated episodes">בקש ממני לדרג פרקים לא מדורגים</string>
   <string name="DontAskToRate" Original="Don't ask me to rate again">אל תבקש ממני לדרג שוב</string>
   <string name="RatingStar" Original="Star">כוכב</string>
@@ -116,7 +117,7 @@
   <string name="LayoutFilmstrip" Original="Filmstrip">רצועת שקופיות</string>
   <string name="LayoutSmallIcons" Original="Small Icons">אייקונים קטנים</string>
   <string name="ButtonAutoPlay" Original="Auto Play">ניגון אוטומטי</string>
-  <string name="ButtonSwitchView" Original="Switch View">שנה מבט</string>
+  <string name="ButtonSwitchView" Original="Switch View">שנה תצוגה</string>
   <string name="ButtonRunImport" Original="Run Import">בצע יבוא</string>
   <string name="ButtonChangeLayout" Original="Change Layout">שנה סידור</string>
   <string name="ButtonOptions" Original="Options">אפשרויות</string>
@@ -127,6 +128,11 @@
   <string name="LabelChosen" Original="Chosen">נבחר:</string>
   <string name="LabelDisabled" Original="Disabled">מבוטל:</string>
   <string name="ResetUserSelections" Original="Reset User Selections">אפס בחירות משתמש</string>
+  <string name="DeleteFromDisk" Original="Delete from Disk">מחק מהדיסק</string>
+  <string name="DeleteFromDatabase" Original="Delete from Database">מחק ממסד הנתונים</string>
+  <string name="DeleteFromFileDatabase" Original="Delete from Disk and Database">מחק מדיסק וממסד הנתונים</string>
+  <string name="RateDialogLabel" Original="Select Your Rating for {0}">בחר דירוג עבור {0}</string>
+  <string name="Hide_thumbnail_on_unwatched" Original="Hide Spoiler Thumbnails">הסתר תמונה לפרקים שלא נצפו</string>
   <!--Rate Descriptions - 5 Stars-->
   <string name="RateFiveStarOne" Original="Terrible">גרוע</string>
   <string name="RateFiveStarTwo" Original="Mediocre">בינוני</string>
@@ -134,23 +140,74 @@
   <string name="RateFiveStarFour" Original="Superb">מעולה</string>
   <string name="RateFiveStarFive" Original="Perfect">מושלם</string>
   <!--Rate Descriptions - 10 Stars-->
+  <string name="RateTenStarOne" Original="Abysmal">גרוע</string>
   <string name="RateTenStarTwo" Original="Terrible">גרוע</string>
+  <string name="RateTenStarThree" Original="Bad">רע</string>
+  <string name="RateTenStarFour" Original="Poor">ירוד</string>
   <string name="RateTenStarFive" Original="Mediocre">בינוני</string>
+  <string name="RateTenStarSix" Original="Fair">בינוני</string>
   <string name="RateTenStarSeven" Original="Good">טוב</string>
+  <string name="RateTenStarEight" Original="Great">נהדר</string>
   <string name="RateTenStarNine" Original="Superb">מעולה</string>
   <string name="RateTenStarTen" Original="Perfect">מושלם</string>
+  <string name="ContentRating" Original="Content Rating">דירוג תוכן</string>
+  <string name="ViewTags" Original="View Tags">צפה בתגיות</string>
+  <string name="AddViewTag" Original="Add Series to View Tag">הוסף סדרה לתצוגה</string>
+  <string name="RemoveViewTag" Original="Remove Series from View Tag">הורד סדרה מתצוגה</string>
+  <string name="NewViewTag" Original="New Tag">תצוגה חדשה</string>
+  <string name="FanartIntervalFiveSeconds" Original="5 Seconds">5 שניות</string>
+  <string name="FanartIntervalTenSeconds" Original="10 Seconds">10 שניות</string>
+  <string name="FanartIntervalFifteenSeconds" Original="15 Seconds">15 שניות</string>
+  <string name="FanartIntervalThirtySeconds" Original="30 Seconds">30 שניות</string>
+  <string name="FanartIntervalFortyFiveSeconds" Original="45 Seconds">45 שניות</string>
+  <string name="FanartIntervalSixtySeconds" Original="60 Seconds">60 שניות</string>
+  <string name="PinCode" Original="Pin Code">קוד נעילה</string>
+  <string name="PinCodeIncorrectLine1" Original="The entered pin code is incorrect">קוד הנעילה שגוי</string>
+  <string name="PinCodeIncorrectLine2" Original="Press OK to try again">לחץ אוקיי לנסות שוב</string>
+  <string name="ParentalControlLocked" Original="Lock Views">נעל תצוגות</string>
+  <string name="PinCodeMessageIncorrect" Original="Pin Incorrect">קוד נעילה שגוי</string>
+  <string name="Subtitles" Original="Subtitles">כתוביות</string>
   <string name="Actors" Original="Actors">שחקנים</string>
   <string name="Certification" Original="Certification">אישור צפייה</string>
   <string name="Director" Original="Director">במאי</string>
   <string name="Directors" Original="Directors">במאים</string>
+  <string name="FileSize" Original="File Size">גודל קובץ</string>
   <string name="Genre" Original="Genre">ז\'אנר</string>
+  <string name="Group" Original="Groups">קבוצה</string>
+  <string name="Groups" Original="Groups">קבוצות</string>
+  <string name="GuestStar" Original="Guest Star">כוכב אורח</string>
+  <string name="GuestStars" Original="Guest Stars">כוכבים אורחים</string>
+  <string name="Minutes" Original="Minutes">דקות</string>
+  <string name="MyRating" Original="My Rating">הדירוג שלי</string>
+  <string name="Network" Original="Network">רשת</string>
   <string name="Rated" Original="Rated">מדורג</string>
+  <string name="Rating" Original="Rating">דירוג</string>
   <string name="Runtime" Original="Runtime">זמן ריצה</string>
+  <string name="SeriesDetails" Original="Series Details">פרטי סדרה</string>
+  <string name="Watched" Original="Watched">נצפה</string>
   <string name="Writer" Original="Writer">כותב</string>
   <string name="Writers" Original="Writers">כותבים</string>
+  <string name="TVDB_ERROR_UNAVAILABLE_1" Original="TheTVDB.com is currently unavailable">TheTVDB.com לא זמין כרגע</string>
+  <string name="TVDB_ERROR_UNAVAILABLE_2" Original="Please try again later">אנא נסה מאוחר יותר</string>
+  <string name="NETWORK_ERROR_UNAVAILABLE_1" Original="Network connection is unavailable">חיבור הרשת אינו זמין כרגע</string>
+  <string name="NETWORK_ERROR_UNAVAILABLE_2" Original="Check your connection and try again">בדוק את החיבור ונסה שוב</string>
+  <string name="PlayNow" Original="Play Now">נגן עכשיו</string>
   <string name="ErrorClear" Original="Error">שגיאה</string>
+  <string name="PlaySomething" Original="Play...">נגן</string>
   <string name="SortBy" Original="Sort By">מיין לפי</string>
   <string name="Title" Original="Title">שם סרט</string>
+  <string name="CFS_Skip" Original="Skip">דלג</string>
   <string name="Votes" Original="votes">הצבעות</string>
+  <string name="LayoutCoveflow" Original="Coveflow">תצוגת עטיפות תלת-מימד</string>
+  <string name="Calendar" Original="Calendar">לוח שנה</string>
+  <string name="Recommendations" Original="Recommendations">המלצות</string>
+  <string name="MainMenu" Original="Main Menu">תפריט ראשי</string>
+  <string name="OK" Original="OK">אוקיי</string>
   <string name="Cancel" Original="Cancel">ביטול</string>
+  <string name="Ignore" Original="Ignore">התעלם</string>
+  <string name="Update" Original="Update">עדכון</string>
+  <string name="LayoutCoverflow" Original="Coverflow">תצוגת עטיפות תלת-מימד</string>
+  <string name="Warning" Original="Warning">אזהרה</string>
+  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">פרקים שלא נצפו</string>
+  <string name="AllEpisodes" Original="All Episodes">כל הפרקים</string>
 </resources>
