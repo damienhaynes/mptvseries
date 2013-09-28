@@ -32,7 +32,8 @@ namespace WindowPlugins.GUITVSeries.GUI
         public enum ContextMenuItem
         {
             layout,
-            searchmovie
+            searchmovie,
+            biography
         }
 
         public enum Layout
@@ -148,6 +149,14 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             GUIListItem listItem = null;
 
+            // Trakt: Search for Actor
+            if (Helper.IsTraktAvailableAndEnabled)
+            {
+                listItem = new GUIListItem(Translation.Biography);
+                dlg.Add(listItem);
+                listItem.ItemId = (int)ContextMenuItem.biography;
+            }
+
             // MovingPictures: Search for Actor in Movies
             if (Helper.IsMovingPicturesAvailableAndEnabled)
             {
@@ -174,6 +183,12 @@ namespace WindowPlugins.GUITVSeries.GUI
                     DBActor actor = (selectedItem as GUIActorListItem).Item as DBActor;
                     string searchObj = string.Format("searchcast:{0}", actor.Name);
                     GUIWindowManager.ActivateWindow(96742, searchObj);
+                    break;
+
+                // trakt actor search
+                case ((int)ContextMenuItem.biography):
+                    actor = (selectedItem as GUIActorListItem).Item as DBActor;
+                    GUIWindowManager.ActivateWindow(874005, actor.Name);
                     break;
             }
 
