@@ -33,7 +33,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
-        public const int cDBVersion = 5;
+        public const int cDBVersion = 6;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -201,13 +201,46 @@ namespace WindowPlugins.GUITVSeries
                         catch (Exception) { }  
 
                         nUpgradeDBVersion++;
-                        break;  
+                        break;
+                    case 5:
+                        newIndex = DBReplacements.GetAll().Length;
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = newIndex++;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 0;
+                        replacement[DBReplacements.cBefore] = "1";
+                        replacement[DBReplacements.cToReplace] = @"(?-i)([A-Z])\.(?=[A-Z])";
+                        replacement[DBReplacements.cWith] = @"${1}";
+                        replacement[DBReplacements.cIsRegex] = true;
+                        try
+                        {
+                          replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        replacement = new DBReplacements();
+                        replacement[DBReplacements.cIndex] = newIndex++;
+                        replacement[DBReplacements.cEnabled] = 1;
+                        replacement[DBReplacements.cTagEnabled] = 0;
+                        replacement[DBReplacements.cBefore] = "0";
+                        replacement[DBReplacements.cToReplace] = "<space><space>";
+                        replacement[DBReplacements.cWith] = @"<space>";
+                        replacement[DBReplacements.cIsRegex] = false;
+                        try
+                        {
+                            replacement.Commit();
+                        }
+                        catch (Exception) { }
+
+                        nUpgradeDBVersion++;
+                        break;
                     default:
                         {
                             // no replacements in the db => put the default ones
                             AddDefaults();
 
-                            nUpgradeDBVersion=5;
+                            nUpgradeDBVersion=6;
                         }
                         break;
                 }
@@ -236,8 +269,16 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<space>";
             replacement.Commit();
 
-            // to avoid being parsed as second episode 20/80
             replacement[DBReplacements.cIndex] = "2";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cTagEnabled] = "0";
+            replacement[DBReplacements.cBefore] = "0";
+            replacement[DBReplacements.cToReplace] = "<space><space>";
+            replacement[DBReplacements.cWith] = @"<space>";
+            replacement.Commit();
+
+            // to avoid being parsed as second episode 20/80
+            replacement[DBReplacements.cIndex] = "3";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -245,7 +286,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "3";
+            replacement[DBReplacements.cIndex] = "4";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -253,7 +294,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "4";
+            replacement[DBReplacements.cIndex] = "5";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -261,7 +302,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "5";
+            replacement[DBReplacements.cIndex] = "6";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -269,7 +310,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "6";
+            replacement[DBReplacements.cIndex] = "7";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -277,7 +318,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "7";
+            replacement[DBReplacements.cIndex] = "8";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -285,14 +326,14 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "8";
+            replacement[DBReplacements.cIndex] = "9";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
             replacement[DBReplacements.cToReplace] = "HR.HDTV";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "9";
+            replacement[DBReplacements.cIndex] = "10";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -300,7 +341,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "10";
+            replacement[DBReplacements.cIndex] = "11";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -312,7 +353,7 @@ namespace WindowPlugins.GUITVSeries
 
             // low roman numerals preceded by Part or pt (for eg. Part 4 => 1x04)
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 11;
+            replacement[DBReplacements.cIndex] = 12;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -327,7 +368,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Part n or Part n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 12;
+            replacement[DBReplacements.cIndex] = 13;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -342,7 +383,7 @@ namespace WindowPlugins.GUITVSeries
 
             // n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 13;
+            replacement[DBReplacements.cIndex] = 14;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -353,9 +394,21 @@ namespace WindowPlugins.GUITVSeries
             {
               replacement.Commit();
             }
-            catch (Exception) { }  
+            catch (Exception) { }
 
-            
+            replacement = new DBReplacements();
+            replacement[DBReplacements.cIndex] = 15;
+            replacement[DBReplacements.cEnabled] = 1;
+            replacement[DBReplacements.cTagEnabled] = 0;
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cToReplace] = @"(?-i)([A-Z])\.(?=[A-Z])";
+            replacement[DBReplacements.cWith] = @"${1}";
+            replacement[DBReplacements.cIsRegex] = true;
+            try
+            {
+                replacement.Commit();
+            }
+            catch (Exception) { }
 
         }
 
