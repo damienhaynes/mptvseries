@@ -437,7 +437,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cSubstituteMissingArtwork, 0);
 
             if (GetOptions(cAskToRate)==null)
-                SetOptions(cAskToRate, 1);
+                SetOptions(cAskToRate, 0);
 
             if (GetOptions(cSkipSeasonViewOnSingleSeason) == null)
                 SetOptions(cSkipSeasonViewOnSingleSeason, 1);
