@@ -194,7 +194,15 @@ namespace WindowPlugins.GUITVSeries
                 List<DBEpisode> episodes = DBEpisode.Get(condition, false);
                 foreach (DBEpisode ep in episodes)
                 {
+                    string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     ep[DBOnlineEpisode.cWatched] = "1";
+                    ep[DBOnlineEpisode.cPlayCount] = ep[DBOnlineEpisode.cPlayCount] + 1;
+                    ep[DBEpisode.cDateWatched] = date;
+                    ep[DBOnlineEpisode.cLastWatchedDate] = date;
+                    if (string.IsNullOrEmpty(ep[DBOnlineEpisode.cFirstWatchedDate]))
+                    {
+                        ep[DBOnlineEpisode.cFirstWatchedDate] = date;
+                    }
                     ep.Commit();
                 }
                 // Update Episode Counts

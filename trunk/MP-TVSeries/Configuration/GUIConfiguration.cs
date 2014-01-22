@@ -1580,6 +1580,9 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cID:
                                 case DBOnlineEpisode.cLastUpdated:                                
                                 case DBOnlineEpisode.cWatched:
+                                case DBOnlineEpisode.cFirstWatchedDate:
+                                case DBOnlineEpisode.cLastWatchedDate:
+                                case DBOnlineEpisode.cPlayCount:
                                 case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                 case DBOnlineEpisode.cEpisodeThumbnailUrl:
                                 case DBOnlineEpisode.cCombinedEpisodeNumber:
@@ -2687,6 +2690,14 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBEpisode ep in episodeList)
                         {
                             ep[DBOnlineEpisode.cWatched] = watched;
+
+                            if (watched == 1 && ep[DBOnlineEpisode.cPlayCount] == 0)
+                                ep[DBOnlineEpisode.cPlayCount] = 1;
+                            if (watched == 1 && string.IsNullOrEmpty(ep[DBOnlineEpisode.cLastWatchedDate]))
+                                ep[DBOnlineEpisode.cLastWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            if (watched == 1 && string.IsNullOrEmpty(ep[DBOnlineEpisode.cFirstWatchedDate]))
+                                ep[DBOnlineEpisode.cFirstWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                             ep.Commit();
                         }
 
@@ -2750,6 +2761,14 @@ namespace WindowPlugins.GUITVSeries
                         foreach (DBEpisode ep in episodeList)
                         {
                             ep[DBOnlineEpisode.cWatched] = watched;
+
+                            if (watched == 1 && ep[DBOnlineEpisode.cPlayCount] == 0)
+                                ep[DBOnlineEpisode.cPlayCount] = 1;
+                            if (watched == 1 && string.IsNullOrEmpty(ep[DBOnlineEpisode.cLastWatchedDate]))
+                                ep[DBOnlineEpisode.cLastWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            if (watched == 1 && string.IsNullOrEmpty(ep[DBOnlineEpisode.cFirstWatchedDate]))
+                                ep[DBOnlineEpisode.cFirstWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                             ep.Commit();
                         }
 
@@ -2797,6 +2816,14 @@ namespace WindowPlugins.GUITVSeries
                         episode = (DBEpisode)nodeWatched.Tag;
 
                         episode[DBOnlineEpisode.cWatched] = watched;
+
+                        if (watched == 1 && episode[DBOnlineEpisode.cPlayCount] == 0)
+                            episode[DBOnlineEpisode.cPlayCount] = 1;
+                        if (watched == 1 && string.IsNullOrEmpty(episode[DBOnlineEpisode.cLastWatchedDate]))
+                            episode[DBOnlineEpisode.cLastWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        if (watched == 1 && string.IsNullOrEmpty(episode[DBOnlineEpisode.cFirstWatchedDate]))
+                            episode[DBOnlineEpisode.cFirstWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                         episode.Commit();
 
                         FollwitConnector.Watch(episode, watched == 1, false);

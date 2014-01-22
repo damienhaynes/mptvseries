@@ -38,6 +38,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeIndex = "EpisodeIndex";       // episode index
         public const String cEpisodeName = "EpisodeName";         // episode name
         public const String cWatched = "Watched";                 // tag to know if episode has been watched already (overrides the local file's tag)
+        public const String cLastWatchedDate = "LastWatchedDate";
+        public const String cFirstWatchedDate = "FirstWatchedDate";
+        public const String cPlayCount = "PlayCount";
         public const String cEpisodeSummary = "Summary";
         public const String cFirstAired = "FirstAired";
         public const String cOnlineDataImported = "OnlineDataImported";
@@ -142,6 +145,9 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cEpisodeName, new DBField(DBField.cTypeString));
 
             base.AddColumn(cWatched, new DBField(DBField.cTypeInt));
+            base.AddColumn(cPlayCount, new DBField(DBField.cType.Int));
+            base.AddColumn(cLastWatchedDate, new DBField(DBField.cTypeString));
+            base.AddColumn(cFirstWatchedDate, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
             base.AddColumn(cFirstAired, new DBField(DBField.cTypeString));
             base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
