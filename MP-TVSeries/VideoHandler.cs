@@ -409,7 +409,16 @@ namespace WindowPlugins.GUITVSeries
             List<DBEpisode> episodes = DBEpisode.Get(condition, false);
             foreach (DBEpisode ep in episodes)
             {
+                string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                 ep[DBOnlineEpisode.cWatched] = 1;
+                ep[DBOnlineEpisode.cPlayCount] = ep[DBOnlineEpisode.cPlayCount] + 1;
+                ep[DBEpisode.cDateWatched] = date;
+                ep[DBOnlineEpisode.cLastWatchedDate] = date;
+                if (string.IsNullOrEmpty(ep[DBOnlineEpisode.cFirstWatchedDate]))
+                {
+                    ep[DBOnlineEpisode.cFirstWatchedDate] = date;
+                }
                 ep.Commit(); 
             }
             // Update Episode Counts
@@ -498,7 +507,6 @@ namespace WindowPlugins.GUITVSeries
                     if ((timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100)
                     {
                         m_currentEpisode[DBEpisode.cStopTime] = 0;
-                        m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         m_currentEpisode.Commit();
                         PlaybackOperationEnded(true);
                     }
@@ -529,7 +537,6 @@ namespace WindowPlugins.GUITVSeries
                 try
                 {
                     m_currentEpisode[DBEpisode.cStopTime] = 0;
-                    m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     m_currentEpisode.Commit();
                     PlaybackOperationEnded(true);
 
@@ -557,7 +564,6 @@ namespace WindowPlugins.GUITVSeries
                         && (timeMovieStopped / playlistPlayer.g_Player.Duration) > watchedAfter / 100) 
                     {
                         m_previousEpisode[DBEpisode.cStopTime] = 0;
-                        m_currentEpisode[DBEpisode.cDateWatched] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         m_previousEpisode.Commit();
                         MPTVSeriesLog.Write("This episode counts as watched");
                         MarkEpisodeAsWatched(m_previousEpisode);

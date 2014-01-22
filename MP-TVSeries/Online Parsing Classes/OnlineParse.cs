@@ -1156,6 +1156,9 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cCompositeID:
                                     case DBEpisode.cSeriesID:
                                     case DBOnlineEpisode.cWatched:
+                                    case DBOnlineEpisode.cLastWatchedDate:
+                                    case DBOnlineEpisode.cFirstWatchedDate:
+                                    case DBOnlineEpisode.cPlayCount:
                                     case DBOnlineEpisode.cHidden:                                    
                                     case DBOnlineEpisode.cMyRating:
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
@@ -1766,7 +1769,15 @@ namespace WindowPlugins.GUITVSeries
                                 episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].CommunityRating;
 
                                 if (MarkWatched)
+                                {
                                     episode[DBOnlineEpisode.cWatched] = true;
+                                    if (episode[DBOnlineEpisode.cPlayCount] == 0)
+                                        episode[DBOnlineEpisode.cPlayCount] = 1;
+                                    if (string.IsNullOrEmpty(episode[DBOnlineEpisode.cLastWatchedDate]))
+                                        episode[DBOnlineEpisode.cLastWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                    if (string.IsNullOrEmpty(episode[DBOnlineEpisode.cFirstWatchedDate]))
+                                        episode[DBOnlineEpisode.cFirstWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                }
 
                                 episode.Commit();
                             }

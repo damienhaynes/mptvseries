@@ -1215,7 +1215,15 @@ namespace WindowPlugins.GUITVSeries
                         {
                             bool watched = selectedEpisode[DBOnlineEpisode.cWatched];
                             
-                            selectedEpisode[DBOnlineEpisode.cWatched] = !watched;                            
+                            selectedEpisode[DBOnlineEpisode.cWatched] = !watched;
+
+                            if (!watched && selectedEpisode[DBOnlineEpisode.cPlayCount] == 0)
+                                selectedEpisode[DBOnlineEpisode.cPlayCount] = 1;
+                            if (!watched && string.IsNullOrEmpty(selectedEpisode[DBOnlineEpisode.cLastWatchedDate]))
+                                selectedEpisode[DBOnlineEpisode.cLastWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            if (!watched && string.IsNullOrEmpty(selectedEpisode[DBOnlineEpisode.cFirstWatchedDate]))
+                                selectedEpisode[DBOnlineEpisode.cFirstWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                             selectedEpisode.Commit();
 
                             FollwitConnector.Watch(selectedEpisode, !watched, false);
@@ -1257,7 +1265,15 @@ namespace WindowPlugins.GUITVSeries
                         // and set watched state
                         foreach (DBEpisode episode in episodeList)
                         {
-                            episode[DBOnlineEpisode.cWatched] = 1;                            
+                            episode[DBOnlineEpisode.cWatched] = 1;
+
+                            if (episode[DBOnlineEpisode.cPlayCount] == 0)
+                                episode[DBOnlineEpisode.cPlayCount] = 1;
+                            if (string.IsNullOrEmpty(episode[DBOnlineEpisode.cLastWatchedDate]))
+                                episode[DBOnlineEpisode.cLastWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            if (string.IsNullOrEmpty(episode[DBOnlineEpisode.cFirstWatchedDate]))
+                                episode[DBOnlineEpisode.cFirstWatchedDate] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                             episode.Commit();
                         }
 

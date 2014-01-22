@@ -62,7 +62,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cTableName = "local_episodes";
         public const String cOutName = "Episode";
-        public const int cDBVersion = 8;
+        public const int cDBVersion = 9;
 
         #region Local DB Fields
         public const String cFilename = "EpisodeFilename";
@@ -246,6 +246,36 @@ namespace WindowPlugins.GUITVSeries
                     case 7:
                         //DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktLibrary, 0, new SQLCondition());
                         //DBOnlineEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cTraktSeen, 0, new SQLCondition());
+                        nUpgradeDBVersion++;
+                        break;
+
+                    case 8:
+                        // this may take a while depending on number of watched episodes in database
+                        System.Threading.Thread upgradeThread = new System.Threading.Thread((o) =>
+                            {
+                                // Add new PlayCount field and watched date fields
+                                MPTVSeriesLog.Write("Upgrading DBOnlineEpisode table with new fields: PlayCount, DateLastWatched and DateFirstWatched");
+
+                                int i = 0;
+                                conditions = new SQLCondition();
+                                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
+                                episodes = DBEpisode.Get(conditions);
+                                foreach (var episode in episodes)
+                                {
+                                    MPTVSeriesLog.Write("[{0}/{1}] Upgrading database fields for episode '{2}'", ++i, episodes.Count , episode.ToString());
+                                    // if previously watched set play count to 1
+                                    episode[DBOnlineEpisode.cPlayCount] = 1;
+
+                                    // use old date watched field and fill in new persistent fields.
+                                    episode[DBOnlineEpisode.cLastWatchedDate] = episode[DBEpisode.cDateWatched];
+                                    episode[DBOnlineEpisode.cFirstWatchedDate] = episode[DBEpisode.cDateWatched];
+
+                                    episode.Commit();
+                                }
+                                MPTVSeriesLog.Write("Update of DBOnlineEpisode table complete.");
+                            });
+
+                        upgradeThread.Start();
                         nUpgradeDBVersion++;
                         break;
 
@@ -489,7 +519,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cFileDateAdded, new DBField(DBField.cTypeString));
             base.AddColumn(cFileDateCreated, new DBField(DBField.cTypeString));            
             base.AddColumn(cIsAvailable, new DBField(DBField.cTypeInt));
-            base.AddColumn(cDateWatched, new DBField(DBField.cTypeString));
+            base.AddColumn(cDateWatched, new DBField(DBField.cTypeString)); // we should now remove this as we have it on the onlineepisode table which is persistent
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
