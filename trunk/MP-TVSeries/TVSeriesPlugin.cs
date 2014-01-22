@@ -1945,7 +1945,7 @@ namespace WindowPlugins.GUITVSeries
                 people.Writers = m_SelectedEpisode[DBOnlineEpisode.cWriter].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
                 people.GuestStars = m_SelectedEpisode[DBOnlineEpisode.cGuestStars].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
 
-                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, m_SelectedSeason[DBSeason.cIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], tvdbid, fanart, people, false);
+                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, m_SelectedSeason[DBSeason.cIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], tvdbid, m_SelectedEpisode[DBOnlineEpisode.cWatched], fanart, people, false);
             }
         }
 
