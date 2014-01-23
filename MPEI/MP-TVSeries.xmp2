@@ -20,13 +20,6 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\External\PluginConfigLoader.exe</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{8d0ae75d-52d4-4cd2-9331-0a97dd48078d}-PluginConfigLoader.exe</ZipFileName>
-              <DestinationFilename>%Base%\PluginConfigLoader.exe</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\External\MP-TVSeries-Configuration.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{3d9275ec-fc9a-4e26-8db4-b9ebfa215b27}-MP-TVSeries-Configuration.exe</ZipFileName>
               <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
@@ -666,13 +659,6 @@ Trakt can also help you keep your watched flags in sync across multiple computer
               <LocalFileName>..\MP-TVSeries\Resources\Languages\zh.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{a31f27b0-57bd-4b25-903f-0c863cf733d9}-zh.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\zh.xml</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-              <Param1 />
-              <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml.bak</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{06967c92-72db-42f9-8d9c-8d929350b620}-en-US.xml.bak</ZipFileName>
-              <DestinationFilename>%Language%\MP-TVSeries\en-US.xml.bak</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
               <Param1 />
@@ -2214,13 +2200,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\External\PluginConfigLoader.exe</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{8d0ae75d-52d4-4cd2-9331-0a97dd48078d}-PluginConfigLoader.exe</ZipFileName>
-        <DestinationFilename>%Base%\PluginConfigLoader.exe</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\External\MP-TVSeries-Configuration.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{3d9275ec-fc9a-4e26-8db4-b9ebfa215b27}-MP-TVSeries-Configuration.exe</ZipFileName>
         <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
@@ -2819,13 +2798,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <LocalFileName>..\MP-TVSeries\Resources\Languages\zh.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{a31f27b0-57bd-4b25-903f-0c863cf733d9}-zh.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\zh.xml</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\MP-TVSeries\Resources\Languages\en-US.xml.bak</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{06967c92-72db-42f9-8d9c-8d929350b620}-en-US.xml.bak</ZipFileName>
-        <DestinationFilename>%Language%\MP-TVSeries\en-US.xml.bak</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
