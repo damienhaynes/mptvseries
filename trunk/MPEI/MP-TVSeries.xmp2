@@ -20,9 +20,16 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\External\MP-TVSeries-Configuration.exe</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{3d9275ec-fc9a-4e26-8db4-b9ebfa215b27}-MP-TVSeries-Configuration.exe</ZipFileName>
-              <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
+              <LocalFileName>..\External\ConfigLauncher\.NET 30\MP-TVSeries-Configuration.exe</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f12f70f7-1367-4ceb-8f51-c95d4e46457f}-MP-TVSeries-Configuration.exe</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\External\ConfigLauncher\.NET 40\MP-TVSeries-Configuration.exe</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{193d9414-f8cc-41c9-9a42-445266c8c03f}-MP-TVSeries-Configuration.exe</ZipFileName>
+              <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -2005,6 +2012,75 @@ public class Script
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
+            <ActionItem Name="Script" ActionType="Script" ConditionGroup="Main">
+              <Params>
+                <Items>
+                  <SectionParam Name="Script">
+                    <Value>//css_reference "MpeCore.dll";
+
+using System;
+using System.IO;
+using System.Diagnostics;
+using MpeCore.Classes;
+using MpeCore;
+
+public class Script
+{
+        public static void Main(PackageClass packageClass, ActionItem actionItem)
+        {	
+	// get base path for MediaPortal
+	string basePath = MpeInstaller.TransformInRealPath("%Base%");
+
+	// get the file version info for currently installed MediaPortal.
+               FileVersionInfo mpVersionInfo = FileVersionInfo.GetVersionInfo(basePath + "\\MediaPortal.exe");
+	
+	Version mpNet4Version = new System.Version(1, 6, 0, 0);
+                Version mpCurrVersion = new System.Version(mpVersionInfo.FileVersion);
+
+                string source = string.Empty;
+	string destination = basePath + "\\MP-TVSeries-Configuration.exe";
+	
+	// copy the correct compiled version of the config launcher based on installed version
+	if (mpCurrVersion.CompareTo(mpNet4Version) &gt;= 0)
+	{
+		// .Net 4... current MP version is v1.6 or greater
+		source = basePath + @"\MP-TVSeries\Configuration\.NET 40\MP-TVSeries-Configuration.exe";
+	}
+	else
+	{
+		// .Net 3... current MP version is less than v1.6
+		source = basePath + @"\MP-TVSeries\Configuration\.NET 30\MP-TVSeries-Configuration.exe";
+	}
+	
+	try { File.Copy(source, destination, true); } catch {}
+	
+	return;
+        }
+}</Value>
+                    <ValueType>Script</ValueType>
+                    <Description />
+                  </SectionParam>
+                  <SectionParam Name="Uninstall Script">
+                    <Value>//css_reference "MpeCore.dll";
+
+using MpeCore.Classes;
+using MpeCore;
+
+public class Script
+{
+    public static void Main(PackageClass packageClass, UnInstallItem item)
+    {
+        return;
+    }
+}
+</Value>
+                    <ValueType>Script</ValueType>
+                    <Description />
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
           </Items>
         </Actions>
         <IncludedGroups />
@@ -2200,9 +2276,16 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\External\MP-TVSeries-Configuration.exe</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{3d9275ec-fc9a-4e26-8db4-b9ebfa215b27}-MP-TVSeries-Configuration.exe</ZipFileName>
-        <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
+        <LocalFileName>..\External\ConfigLauncher\.NET 30\MP-TVSeries-Configuration.exe</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f12f70f7-1367-4ceb-8f51-c95d4e46457f}-MP-TVSeries-Configuration.exe</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\External\ConfigLauncher\.NET 40\MP-TVSeries-Configuration.exe</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{193d9414-f8cc-41c9-9a42-445266c8c03f}-MP-TVSeries-Configuration.exe</ZipFileName>
+        <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
