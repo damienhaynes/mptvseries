@@ -303,7 +303,7 @@ namespace Cornerstone.MP {
                     image = (Image)typeof(Bitmap).InvokeMember("FromGDIplus", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { imagePtr });
             }
             catch (Exception) {
-                MPTVSeriesLog.Write("AsyncImageResource: Failed to load image from {0}", filename, MPTVSeriesLog.LogLevel.Normal);
+                MPTVSeriesLog.Write("AsyncImageResource: Failed to load image from {0}", filename);
                 image = null;
             }
 
