@@ -64,6 +64,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cOutName = "Episode";
         public const int cDBVersion = 9;
 
+        static Object getEpsLock = new Object();
+
         #region Local DB Fields
         public const String cFilename = "EpisodeFilename";
         public const String cCompositeID = DBOnlineEpisode.cCompositeID;           // composite string used for link key to online episode data
@@ -250,30 +252,45 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case 8:
+                        // add new PlayCount field and watched date fields
                         // this may take a while depending on number of watched episodes in database
                         System.Threading.Thread upgradeThread = new System.Threading.Thread((o) =>
                             {
-                                // Add new PlayCount field and watched date fields
-                                MPTVSeriesLog.Write("Upgrading DBOnlineEpisode table with new fields: PlayCount, DateLastWatched and DateFirstWatched");
-
                                 int i = 0;
+                                MPTVSeriesLog.Write("Upgrading 'online_episodes' table with new fields: 'PlayCount', 'DateLastWatched' and 'DateFirstWatched'...");
+
                                 conditions = new SQLCondition();
-                                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
-                                episodes = DBEpisode.Get(conditions);
-                                foreach (var episode in episodes)
+                                conditions.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+                                var series = DBSeries.Get(conditions, false, false);
+                                
+                                foreach (var s in series)
                                 {
-                                    MPTVSeriesLog.Write("[{0}/{1}] Upgrading database fields for episode '{2}'", ++i, episodes.Count , episode.ToString());
-                                    // if previously watched set play count to 1
-                                    episode[DBOnlineEpisode.cPlayCount] = 1;
+                                    MPTVSeriesLog.Write("[{0}/{1}] Upgrading 'online_episodes' table for series '{2}'", ++i, series.Count, s.ToString());
 
-                                    // use old date watched field and fill in new persistent fields.
-                                    episode[DBOnlineEpisode.cLastWatchedDate] = episode[DBEpisode.cDateWatched];
-                                    episode[DBOnlineEpisode.cFirstWatchedDate] = episode[DBEpisode.cDateWatched];
+                                    conditions = new SQLCondition();
+                                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, s[DBSeries.cID], SQLConditionType.Equal);
+                                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, 1, SQLConditionType.Equal);
+                                    episodes = DBEpisode.Get(conditions, false);
 
-                                    episode.Commit();
+                                    foreach (var episode in episodes)
+                                    {
+                                        // if previously watched set play count to 1
+                                        episode[DBOnlineEpisode.cPlayCount] = 1;
+
+                                        // use old date watched field and fill in new persistent fields.
+                                        // if it doesn't exist, default to Now()
+                                        string dateWatched = string.IsNullOrEmpty(episode[DBEpisode.cDateWatched]) ? DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") : episode[DBEpisode.cDateWatched].ToString();
+
+                                        episode[DBOnlineEpisode.cLastWatchedDate] = dateWatched;
+                                        episode[DBOnlineEpisode.cFirstWatchedDate] = dateWatched;
+                                        episode.Commit();
+                                    }
                                 }
-                                MPTVSeriesLog.Write("Update of DBOnlineEpisode table complete.");
-                            });
+                                MPTVSeriesLog.Write("Update of 'online_episodes' table is complete.");
+                            })
+                            { 
+                                IsBackground = true
+                            };
 
                         upgradeThread.Start();
                         nUpgradeDBVersion++;
@@ -1666,16 +1683,19 @@ namespace WindowPlugins.GUITVSeries
             // First get the most recently watched
             // Try to get more than one series so widen the range
             var episodesWatched = GetMostRecent(MostRecentType.Watched, 30, 100);
-            
-            // get the last 3 series watched
-            foreach (int seriesId in episodesWatched.Select(e => (int)e[DBEpisode.cSeriesID]).Distinct())
+
+            if (episodesWatched != null)
             {
-                // get next unwatched episode
-                var episode = DBEpisode.GetNextUnWatched(seriesId, ignoreSpecials);
-                if (episode != null) nextEpisodes.Add(episode);
-                if (nextEpisodes.Count == limit) break;
+                // get the last 3 series watched
+                foreach (int seriesId in episodesWatched.Select(e => (int)e[DBEpisode.cSeriesID]).Distinct())
+                {
+                    // get next unwatched episode
+                    var episode = DBEpisode.GetNextUnWatched(seriesId, ignoreSpecials);
+                    if (episode != null) nextEpisodes.Add(episode);
+                    if (nextEpisodes.Count == limit) break;
+                }
             }
-            
+
             return nextEpisodes;
         }
 
@@ -1769,20 +1789,23 @@ namespace WindowPlugins.GUITVSeries
 
         public static List<DBEpisode> Get(string query)
         {
-            SQLiteResultSet results = DBTVSeries.Execute(query);
-            List<DBEpisode> outList = new List<DBEpisode>();
-            if (results.Rows.Count > 0)
+            lock (getEpsLock)
             {
-                for (int index = 0; index < results.Rows.Count; index++)
+                SQLiteResultSet results = DBTVSeries.Execute(query);
+                List<DBEpisode> outList = new List<DBEpisode>();
+                if (results != null && results.Rows.Count > 0)
                 {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(results.Rows[index], results.ColumnIndices);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
-                    outList.Add(episode);
+                    for (int index = 0; index < results.Rows.Count; index++)
+                    {
+                        DBEpisode episode = new DBEpisode();
+                        episode.Read(results.Rows[index], results.ColumnIndices);
+                        episode.m_onlineEpisode = new DBOnlineEpisode();
+                        episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
+                        outList.Add(episode);
+                    }
                 }
+                return outList;
             }
-            return outList;
         }
 
         public static DBEpisode Get(int seriesId, int seasonIdx, int episodeIdx)
