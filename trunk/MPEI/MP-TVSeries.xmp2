@@ -22,14 +22,14 @@
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\External\ConfigLauncher\.NET 30\MP-TVSeries-Configuration.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{f12f70f7-1367-4ceb-8f51-c95d4e46457f}-MP-TVSeries-Configuration.exe</ZipFileName>
-              <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe</DestinationFilename>
+              <DestinationFilename>%Base%\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
               <LocalFileName>..\External\ConfigLauncher\.NET 40\MP-TVSeries-Configuration.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{193d9414-f8cc-41c9-9a42-445266c8c03f}-MP-TVSeries-Configuration.exe</ZipFileName>
-              <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe</DestinationFilename>
+              <DestinationFilename>%Base%\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -680,6 +680,13 @@ Trakt can also help you keep your watched flags in sync across multiple computer
               <LocalFileName>..\MP-TVSeries\Resources\Languages\vi.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{479905b7-194f-4f7f-af6d-a6266b89a1ac}-vi.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\vi.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\bg.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{dba9855d-7457-4236-b6d4-e225d20cb5fc}-bg.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\bg.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -1535,13 +1542,13 @@ Click Next to continue or Cancel to exit Setup.
         </Params>
         <Actions>
           <Items>
-            <ActionItem Name="InstallFiles" ActionType="InstallFiles" ConditionGroup="">
+            <ActionItem Name="Installing Files" ActionType="InstallFiles" ConditionGroup="">
               <Params>
                 <Items />
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="Extension Installer" ActionType="Extension Installer" ConditionGroup="TraktPlugin">
+            <ActionItem Name="Installing Trakt" ActionType="Extension Installer" ConditionGroup="TraktPlugin">
               <Params>
                 <Items>
                   <SectionParam Name="Extension package">
@@ -1558,13 +1565,233 @@ Click Next to continue or Cancel to exit Setup.
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="ClearSkinCache" ActionType="ClearSkinCache" ConditionGroup="DefaultWideSkin">
+            <ActionItem Name="Clearing Skin Cache" ActionType="ClearSkinCache" ConditionGroup="DefaultWideSkin">
               <Params>
                 <Items />
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="Script" ActionType="Script" ConditionGroup="Main">
+            <ActionItem Name="Creating Shortcut Folder in Programs Group" ActionType="CreateFolder" ConditionGroup="Main">
+              <Params>
+                <Items>
+                  <SectionParam Name="Folder location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of folder</Description>
+                  </SectionParam>
+                  <SectionParam Name="Remove on Uninstall">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Remove on UnInstall</Description>
+                  </SectionParam>
+                  <SectionParam Name="Question on UnInstall">
+                    <Value />
+                    <ValueType>String</ValueType>
+                    <Description>Quetion asked from user when UnInstall.
+ With Yes response the folder will be deleted
+ If empty no question will be asked and no folder will be deleted</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Configuration Programs Shortcut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Configuration.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Configuration</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Configuration Desktop Shortcut" ActionType="CreateShortCut" ConditionGroup="Main">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Desktop%\MP-TVSeries Configuration.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Configuration</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Forums Shortcut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Forums.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Forums.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Forums</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Homepage Shortcut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Home.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Home.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Home page</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Issue Tracker Shortcut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Issues.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Issues.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Issue Tracker</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Updates Shortcut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Updates.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Updates.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Downloads Page</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Creating Wiki Shortcut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
+              <Params>
+                <Items>
+                  <SectionParam Name="ShortCut location">
+                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Wiki.lnk</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Location of shortcut</Description>
+                  </SectionParam>
+                  <SectionParam Name="ShortCut target">
+                    <Value>%Config%\MP-TVSeries\Web\Wiki.url</Value>
+                    <ValueType>Template</ValueType>
+                    <Description>Target of short cut</Description>
+                  </SectionParam>
+                  <SectionParam Name="Description">
+                    <Value>MP-TVSeries Wiki</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Description tooltip text </Description>
+                  </SectionParam>
+                  <SectionParam Name="Icon of the shortcut">
+                    <Value />
+                    <ValueType>Template</ValueType>
+                    <Description>Icon of the shortcut, 
+ if is empty the icon of the target will be used</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Backing Up Old Database" ActionType="Script" ConditionGroup="Main">
               <Params>
                 <Items>
                   <SectionParam Name="Script">
@@ -1618,227 +1845,7 @@ public class Script
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="Main">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Desktop%\MP-TVSeries Configuration.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Configuration</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateFolder" ActionType="CreateFolder" ConditionGroup="Main">
-              <Params>
-                <Items>
-                  <SectionParam Name="Folder location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of folder</Description>
-                  </SectionParam>
-                  <SectionParam Name="Remove on Uninstall">
-                    <Value>YES</Value>
-                    <ValueType>Bool</ValueType>
-                    <Description>Remove on UnInstall</Description>
-                  </SectionParam>
-                  <SectionParam Name="Question on UnInstall">
-                    <Value />
-                    <ValueType>String</ValueType>
-                    <Description>Quetion asked from user when UnInstall.
- With Yes response the folder will be deleted
- If empty no question will be asked and no folder will be deleted</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Forums.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Config%\MP-TVSeries\Web\Forums.url</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Forums</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Home.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Config%\MP-TVSeries\Web\Home.url</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Home page</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Issues.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Config%\MP-TVSeries\Web\Issues.url</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Issue Tracker</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Updates.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Config%\MP-TVSeries\Web\Updates.url</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Downloads Page</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Wiki.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Config%\MP-TVSeries\Web\Wiki.url</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Wiki</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="CreateShortCut" ActionType="CreateShortCut" ConditionGroup="ShortcutUrls">
-              <Params>
-                <Items>
-                  <SectionParam Name="ShortCut location">
-                    <Value>%Programs%\Team MediaPortal\MediaPortal Plugins\MP-TVSeries\Configuration.lnk</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Location of shortcut</Description>
-                  </SectionParam>
-                  <SectionParam Name="ShortCut target">
-                    <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
-                    <ValueType>Template</ValueType>
-                    <Description>Target of short cut</Description>
-                  </SectionParam>
-                  <SectionParam Name="Description">
-                    <Value>MP-TVSeries Configuration</Value>
-                    <ValueType>String</ValueType>
-                    <Description>Description tooltip text </Description>
-                  </SectionParam>
-                  <SectionParam Name="Icon of the shortcut">
-                    <Value />
-                    <ValueType>Template</ValueType>
-                    <Description>Icon of the shortcut, 
- if is empty the icon of the target will be used</Description>
-                  </SectionParam>
-                </Items>
-              </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
-            </ActionItem>
-            <ActionItem Name="Script" ActionType="Script" ConditionGroup="DefaultSkin">
+            <ActionItem Name="Copying Compatible Default Skin Files" ActionType="Script" ConditionGroup="DefaultSkin">
               <Params>
                 <Items>
                   <SectionParam Name="Script">
@@ -1925,7 +1932,7 @@ public class Script
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="Script" ActionType="Script" ConditionGroup="DefaultWideSkin">
+            <ActionItem Name="Copying Compatible DefaultWide Skin Files" ActionType="Script" ConditionGroup="DefaultWideSkin">
               <Params>
                 <Items>
                   <SectionParam Name="Script">
@@ -2012,7 +2019,7 @@ public class Script
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-            <ActionItem Name="Script" ActionType="Script" ConditionGroup="Main">
+            <ActionItem Name="Copying Compatible Configuration Launcher" ActionType="Script" ConditionGroup="Main">
               <Params>
                 <Items>
                   <SectionParam Name="Script">
@@ -2044,12 +2051,12 @@ public class Script
 	if (mpCurrVersion.CompareTo(mpNet4Version) &gt;= 0)
 	{
 		// .Net 4... current MP version is v1.6 or greater
-		source = basePath + @"\MP-TVSeries\Configuration\.NET 40\MP-TVSeries-Configuration.exe";
+		source = basePath + @"\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe";
 	}
 	else
 	{
 		// .Net 3... current MP version is less than v1.6
-		source = basePath + @"\MP-TVSeries\Configuration\.NET 30\MP-TVSeries-Configuration.exe";
+		source = basePath + @"\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe";
 	}
 	
 	try { File.Copy(source, destination, true); } catch {}
@@ -2217,19 +2224,17 @@ public class Script
     <Version>
       <Major>3</Major>
       <Minor>5</Minor>
-      <Build>1</Build>
-      <Revision>2032</Revision>
+      <Build>2</Build>
+      <Revision>2045</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Added support to search for actors, writers, directors and guest stars from selected show/episode. This is available under 'Trakt' from the context menu.
-* Added support to search for Actor from the Actors GUI, this will perform a search on trakt so you can view the Actors biography.
-* Updated translations from Transifex.
-* Updated Trakt plugin to v3.1.0.</VersionDescription>
+    <VersionDescription>* Updated translations from Transifex.
+* Updated Trakt plugin to v3.1.3.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.5.1.2032.mpe1</OnlineLocation>
-    <ReleaseDate>2013-09-28T15:25:06</ReleaseDate>
+    <ReleaseDate>2014-01-24T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2278,14 +2283,14 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\External\ConfigLauncher\.NET 30\MP-TVSeries-Configuration.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{f12f70f7-1367-4ceb-8f51-c95d4e46457f}-MP-TVSeries-Configuration.exe</ZipFileName>
-        <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe</DestinationFilename>
+        <DestinationFilename>%Base%\MP-TVSeries\Configuration\.NET30\MP-TVSeries-Configuration.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\External\ConfigLauncher\.NET 40\MP-TVSeries-Configuration.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{193d9414-f8cc-41c9-9a42-445266c8c03f}-MP-TVSeries-Configuration.exe</ZipFileName>
-        <DestinationFilename>%Config%\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe</DestinationFilename>
+        <DestinationFilename>%Base%\MP-TVSeries\Configuration\.NET40\MP-TVSeries-Configuration.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
@@ -2895,6 +2900,13 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <LocalFileName>..\MP-TVSeries\Resources\Languages\vi.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{479905b7-194f-4f7f-af6d-a6266b89a1ac}-vi.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\vi.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\bg.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{dba9855d-7457-4236-b6d4-e225d20cb5fc}-bg.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\bg.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
@@ -3614,21 +3626,21 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{c5701c43-5373-43ff-ba81-fca49f56266a}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{ebc2e4c4-719f-41bf-8f0e-645dd2f67c52}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{f2474106-6da0-4bfd-bfc4-df89b7c7a384}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{8c7d57bc-0b1e-416f-b595-a21dfb781c21}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7a42e3b5-b01f-4af4-8486-8e77a8fd96d4}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{86f16d71-8bcb-4260-bb67-6b6782202b14}-TraktPlugin.mpe1</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
