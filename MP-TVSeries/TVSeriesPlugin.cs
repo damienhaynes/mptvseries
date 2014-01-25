@@ -357,6 +357,7 @@ namespace WindowPlugins.GUITVSeries
             DoNothing,
             Random,
             FirstUnwatched,
+            FirstUnwatchedOtherwiseRandom,
             RandomUnwatched,
             Latest,
             AlwaysAsk
@@ -1665,6 +1666,17 @@ namespace WindowPlugins.GUITVSeries
                                     episodeList = FilterEpisodeList(episodeList, true, true);
                                     m_SelectedEpisode = GetFirstOrLastEpisode(episodeList, true);
                                     break;
+                                case OnPlaySeriesOrSeasonAction.FirstUnwatchedOtherwiseRandom:
+                                    // try get first unwatched
+                                    var episodes = FilterEpisodeList(episodeList, true, true);
+                                    m_SelectedEpisode = GetFirstOrLastEpisode(episodes, true);
+                                    if (m_SelectedEpisode == null)
+                                    {
+                                        // else get random
+                                        episodeList = FilterEpisodeList(episodeList, true, false);
+                                        m_SelectedEpisode = GetRandomEpisode(episodeList);
+                                    }
+                                    break;
                                 case OnPlaySeriesOrSeasonAction.RandomUnwatched:
                                     episodeList = FilterEpisodeList(episodeList, true, true);
                                     m_SelectedEpisode = GetRandomEpisode(episodeList);
@@ -1686,6 +1698,9 @@ namespace WindowPlugins.GUITVSeries
                                 break;
                             case OnPlaySeriesOrSeasonAction.FirstUnwatched:
                                 ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.FirstUnwatchedEpisode));
+                                break;
+                            case OnPlaySeriesOrSeasonAction.FirstUnwatchedOtherwiseRandom:
+                                ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.FirstUnwatchedEpisodeOtherwiseRandom));
                                 break;
                             case OnPlaySeriesOrSeasonAction.RandomUnwatched:
                                 ShowNotifyDialog(Translation.PlayError, string.Format(Translation.UnableToFindAny, Translation.RandomUnwatchedEpisode));
