@@ -640,7 +640,7 @@ namespace WindowPlugins.GUITVSeries
             for (int i = 0; i < allConditions.Length; i++)
             {
                 string[] condSplit = System.Text.RegularExpressions.Regex.Split(allConditions[i], ";");
-                string condSplit2 = condSplit[2].Replace("\"", "").Replace("'", "");
+                string condSplit2 = condSplit[2].Replace("\"", ""); //.Replace("'", ""); // DH: im not sure why this replace with empty string is here since we replace later with double '' on sql query
                 if (condSplit2.StartsWith("<today"))
                 {
                     // relative date value
