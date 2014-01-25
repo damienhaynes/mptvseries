@@ -1443,6 +1443,15 @@ Trakt can also help you keep your watched flags in sync across multiple computer
           </Items>
         </Files>
       </GroupItem>
+      <GroupItem Name="ExtensionsPlugin">
+        <ParentGroup />
+        <DisplayName>Extensions Plugin</DisplayName>
+        <DefaulChecked>false</DefaulChecked>
+        <Description>The Extensions plugin for MediaPortal allows you to browse, install, update and uninstall plugin/skin extensions all from the GUI.</Description>
+        <Files>
+          <Items />
+        </Files>
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -1516,6 +1525,7 @@ Click Next to continue or Cancel to exit Setup.
           <string>DefaultSkin</string>
           <string>DefaultWideSkin</string>
           <string>TraktPlugin</string>
+          <string>ExtensionsPlugin</string>
         </IncludedGroups>
         <PanelName>Tree View Selector</PanelName>
         <WizardButtonsEnum>BackNextCancel</WizardButtonsEnum>
@@ -1570,6 +1580,33 @@ Click Next to continue or Cancel to exit Setup.
                     <Value>3.1.3.1</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Installing Extensions" ActionType="Extension Installer" ConditionGroup="ExtensionsPlugin">
+              <Params>
+                <Items>
+                  <SectionParam Name="Extension package">
+                    <Value />
+                    <ValueType>File</ValueType>
+                    <Description>Location of the extension package</Description>
+                  </SectionParam>
+                  <SectionParam Name="Extension Id">
+                    <Value>a6afa4d6-4fd8-4607-8878-5911db044fd7</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
+                  </SectionParam>
+                  <SectionParam Name="Extension Version">
+                    <Value>1.2.1.195</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
+                  </SectionParam>
+                  <SectionParam Name="Silent Install">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Silent install, No wizard screen will be displayed </Description>
                   </SectionParam>
                 </Items>
               </Params>
@@ -2240,11 +2277,10 @@ public class Script
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Updated translations from Transifex.
-* Updated Trakt plugin to v3.1.3.</VersionDescription>
+    <VersionDescription>* Updated translations from Transifex.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.5.1.2032.mpe1</OnlineLocation>
-    <ReleaseDate>2014-01-24T15:25:06</ReleaseDate>
+    <ReleaseDate>2014-01-25T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
