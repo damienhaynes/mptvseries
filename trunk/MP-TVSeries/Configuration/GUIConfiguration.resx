@@ -131,10 +131,10 @@
   </metadata>
   <data name="imageList1.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAAWwBBAFsAQQBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAAYQBBAGEAQQBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -679,15 +679,14 @@ can be started within plugin.</value>
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAAcRJREFUSEu1lb0rR1EYxy+SRF6TgWQyeUnJS5ESWZUsshhksMhksVgsis1qMFhI/gEU
-        CsnARFEMP4tFykt0fb+/zqmno3N/z7m49e3ec8853895nvMWxXEcUcqnF+36oLyk9tYz6xsImIPxG7QM
-        NfggoYBCGLVCI9AGxHCpe2gWKnVBWkA5Ok5DJ9C7MLYA+75G3aCEaAAd6HCYYGrNP9BmF+oJAXSb8K3J
-        F8oH0AK0KaDnJm1FISmqR+NLYXKB72FhMIPvR2geKnGNbdmXIk7mqjBniuockzaU233GuQDM47MBPOHd
-        kssoNIIlMXqu89SPL0V7AjCQ2p0m5nRwdzIB3KU3UFMggEdHM8SjpNMHqEJlLcR3QSCAC+TUZCCj2WiB
-        /lE1OmQM4Oo/AONi/tb/GlAG82MBGE0L6IfJlDM/zP2aMN/Hd0UogBPPfcEVtiUmh6tmR5hzkw6xXgso
-        RttJ6FaYcKXwHNqGXsT/VxNdlq8BcB8cCQP3DpDlO7QbE5GpAJVmpA8eyCf+c0MuQo3SXBuB7cPTdAXi
-        4cdRn0ETEA/GH1el7aRJkTuoLvzgzcU7Od+t/E0Esm8NCrx8uDQTHxnBNxzK2wROMetMAAAAAElFTkSu
-        QmCC
+        CvIBPVL3EQAAAbBJREFUSEu11b0rRXEcx3EPSSKPyUAymTyk5KFIiaxKFlkMMlhkslgsFsVmNRgsJP8A
+        CoVkYKIohmuxSHmIrvfnOL/jXO7v3HMOPvUKv3P7ftxzfuecrGQy6QiZLnQj2/nLEjPTmRuxYBrPWECt
+        FtIlakEemjCIVejDcoMpFCElYQtKMIFDvMAM/u4CffASpqAVe/APSucVW+iEl0wFHdDXN0PesYtZrLlr
+        cgKdtnykJKigBmcwQ04xAJNJ3GEGhVpIF1uBLuaSjrt0iqrhTzNaPn+1x1ag8/ig47hHI2LFVjCvYy7t
+        89ixFWzrmKtXC3ETVKC79BL1WogQPToaoEdJm62gHFXuz1wtRIg2yBE0KGEr+E0qkIAGnf9HwQg0RFb+
+        uqAYBzAFQ3ELejAO//XRuV+GGb6D0qgFuvC6L7TD1rXgRrtmE2a4btJ+eDMzFRRgDFcwQ7RT9BzawKO7
+        Jk/Qt3MSpkD3wT7MgCDXGIaXMAVl0H96C/8w4w26IedQh5SEKTDR03QRevjpQ8cYhR6MP16VJlEKTNqh
+        N5feyTlaCEqcAqUSevloawbmqyCZ9QEcytsErMZywwAAAABJRU5ErkJggg==
 </value>
   </data>
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -801,18 +800,6 @@ This option is recommended if you want to prevent spoilers before watching an ep
 
 This setting can also be changed from within Media Portal in the plugins context menu.</value>
   </data>
-  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
-    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
-A prompt will be shown if trying to playback out of order.
-
-Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
-so that a proper check can be performed.
-
-The check is ignored in the following conditions:
-* Playback of Specials (and next unwatched Specials).
-* Playback of Watched/Seen episodes.
-* Playback using Playlist player.</value>
-  </data>
   <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>404, 12</value>
   </metadata>
@@ -828,22 +815,22 @@ If an expression can not evaluate these items, the next expression in the list i
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAANxJREFUWEdj+P//P8NA4gG1HOTxUQcM/hBgIAzSCCnBl8gJhgABwxuB8sCUxJCPTx2t
-        HOAHtRzkgD9AbI/LEbRwgDrQsg9IDgA54hUQy2FzBLUdwA+05Cqa5SAHgPAZIOZEdwS1HbAOh+UwR8yn
-        pQPqCFgOc0QOsiOoFQLe0MQGswQf/ROo1gbmCGo4QAVLoiPkEFCilAY5glIH8OBJdIQccRKol41SB6Cn
-        KVBU4LNYl5aJEGT2qANGQ2A0BEZDYMBDAFTSzcSDweU/1WpDWveaCDZKRx0wGgK0DgEAOw5jgPZ9V4gA
-        AAAASUVORK5CYII=
+        CvIBPVL3EQAAAQtJREFUWEft1DFqAlEUhWErISBkAYFUglV2IGQBAZeRKpAdCC7Dyh1kH4JtNpEqrSBM
+        zhu8cmbyP8fq2syBj8HDcO8DHzNpmuausMyEZSYsM2GZCUt3Q97Pz2pobsDSDWQj5aXP9lclNDdg6a5k
+        JeWF4iSvgqG5AUtXyUJ+JQ5Q/Miz/AvNDVg6yKN8iy8PB3mQTmhuwNJBvsSX9u2kE5obsHS9rMWX1XzI
+        JTQ3YOksb1Iumy+qOcpS2tDcgKU7Zy79SzekXMonwbkBS6fMpHbphuxlSnMDlg5S/gpf0vcindDcgKWD
+        jAcYDzAeYDzA3Q9QFmyvaL//HpobsMyEZSYsM2GZCctMWOZpJn87DmOA2cnacgAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAANtJREFUWEdj+P//P8NA4gG1HOTxUQcM7hBgwAS6QKGZeLA0uhZCCRxvCGBxgDdQDJhy
-        cGKQA1HAqANGQ2A0BEZDYMiHAA+wWLtKoPTDVTKeBOpjo0YIqAAN+kCiI14B1YPrBWo4AGQOqA74Q6Qj
-        fgLV2cAqBGo5AGReHZEOyEGujajpAJC56wg4Yj6ta0N+PInyDFCOk9YOAJmvjiVRghKdHLrl1EyE6Gb7
-        IUUFKHHaY7Oclg4Amd0IdUQ+Lstp7QCQ+Wn4LKfYAYSyEDXkCZZU1LAEnxmjDhgNAQCx+mOArbVEmgAA
-        AABJRU5ErkJggg==
+        CvIBPVL3EQAAAQlJREFUWEft1TFqAlEYxHGrgCDkAIJVwCo3EDyA4DGsBG8geIxUuUHuIaT1EqnSBgLr
+        vMUvzG7+T0OKz2YHfoijzHvIgqOmae4Ky0xYZsIyE5aZsAyQZ3m5Yiqd0K7DMkBWUj6oKRfshHYdlgEy
+        XGC4wHCB4QLpF5jIqez8w1EeaNdhGS55kk/x8Vs+pP1foF2HZbCUn/5b/JCaL1lIG9p1WIZe9uIH1Wzl
+        J7TrsAyQN/HD+l6lE9p1WAbIo9QeyncZSye067AMlcyl/1CWh24mv0K7DstwJWuJw8vDuRQM7Tosw40c
+        pHxp176rhHYdluEP2Vxeq6Fdh2UmLDNhmQnLTFhmwjJPMzoDsfpjgJZEjvIAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="label69.Text" xml:space="preserve">
@@ -855,6 +842,18 @@ Be sure to enable 'run before matching' for this to work before it reaches the p
   </data>
   <data name="label68.Text" xml:space="preserve">
     <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
+  </data>
+  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
+    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
+A prompt will be shown if trying to playback out of order.
+
+Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
+so that a proper check can be performed.
+
+The check is ignored in the following conditions:
+* Playback of Specials (and next unwatched Specials).
+* Playback of Watched/Seen episodes.
+* Playback using Playlist player.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>39</value>
