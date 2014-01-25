@@ -1552,7 +1552,7 @@ Click Next to continue or Cancel to exit Setup.
               <Params>
                 <Items>
                   <SectionParam Name="Extension package">
-                    <Value>ExternalPlugins\TraktPlugin.mpe1</Value>
+                    <Value />
                     <ValueType>File</ValueType>
                     <Description>Location of the extension package</Description>
                   </SectionParam>
@@ -1560,6 +1560,16 @@ Click Next to continue or Cancel to exit Setup.
                     <Value>YES</Value>
                     <ValueType>Bool</ValueType>
                     <Description>Silent install, No wizard screen will be displayed </Description>
+                  </SectionParam>
+                  <SectionParam Name="Extension Id">
+                    <Value>a9c3845a-8718-4712-85cc-26f56520bb9a</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
+                  </SectionParam>
+                  <SectionParam Name="Extension Version">
+                    <Value>3.1.3.1</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
                 </Items>
               </Params>
@@ -3626,21 +3636,14 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{ebc2e4c4-719f-41bf-8f0e-645dd2f67c52}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{6c964312-ee53-41a5-9f9d-e0868fac14e4}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{8c7d57bc-0b1e-416f-b595-a21dfb781c21}-icon.png</ZipFileName>
-        <DestinationFilename />
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
-        <Param1 />
-        <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>ExternalPlugins\TraktPlugin.mpe1</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{86f16d71-8bcb-4260-bb67-6b6782202b14}-TraktPlugin.mpe1</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{3eff939a-acff-4409-99a6-3a06b5de9785}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
