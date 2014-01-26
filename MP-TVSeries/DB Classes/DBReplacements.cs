@@ -398,7 +398,7 @@ namespace WindowPlugins.GUITVSeries
 
             replacement = new DBReplacements();
             replacement[DBReplacements.cIndex] = 15;
-            replacement[DBReplacements.cEnabled] = 1;
+            replacement[DBReplacements.cEnabled] = 0;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
             replacement[DBReplacements.cToReplace] = @"(?-i)([A-Z])\.(?=[A-Z])";
