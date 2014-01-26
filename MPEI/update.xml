@@ -2844,15 +2844,17 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Version>
           <Major>3</Major>
           <Minor>5</Minor>
-          <Build>2</Build>
-          <Revision>2052</Revision>
+          <Build>3</Build>
+          <Revision>2054</Revision>
         </Version>
         <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-        <VersionDescription>* Fixed view tags not working when a tag name contained an apostrophe.
+        <VersionDescription>* Disabled string replacement in v3.5.2 for acyroynm detection, breaks other series matches.
+
+* Fixed view tags not working when a tag name contained an apostrophe.
 
 * Added a new "On Play" action: "Play First Unwatched otherwise Random". If there is no unwatched then it will pick a random episode. Users may need to check in configuration is desired option is still selected as indexes have changed.
 
@@ -2871,8 +2873,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Removed the generic PluginConfigLoader.exe from the installation package.
 
 * Send 'Watched' flag to Trakt plugin when selecting trakt from the internal tvseries menu. This can be used to show spoilers on shouts when episode is watched and 'hide spoilers' is enabled.
-
-* Updated default string replacements for acronym detection. Thanks Rochess.
 
 * Updated translations from Transifex.</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
