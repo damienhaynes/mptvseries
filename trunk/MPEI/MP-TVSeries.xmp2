@@ -2272,15 +2272,26 @@ public class Script
       <Major>3</Major>
       <Minor>5</Minor>
       <Build>2</Build>
-      <Revision>2045</Revision>
+      <Revision>2052</Revision>
     </Version>
-    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
-
+    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Updated translations from Transifex.</VersionDescription>
+    <VersionDescription>* Fixed view tags not working when a tag name contained an apostrophe.
+* Added a new "On Play" action: "Play First Unwatched otherwise Random". If there is no unwatched then it will pick a random episode. Users may need to check in configuration is desired option is still selected as indexes have changed.
+* Added Extensions plugin installer to installation package.
+* Added 'LastWatchedDate', 'FirstWatchedDate' and 'PlayCount' fields to the online_episodes table. Primary use case will be for syncing plugins like Trakt. When user toggles watched, it will not affect the PlayCount. Database will be upgraded on first startup, anything watched will have a playcount of 1.
+* Updated installer so that the Trakt installation package is now referenced by it's online ID, this means the installer size is reduced and package is downloaded if minimum version is not already installed.
+* Improved thread safety when multiple plugins performing an episode query via the API.
+* Improved logging of script execution in MPEI installer window during installation. Should be clear what it's actually doing.
+* Updated the configuration launcher to be compatible with MediaPortal 1.6, it will no longer crash. Correct one is installed during installation, if user upgrades MediaPortal after installing tvseries it's recommended to re-run the installer.
+* Removed the generic PluginConfigLoader.exe from the installation package.
+* Send 'Watched' flag to Trakt plugin when selecting trakt from the internal tvseries menu. This can be used to show spoilers on shouts when episode is watched and 'hide spoilers' is enabled.
+* Updated default string replacements for acronym detection. Thanks Rochess.
+* Updated translations from Transifex.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://mptvseries.googlecode.com/files/MP-TVSeries-3.5.1.2032.mpe1</OnlineLocation>
-    <ReleaseDate>2014-01-25T15:25:06</ReleaseDate>
+    <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;amp;task=att_download&amp;amp;link_id=17&amp;amp;cf_id=24</OnlineLocation>
+    <ReleaseDate>2014-01-26T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -3672,14 +3683,14 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{6c964312-ee53-41a5-9f9d-e0868fac14e4}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{14572959-63e3-4eea-920d-e462c38acd4e}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{3eff939a-acff-4409-99a6-3a06b5de9785}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{9feabd63-79e5-4a6f-96b9-018d55754917}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
