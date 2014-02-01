@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP-TVSeries", "MP-TVSeries\MP-TVSeries.csproj", "{A983AA7A-DE3C-4587-9416-22373A35B721}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{85B48327-8153-4BD1-AE36-EDC0337F7F8A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FollwitApi", "External\FollwitApi\FollwitApi.csproj", "{75EBA361-8137-4107-A5B5-753CE959983B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigLauncher", "ConfigLauncher\ConfigLauncher.csproj", "{5D751473-DCC5-4044-A6E3-403D97C5B9F9}"
 EndProject
 Global
@@ -31,16 +27,6 @@ Global
 		{A983AA7A-DE3C-4587-9416-22373A35B721}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A983AA7A-DE3C-4587-9416-22373A35B721}.Release|x86.ActiveCfg = Release|x86
 		{A983AA7A-DE3C-4587-9416-22373A35B721}.Release|x86.Build.0 = Release|x86
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{75EBA361-8137-4107-A5B5-753CE959983B}.Release|x86.ActiveCfg = Release|Any CPU
 		{5D751473-DCC5-4044-A6E3-403D97C5B9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D751473-DCC5-4044-A6E3-403D97C5B9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D751473-DCC5-4044-A6E3-403D97C5B9F9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -54,8 +40,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{75EBA361-8137-4107-A5B5-753CE959983B} = {85B48327-8153-4BD1-AE36-EDC0337F7F8A}
 	EndGlobalSection
 EndGlobal
