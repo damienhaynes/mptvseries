@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+  <id>9816</id>
+  <defaultcontrol>50</defaultcontrol>
+  <allowoverlay>yes</allowoverlay>
+  <define>#useSelectedFanart:No</define>
+  <controls>
+    <control>
+      <description>BG</description>
+      <type>image</type>
+      <id>1</id>
+      <texture>BH TV.jpg</texture>
+      <width>1280</width>
+      <height>720</height>
+      <colordiffuse>90ffffff</colordiffuse>
+    </control>
+		<control>
+      <description>Fanart Background</description>
+      <type>image</type>
+      <id>1</id>
+      <posX>0</posX>
+      <posY>0</posY>
+      <width>1280</width>
+      <height>720</height>
+      <texture>#TVSeries.Current.Fanart</texture>
+    </control>
+    <control>
+      <description>background top overlay</description>
+      <type>image</type>
+      <id>1</id>
+      <posX>0</posX>
+      <posY>0</posY>
+      <width>1280</width>
+      <height>270</height>
+      <texture>overlay_top.png</texture>
+      <colordiffuse>ccffffff</colordiffuse>
+    </control>
+    <control>
+      <type>label</type>
+      <id>1</id>
+      <posX>30</posX>
+      <posY>10</posY>
+      <label>#currentmodule</label>
+      <font>font11</font>
+      <align>left</align>
+      <textcolor>ff6FAFE1</textcolor>
+    </control>
+    <control>
+      <description>Number of Files Label</description>
+      <type>label</type>
+      <id>1</id>
+      <posX>30</posX>
+      <posY>35</posY>
+      <label>#selectedindex/#itemcount</label>
+      <align>left</align>
+      <textcolor>ivory</textcolor>
+      <font>font10</font>
+      <visible>string.equals(#selectedindex)+string.equals(#itemcount)</visible>
+    </control>
+    <control>
+      <description>background selecteditem</description>
+      <type>image</type>
+      <id>0</id>
+      <posX>-20</posX>
+      <posY>65</posY>
+      <width>1350</width>
+      <height>60</height>
+      <texture>general_overlay_selecteditem.png</texture>
+      <colordiffuse>bbffffff</colordiffuse>
+    </control>
+		<control>
+      <description>General Overlay</description>
+      <id>0</id>
+      <type>image</type>
+      <posX>0</posX>
+      <posY>30</posY>
+      <width>1280</width>
+      <height>720</height>
+      <texture>general_overlay.png</texture>
+    </control>
+    <import>common.time.xml</import>
+    <control>
+			<type>actiongroup</type>
+			<description>action menu</description>
+			<defaultcontrol>2</defaultcontrol>
+			<onexit>50</onexit>
+			<buttonX>0</buttonX>
+			<buttonY>-130</buttonY>
+			<buttonwidth>106</buttonwidth>
+      <buttonheight>720</buttonheight>
+      <textureFocus>-</textureFocus>
+      <textureNoFocus>Action_nofocus.png</textureNoFocus>
+			<width>568</width>
+			<height>900</height>
+			<dimColor>00ffffff</dimColor>
+			<control>
+        <type>image</type>
+        <id>0</id>
+        <width>1280</width>
+        <height>720</height>
+        <texture>white.png</texture>
+        <colordiffuse>201e90ff</colordiffuse>
+			</control>
+			<control>
+				<type>image</type>
+				<posX>26</posX>
+				<posY>78</posY>
+				<width>380</width>
+				<height>591</height>
+				<texture>Backslide.png</texture>
+				<colorDiffuse>ffffffff</colorDiffuse>
+				<visible>!Control.HasFocus(50)</visible>
+				<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
+				<animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
+			</control>
+			<control>
+				<description>group element</description>
+				<type>group</type>
+				<visible>!Control.HasFocus(50)</visible>
+				<posX>50</posX>
+				<posY>121</posY>
+				<layout>StackLayout(0, Vertical, true)</layout>
+				<visible>!Control.HasFocus(50)</visible>
+				<animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
+				<animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
+				<control>
+					<description>Switch Layout</description>
+					<type>button</type>
+					<id>2</id>
+					<onleft>50</onleft>
+					<onright>50</onright>
+				</control> 
+				<control>
+					<description>Refresh</description>
+					<type>button</type>
+					<id>3</id>
+					<label>184</label>
+					<onleft>50</onleft>
+					<onright>50</onright>
+				</control>
+			</control>			
+		</control>
+    <import>common.facade.video.Title.xml</import>
+    <control>
+      <description>Selected item Label</description>
+      <type>fadelabel</type>
+      <id>1</id>
+      <posX>0</posX>
+      <posY>95</posY>
+      <width>1280</width>
+      <label>#selecteditem</label>
+      <font>font14</font>
+      <align>center</align>
+      <textcolor>ff6FAFE1</textcolor>
+    </control>
+    <control>
+      <description>Series Default image</description>
+      <id>0</id>
+      <type>image</type>
+      <posX>820</posX>
+      <posY>180</posY>
+      <width>304</width>
+      <height>423</height>
+      <texture mask="videothumbmask.png">missing_Coverart_video.png</texture>
+      <visible>facadeview.list+!control.hasthumb(500)</visible>
+    </control>
+    <control>
+      <description>Series Poster</description>
+      <id>500</id>
+      <type>image</type>
+      <posX>820</posX>
+      <posY>180</posY>
+      <width>304</width>
+      <height>423</height>
+      <texture mask="videothumbmask.png">#selectedthumb</texture>
+      <visible>facadeview.list</visible>
+    </control>
+		<control>
+      <description>Series Poster Frame</description>
+			<type>image</type>
+      <id>1</id>
+      <posX>820</posX>
+      <posY>180</posY>
+      <width>304</width>
+      <height>423</height>
+      <texture>Videothumbframe.png</texture>
+      <visible>facadeview.list</visible>
+    </control>
+  </controls>
+</window>

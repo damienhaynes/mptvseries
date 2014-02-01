@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<window> 
+	<controls>
+
+		<control>
+			<description>Cover Art</description>
+			<type>image</type>
+			<id>60</id>
+			<posX>75</posX>
+			<posY>240</posY>
+			<width>278</width>
+			<height>418</height>
+			<texture>#TVSeries.SeriesPoster</texture>
+			<visible>facadeview.largeicons</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>
+	
+		<!-- Watched Icons -->
+		<control>
+			<description>Series Watched Icon Background</description>
+			<type>image</type>
+			<id>0</id>
+			<posX>321</posX>
+			<posY>300</posY>
+			<width>32</width>
+			<height>39</height>
+			<texture>overlaywubg.png</texture>
+			<visible>control.isvisible(1237)+facadeview.largeicons+Control.HasThumb(60)</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>
+		<control>
+			<description>Series Watched Icon</description>
+			<type>image</type>
+			<id>0</id>
+			<posX>329</posX>
+			<posY>306</posY>
+			<width>20</width>
+			<height>20</height>
+			<texture>tvseries_Watched.png</texture>
+			<visible>control.isvisible(1237)+facadeview.largeicons+control.isvisible(1243)+control.isvisible(1244)+Control.HasThumb(60)</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>
+		<control>
+			<description>Series Un-Watched Icon</description>
+			<type>image</type>
+			<id>0</id>
+			<posX>329</posX>
+			<posY>306</posY>
+			<width>20</width>
+			<height>20</height>
+			<texture>tvseries_UnWatched.png</texture>
+			<visible>control.isvisible(1237)+facadeview.largeicons+!control.isvisible(1243)+control.isvisible(1244)+Control.HasThumb(60)</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>
+		<control>
+			<description>Series Not Available and Watched Icon</description>
+			<type>image</type>
+			<id>0</id>
+			<posX>329</posX>
+			<posY>306</posY>
+			<width>20</width>
+			<height>20</height>
+			<texture>tvseries_WatchedNA.png</texture>
+			<visible>control.isvisible(1237)+facadeview.largeicons+control.isvisible(1243)+!control.isvisible(1244)+Control.HasThumb(60)</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>
+		<control>
+			<description>Series Not Available and Un-Watched Icon</description>
+			<type>image</type>
+			<id>0</id>
+			<posX>329</posX>
+			<posY>306</posY>
+			<width>20</width>
+			<height>20</height>
+			<texture>tvseries_UnWatchedNA.png</texture>
+			<visible>control.isvisible(1237)+facadeview.largeicons+!control.isvisible(1243)+!control.isvisible(1244)+Control.HasThumb(60)</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>	
+	
+		<control>
+			<description>Series Title</description>
+			<type>label</type>
+			<id>0</id>
+			<posX>75</posX>
+			<posY>665</posY>
+			<width>1150</width>
+			<font>font18</font>
+			<label>#TVSeries.Series.Pretty_Name</label>
+			<textcolor>ffffffff</textcolor>
+			<visible>control.isvisible(1237)+facadeview.largeicons</visible>
+			<animation effect="fade" time="250">WindowClose</animation>
+		</control>
+	
+	</controls>
+</window>
