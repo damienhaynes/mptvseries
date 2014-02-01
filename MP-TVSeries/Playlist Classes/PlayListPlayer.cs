@@ -448,7 +448,7 @@ namespace WindowPlugins.GUITVSeries
                 // If the file is an image file, it should be mounted before playing
                 string filename = item.FileName;
                 if (Helper.IsImageFile(filename)) {
-                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename, false)) {
                         return false;
                     }
                 }

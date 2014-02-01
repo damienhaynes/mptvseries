@@ -2053,7 +2053,7 @@ namespace WindowPlugins.GUITVSeries
         void GUIWindowManager_OnDeActivateWindow(int windowID)
         {
             // Settings/General window
-            if (windowID == (int)Window.WINDOW_SETTINGS_SKIN)
+            if (windowID == (int)Window.WINDOW_SETTINGS_GUISKIN)
             {
                 // did skin change?
                 if (SkinSettings.CurrentSkin != SkinSettings.PreviousSkin)
@@ -5979,7 +5979,7 @@ namespace WindowPlugins.GUITVSeries
                 string filename = playlist[0].FileName;
                 if (Helper.IsImageFile(filename))
                 {
-                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename))
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename, false))
                     {
                         return;
                     }
