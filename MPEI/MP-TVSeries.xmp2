@@ -422,7 +422,7 @@ Trakt can also help you keep your watched flags in sync across multiple computer
           <Items />
         </Files>
       </GroupItem>
-	  <GroupItem Name="ExtensionsPlugin">
+      <GroupItem Name="ExtensionsPlugin">
         <ParentGroup />
         <DisplayName>Extensions Plugin</DisplayName>
         <DefaulChecked>false</DefaulChecked>
@@ -745,7 +745,7 @@ Trakt can also help you keep your watched flags in sync across multiple computer
             </FileItem>
           </Items>
         </Files>
-      </GroupItem>      
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -1323,7 +1323,7 @@ public class Script
       <Major>4</Major>
       <Minor>0</Minor>
       <Build>0</Build>
-      <Revision>2059</Revision>
+      <Revision>2061</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
