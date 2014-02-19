@@ -249,9 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Nepodarilo sa vymazať súbor: {0}</string>
   <string name="PlaySomething" Original="Play...">Prehrať...</string>
   <string name="PlayError" Original="Play error">Chyba prehrávania</string>
-  <string name="RandomEpisode" Original="random episode">náhodná epizóda</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">prvá epizóda ktorú som nevidel</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">náhodná epizóda ktorú som nevidel</string>
+  <string name="RandomEpisode" Original="Random episode">Náhodná epizóda</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Prvá nevidená epizóda</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Prvá nevidená epizóda, inak náhodná</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Náhodná nevidená epizóda</string>
   <string name="LatestEpisode" Original="latest episode">najnovšia epizóda</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Nepodarilo sa nájsť žiadne {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Nepodarilo sa nájsť žiadnu epizódu</string>

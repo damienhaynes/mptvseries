@@ -249,9 +249,6 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Impossible de supprimer le fichier: {0}</string>
   <string name="PlaySomething" Original="Play...">Lecture...</string>
   <string name="PlayError" Original="Play error">Erreur de lecture</string>
-  <string name="RandomEpisode" Original="random episode">Episode au hasard</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">Premier épisode non vu</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">Episode non vu au hasard</string>
   <string name="LatestEpisode" Original="latest episode">Dernier épisode</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Impossible de trouver un {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Aucun épisode trouvé</string>

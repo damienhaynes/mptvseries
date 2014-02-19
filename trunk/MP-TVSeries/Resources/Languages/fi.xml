@@ -249,9 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Ei voi poistaa tiedostoa: {0}</string>
   <string name="PlaySomething" Original="Play...">Toista...</string>
   <string name="PlayError" Original="Play error">Toistovirhe</string>
-  <string name="RandomEpisode" Original="random episode">satunnainen jakso</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">ensimmäinen katsomaton jakso</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">satunnainen katsomaton jakso</string>
+  <string name="RandomEpisode" Original="Random episode">Satunnainen jakso</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Ensimmäinen katsomaton jakso</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Ensimmäinen katsomaton jakso muuten satunnainen</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Satunnainen katsomaton jakso</string>
   <string name="LatestEpisode" Original="latest episode">viimeisin jakso</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Ei löydy yhtään {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Yhtään jaksoa ei löydy</string>
