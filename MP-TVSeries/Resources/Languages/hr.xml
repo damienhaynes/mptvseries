@@ -249,9 +249,6 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Ne mogu izbrisati datoteku: {0}</string>
   <string name="PlaySomething" Original="Play...">Reproducirajte...</string>
   <string name="PlayError" Original="Play error">Greška pri reprodukciji</string>
-  <string name="RandomEpisode" Original="random episode">nasumičnu epizodu</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">prvu nepogledanu epizodu</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">nasumično nepogledanu epizodu</string>
   <string name="LatestEpisode" Original="latest episode">posljednju epizodu</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Ne mogu pronaći {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Ne mogu naći bilo koju epizodu</string>

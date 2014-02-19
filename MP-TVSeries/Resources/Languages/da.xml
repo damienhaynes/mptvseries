@@ -249,9 +249,6 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Sletning af filen mislykkedes: {0}</string>
   <string name="PlaySomething" Original="Play...">Afspil...</string>
   <string name="PlayError" Original="Play error">Afspilningsfejl</string>
-  <string name="RandomEpisode" Original="random episode">tilfældigt afsnit</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">første usete afsnit</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">tilfældig uset afsnit</string>
   <string name="LatestEpisode" Original="latest episode">sidste afsnit</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Ude af stand til at finde nogen {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Ude af stand til at finde noget afsnit</string>

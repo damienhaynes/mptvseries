@@ -249,9 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Kan inte ta bort filen: {0}</string>
   <string name="PlaySomething" Original="Play...">Spela...</string>
   <string name="PlayError" Original="Play error">Fel vid uppspelning</string>
-  <string name="RandomEpisode" Original="random episode">Slumpa avsnitt</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">första osedda avsnitt</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">slumpa osedda avsnitt</string>
+  <string name="RandomEpisode" Original="Random episode">Slumpa avsnitt</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">första osedda avsnitt</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">första osedda avsnitt annars slumpa</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">slumpa osedda avsnitt</string>
   <string name="LatestEpisode" Original="latest episode">senaste avsnitt</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Kan inte hitta några {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Kan inte hitta något avsnitt</string>

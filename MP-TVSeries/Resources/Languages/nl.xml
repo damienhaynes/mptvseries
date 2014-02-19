@@ -249,9 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Niet mogelijk om bestand: {0} te verwijderen</string>
   <string name="PlaySomething" Original="Play...">Afspelen</string>
   <string name="PlayError" Original="Play error">Afspeel fout</string>
-  <string name="RandomEpisode" Original="random episode">Willekeurige aflevering</string>
-  <string name="FirstUnwatchedEpisode" Original="first unwatched episode">Eerste onbekeken aflevering</string>
-  <string name="RandomUnwatchedEpisode" Original="random unwatched episode">Willekeurgie onbekeken aflevering</string>
+  <string name="RandomEpisode" Original="Random episode">Willekeurige aflevering</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Eerste onbekeken aflevering</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Eerste onbekeken aflevering, anders willekeurig</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Willekeurige onbekeken aflevering</string>
   <string name="LatestEpisode" Original="latest episode">Laatste aflevering</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Onmogelijk om enige {0} te vinden</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Onmogelijk om enige aflvering te vinden</string>
