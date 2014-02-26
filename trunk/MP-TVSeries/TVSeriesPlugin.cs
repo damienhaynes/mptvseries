@@ -430,7 +430,6 @@ namespace WindowPlugins.GUITVSeries
                 m_bShowLastActiveModule = xmlreader.GetValueAsBool("general", "showlastactivemodule", false);
                 m_iLastActiveModule = xmlreader.GetValueAsInt("general", "lastactivemodule", -1);
             }
-
             #endregion
 
             #region Initialize Importer
@@ -450,7 +449,6 @@ namespace WindowPlugins.GUITVSeries
 
             // listen to this event to detect skin/language changes in GUI
             GUIWindowManager.OnDeActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnDeActivateWindow);
-
             GUIWindowManager.OnActivateWindow += new GUIWindowManager.WindowActivationHandler(GUIWindowManager_OnActivateWindow);
 
             String xmlSkin = GUIGraphicsContext.Skin + @"\TVSeries.xml";

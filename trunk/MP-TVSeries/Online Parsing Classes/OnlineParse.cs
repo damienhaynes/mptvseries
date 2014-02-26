@@ -226,14 +226,17 @@ namespace WindowPlugins.GUITVSeries
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Run an Online update when needed
-            if (onlineUpdateNeeded && !wasOnlineUpdate) {
+            if (onlineUpdateNeeded && !wasOnlineUpdate)
+            {
                 MPTVSeriesLog.Write("Import Worker completed, online update is required.", MPTVSeriesLog.LogLevel.Normal);
                 onlineUpdateNeeded = false;
                 TVSeriesPlugin.m_LastUpdateScan = DateTime.Now;
                 Start(new CParsingParameters(false, true));
             }
-            else {
-                FollwitConnector.SyncNewEpisodes();
+            else
+            {
+                if (FollwitConnector.Enabled)
+                    FollwitConnector.SyncNewEpisodes();
 
                 if (OnlineParsingCompleted != null) // only if any subscribers exist
                 {
