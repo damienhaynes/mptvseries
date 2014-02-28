@@ -407,6 +407,10 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             #region Misc
+            // publish skin properties for custom view menus on home screen
+            PublishViewsToSkin();
+
+            // initialise video handler
             m_VideoHandler = new VideoHandler();
             m_VideoHandler.RateRequestOccured += new VideoHandler.rateRequest(m_VideoHandler_RateRequestOccured);
 
@@ -3410,12 +3414,15 @@ namespace WindowPlugins.GUITVSeries
             setGUIProperty(name.ToString(), value);
         }
 
-        public static void setGUIProperty(string name, string value)
+        public static void setGUIProperty(string name, string value, bool log=false)
         {
             string property = name;
             if (!property.StartsWith("#"))
                 property = string.Concat("#TVSeries.", property);
             GUIPropertyManager.SetProperty(property, value);
+
+            if (log)
+                MPTVSeriesLog.Write(property + " = " + value, MPTVSeriesLog.LogLevel.Debug);
         }
 
         void clearGUIProperty(guiProperty name)
@@ -4166,6 +4173,9 @@ namespace WindowPlugins.GUITVSeries
                     m_CurrLView.gettypeOfStep(0) == logicalViewStep.type.group)
                     LoadFacade();
             }
+
+            // update home menu if skins are creating menus based on views
+            PublishViewsToSkin();
         }
 
         private void ShowViewExistsMessage(string view)
@@ -5774,6 +5784,23 @@ namespace WindowPlugins.GUITVSeries
                 List<string> fields = SkinSettings.SkinProperties[pre];
                 for (int i = 0; i < fields.Count; i++)
                     clearGUIProperty(pre + "." + fields[i]);
+            }
+        }
+
+        public static void PublishViewsToSkin()
+        {
+            int i = 1;
+            var views = logicalView.getAll(false);
+
+            setGUIProperty("View.Count", views.Count.ToString(), true);
+
+            foreach (var view in views)
+            {
+                setGUIProperty(string.Format("View.Item.{0}.Name", i), view.prettyName, true);
+                setGUIProperty(string.Format("View.Item.{0}.HyperlinkParameter", i), "view:" + view.Name, true);
+                setGUIProperty(string.Format("View.Item.{0}.TaggedView", i), view.IsTaggedView.ToString(), true);
+                setGUIProperty(string.Format("View.Item.{0}.Locked", i), view.ParentalControl.ToString(), true);
+                i++;
             }
         }
 
