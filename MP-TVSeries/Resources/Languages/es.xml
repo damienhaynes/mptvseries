@@ -249,6 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">No se pudo borrar el archivo: {0}</string>
   <string name="PlaySomething" Original="Play...">Reproducir...</string>
   <string name="PlayError" Original="Play error">Error de reproducción</string>
+  <string name="RandomEpisode" Original="Random episode">Episodio aleatorio</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Primer episodio no visto</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Primer episodio no visto de otra manera aleatoria</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Episodio no visto aleatorio</string>
   <string name="LatestEpisode" Original="latest episode">último episodio</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">No se encontró ningún {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">No se encontró ningún episodio</string>
@@ -309,4 +313,5 @@
   <string name="Filters" Original="Filters">Filtros</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Episodios no Vistos</string>
   <string name="AllEpisodes" Original="All Episodes">Todos los Capítulos</string>
+  <string name="Biography" Original="Biography">Biografía</string>
 </resources>

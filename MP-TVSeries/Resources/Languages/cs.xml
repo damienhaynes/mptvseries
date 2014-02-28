@@ -249,6 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Nelze odstranit soubor: {0}</string>
   <string name="PlaySomething" Original="Play...">Přehrát...</string>
   <string name="PlayError" Original="Play error">Chyba přehrávání</string>
+  <string name="RandomEpisode" Original="Random episode">Náhodnou epizodu</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">První nezhlédnutou epizodu</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">První nezhlédnutou epizodu, jinak náhodnou</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Náhodnou nezhlédnutou epizodu</string>
   <string name="LatestEpisode" Original="latest episode">aktuální epizodu</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Nepodařilo se nalézt žádnou {0}.</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Nebyla nalezena žádná epizoda.</string>
@@ -309,4 +313,5 @@
   <string name="Filters" Original="Filters">Filtr</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Nezhlédnuté epizody</string>
   <string name="AllEpisodes" Original="All Episodes">Všechny epizody</string>
+  <string name="Biography" Original="Biography">Životopis</string>
 </resources>
