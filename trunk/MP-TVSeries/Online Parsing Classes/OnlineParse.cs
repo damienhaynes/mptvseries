@@ -2306,6 +2306,9 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineEpisode.cCompositeID:
                     case DBEpisode.cSeriesID:
                     case DBOnlineEpisode.cWatched:
+                    case DBOnlineEpisode.cFirstWatchedDate:
+                    case DBOnlineEpisode.cLastWatchedDate:
+                    case DBOnlineEpisode.cPlayCount:
                     case DBOnlineEpisode.cHidden:
                     case DBOnlineEpisode.cMyRating:
                     case DBOnlineEpisode.cFollwitId:
