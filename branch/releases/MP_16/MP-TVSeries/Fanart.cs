@@ -43,6 +43,7 @@ namespace WindowPlugins.GUITVSeries
 
         static Dictionary<int, Fanart> fanartsCache = new Dictionary<int, Fanart>();
         static Random fanartRandom = new Random();
+        static Object lockObject = new Object();
 
         #endregion
 
@@ -143,18 +144,23 @@ namespace WindowPlugins.GUITVSeries
        
         public static Fanart getFanart(int seriesID)
         {
-            Fanart f = null;
-            if (fanartsCache.ContainsKey(seriesID))
+            // possibly multiple plugins accessing fanart at the same time
+            lock (lockObject)
             {
-                f = fanartsCache[seriesID];
-                f.ForceNewPick();
+                Fanart f = null;
+                if (fanartsCache.ContainsKey(seriesID))
+                {
+                    f = fanartsCache[seriesID];
+                    f.ForceNewPick();
+                }
+                else
+                {
+                    // this will get simple drop-ins (old method)
+                    f = new Fanart(seriesID); 
+                    fanartsCache.Add(seriesID, f);
+                }
+                return f;
             }
-            else
-            {
-                f = new Fanart(seriesID); // this will get simple drop-ins (old method)
-                fanartsCache.Add(seriesID, f);
-            }
-            return f;
         }
 
         public static bool RefreshFanart(int seriesID)

@@ -448,7 +448,7 @@ namespace WindowPlugins.GUITVSeries
                 // If the file is an image file, it should be mounted before playing
                 string filename = m_currentEpisode[DBEpisode.cFilename];
                 if (m_bIsImageFile) { 
-                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename)) {                        
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename, false)) {                        
                         return false;
                     }
                 }
