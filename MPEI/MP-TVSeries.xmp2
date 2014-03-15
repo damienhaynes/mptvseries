@@ -871,7 +871,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>3.1.3.1</Value>
+                    <Value>4.0.1.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -1322,19 +1322,18 @@ public class Script
     <Version>
       <Major>4</Major>
       <Minor>0</Minor>
-      <Build>1</Build>
-      <Revision>2067</Revision>
+      <Build>2</Build>
+      <Revision>2072</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Updated to support MediaPortal 1.7. Not compatible with earlier versions.
-* Added safer access to the fanart collection when multiple plugins are accessing them at the same time.
-* Fixed and re-enabled string replacement for acronym detection. Thanks Rochess. 
-* Updated translations from Transifex.</VersionDescription>
+    <VersionDescription>* Fixed 'PlayCount', 'FirstDateWatched' and 'LastDateWatched' fields being cleared when an online update of an episode occurs.
+* Publish skin properties for the users 'views', allows skin designers to create custom menus on the home screen. See debug log for available skin properties.
+</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;amp;task=att_download&amp;amp;link_id=17&amp;amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2014-02-20T15:25:06</ReleaseDate>
+    <ReleaseDate>2014-03-15T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2040,14 +2039,14 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0aad767d-4c7c-4bd5-9b8e-efc22c0c8ed9}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{53f398f9-3d31-49a6-8007-d9c1a3b44c8c}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{7d9d50cf-6be2-4ac2-a9a7-06e9f88dc181}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{c04e4026-7591-4f77-9db1-73f8dae3259d}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
