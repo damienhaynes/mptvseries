@@ -3062,7 +3062,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
         <VersionDescription>* Updated to include bug fixes and new features in MP-TVSeries 4.0.x. See v4.0.x change log for details.</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;amp;task=att_download&amp;amp;link_id=17&amp;amp;cf_id=24</OnlineLocation>
+        <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
         <ReleaseDate>2014-03-15T15:25:06</ReleaseDate>
         <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
         <Location>.\Release\[Name]-[Version].mpe1</Location>
@@ -3409,7 +3409,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Publish skin properties for the users 'views', allows skin designers to create custom menus on the home screen. See debug log for available skin properties.
 * Updated translations from Transifex.</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=64</OnlineLocation>
+        <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=64</OnlineLocation>
         <ReleaseDate>2014-03-15T15:25:06</ReleaseDate>
         <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
         <Location>.\Release\[Name]-[Version].mpe1</Location>
