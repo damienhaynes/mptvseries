@@ -46,6 +46,8 @@ using WindowPlugins.GUITVSeries.FollwitTv;
 using TraktPlugin.TraktAPI;
 using TraktPlugin.TraktHandlers;
 using TraktPlugin.TraktAPI.DataStructures;
+using Trailers;
+using Trailers.Providers;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -90,9 +92,9 @@ namespace WindowPlugins.GUITVSeries
         private AsyncImageResource seriesposter = null;
         private AsyncImageResource seasonbanner = null;
 
-        private Listlevel listLevel = Listlevel.Series;
-        private DBSeries m_SelectedSeries;
-        private DBSeason m_SelectedSeason;
+        public static Listlevel CurrentViewLevel = Listlevel.Series;
+        public static DBSeries m_SelectedSeries;
+        public static DBSeason m_SelectedSeason;
         public static DBEpisode m_SelectedEpisode;
 
         private DBTable m_FanartItem;
@@ -280,6 +282,7 @@ namespace WindowPlugins.GUITVSeries
             viewAddToNewView,
             showActorsGUI,
             trakt,
+            trailers,
             downloadTorrent,
             downloadNZB,
             filterUnwatched
@@ -315,7 +318,7 @@ namespace WindowPlugins.GUITVSeries
             Title       // used for matching only
         }
         
-        enum Listlevel
+        public enum Listlevel
         {
             Episode,
             Season,
@@ -551,7 +554,7 @@ namespace WindowPlugins.GUITVSeries
                         // will auto drill down to current available season if only one exists
                         if (viewLevels > 1) m_CurrViewStep = viewLevels - 2;
                         else m_CurrViewStep = 0;
-                        this.listLevel = Listlevel.Season;
+                        CurrentViewLevel = Listlevel.Season;
                         break;
                     #endregion
 
@@ -566,7 +569,7 @@ namespace WindowPlugins.GUITVSeries
                         // load into episode view for series/season
                         if (viewLevels > 1) m_CurrViewStep = viewLevels - 1;
                         else m_CurrViewStep = 0;
-                        this.listLevel = Listlevel.Episode;
+                        CurrentViewLevel = Listlevel.Episode;
                         m_stepSelection = new string[] { m_LoadingParameter.SeriesId, m_LoadingParameter.SeasonIdx };
                         m_stepSelections.Add(m_stepSelection);
                         break;
@@ -583,7 +586,7 @@ namespace WindowPlugins.GUITVSeries
                         // load into episode view for series/season
                         if (viewLevels > 1) m_CurrViewStep = viewLevels - 1;
                         else m_CurrViewStep = 0;
-                        this.listLevel = Listlevel.Episode;
+                        CurrentViewLevel = Listlevel.Episode;
                         m_stepSelection = new string[] { m_LoadingParameter.SeriesId, m_LoadingParameter.SeasonIdx };
                         m_stepSelections.Add(m_stepSelection);
                         break;
@@ -685,7 +688,7 @@ namespace WindowPlugins.GUITVSeries
                 showRatingsDialog(ask2Rate, true);
                 ask2Rate = null;
                 // Refresh the facade if we want to see the submitted rating
-                if (this.listLevel == Listlevel.Episode)
+                if (CurrentViewLevel == Listlevel.Episode)
                 {
                     LoadFacade();
                 }
@@ -738,7 +741,7 @@ namespace WindowPlugins.GUITVSeries
                 bool emptyList = currentitem.Label == Translation.No_items;
                 if (!emptyList)
                 {
-                    switch (this.listLevel)
+                    switch (CurrentViewLevel)
                     {
                         case Listlevel.Episode:
                             {
@@ -772,7 +775,7 @@ namespace WindowPlugins.GUITVSeries
 
                     if (!emptyList)
                     {
-                        switch (this.listLevel)
+                        switch (CurrentViewLevel)
                         {
                             case Listlevel.Episode:
                                 dlg.SetHeading(Translation.Episode + ": " + selectedEpisode[DBEpisode.cEpisodeName]);
@@ -792,7 +795,7 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         #region Top Level Menu Items - Context Sensitive
-                        if (this.listLevel == Listlevel.Episode)
+                        if (CurrentViewLevel == Listlevel.Episode)
                         {
                             pItem = new GUIListItem(Translation.Toggle_watched_flag);
                             dlg.Add(pItem);
@@ -805,7 +808,7 @@ namespace WindowPlugins.GUITVSeries
                                 pItem.ItemId = (int)eContextMenus.rate;
                             }
                         }
-                        else if (this.listLevel != Listlevel.Group)
+                        else if (CurrentViewLevel != Listlevel.Group)
                         {
                             if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled)
                             {
@@ -829,14 +832,14 @@ namespace WindowPlugins.GUITVSeries
                         // Series:  Add all episodes for selected series
                         // Season:  Add all episodes for selected season
                         // Episode: Add selected episode
-                        if (this.listLevel != Listlevel.Group)
+                        if (CurrentViewLevel != Listlevel.Group)
                         {
                             pItem = new GUIListItem(Translation.AddToPlaylist);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.addToPlaylist;
                         }
 
-                        if (this.listLevel != Listlevel.Group)
+                        if (CurrentViewLevel != Listlevel.Group)
                         {
                             if (m_SelectedSeries != null && FanartBackground != null && // only if skins supports it
                                 m_SelectedSeries[DBOnlineSeries.cID] > 0)
@@ -855,7 +858,7 @@ namespace WindowPlugins.GUITVSeries
 
                         }
 
-                        if (this.listLevel == Listlevel.Series)
+                        if (CurrentViewLevel == Listlevel.Series)
                         {
                             if (selectedSeries.PosterList.Count > 1)
                             {
@@ -877,7 +880,7 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         // Season View may not be available so show cycle season banner at episode level as well
-                        if (this.listLevel == Listlevel.Season || this.listLevel == Listlevel.Episode)
+                        if (CurrentViewLevel == Listlevel.Season || CurrentViewLevel == Listlevel.Episode)
                         {
                             if (selectedSeason.BannerList.Count > 1)
                             {
@@ -888,14 +891,14 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         // Can always add to existing or new view
-                        if (listLevel == Listlevel.Series)
+                        if (CurrentViewLevel == Listlevel.Series)
                         {
                             pItem = new GUIListItem(Translation.AddViewTag + " ...");
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextMenus.addToView;
                         }
                         // Dont show if not a member of any view
-                        if (listLevel == Listlevel.Series)
+                        if (CurrentViewLevel == Listlevel.Series)
                         {
                             if (!String.IsNullOrEmpty(selectedSeries[DBOnlineSeries.cViewTags]))
                             {
@@ -914,14 +917,14 @@ namespace WindowPlugins.GUITVSeries
                     dlg.Add(pItem);
                     pItem.ItemId = (int)eContextMenus.switchView;
 
-                    if (SkinSettings.GetLayoutCount(this.listLevel.ToString()) > 1)
+                    if (SkinSettings.GetLayoutCount(CurrentViewLevel.ToString()) > 1)
                     {
                         pItem = new GUIListItem(Translation.ChangeLayout + " ...");
                         dlg.Add(pItem);
                         pItem.ItemId = (int)eContextMenus.switchLayout;
                     }
 
-                    if (listLevel != Listlevel.Group)
+                    if (CurrentViewLevel != Listlevel.Group)
                     {
                         pItem = new GUIListItem(Translation.Actions + " ...");
                         dlg.Add(pItem);
@@ -937,8 +940,17 @@ namespace WindowPlugins.GUITVSeries
                     pItem.ItemId = (int)eContextMenus.options;
                     #endregion
 
+                    #region trailer menu
+                    if (CurrentViewLevel != Listlevel.Group && Helper.IsTrailersAvailableAndEnabled)
+                    {
+                        pItem = new GUIListItem(GUIPropertyManager.GetProperty("#Trailers.Translation.Trailers.Label") + " ...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextItems.trailers;
+                    }
+                    #endregion
+
                     #region trakt.tv menu
-                    if (listLevel != Listlevel.Group && Helper.IsTraktAvailableAndEnabled)
+                    if (CurrentViewLevel != Listlevel.Group && Helper.IsTraktAvailableAndEnabled)
                     {
                         pItem = new GUIListItem("Trakt ...");
                         dlg.Add(pItem);
@@ -947,7 +959,7 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
 
                     #region My Torrents Search
-                    if (listLevel != Listlevel.Group && Helper.IsMyTorrentsAvailableAndEnabled)
+                    if (CurrentViewLevel != Listlevel.Group && Helper.IsMyTorrentsAvailableAndEnabled)
                     {
                         pItem = new GUIListItem(Translation.SearchTorrent + " ...");
                         dlg.Add(pItem);
@@ -956,7 +968,7 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
 
                     #region NZB Search
-                    if (listLevel == Listlevel.Episode && Helper.IsMpNZBAvailableAndEnabled)
+                    if (CurrentViewLevel == Listlevel.Episode && Helper.IsMpNZBAvailableAndEnabled)
                     {
                         pItem = new GUIListItem(Translation.SearchNZB + " ...");
                         dlg.Add(pItem);
@@ -965,7 +977,7 @@ namespace WindowPlugins.GUITVSeries
                     #endregion
 
                     #region Subtitles - keep at the bottom for fast access (menu + up => there)
-                    if (!emptyList && subtitleDownloadEnabled && this.listLevel == Listlevel.Episode)
+                    if (!emptyList && subtitleDownloadEnabled && CurrentViewLevel == Listlevel.Episode)
                     {
                         pItem = new GUIListItem(Translation.Subtitles);
                         dlg.Add(pItem);
@@ -981,7 +993,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 dlg.Reset();
                                 dlg.SetHeading(Translation.Actions);
-                                if (listLevel != Listlevel.Group)
+                                if (CurrentViewLevel != Listlevel.Group)
                                 {
                                     if (DBOption.GetOptions(DBOption.cShowDeleteMenu))
                                     {
@@ -1000,7 +1012,7 @@ namespace WindowPlugins.GUITVSeries
                                     // add hidden menu
                                     // check if item is already hidden
                                     pItem = new GUIListItem();
-                                    switch (listLevel)
+                                    switch (CurrentViewLevel)
                                     {
                                         case Listlevel.Series:
                                             pItem.Label = selectedSeries[DBSeries.cHidden] ? Translation.UnHide : Translation.Hide;
@@ -1021,7 +1033,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
 
                                 // Online to Local Episode Matching order
-                                if (this.listLevel != Listlevel.Group)
+                                if (CurrentViewLevel != Listlevel.Group)
                                 {
                                     // get current online episode to local episode matching order
                                     string currMatchOrder = selectedSeries[DBOnlineSeries.cChosenEpisodeOrder].ToString();
@@ -1033,7 +1045,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
 
                                 // Episode Sort By
-                                if (this.listLevel == Listlevel.Episode || this.listLevel == Listlevel.Season)
+                                if (CurrentViewLevel == Listlevel.Episode || CurrentViewLevel == Listlevel.Season)
                                 {
                                     // get current episode sort order (DVD or Aired)
                                     string currSortBy = selectedSeries[DBOnlineSeries.cEpisodeSortOrder].ToString();
@@ -1103,7 +1115,7 @@ namespace WindowPlugins.GUITVSeries
 
                         case (int)eContextMenus.rate:
                             {
-                                switch (listLevel)
+                                switch (CurrentViewLevel)
                                 {
                                     case Listlevel.Episode:
                                         showRatingsDialog(m_SelectedEpisode, false);                                        
@@ -1215,11 +1227,11 @@ namespace WindowPlugins.GUITVSeries
                             ToggleWatched(selectedSeries, episodeList, true);
 
                         // Updated Episode Counts
-                        if (this.listLevel == Listlevel.Series && selectedSeries != null)
+                        if (CurrentViewLevel == Listlevel.Series && selectedSeries != null)
                         {
                             DBSeries.UpdateEpisodeCounts(selectedSeries);
                         }
-                        else if (this.listLevel == Listlevel.Season && selectedSeason != null)
+                        else if (CurrentViewLevel == Listlevel.Season && selectedSeason != null)
                         {
                             DBSeason.UpdateEpisodeCounts(selectedSeries, selectedSeason);
                         }
@@ -1258,11 +1270,11 @@ namespace WindowPlugins.GUITVSeries
                             ToggleWatched(selectedSeries, episodeList, false);
 
                         // Updated Episode Counts
-                        if (this.listLevel == Listlevel.Series && selectedSeries != null)
+                        if (CurrentViewLevel == Listlevel.Series && selectedSeries != null)
                         {
                             DBSeries.UpdateEpisodeCounts(selectedSeries);
                         }
-                        else if (this.listLevel == Listlevel.Season && selectedSeason != null)
+                        else if (CurrentViewLevel == Listlevel.Season && selectedSeason != null)
                         {
                             DBSeason.UpdateEpisodeCounts(selectedSeries, selectedSeason);
                         }
@@ -1340,6 +1352,12 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     #endregion
 
+                    #region trailers
+                    case (int)eContextItems.trailers:
+                        ShowTrailerMenu();
+                        break;
+                    #endregion
+
                     #region trakt.tv
                     case (int)eContextItems.trakt:
                         ShowTraktMenu();
@@ -1384,7 +1402,7 @@ namespace WindowPlugins.GUITVSeries
                     #region Actions
                     #region Hide
                     case (int)eContextItems.actionHide:
-                        switch (this.listLevel)
+                        switch (CurrentViewLevel)
                         {
                             case Listlevel.Series:
                                 selectedSeries.HideSeries(!selectedSeries[DBSeries.cHidden]);
@@ -1424,7 +1442,7 @@ namespace WindowPlugins.GUITVSeries
 
                     #region MediaInfo
                     case (int)eContextItems.actionRecheckMI:
-                        switch (listLevel)
+                        switch (CurrentViewLevel)
                         {
                             case Listlevel.Episode:
                                 m_SelectedEpisode.ReadMediaInfo();
@@ -1555,14 +1573,14 @@ namespace WindowPlugins.GUITVSeries
                         if (this.m_Facade.SelectedListItem == null || this.m_Facade.SelectedListItem.TVTag == null)
                             return;
 
-                        if (this.listLevel == Listlevel.Group)
+                        if (CurrentViewLevel == Listlevel.Group)
                             return;
 
                         selectedSeries = null;
                         selectedSeason = null;
                         selectedEpisode = null;
 
-                        switch (this.listLevel)
+                        switch (CurrentViewLevel)
                         {
                             case Listlevel.Series:
                                 selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
@@ -1603,7 +1621,7 @@ namespace WindowPlugins.GUITVSeries
                     selectedEpisode = null;
                     string selectedGroup = null;
 
-                    switch (this.listLevel)
+                    switch (CurrentViewLevel)
                     {
                         case Listlevel.Group:
                             selectedGroup = this.m_Facade.SelectedListItem.TVTag as string;
@@ -1693,6 +1711,12 @@ namespace WindowPlugins.GUITVSeries
 
                     if (m_SelectedEpisode == null)
                     {
+                        if (Helper.IsTrailersAvailableAndEnabled)
+                        {
+                            ShowTrailerMenu();
+                            goto default;
+                        }
+
                         switch (onPlayAction)
                         {
                             case OnPlaySeriesOrSeasonAction.Random:
@@ -1725,7 +1749,7 @@ namespace WindowPlugins.GUITVSeries
                         return;
 
                     // can only cycle artwork on series and seasons
-                    if (this.listLevel == Listlevel.Group || this.listLevel == Listlevel.Episode)
+                    if (CurrentViewLevel == Listlevel.Group || CurrentViewLevel == Listlevel.Episode)
                         return;
 
                     selectedSeries = null;
@@ -1734,7 +1758,7 @@ namespace WindowPlugins.GUITVSeries
 
                     bool nextImage = action.wID == Action.ActionType.ACTION_NEXT_PICTURE ? true : false;
 
-                    switch (this.listLevel)
+                    switch (CurrentViewLevel)
                     {
                         case Listlevel.Series:
                             selectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
@@ -1781,7 +1805,7 @@ namespace WindowPlugins.GUITVSeries
                     int iControl = message.SenderControlId;
                     if (iControl == (int)m_Facade.GetID)
                     {
-                        switch (this.listLevel)
+                        switch (CurrentViewLevel)
                         {
                             case Listlevel.Group:
                                 Group_OnItemSelected(m_Facade.SelectedListItem);
@@ -1839,7 +1863,7 @@ namespace WindowPlugins.GUITVSeries
         protected void ShowMyTorrents()
         {
             string searchObj = string.Empty;
-            if (listLevel != Listlevel.Episode)
+            if (CurrentViewLevel != Listlevel.Episode)
             {
                 searchObj = string.Format("{0}", m_SelectedSeries[DBOnlineSeries.cOriginalName]);
             }
@@ -1857,7 +1881,7 @@ namespace WindowPlugins.GUITVSeries
         protected void ShowMPNZB()
         {
             string searchObj = string.Empty;
-            if (listLevel == Listlevel.Episode)
+            if (CurrentViewLevel == Listlevel.Episode)
             {
                 searchObj = string.Format("search:{0} S{1}E{2}", m_SelectedSeries[DBOnlineSeries.cOriginalName], m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]);
             }
@@ -1865,6 +1889,53 @@ namespace WindowPlugins.GUITVSeries
             GUIWindowManager.ActivateWindow(3847, searchObj);
 
         }
+        #endregion
+
+        #region Trailers Menu
+
+        internal static void ShowTrailerMenu()
+        {
+            var mediaItem = new MediaItem
+            {
+                MediaType = MediaItemType.Show,
+                AirDate = m_SelectedSeries[DBOnlineSeries.cFirstAired],
+                IMDb = m_SelectedSeries[DBOnlineSeries.cIMDBID],
+                Poster = m_SelectedSeries.Poster,
+                Plot = m_SelectedSeries[DBOnlineSeries.cSummary],
+                Title = m_SelectedSeries[DBOnlineSeries.cOriginalName],
+                TVDb = m_SelectedSeries[DBOnlineSeries.cID]                
+            };
+
+            int year = 0;
+            if (int.TryParse(m_SelectedSeries.Year, out year))
+            {
+                mediaItem.Year = year;
+            }
+
+            if (CurrentViewLevel == Listlevel.Season)
+            {
+                mediaItem.MediaType = MediaItemType.Season;
+                mediaItem.Season = m_SelectedSeason[DBSeason.cIndex];
+                mediaItem.Poster = m_SelectedSeason.Banner;
+            }
+            else if (CurrentViewLevel == Listlevel.Episode)
+            {
+                mediaItem.MediaType = MediaItemType.Episode;
+                mediaItem.Season = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex];
+                mediaItem.Episode = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex];
+                mediaItem.EpisodeName = m_SelectedEpisode[DBOnlineEpisode.cEpisodeName];
+                mediaItem.Plot = m_SelectedEpisode[DBOnlineEpisode.cEpisodeSummary];
+                mediaItem.Poster = m_SelectedEpisode[DBOnlineEpisode.cEpisodeThumbnailFilename];
+
+                if (!string.IsNullOrEmpty(m_SelectedEpisode[DBEpisode.cFilename]))
+                {
+                    mediaItem.FullPath = m_SelectedEpisode[DBEpisode.cFilename];
+                }
+            }
+
+            Trailers.Trailers.SearchForTrailers(mediaItem);
+        }
+
         #endregion
 
         #region Trakt Menu
@@ -1881,11 +1952,11 @@ namespace WindowPlugins.GUITVSeries
                 Actors = m_SelectedSeries[DBOnlineSeries.cActors].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList()
             };
 
-            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
+            if (CurrentViewLevel == Listlevel.Series || CurrentViewLevel == Listlevel.Season)
             {              
                 TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, fanart, people, true);
             }
-            else if (this.listLevel == Listlevel.Episode)
+            else if (CurrentViewLevel == Listlevel.Episode)
             {
                 people.Directors = m_SelectedEpisode[DBOnlineEpisode.cDirector].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
                 people.Writers = m_SelectedEpisode[DBOnlineEpisode.cWriter].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
@@ -1962,7 +2033,7 @@ namespace WindowPlugins.GUITVSeries
                     return;
                 
                 #region Parental Control Check for Tagged Views
-                if (this.listLevel == Listlevel.Group && logicalView.IsLocked)
+                if (CurrentViewLevel == Listlevel.Group && logicalView.IsLocked)
                 {
                     string viewName = this.m_Facade.SelectedListItem.Label;
                     DBView[] views = DBView.getTaggedViews();
@@ -1997,7 +2068,7 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
 
                 m_back_up_select_this = null;
-                switch (this.listLevel)
+                switch (CurrentViewLevel)
                 {
                     case Listlevel.Group:
                         this.m_CurrViewStep++;
@@ -2011,21 +2082,21 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case Listlevel.Series:
-                        this.m_SelectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
+                        m_SelectedSeries = this.m_Facade.SelectedListItem.TVTag as DBSeries;
                         if (m_SelectedSeries == null) return;
 
                         this.m_CurrViewStep++;
                         setNewListLevelOfCurrView(m_CurrViewStep);
                         m_stepSelection = new string[] { m_SelectedSeries[DBSeries.cID].ToString() };
                         m_stepSelections.Add(m_stepSelection);
-                        m_stepSelectionPretty.Add(this.m_SelectedSeries.ToString());
+                        m_stepSelectionPretty.Add(m_SelectedSeries.ToString());
                         MPTVSeriesLog.Write("Series Clicked: ", m_stepSelection[0], MPTVSeriesLog.LogLevel.Debug);
                         this.LoadFacade();
                         this.m_Facade.Focus = true;
                         break;
 
                     case Listlevel.Season:
-                        this.m_SelectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
+                        m_SelectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
                         if (m_SelectedSeason == null) return;
 
                         this.m_CurrViewStep++;
@@ -2216,7 +2287,7 @@ namespace WindowPlugins.GUITVSeries
                 PerfWatcher.GetNamedWatch("FacadeMode - switch to Album").Start();
                 if (mode == GUIFacadeControl.Layout.AlbumView)
                 {
-                    switch (this.listLevel)
+                    switch (CurrentViewLevel)
                     {
                         case (Listlevel.Series):
                             if (DBOption.GetOptions(DBOption.cViewSeriesListFormat) == "Filmstrip")
@@ -2315,10 +2386,10 @@ namespace WindowPlugins.GUITVSeries
                     this.m_Facade.CoverFlowLayout.Clear();
 
                 if (m_Facade != null) m_Facade.Focus = true;
-                MPTVSeriesLog.Write("LoadFacade: ListLevel: ", listLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("LoadFacade: ListLevel: ", CurrentViewLevel.ToString(), MPTVSeriesLog.LogLevel.Debug);
                 setCurPositionLabel();
 
-                switch (this.listLevel)
+                switch (CurrentViewLevel)
                 {
                     case Listlevel.Series:
                     case Listlevel.Episode:
@@ -2344,7 +2415,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (filterButton != null)
                 {
-                    if (this.listLevel != Listlevel.Group)
+                    if (CurrentViewLevel != Listlevel.Group)
                         GUIControl.EnableControl(this.GetID, filterButton.GetID);
                     else
                         GUIControl.DisableControl(this.GetID, filterButton.GetID);
@@ -2461,7 +2532,7 @@ namespace WindowPlugins.GUITVSeries
                                 // Navigate to selected using OnAction instead 
                                 if (m_Facade.CurrentLayout == GUIFacadeControl.Layout.Filmstrip || m_Facade.CurrentLayout == GUIFacadeControl.Layout.CoverFlow)
                                 {
-                                    if (this.listLevel == Listlevel.Series)
+                                    if (CurrentViewLevel == Listlevel.Series)
                                     {
                                         List<DBSeries> seriesList = m_CurrLView.getSeriesItems(m_CurrViewStep, m_stepSelection);
 
@@ -2490,7 +2561,7 @@ namespace WindowPlugins.GUITVSeries
                                             }
                                         }
                                     }
-                                    else if (this.listLevel == Listlevel.Season)
+                                    else if (CurrentViewLevel == Listlevel.Season)
                                     {
                                         List<DBSeason> seasonList = m_CurrLView.getSeasonItems(m_CurrViewStep, m_stepSelection);
 
@@ -2588,7 +2659,7 @@ namespace WindowPlugins.GUITVSeries
                 LoadFacade();
             }
 
-            if (!bFacadeEmpty && this.listLevel == Listlevel.Episode && m_Facade.Count != itemsToDisplay)
+            if (!bFacadeEmpty && CurrentViewLevel == Listlevel.Episode && m_Facade.Count != itemsToDisplay)
             {
                 MPTVSeriesLog.Write("Facade count is not correct, retrying reload");
                 LoadFacade();
@@ -2667,7 +2738,7 @@ namespace WindowPlugins.GUITVSeries
                 List<DBSeries> seriesList = null;
                 PerfWatcher.GetNamedWatch("FacadeLoading getting/reporting items").Start();
 
-                switch (this.listLevel)
+                switch (CurrentViewLevel)
                 {
                     #region Group
                     case Listlevel.Group:
@@ -2833,9 +2904,9 @@ namespace WindowPlugins.GUITVSeries
                                     }
                                     #endregion
 
-                                    if (this.m_SelectedSeries != null)
+                                    if (m_SelectedSeries != null)
                                     {
-                                        if (series[DBSeries.cID] == this.m_SelectedSeries[DBSeries.cID])
+                                        if (series[DBSeries.cID] == m_SelectedSeries[DBSeries.cID])
                                         {
                                             selectedIndex = count;
                                         }
@@ -2978,9 +3049,9 @@ namespace WindowPlugins.GUITVSeries
 
                                     if (!canBeSkipped)
                                     {
-                                        if (this.m_SelectedSeason != null)
+                                        if (m_SelectedSeason != null)
                                         {
-                                            if (this.m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
+                                            if (m_SelectedSeason[DBSeason.cIndex] == season[DBSeason.cIndex])
                                                 selectedIndex = count;
                                         }
                                         else
@@ -3347,12 +3418,12 @@ namespace WindowPlugins.GUITVSeries
         {
             // Series & Season List Images
             string sListFilename = string.Empty;
-            if (this.listLevel == Listlevel.Series)
+            if (CurrentViewLevel == Listlevel.Series)
                 sListFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_SeriesListIcon.png");
-            if (this.listLevel == Listlevel.Season)
+            if (CurrentViewLevel == Listlevel.Season)
                 sListFilename = Helper.GetThemedSkinFile(ThemeType.Image, "tvseries_SeasonListIcon.png");
 
-            if (this.listLevel == Listlevel.Series || this.listLevel == Listlevel.Season)
+            if (CurrentViewLevel == Listlevel.Series || CurrentViewLevel == Listlevel.Season)
             {
                 if (!(System.IO.File.Exists(sListFilename)))
                     return false;
@@ -3460,7 +3531,7 @@ namespace WindowPlugins.GUITVSeries
             string searchPattern = string.Empty;
 
             // Get selected Series and/or list of Episode(s) to update
-            switch (this.listLevel)
+            switch (CurrentViewLevel)
             {
                 case Listlevel.Series:
                     seriesIDsUpdates.Add(series[DBSeries.cID]);
@@ -3486,7 +3557,7 @@ namespace WindowPlugins.GUITVSeries
             // Delete Physical Thumbnails
             // Dont prompt if just doing a single episode update
             bool deleteThumbs = true;
-            if (this.listLevel != Listlevel.Episode)
+            if (CurrentViewLevel != Listlevel.Episode)
             {
                 GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
                 if (dlgYesNo != null)
@@ -3534,7 +3605,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     List<ParsingAction> parsingActions = new List<ParsingAction>();
                     // Conditional parsing actions                    
-                    if (this.listLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
+                    if (CurrentViewLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
                     parsingActions.Add(ParsingAction.UpdateEpisodes);
                     if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
                     parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
@@ -3724,7 +3795,7 @@ namespace WindowPlugins.GUITVSeries
             // Get Available Layouts for Skin
             foreach (string layout in SkinSettings.SupportedLayouts)
             {
-                switch (this.listLevel)
+                switch (CurrentViewLevel)
                 {
                     case Listlevel.Group:
                         if (layout.StartsWith("Group"))
@@ -3778,7 +3849,7 @@ namespace WindowPlugins.GUITVSeries
 
         private string GetCurrentLayout()
         {
-            switch (this.listLevel)
+            switch (CurrentViewLevel)
             {
                 case Listlevel.Group:
                     if (DBOption.GetOptions(DBOption.cGraphicalGroupView))
@@ -3862,7 +3933,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void switchLayout(string layout)
         {
-            switch (this.listLevel)
+            switch (CurrentViewLevel)
             {
                 case Listlevel.Group:
                     if (layout == "List")
@@ -4318,7 +4389,7 @@ namespace WindowPlugins.GUITVSeries
         {
             String sDialogHeading = String.Empty;
 
-            switch (this.listLevel)
+            switch (CurrentViewLevel)
             {
                 case Listlevel.Series:
                     sDialogHeading = Translation.Delete_that_series;
@@ -4344,15 +4415,15 @@ namespace WindowPlugins.GUITVSeries
             bool hasDuplicateEpisode = false;
             bool hasLocalFiles = false;
 
-            if (this.listLevel == Listlevel.Series && series != null)
+            if (CurrentViewLevel == Listlevel.Series && series != null)
             {
                 hasLocalFiles = series[DBOnlineSeries.cHasLocalFiles];
             }
-            else if (this.listLevel == Listlevel.Season && season != null)
+            else if (CurrentViewLevel == Listlevel.Season && season != null)
             {
                 hasLocalFiles = season[DBSeason.cHasLocalFiles];
             }
-            else if (this.listLevel == Listlevel.Episode && episode != null)
+            else if (CurrentViewLevel == Listlevel.Episode && episode != null)
             {
                 hasSubtitles = episode.checkHasLocalSubtitles();
                 hasDuplicateEpisode = episode.HasDuplicateEpisode;
@@ -4408,7 +4479,7 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId == (int)DeleteMenuItems.subtitles)
             {
                 msgDlgCaption = Translation.UnableToDeleteSubtitles;
-                switch (this.listLevel)
+                switch (CurrentViewLevel)
                 {
                     case Listlevel.Episode:
                         if (episode == null) return;
@@ -4422,7 +4493,7 @@ namespace WindowPlugins.GUITVSeries
             if (dlg.SelectedId != (int)DeleteMenuItems.subtitles)
             {
                 msgDlgCaption = Translation.UnableToDelete;
-                switch (this.listLevel)
+                switch (CurrentViewLevel)
                 {
                     #region Delete Series
                     case Listlevel.Series:
@@ -4763,22 +4834,22 @@ namespace WindowPlugins.GUITVSeries
             switch (m_CurrLView.gettypeOfStep(step))
             {
                 case logicalViewStep.type.group:
-                    listLevel = Listlevel.Group;
+                    CurrentViewLevel = Listlevel.Group;
                     if (dummyIsGroups != null) dummyIsGroups.Visible = true;
                     if (dummyIsGroups != null) dummyIsGroups.UpdateVisibility();
                     break;
                 case logicalViewStep.type.series:
-                    listLevel = Listlevel.Series;
+                    CurrentViewLevel = Listlevel.Series;
                     if (dummyIsSeries != null) dummyIsSeries.Visible = true;
                     if (dummyIsSeries != null) dummyIsSeries.UpdateVisibility();
                     break;
                 case logicalViewStep.type.season:
-                    listLevel = Listlevel.Season;
+                    CurrentViewLevel = Listlevel.Season;
                     if (dummyIsSeasons != null) dummyIsSeasons.Visible = true;
                     if (dummyIsSeasons != null) dummyIsSeasons.UpdateVisibility();
                     break;
                 case logicalViewStep.type.episode:
-                    listLevel = Listlevel.Episode;
+                    CurrentViewLevel = Listlevel.Episode;
                     if (dummyIsEpisodes != null) dummyIsEpisodes.Visible = true;
                     if (dummyIsEpisodes != null) dummyIsEpisodes.UpdateVisibility();
                     break;
@@ -4925,7 +4996,7 @@ namespace WindowPlugins.GUITVSeries
             string value = string.Empty;
 
             // check layout / view visibility
-            switch (this.listLevel)
+            switch (CurrentViewLevel)
             {
                 case Listlevel.Series:
                     SkinSettings.Defines.TryGetValue(SkinSettings.cfanartseriesview, out value);
@@ -5141,7 +5212,7 @@ namespace WindowPlugins.GUITVSeries
                 parent != m_Facade.CoverFlowLayout)
                 return;
 
-            switch (this.listLevel)
+            switch (CurrentViewLevel)
             {
                 case Listlevel.Group:
                     Group_OnItemSelected(m_Facade.SelectedListItem);
@@ -5883,24 +5954,24 @@ namespace WindowPlugins.GUITVSeries
             SQLCondition condition = new SQLCondition();
             List<DBEpisode> episodes;
 
-            if (this.listLevel == Listlevel.Group)
+            if (CurrentViewLevel == Listlevel.Group)
             {
                 return;
             }
-            else if (this.listLevel == Listlevel.Series && m_SelectedSeries != null)
+            else if (CurrentViewLevel == Listlevel.Series && m_SelectedSeries != null)
             {
                 condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
                 if (DBOption.GetOptions(DBOption.cPlaylistUnwatchedOnly))
                     condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal);
             }
-            else if (this.listLevel == Listlevel.Season && m_SelectedSeason != null)
+            else if (CurrentViewLevel == Listlevel.Season && m_SelectedSeason != null)
             {
                 condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
                 condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
                 if (DBOption.GetOptions(DBOption.cPlaylistUnwatchedOnly))
                     condition.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, false, SQLConditionType.Equal);
             }
-            else if (this.listLevel == Listlevel.Episode && m_SelectedEpisode != null)
+            else if (CurrentViewLevel == Listlevel.Episode && m_SelectedEpisode != null)
             {
                 condition.Add(new DBEpisode(), DBEpisode.cSeriesID, m_SelectedSeries[DBSeries.cID], SQLConditionType.Equal);
                 condition.Add(new DBEpisode(), DBEpisode.cSeasonIndex, m_SelectedSeason[DBSeason.cIndex], SQLConditionType.Equal);
@@ -6155,6 +6226,10 @@ namespace WindowPlugins.GUITVSeries
         {
             if (m_SelectedEpisode[DBEpisode.cFilename].ToString().Length == 0)
             {
+                if (Helper.IsTrailersAvailableAndEnabled)
+                {
+                    ShowTrailerMenu();
+                }
                 return;
             }
 
