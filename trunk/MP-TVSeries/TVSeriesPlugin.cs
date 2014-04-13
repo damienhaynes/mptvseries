@@ -2101,15 +2101,19 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (m_CurrLView != null)
                     {
-                        bool viewSwitched = false;
+                        //bool viewSwitched = false;
                         if (m_CurrLView.ParentalControl)
                         {
+                            GUIWindowManager.ShowPreviousWindow();
+                            /*
                             viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
                             // Exit if no view changed, otherwise reload the facade
                             if (!viewSwitched)
                                 GUIWindowManager.ShowPreviousWindow();
                             else
                                 LoadFacade();
+                             * 
+                             */
                         }
                     }
                 }
