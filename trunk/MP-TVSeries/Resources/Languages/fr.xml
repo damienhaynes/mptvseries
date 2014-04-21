@@ -35,7 +35,7 @@
   <string name="Yes" Original="Yes">Oui</string>
   <string name="No" Original="No">Non</string>
   <string name="Error" Original="#Error">Erreur</string>
-  <string name="No_items" Original="No items!">Pas d\'objet !</string>
+  <string name="No_items" Original="No items!">Aucun d\'objet !</string>
   <string name="Unknown" Original="Unknown">Inconnu</string>
   <string name="wrongSkin" Original="Wrong Skin file">Erreur de fichier pour le Thème</string>
   <string name="special" Original="Special">Spécial</string>
@@ -48,7 +48,7 @@
   <string name="Options" Original="Options">Options</string>
   <string name="Genres" Original="Genres">Par genres</string>
   <string name="All" Original="All">Tous les épisodes</string>
-  <string name="Latest" Original="Latest Aired">Les derniers épisodes</string>
+  <string name="Latest" Original="Latest Aired">Les derniers épisodes diffusés</string>
   <string name="Channels" Original="Channels">Par chaines</string>
   <string name="Unwatched" Original="Unwatched">Episodes non visionnés</string>
   <string name="Favourites" Original="Favourites">Favoris</string>
@@ -60,38 +60,38 @@
   <string name="DontAskToRate" Original="Don't ask me to rate again">Ne pas noter les épisodes</string>
   <string name="RatingStar" Original="Star">Etoile</string>
   <string name="RatingStars" Original="Stars">Etoiles</string>
-  <string name="ChangeView" Original="Change View">Type d\'affichage</string>
+  <string name="ChangeView" Original="Change View">Changer d\'affichage</string>
   <string name="ChangeViewFast" Original="Immediatly Change Views">Changement immédiat de l\'affichage</string>
   <string name="FanArt" Original="Fanart">Gestion des Fanarts (fond d\'écran)</string>
-  <string name="FanListAll" Original="List all Fanart for this Series">Liste complète de tous Fanarts pour cette série</string>
+  <string name="FanListAll" Original="List all Fanart for this Series">Liste complète des Fanarts pour cette série</string>
   <string name="FanArtGetAndUse" Original="Download Fanart and Use">Télécharger et utiliser</string>
   <string name="FanArtGet" Original="Download Fanart">Télécharger le Fanart</string>
   <string name="FanArtUse" Original="Set Fanart as Default">Fanart par défaut</string>
-  <string name="FanArtDelete" Original="Delete Fanart">Effacer le Fanart</string>
+  <string name="FanArtDelete" Original="Delete Fanart">Supprimer le Fanart</string>
   <string name="FanDownloadingStatus" Original="Downloading {0} Fanart...">Téléchargement de {0} Fanart</string>
   <string name="FanArtLocal" Original="Local">Présent</string>
   <string name="FanArtOnline" Original="Remote">A télécharger</string>
   <string name="FanArtOnlineLoading" Original="Loading {0} of {1} Fanart...">Chargement en cours des Fanarts de {0} à {1}</string>
   <string name="FanArtRandom" Original="Display random Fanart">Affichage aléatoire des Fanarts</string>
   <string name="FanArtNoneFound" Original="No Fanart could be found">Aucun Fanart trouvé</string>
-  <string name="CFS_Choose_Item" Original="Choose item">Choisir un élément</string>
+  <string name="CFS_Choose_Item" Original="Choose item">Sélectionner un élément</string>
   <string name="CFS_Select_Matching_Item" Original="Select matching item:">Choisir l\'élément correspondant :</string>
   <string name="CFS_Search_Again" Original="Search again">Nouvelle Recherche</string>
   <string name="CFS_Select_Matching_Subitle_File" Original="Select Matching Subtitle File">Selectionner le sous-titre à assortir</string>
   <string name="CFS_Subtitle_Episode" Original="Choose item">Episode: </string>
   <string name="CFS_Matching_Subtitles" Original="Matching Subtitles">Sous-titre correspondant</string>
-  <string name="CFS_Choose_Correct_Series" Original="Choose Correct Series">Choisir la série correspondante</string>
+  <string name="CFS_Choose_Correct_Series" Original="Choose Correct Series">Sélectionner la série correspondante</string>
   <string name="CFS_Available_Series" Original="Available Series">Séries disponibles</string>
   <string name="CFS_Select_Correct_Subtitle_Version" Original="Select desired subtitles version">Sélectionner la version du sous-titre desiré</string>
   <string name="CFS_Select_Version" Original="Version:">Version: </string>
-  <string name="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Choisir l\'épisode désiré</string>
+  <string name="CFS_Choose_Correct_Episode" Original="Choose Correct Episode">Sélectionner l\'épisode désiré</string>
   <string name="CFS_Local_Episode_Index" Original="Local Episiode index:">Episode:</string>
   <string name="CFS_Available_Episode_List" Original="Available Episode list:">Liste des épisodes disponibles:</string>
-  <string name="CFS_Choose_Search_Site" Original="Choose search site:">Choisir un site de recherche: </string>
+  <string name="CFS_Choose_Search_Site" Original="Choose search site:">Sélectionner un site de recherche: </string>
   <string name="CFS_List_Search_Site" Original="List of search sites:">liste des sites de recherche: </string>
   <string name="CFS_Found_Torrents" Original="Found torrents:">Torrents trouvés : </string>
   <string name="CFS_Looking_For" Original="Looking for:">Rechercher via: </string>
-  <string name="CFS_Choose_Correct_Season" Original="Choose correct season">Choisir la saison</string>
+  <string name="CFS_Choose_Correct_Season" Original="Choose correct season">Sélectionner la saison</string>
   <string name="CFS_Local_Season_Index" Original="Local Season index:">Liste des saisons présentes sur vos disques durs: </string>
   <string name="CFS_Available_Seasons" Original="Available Seasons list:">Liste des saisons disponibles: </string>
   <string name="CFS_Skip_Never_Ask_Again" Original="Skip / Never Ask Again">Passer / Ne plus demander</string>
@@ -101,7 +101,7 @@
   <string name="TVDB_ERROR_TITLE" Original="theTVDB Error">Erreur de TVDB</string>
   <string name="TVDB_INFO_TITLE" Original="theTVDB">TVDB</string>
   <string name="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Le numéro de compte n\'est pas précisé </string>
-  <string name="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Rentrer vos identifiants dans la configuration</string>
+  <string name="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Entrer vos identifiants dans la configuration</string>
   <string name="ChangeLayout" Original="Change Layout">Changer la mise en page</string>
   <string name="UseOnlineFavourites" Original="Use Online Favourites"> Utilisez Favoris en ligne </string>
   <string name="AddToPlaylist" Original="Add To Playlist">Ajouter à la Playlist</string>
@@ -117,7 +117,7 @@
   <string name="LayoutFilmstrip" Original="Filmstrip">Pellicule</string>
   <string name="LayoutSmallIcons" Original="Small Icons">Petites Icones</string>
   <string name="ButtonAutoPlay" Original="Auto Play">Lecture automatique</string>
-  <string name="ButtonSwitchView" Original="Switch View">Type d\'affichage</string>
+  <string name="ButtonSwitchView" Original="Switch View">Changer d\'affichage</string>
   <string name="ButtonRunImport" Original="Run Import">Mise à jour</string>
   <string name="ButtonChangeLayout" Original="Change Layout">Type de mise en page</string>
   <string name="ButtonOptions" Original="Options">Options</string>
@@ -186,8 +186,8 @@
   <string name="MultiAudio" Original="Multiple Audio Tracks">Multiples Pistes Audio</string>
   <string name="OnlineFavourites" Original="Online Favourites">Favoris en ligne</string>
   <string name="Actors" Original="Actors">Infos Acteurs</string>
-  <string name="RemovableMedia" Original="Removable Media">Média amovible</string>
-  <string name="LocalMedia" Original="Local Media">Média local</string>
+  <string name="RemovableMedia" Original="Removable Media">Support amovible</string>
+  <string name="LocalMedia" Original="Local Media">Support de stockage local</string>
   <string name="AdultSeries" Original="Adult Series">Séries pour Adultes</string>
   <string name="KidsSeries" Original="Kids Series">Séries pour Enfants</string>
   <string name="ClearFanartCache" Original="Clear Fanart Cache">Effacer le cache de Fanart</string>
@@ -249,7 +249,9 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Impossible de supprimer le fichier: {0}</string>
   <string name="PlaySomething" Original="Play...">Lecture...</string>
   <string name="PlayError" Original="Play error">Erreur de lecture</string>
+  <string name="RandomEpisode" Original="Random episode">Episode au hasard</string>
   <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Premier épisode non vu</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Premier épisode non vu, sinon un épisode au hasard</string>
   <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Episode non vu au hasard</string>
   <string name="LatestEpisode" Original="latest episode">Dernier épisode</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Impossible de trouver un {0}</string>
@@ -260,22 +262,22 @@
   <string name="AbsoluteOrder" Original="Absolute Order">Dans l\'ordre</string>
   <string name="Title" Original="Title">Titre</string>
   <string name="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Autre méthode de recherche d\'appariement sur le web</string>
-  <string name="InsertDiskMessageLine1" Original="The media for the episode you have selected">Le média, support de l\'épisode, que vous avez sélectionné</string>
+  <string name="InsertDiskMessageLine1" Original="The media for the episode you have selected">Le support contenant l\'épisode, que vous avez sélectionné</string>
   <string name="InsertDiskMessageLine2" Original="is currently not available.">n\'est pas disponible actuellement.</string>
-  <string name="InsertDiskMessageLine3" Original="Please insert or connect media">SVP, inserer ou connecter votre support de médias</string>
+  <string name="InsertDiskMessageLine3" Original="Please insert or connect media">SVP, inserer ou connecter votre support de stockage</string>
   <string name="InsertDiskMessageLine4" Original="labeled: {0}">nommé: {0}</string>
   <string name="ShowHiddenItems" Original="Show Hidden Items">Afficher les items cachés</string>
   <string name="UnHide" Original="UnHide">Afficher</string>
   <string name="CFS_Skip" Original="Skip">Passer</string>
   <string name="CFS_No_Match_Manual_Search" Original="No Match Found, Manual Search...">Pas de correspondance trouvée, recherche manuelle ..</string>
   <string name="CFS_Local_Series" Original="Local Series:">Séries local:</string>
-  <string name="AvailableMedia" Original="Available Media">Média disponible</string>
+  <string name="AvailableMedia" Original="Available Media">Support de stockage disponible</string>
   <string name="Votes" Original="votes">votes</string>
   <string name="LayoutCoveflow" Original="Coveflow">Coverflow</string>
   <string name="ResumeEpisode" Original="Resume episode from last time?">Reprendre la lecture?</string>
   <string name="SummaryNotAvailable" Original="No summary is currently available.">Aucun résumé n\'est actuellement disponible.</string>
   <string name="Timeout" Original="Timeout">Temps expiré</string>
-  <string name="NoActors" Original="There are no Actors for this series.">Il n\'existe pas d\'info concernant les acteurs pour cette série.</string>
+  <string name="NoActors" Original="There are no Actors for this series.">Il n\'existe aucune info concernant les acteurs pour cette série.</string>
   <string name="GettingActors" Original="Getting Actors from Online">Rechercher des infos concernant les acteurs via le Web</string>
   <string name="ShowAllEpisodes" Original="Show all Episodes">Afficher les épisodes non visionnés et à venir</string>
   <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Télécharger toutes les infos concernant l\'épisode</string>
@@ -295,7 +297,7 @@
   <string name="insertDisk" Original="Please insert Disk">Insérer le disque</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Le support contenant l\'épisode que vous avez selectionné</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">n\'est pas disponible.</string>
-  <string name="InsertDiskMessage3" Original="Please insert or connect media">Insérer ou connecter votre support de médias</string>
+  <string name="InsertDiskMessage3" Original="Please insert or connect media">SVP, inserer ou connecter votre support de stockage</string>
   <string name="InsertDiskMessage4" Original="labeled: {0}">Etiquetés: {0}</string>
   <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Annuler</string>

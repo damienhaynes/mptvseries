@@ -9,7 +9,7 @@
   <string name="Episodes" Original="Episodes">Эпизоды</string>
   <string name="Toggle_watched_flag" Original="Toggle watched flag">Отметить как просмотренный</string>
   <string name="Retrieve_Subtitle" Original="Retrieve Subtitle">Получить субтитры</string>
-  <string name="Load_via_Torrent" Original="Load via Torrent">Загрузить Torrent</string>
+  <string name="Load_via_Torrent" Original="Load via Torrent">Загрузить через торрент</string>
   <string name="Mark_all_as_watched" Original="Mark all as watched">Отметить все как просмотренные</string>
   <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Отметить все как непросмотренные</string>
   <string name="Hide" Original="Hide">Скрыть</string>
@@ -50,7 +50,7 @@
   <string name="All" Original="All">Все</string>
   <string name="Latest" Original="Latest Aired">Последние</string>
   <string name="Channels" Original="Channels">Каналы</string>
-  <string name="Unwatched" Original="Unwatched">непросмотренное</string>
+  <string name="Unwatched" Original="Unwatched">Непросмотренное</string>
   <string name="Favourites" Original="Favourites">Избранное</string>
   <string name="updateMI" Original="Update Mediainfo of local file">Обновить медиаинформацию файла(ов) на  диске</string>
   <string name="RateSeries" Original="Rate this Series">Оценить сериал</string>
@@ -145,7 +145,7 @@
   <string name="RateTenStarThree" Original="Bad">Плохо</string>
   <string name="RateTenStarFour" Original="Poor">Неважно</string>
   <string name="RateTenStarFive" Original="Mediocre">Посредственно</string>
-  <string name="RateTenStarSix" Original="Fair">Ничего так</string>
+  <string name="RateTenStarSix" Original="Fair">Средне</string>
   <string name="RateTenStarSeven" Original="Good">Хорошо</string>
   <string name="RateTenStarEight" Original="Great">Здорово</string>
   <string name="RateTenStarNine" Original="Superb">Супер</string>
@@ -199,11 +199,14 @@
   <string name="Aired" Original="Aired">Дата показа</string>
   <string name="AiredStatusContinuing" Original="Continuing">Продолжается</string>
   <string name="AiredStatusEnded" Original="Ended">Закончился</string>
+  <string name="Airs" Original="Airs">Время показа</string>
   <string name="AirsDay" Original="Airs Day">День показов</string>
   <string name="AirsTime" Original="Airs Time">Время показов</string>
+  <string name="Cast" Original="Cast">В ролях</string>
   <string name="Certification" Original="Certification">Сертификация</string>
   <string name="Director" Original="Director">Режиссер</string>
   <string name="Directors" Original="Directors">Режиссеры</string>
+  <string name="FileSize" Original="File Size">Размер файла</string>
   <string name="FirstAired" Original="First Aired">Первый показ</string>
   <string name="Genre" Original="Genre">Жанр</string>
   <string name="Group" Original="Groups">Группа</string>
@@ -219,6 +222,7 @@
   <string name="Runtime" Original="Runtime">Время</string>
   <string name="SeriesDetails" Original="Series Details">Данные о сериале</string>
   <string name="SeriesStatus" Original="Series Status">Статус сериала</string>
+  <string name="Starring" Original="Starring">В главных ролях</string>
   <string name="Watched" Original="Watched">Просмотрен</string>
   <string name="Writer" Original="Writer">Сценарист</string>
   <string name="Writers" Original="Writers">Сценаристы</string>
@@ -245,6 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Невозможно удалить файл: {0}</string>
   <string name="PlaySomething" Original="Play...">Воспроизвести...</string>
   <string name="PlayError" Original="Play error">Ошибка воспроизведения</string>
+  <string name="RandomEpisode" Original="Random episode">Случайный эпизод</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Первый непросмотренный эпизод</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Первый непросмотренный эпизод или случайный</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Случайный непросмотренный эпизод</string>
   <string name="LatestEpisode" Original="latest episode">последний эпизод</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Невозможно найти {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Невозможно найти эпизоды</string>
@@ -281,9 +289,26 @@
   <string name="MainMenu" Original="Main Menu">Главное меню</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Добавить {0} в список просмотра</string>
   <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Вы не можете выполнить эту операцию\не введя учетные данные. Хотите зарегистрироваться или войти\в trakt.tv?</string>
+  <string name="RelatedSeries" Original="RelatedSeries">Связанные сериалы</string>
+  <string name="SearchTorrent" Original="Torrent Search">Поиск по торрентам</string>
+  <string name="SearchNZB" Original="NZB Search">Поиск NZB</string>
+  <string name="SearchActorInMovies" Original="Search for Actor in Movies">Поиск актеров в фильмах</string>
+  <string name="AddToCustomList" Original="Add {0} to Custom List...">Добавить {0} в пользовательский список...</string>
+  <string name="insertDisk" Original="Please insert Disk">Пожалуйста, вставьте диск</string>
   <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Носитель для выбранного эпизода</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">сейчас не доступен.</string>
   <string name="InsertDiskMessage3" Original="Please insert or connect media">Подключите или вставьте носитель</string>
   <string name="InsertDiskMessage4" Original="labeled: {0}">с меткой: {0}</string>
+  <string name="OK" Original="OK">OK</string>
   <string name="Cancel" Original="Cancel">Отмена</string>
+  <string name="Ignore" Original="Ignore">Игнорировать</string>
+  <string name="Update" Original="Update">Обновить</string>
+  <string name="ViewTagExistsMessage" Original="The view '{0}' already exists">Представление \'{0}\' уже существует</string>
+  <string name="Warning" Original="Warning">Предупреждение</string>
+  <string name="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">Еще не просмотрен/ не добавлен в коллекцию</string>
+  <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Уверены, что хотите продолжить?</string>
+  <string name="Filters" Original="Filters">Фильтры</string>
+  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Непросмотренные эпизоды</string>
+  <string name="AllEpisodes" Original="All Episodes">Все эпизоды</string>
+  <string name="Biography" Original="Biography">Биография</string>
 </resources>

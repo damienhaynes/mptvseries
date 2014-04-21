@@ -7,10 +7,10 @@
   <string name="Seasons" Original="Seasons">Sezone</string>
   <string name="Episode" Original="Episode">Epizoda</string>
   <string name="Episodes" Original="Episodes">Epizode</string>
-  <string name="Toggle_watched_flag" Original="Toggle watched flag">Označi kot gledano</string>
+  <string name="Toggle_watched_flag" Original="Toggle watched flag">Označi kot ogledano</string>
   <string name="Retrieve_Subtitle" Original="Retrieve Subtitle">Prenesi podnapise</string>
   <string name="Load_via_Torrent" Original="Load via Torrent">Naloži preko Torrent-a</string>
-  <string name="Mark_all_as_watched" Original="Mark all as watched">Označi vse kot gledano</string>
+  <string name="Mark_all_as_watched" Original="Mark all as watched">Označi vse kot ogledano</string>
   <string name="Mark_all_as_unwatched" Original="Mark all as unwatched">Označi vse kot neogledano</string>
   <string name="Hide" Original="Hide">Skrij</string>
   <string name="Delete" Original="Delete">Izbriši</string>
@@ -41,7 +41,7 @@
   <string name="special" Original="Special">Posebno</string>
   <string name="specials" Original="Specials">Posebnosti</string>
   <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Izbrisali boste {0} datotek.\nŽelite nadaljevati?</string>
-  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Vsili nov Online pregled za serije</string>
+  <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Vsili nov spletni pregled za serije</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Naloži preko NewsLeecher-ja</string>
   <string name="Download" Original="Download">Prenesi</string>
   <string name="Actions" Original="Actions">Možnosti</string>
@@ -60,7 +60,7 @@
   <string name="DontAskToRate" Original="Don't ask me to rate again">Ne zahtevaj ocene</string>
   <string name="RatingStar" Original="Star">Ocena</string>
   <string name="RatingStars" Original="Stars">Ocene</string>
-  <string name="ChangeView" Original="Change View">Spremeni pogled</string>
+  <string name="ChangeView" Original="Change View">Sortiraj po</string>
   <string name="ChangeViewFast" Original="Immediatly Change Views">Nemudoma spremeni pogled</string>
   <string name="FanArt" Original="Fanart">Slike</string>
   <string name="FanListAll" Original="List all Fanart for this Series">Prikaz vseh Fanart za to serijo</string>
@@ -103,7 +103,7 @@
   <string name="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Oznaka računa ni nastavljena</string>
   <string name="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Vnesite vaše podatke o računu v nastavitvah</string>
   <string name="ChangeLayout" Original="Change Layout">Spremeni pogled</string>
-  <string name="UseOnlineFavourites" Original="Use Online Favourites">Uporabi Online priljubljene</string>
+  <string name="UseOnlineFavourites" Original="Use Online Favourites">Uporabi spletne priljubljene</string>
   <string name="AddToPlaylist" Original="Add To Playlist">Dodaj na seznam predvajanja</string>
   <string name="FanartDisableLabel" Original="Disabled">Onemogočeno</string>
   <string name="FanartMenuEnable" Original="Enable Fanart">Omogoči Fanart</string>
@@ -152,8 +152,8 @@
   <string name="RateTenStarTen" Original="Perfect">Popolno</string>
   <string name="ContentRating" Original="Content Rating">Ocena</string>
   <string name="ViewTags" Original="View Tags">Poglej oznake</string>
-  <string name="AddViewTag" Original="Add Series to View Tag">Dodaj serijo na ogled</string>
-  <string name="RemoveViewTag" Original="Remove Series from View Tag">Odstrani serijo iz pogleda oznake</string>
+  <string name="AddViewTag" Original="Add Series to View Tag">Dodaj seriji oznako</string>
+  <string name="RemoveViewTag" Original="Remove Series from View Tag">Odstrani seriji oznako</string>
   <string name="NewViewTag" Original="New Tag">Nova oznaka</string>
   <string name="CycleSeriesBanner" Original="Cycle Series Banner">Rotiraj baner serije</string>
   <string name="CycleSeasonBanner" Original="Cycle Season Poster">Rotiraj ovitek sezone</string>
@@ -184,7 +184,7 @@
   <string name="Top25User" Original="Top 25 (User)">Top 25 (Uporabnik)</string>
   <string name="Subtitles" Original="Subtitles">Podnapisi</string>
   <string name="MultiAudio" Original="Multiple Audio Tracks">Več kanalov zvoka</string>
-  <string name="OnlineFavourites" Original="Online Favourites">Priljubljeni Online</string>
+  <string name="OnlineFavourites" Original="Online Favourites">Spletne priljubljene</string>
   <string name="Actors" Original="Actors">Igralci</string>
   <string name="RemovableMedia" Original="Removable Media">Izmenljiv medij</string>
   <string name="LocalMedia" Original="Local Media">Lokalni medij</string>
@@ -249,6 +249,10 @@
   <string name="UnableToDeleteFile" Original="Unable to Delete File: {0}">Ni mogoče izbrisati: {0}</string>
   <string name="PlaySomething" Original="Play...">Predvajaj...</string>
   <string name="PlayError" Original="Play error">Napaka</string>
+  <string name="RandomEpisode" Original="Random episode">naključno epizodo</string>
+  <string name="FirstUnwatchedEpisode" Original="First unwatched episode">prvo neogledano epizodo</string>
+  <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Prva neogledana epizoda drugače naključno</string>
+  <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">naključno neogledano epizodo</string>
   <string name="LatestEpisode" Original="latest episode">najnovejšo epizodo</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Ni mogoče najti {0}</string>
   <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Epizod ni mogoče najti</string>
