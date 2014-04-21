@@ -425,7 +425,7 @@ Trakt can also help you keep your watched flags in sync across multiple computer
       <GroupItem Name="ExtensionsPlugin">
         <ParentGroup />
         <DisplayName>Extensions Plugin</DisplayName>
-        <DefaulChecked>false</DefaulChecked>
+        <DefaulChecked>true</DefaulChecked>
         <Description>The Extensions plugin for MediaPortal allows you to browse, install, update and uninstall plugin/skin extensions all from the GUI.</Description>
         <Files>
           <Items />
@@ -746,6 +746,17 @@ Trakt can also help you keep your watched flags in sync across multiple computer
           </Items>
         </Files>
       </GroupItem>
+      <GroupItem Name="TrailersPlugin">
+        <ParentGroup />
+        <DisplayName>Trailers Plugin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Trailers plugin allows streaming of Movie, Show, Season and Episode videos (trailers, teasers, clips and featurettes). If no associated video is found at themoviedb.org then you can manually search on YouTube, iTunes or IMDb.
+
+Trailers can be accessed from the F9 context menu (INFO button on remote).</Description>
+        <Files>
+          <Items />
+        </Files>
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -819,6 +830,7 @@ Click Next to continue or Cancel to exit Setup.
           <string>DefaultSkin</string>
           <string>DefaultWideSkin</string>
           <string>TraktPlugin</string>
+          <string>TrailersPlugin</string>
           <string>ExtensionsPlugin</string>
         </IncludedGroups>
         <PanelName>Tree View Selector</PanelName>
@@ -871,9 +883,36 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>4.0.1.0</Value>
+                    <Value>4.0.2.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
+                  </SectionParam>
+                </Items>
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Installing Trailers" ActionType="Extension Installer" ConditionGroup="TrailersPlugin">
+              <Params>
+                <Items>
+                  <SectionParam Name="Extension package">
+                    <Value />
+                    <ValueType>File</ValueType>
+                    <Description>Location of the extension package</Description>
+                  </SectionParam>
+                  <SectionParam Name="Extension Id">
+                    <Value>b4293f64-9e83-4f1f-b2e3-8bdea2a37425</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
+                  </SectionParam>
+                  <SectionParam Name="Extension Version">
+                    <Value>1.1.2.0</Value>
+                    <ValueType>String</ValueType>
+                    <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
+                  </SectionParam>
+                  <SectionParam Name="Silent Install">
+                    <Value>YES</Value>
+                    <ValueType>Bool</ValueType>
+                    <Description>Silent install, No wizard screen will be displayed </Description>
                   </SectionParam>
                 </Items>
               </Params>
@@ -1322,17 +1361,19 @@ public class Script
     <Version>
       <Major>4</Major>
       <Minor>0</Minor>
-      <Build>2</Build>
-      <Revision>2072</Revision>
+      <Build>3</Build>
+      <Revision>2080</Revision>
     </Version>
-    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
-
+    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed 'PlayCount', 'FirstDateWatched' and 'LastDateWatched' fields being cleared when an online update of an episode occurs.
-* Publish skin properties for the users 'views', allows skin designers to create custom menus on the home screen. See debug log for available skin properties.
+    <VersionDescription>* Added a Trailers context menu item from Series, Season and Episode views. User can stream trailers via the Trailers\OnlineVideos plugins. 
+* Added Trailers MPEI package to main installer package.
+* Added a workaround when resuming from standby into a protected view, user will now return to the previous menu rather than attempt to show the PinCode dialog as this no longer works in MP 1.7 when invoked to early.
+* Updated translations from Transifex.
 </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;amp;task=att_download&amp;amp;link_id=17&amp;amp;cf_id=24</OnlineLocation>
+    <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;amp;task=att_download&amp;amp;link_id=142&amp;amp;cf_id=64</OnlineLocation>
     <ReleaseDate>2014-03-15T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
