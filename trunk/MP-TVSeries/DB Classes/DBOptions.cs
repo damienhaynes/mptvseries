@@ -165,12 +165,6 @@ namespace WindowPlugins.GUITVSeries
         public const string cArtworkLimitSeriesPosters = "ArtworkLimitSeriesPosters";
         public const string cArtworkLimitSeasonPosters = "ArtworkLimitSeasonPosters";
         public const string cMaxConsecutiveDownloadErrors = "MaxConsecutiveDownloadErrors";
-        public const string cFollwitEnabled = "FollwitEnabled";
-        public const string cFollwitBaseUrl = "FollwitBaseUrl";
-        public const string cFollwitUsername = "FollwitUsername";
-        public const string cFollwitHashedPassword = "FollwitHashedPassword";
-        public const string cFollwitUpdateFrequency = "FollwitUpdateFrequency";
-        public const string cFollwitLastUpdated = "FollwitLastUpdated";
         public const string cSortSpecialSeasonLast = "SortSpecialSeasonLast";
         public const string cActorLayout = "ActorLayout";
         public const string cAutoGenerateEpisodeTitles = "AutoGenerateEpisodeTitles";
@@ -519,24 +513,6 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cMaxConsecutiveDownloadErrors) == null)
                 SetOptions(cMaxConsecutiveDownloadErrors, 3);
-
-            if (GetOptions(cFollwitEnabled) == null)
-                SetOptions(cFollwitEnabled, false);
-
-            if (GetOptions(cFollwitBaseUrl) == null)
-                SetOptions(cFollwitBaseUrl, "http://follw.it/");
-
-            if (GetOptions(cFollwitUsername) == null)
-                SetOptions(cFollwitUsername, string.Empty);
-
-            if (GetOptions(cFollwitHashedPassword) == null)
-                SetOptions(cFollwitHashedPassword, string.Empty);
-
-            if (GetOptions(cFollwitUpdateFrequency) == null)
-                SetOptions(cFollwitUpdateFrequency, 60);
-
-            if (GetOptions(cFollwitLastUpdated) == null)
-                SetOptions(cFollwitLastUpdated, 1);
 
             if (GetOptions(cSortSpecialSeasonLast) == null)
                 SetOptions(cSortSpecialSeasonLast, true);
