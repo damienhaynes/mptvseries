@@ -32,8 +32,6 @@ using System.Threading;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 using WindowPlugins.GUITVSeries.Feedback;
-using Action = MediaPortal.GUI.Library.Action;
-using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -235,9 +233,6 @@ namespace WindowPlugins.GUITVSeries
             }
             else
             {
-                if (FollwitConnector.Enabled)
-                    FollwitConnector.SyncNewEpisodes();
-
                 if (OnlineParsingCompleted != null) // only if any subscribers exist
                 {
                     OnlineParsingCompleted.Invoke(m_bNewLocalFiles);

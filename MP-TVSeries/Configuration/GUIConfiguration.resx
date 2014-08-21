@@ -112,29 +112,29 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>268, 9</value>
   </metadata>
-  <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="contextMenuStrip_DetailsTree.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>938, 12</value>
   </metadata>
-  <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="contextMenuStrip_InsertFields.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>608, 13</value>
   </metadata>
-  <metadata name="imageList1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="imageList1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>158, 6</value>
   </metadata>
   <data name="imageList1.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAAYQBBAGEAQQBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAAYwBBAGMAQQBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -654,7 +654,7 @@
         AQABHwGAAgAG/wH+AQABfwn/Cw==
 </value>
   </data>
-  <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>817, 8</value>
   </metadata>
   <data name="addLogo.ToolTip" xml:space="preserve">
@@ -674,7 +674,7 @@ local/online refresh of series.
 This is active when first starting MP or when resuming from standby. A manual scan
 can be started within plugin.</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -689,7 +689,7 @@ can be started within plugin.</value>
         N5feyTlaCEqcAqUSevloawbmqyCZ9QEcytsErMZywwAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>16, 6</value>
   </metadata>
   <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
@@ -800,7 +800,19 @@ This option is recommended if you want to prevent spoilers before watching an ep
 
 This setting can also be changed from within Media Portal in the plugins context menu.</value>
   </data>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
+    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
+A prompt will be shown if trying to playback out of order.
+
+Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
+so that a proper check can be performed.
+
+The check is ignored in the following conditions:
+* Playback of Specials (and next unwatched Specials).
+* Playback of Watched/Seen episodes.
+* Playback using Playlist player.</value>
+  </data>
+  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>404, 12</value>
   </metadata>
   <data name="label70.Text" xml:space="preserve">
@@ -843,19 +855,7 @@ Be sure to enable 'run before matching' for this to work before it reaches the p
   <data name="label68.Text" xml:space="preserve">
     <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
   </data>
-  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
-    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
-A prompt will be shown if trying to playback out of order.
-
-Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
-so that a proper check can be performed.
-
-The check is ignored in the following conditions:
-* Playback of Specials (and next unwatched Specials).
-* Playback of Watched/Seen episodes.
-* Playback using Playlist player.</value>
-  </data>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>39</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
