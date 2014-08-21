@@ -1160,7 +1160,6 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cHidden:                                    
                                     case DBOnlineEpisode.cMyRating:
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
-                                    case DBOnlineEpisode.cFollwitId:
                                         // do nothing here, those information are local only
                                         break;
 
@@ -2306,7 +2305,6 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineEpisode.cPlayCount:
                     case DBOnlineEpisode.cHidden:
                     case DBOnlineEpisode.cMyRating:
-                    case DBOnlineEpisode.cFollwitId:
                         // do nothing here, those information are local only
                         break;
 
