@@ -42,7 +42,6 @@ using aclib.Performance;
 using Cornerstone.MP;
 using System.Xml;
 using WindowPlugins.GUITVSeries.GUI;
-using WindowPlugins.GUITVSeries.FollwitTv;
 using TraktPlugin.TraktAPI;
 using TraktPlugin.TraktHandlers;
 using TraktPlugin.TraktAPI.DataStructures;
@@ -801,7 +800,7 @@ namespace WindowPlugins.GUITVSeries
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
 
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled)
+                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                             {
                                 pItem = new GUIListItem(Translation.RateEpisode + " ...");
                                 dlg.Add(pItem);
@@ -810,7 +809,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (CurrentViewLevel != Listlevel.Group)
                         {
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)) || FollwitConnector.Enabled)
+                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                             {
                                 pItem = new GUIListItem(Translation.RateSeries + " ...");
                                 dlg.Add(pItem);
@@ -1170,8 +1169,6 @@ namespace WindowPlugins.GUITVSeries
 
                             selectedEpisode.Commit();
 
-                            FollwitConnector.Watch(selectedEpisode, !watched, false);
-                           
                             // Update Episode Counts
                             DBSeason.UpdateEpisodeCounts(m_SelectedSeries, m_SelectedSeason);
 
@@ -1221,8 +1218,6 @@ namespace WindowPlugins.GUITVSeries
                             episode.Commit();
                         }
 
-                        FollwitConnector.Watch(episodeList, true);
-
                         if (ToggleWatched != null)
                             ToggleWatched(selectedSeries, episodeList, true);
 
@@ -1263,8 +1258,6 @@ namespace WindowPlugins.GUITVSeries
                             episode[DBOnlineEpisode.cWatched] = 0;                            
                             episode.Commit();
                         }
-
-                        FollwitConnector.Watch(episodeList, false);
 
                         if (ToggleWatched != null)
                             ToggleWatched(selectedSeries, episodeList, false);
@@ -1801,6 +1794,10 @@ namespace WindowPlugins.GUITVSeries
         {
             switch (message.Message)
             {
+                case GUIMessage.MessageType.PS_ONSTANDBY:
+                    MPTVSeriesLog.Write("Handling PS_ONSTANDBY");
+                    return true;
+
                 case GUIMessage.MessageType.GUI_MSG_ITEM_FOCUS_CHANGED:
                     int iControl = message.SenderControlId;
                     if (iControl == (int)m_Facade.GetID)
@@ -2064,7 +2061,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
                     }
-                } 
+                }
                 #endregion
 
                 m_back_up_select_this = null;
@@ -2168,23 +2165,20 @@ namespace WindowPlugins.GUITVSeries
 
                 // Prompt for PinCode if last view before standby had Parental Controls enabled
                 // If the window is not active, we handle on page load
+                // Feature Broken by MediaPortal - system will just hang when trying to do this too early
                 if (GUIWindowManager.ActiveWindow == GetID)
                 {
                     if (m_CurrLView != null)
                     {
-                        //bool viewSwitched = false;
+                        bool viewSwitched = false;
                         if (m_CurrLView.ParentalControl)
                         {
-                            GUIWindowManager.ShowPreviousWindow();
-                            /*
                             viewSwitched = switchView((string)DBOption.GetOptions("lastView"));
                             // Exit if no view changed, otherwise reload the facade
                             if (!viewSwitched)
                                 GUIWindowManager.ShowPreviousWindow();
                             else
                                 LoadFacade();
-                             * 
-                             */
                         }
                     }
                 }
@@ -3722,13 +3716,7 @@ namespace WindowPlugins.GUITVSeries
                 if (Int32.TryParse(tValue, out rating))
                 {
                     Online_Parsing_Classes.OnlineAPI.SubmitRating(tLevel == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
-
-                    if (level == Listlevel.Episode)
-                        FollwitConnector.Rate((DBEpisode)item, rating);
-                    else 
-                        FollwitConnector.Rate((DBSeries)item, rating);
                 }
-                
             })
             {
                 IsBackground = true,
@@ -4727,7 +4715,7 @@ namespace WindowPlugins.GUITVSeries
 
                 // Check if Graphical PinCode dialog exists
 
-                if (System.IO.File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.PinCodeDialog.xml"))
+                if (File.Exists(GUIGraphicsContext.Skin + @"\TVSeries.PinCodeDialog.xml"))
                 {
                     try
                     {
@@ -4741,7 +4729,7 @@ namespace WindowPlugins.GUITVSeries
                         pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, view.prettyName));
                         pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
                         pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
-                        pinCodeDlg.DoModal(pinCodeDlg.GetID); //should this be (GUIWindowManager.ActiveWindow)?
+                        pinCodeDlg.DoModal(GUIWindowManager.ActiveWindow);
                         if (!pinCodeDlg.IsCorrect)
                         {
                             // Prompt to choose UnProtected View
@@ -4757,7 +4745,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                     catch (Exception ex)
                     {
-                        MPTVSeriesLog.Write(string.Format("An Error occurred in the PinCode Dialog: {0}", ex.Message));
+                        MPTVSeriesLog.Write(string.Format("An error occurred in the PinCode dialog: {0}", ex.Message));
                         return false;
                     }
                 }

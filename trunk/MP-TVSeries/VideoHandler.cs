@@ -39,7 +39,6 @@ using MediaPortal.Util;
 using MediaPortal.Playlists;
 using MediaPortal.Video.Database;
 using WindowPlugins.GUITVSeries;
-using WindowPlugins.GUITVSeries.FollwitTv;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -163,9 +162,6 @@ namespace WindowPlugins.GUITVSeries
                 m_previousEpisode = m_currentEpisode;
                 m_currentEpisode = episode;
                 int timeMovieStopped = m_currentEpisode[DBEpisode.cStopTime];
-
-                // asynchronously send now watching info to follwit
-                FollwitConnector.NowWatching(episode, true);
 
                 // Check if file is an Image e.g. ISO
                 string filename = m_currentEpisode[DBEpisode.cFilename];
@@ -641,10 +637,6 @@ namespace WindowPlugins.GUITVSeries
 
         void PlaybackOperationEnded(bool countAsWatched)
         {
-            // if needed, asynchronously notify follw.it we arnt watching the show anymore
-            FollwitConnector.NowWatching(m_currentEpisode, false);
-            if (countAsWatched) FollwitConnector.Watch(m_currentEpisode, true, true);
-
             // notify listeners
             if (!countAsWatched && EpisodeStopped != null) EpisodeStopped(m_currentEpisode);
 
