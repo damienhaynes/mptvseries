@@ -377,7 +377,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cAutoDownloadMissingArtwork, true);
 
             if (GetOptions(cAutoUpdateEpisodeRatings) == null)
-                SetOptions(cAutoUpdateEpisodeRatings, true);
+                SetOptions(cAutoUpdateEpisodeRatings, false);
 
             if (GetOptions(cAutoUpdateAllFanart) == null)
                 SetOptions(cAutoUpdateAllFanart, false);
