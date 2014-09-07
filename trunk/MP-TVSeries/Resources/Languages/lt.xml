@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Blogas apvalkalo failas</string>
   <string name="special" Original="Special">Specialus</string>
   <string name="specials" Original="Specials">Specialūs</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Jūs ketinate visam laikui ištrinti {0} fizinį failą(-us).⏎ Ar norite tęsti?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Priverstinė nauja online apžvalga Serialams</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Užkrauti per NewsLeecher</string>
   <string name="Download" Original="Download">Atsisiųsti</string>
@@ -288,7 +287,6 @@
   <string name="Shouts" Original="Shouts">Šaukimai</string>
   <string name="MainMenu" Original="Main Menu">Pagrindinis meniu</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Pridėti {0} į žiūrimų sąrašą</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Jūs negalite atlikti šios operacijos⏎ neprisijungus. Ar norite registruotis ar prisijungti ⏎ prie trakt.tv dabar?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Susiję serialai</string>
   <string name="SearchTorrent" Original="Torrent Search">Torentų paieška</string>
   <string name="SearchNZB" Original="NZB Search">NZB paieška</string>

@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Λάθος αρχείο θέματος</string>
   <string name="special" Original="Special">Σπέσιαλ</string>
   <string name="specials" Original="Specials">Σπέσιαλ</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Πρόκειται να διαγράψετε {0} φυσικό(ά) αρχείο(α).\nΘέλετε να συνεχίσετε;</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Νέα αναζήτηση για τη Σειρά</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Άνοιγμα μέσω NewsLeecher</string>
   <string name="Download" Original="Download">Μεταφόρτωση</string>

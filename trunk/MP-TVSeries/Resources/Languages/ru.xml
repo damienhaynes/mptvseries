@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Неверный файл скина</string>
   <string name="special" Original="Special">Дополнение</string>
   <string name="specials" Original="Specials">Дополнения</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Вы собираетесь удалить навсегда {0} файл(ов) с диска.\nВы хотите продолжить?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Принудительное соответствие онлайн</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Загрузить качалкой новостей</string>
   <string name="Download" Original="Download">Скачать</string>
@@ -288,7 +287,6 @@
   <string name="Shouts" Original="Shouts">Выкрики</string>
   <string name="MainMenu" Original="Main Menu">Главное меню</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Добавить {0} в список просмотра</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Вы не можете выполнить эту операцию\не введя учетные данные. Хотите зарегистрироваться или войти\в trakt.tv?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Связанные сериалы</string>
   <string name="SearchTorrent" Original="Torrent Search">Поиск по торрентам</string>
   <string name="SearchNZB" Original="NZB Search">Поиск NZB</string>

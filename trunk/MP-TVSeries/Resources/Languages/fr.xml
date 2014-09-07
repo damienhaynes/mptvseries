@@ -288,7 +288,7 @@
   <string name="Shouts" Original="Shouts">Messages</string>
   <string name="MainMenu" Original="Main Menu">Menu Principal</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Ajouter {0} à la liste</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Impossible à réaliser sans être\nconnecté. Voulez vous vous connecter\nà trakt.tv maintenant?</string>
+  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Impossible à réaliser sans être connecté. Voulez vous vous connecter \nà trakt.tv maintenant?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Séries similaires</string>
   <string name="SearchTorrent" Original="Torrent Search">Recherche de Torrents</string>
   <string name="SearchNZB" Original="NZB Search">Recherche de NZB</string>

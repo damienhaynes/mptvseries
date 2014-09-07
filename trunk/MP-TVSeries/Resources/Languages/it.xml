@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Skin non disponibile</string>
   <string name="special" Original="Special">Speciale</string>
   <string name="specials" Original="Specials">Speciali</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Stai per cancellare in modo definitivo {0} file(s).\nVuoi continuare?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Forza corrispondenza online</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Scarica mediante NewsLeecher</string>
   <string name="Download" Original="Download">Scarica</string>
@@ -288,7 +287,6 @@
   <string name="Shouts" Original="Shouts">Giudizi</string>
   <string name="MainMenu" Original="Main Menu">Menu principale</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Aggiungi {0} alla lista da vedere</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Non puoi eseguire questa operazione\nsenza prima essere loggato. Desideri registrarti o loggarti\na trakt.tv adesso?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Serie correlate</string>
   <string name="SearchTorrent" Original="Torrent Search">Cerca torrent</string>
   <string name="SearchNZB" Original="NZB Search">Cerca NZB</string>

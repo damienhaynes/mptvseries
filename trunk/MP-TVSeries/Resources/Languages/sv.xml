@@ -40,7 +40,8 @@
   <string name="wrongSkin" Original="Wrong Skin file">Felaktig skin-fil</string>
   <string name="special" Original="Special">Special</string>
   <string name="specials" Original="Specials">Specialer</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Radera {0} fysik(a) fil(er).\nFortsätt?</string>
+  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Ta bort {0} fysik(a) fil(er) permanent.
+Fortsätt?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Tvinga träff i Online-databas</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Ladda ner via NewsLeecher</string>
   <string name="Download" Original="Download">Ladda ner</string>
@@ -288,7 +289,8 @@
   <string name="Shouts" Original="Shouts">Shouts</string>
   <string name="MainMenu" Original="Main Menu">Startmeny</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Lägg till {0} i Watchlistan</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Du kan inte göra det här utan att vara inloggad. ⏎ Vill du registrera dig eller logga in på trakt.tv nu?⏎ </string>
+  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Du kan inte göra det här utan att vara inloggad. 
+Vill du registrera dig eller logga in på trakt.tv nu?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Relaterade serier</string>
   <string name="SearchTorrent" Original="Torrent Search">Torrentsökning</string>
   <string name="SearchNZB" Original="NZB Search">NZB-sökning</string>

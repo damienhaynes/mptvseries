@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Napačna datoteka preobleke</string>
   <string name="special" Original="Special">Posebno</string>
   <string name="specials" Original="Specials">Posebnosti</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Izbrisali boste {0} datotek.\nŽelite nadaljevati?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Vsili nov spletni pregled za serije</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Naloži preko NewsLeecher-ja</string>
   <string name="Download" Original="Download">Prenesi</string>
@@ -288,7 +287,6 @@
   <string name="Shouts" Original="Shouts">Kriki</string>
   <string name="MainMenu" Original="Main Menu">Glavni meni</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Dodaj {0} na seznam gledanja</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Te operacije ne morete narediti brez da ste\nvpisani. Ali se želite prijaviti ali vpisatin\nv trakt.tv ?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Sorodne serije</string>
   <string name="SearchTorrent" Original="Torrent Search">Iskanje torrentov</string>
   <string name="SearchNZB" Original="NZB Search">Iskanje NZB</string>
