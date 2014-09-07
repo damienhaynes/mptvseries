@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Forkert skin file</string>
   <string name="special" Original="Special">Ekstra</string>
   <string name="specials" Original="Specials">Ekstra</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Du er ved at slette {0} file(r) permanent {0} .\nÃnsker du at fortsætte?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Tving online match</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Åben vha. NewsLeehcer</string>
   <string name="Download" Original="Download">Hent</string>
@@ -284,7 +283,6 @@
   <string name="Shouts" Original="Shouts">Debatindlæg</string>
   <string name="MainMenu" Original="Main Menu">Hovedmenu</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Tilføj {0} til setliste</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Du kan ikke gøre dette uden, at\nvære logget ind. Ønsker du at logge ind eller oprette\nen bruger til trakt.tv nu?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Relaterede serier</string>
   <string name="SearchTorrent" Original="Torrent Search">Søg Torrent</string>
   <string name="SearchNZB" Original="NZB Search">NZB søgning</string>

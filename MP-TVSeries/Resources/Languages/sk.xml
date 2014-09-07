@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Chybný súbor vzhľadu</string>
   <string name="special" Original="Special">Špeciál</string>
   <string name="specials" Original="Specials">Špeciály</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Chystáte sa permanentne vymazať {0} súborov.\nPokračovať?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Vynútiť nové hľadanie seriálu online</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Načítať cez NewsLeecher</string>
   <string name="Download" Original="Download">Sťahovanie</string>
@@ -288,7 +287,6 @@
   <string name="Shouts" Original="Shouts">Výkriky</string>
   <string name="MainMenu" Original="Main Menu">Hlavné menu</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Pridať {0} do watchlistu</string>
-  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Operáciu nie je možné uskuočniť bez prihlásenia sa. Prajte si zaregistrovať sa alebo sa prihlásiť do trakt.tv?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Podobné seriály</string>
   <string name="SearchTorrent" Original="Torrent Search">Hľadanie torrentov</string>
   <string name="SearchNZB" Original="NZB Search">Hľadanie NZB</string>

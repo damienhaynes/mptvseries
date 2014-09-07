@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">잘못된 스킨 파일</string>
   <string name="special" Original="Special">스페셜</string>
   <string name="specials" Original="Specials">스페셜</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">{0} 물리파일이 영원히 지워지게됩니다.\n진행하시겠습니까?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">강제로 온라인 매치</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">NewsLeecher로 읽기</string>
   <string name="Download" Original="Download">다운로드</string>

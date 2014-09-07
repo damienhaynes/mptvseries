@@ -35,7 +35,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Röng útlitsskrá</string>
   <string name="special" Original="Special">Sér þáttur</string>
   <string name="specials" Original="Specials">Sér þættir</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Þú vilt eyða endanlega {0} skrá(m).\nViltu halda áfram?</string>
   <string name="Download" Original="Download">Sækja</string>
   <string name="Actions" Original="Actions">Aðgerðir</string>
   <string name="Options" Original="Options">Valmöguleikar</string>

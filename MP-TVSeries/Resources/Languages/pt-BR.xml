@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Arquivo de skin errado</string>
   <string name="special" Original="Special">Especial</string>
   <string name="specials" Original="Specials">Especiais</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Você está prestes a excluir permanentemente {0} arquivo(s) físico(s).\nDeseja continuar?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Forçar equivalência online</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Carregar via NewsLeecher</string>
   <string name="Download" Original="Download">Download</string>

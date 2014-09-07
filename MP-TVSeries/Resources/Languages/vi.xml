@@ -40,7 +40,6 @@
   <string name="wrongSkin" Original="Wrong Skin file">Tập tin giao diện không hợp lệ</string>
   <string name="special" Original="Special">Đặc biệt</string>
   <string name="specials" Original="Specials">Đặc biệt</string>
-  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">Bạn chuẩn bị xóa hoàn toàn {0} khỏi hệ thống (các)tập tin.\nBạn có muốn tiếp tục?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Buộc tìm kiếm các seri mới trên mạng</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Tải thông qua NewsLeecher</string>
   <string name="Download" Original="Download">Tải về</string>
