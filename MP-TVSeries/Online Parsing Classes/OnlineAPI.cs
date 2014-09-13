@@ -139,14 +139,14 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         if (String.IsNullOrEmpty(account))
         {
             string[] lines = new string[] { Translation.TVDB_INFO_ACCOUNTID_1, Translation.TVDB_INFO_ACCOUNTID_2 };
-            TVSeriesPlugin.ShowDialogOk(Translation.TVDB_INFO_TITLE, lines);
-            MPTVSeriesLog.Write("Cannot submit rating, make sure you have your Account identifier set!");
+            //TVSeriesPlugin.ShowDialogOk(Translation.TVDB_INFO_TITLE, lines); //trakt.tv also listens to this, also can store ratings locally.
+            MPTVSeriesLog.Write("Cannot submit rating to thetvdb.com, this requires your Account Identifier to be set.");
             return false;
         }
 
         if (itemId == "0" || rating < 0 || rating > 10)
         {
-            MPTVSeriesLog.Write("Cannot submit rating, invalid values.....this is most likely a programming error");
+            MPTVSeriesLog.Write("Cannot submit rating, invalid values...this is most likely a programming error");
             return false;
         }
 
