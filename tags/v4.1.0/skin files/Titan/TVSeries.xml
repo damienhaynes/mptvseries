@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+  <id>9811</id>
+  <defaultcontrol>50</defaultcontrol>
+  <allowoverlay>yes</allowoverlay>
+  <define>#header.label:#TVSeries.Translation.Series_Plural.Label</define>
+  <controls>
+    <!-- Import Dummy Controls to handle visibility -->
+    <import>TVSeries.dummy.xml</import>
+    <!-- ********************** BACKGROUNDS************************************** -->
+    <control>
+      <description>default background</description>
+      <type>image</type>
+      <id>1</id>
+      <posX>0</posX>
+      <posY>0</posY>
+      <width>1920</width>
+      <height>1080</height>
+      <texture>background.png</texture>
+      <shouldCache>true</shouldCache>
+    </control>
+    <control>
+      <description>Fanart Background #1</description>
+      <type>image</type>
+      <id>524</id>
+      <posY>0</posY>
+      <posX>0</posX>
+      <width>1920</width>
+      <height>1080</height>
+      <texture>#TVSeries.Fanart.1</texture>
+      <animation effect="fade" time="300">visible</animation>
+      <animation effect="fade" time="300" delay="300">hidden</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+    <control>
+      <description>Fanart Background #2</description>
+      <type>image</type>
+      <id>525</id>
+      <posY>0</posY>
+      <posX>0</posX>
+      <width>1920</width>
+      <height>1080</height>
+      <texture>#TVSeries.Fanart.2</texture>
+      <animation effect="fade" time="300">visible</animation>
+      <animation effect="fade" time="300" delay="300">hidden</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+    <!--            :: BACKGROUND INCLUDES ::            -->
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'default'))">TVSeries.background.widebanner.default.xml</include>	
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'4x2'))">TVSeries.background.widebanner.4x2.xml</include>	
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'6x2'))">TVSeries.background.widebanner.6x2.xml</include>
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'7x4'))">TVSeries.background.widebanner.4x2.xml</include>	
+    <control>
+      <id>0</id>
+      <type>image</type>
+      <posX>66</posX>
+      <posY>34</posY>
+      <width>61</width>
+      <height>57</height>
+      <texture>icon_series.png</texture>
+      <visible>control.isvisible(51) | control.isvisible(50)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+    <import>common.time.xml</import>
+    <!--            :: VIEWS INCLUDES ::            -->
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'default'))">TVSeries.views.widebanner.default.xml</include>	
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'4x2'))">TVSeries.views.widebanner.4x2.xml</include>	
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'6x2'))">TVSeries.views.widebanner.6x2.xml</include>
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'7x4'))">TVSeries.views.widebanner.4x2.xml</include>
+    <import>TVSeries.hiddenmenu.xml</import>
+    <import>common.overlay.xml</import>
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'default'))">TVSeries.facade.widebanner.default.xml</include>	
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'4x2'))">TVSeries.facade.widebanner.4x2.xml</include>	
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'6x2'))">TVSeries.facade.widebanner.6x2.xml</include>
+		<include condition="#(eq(#skin.layout.tvseries.widebanner,'7x4'))">TVSeries.facade.widebanner.7x4.xml</include>
+    <!-- ********************** IMPORT PROCESS *************************************** -->
+    <control>
+      <description>Import Animation</description>
+      <type>animation</type>
+      <id>51</id>
+      <posX>933</posX>
+      <posY>42</posY>
+      <width>54</width>
+      <height>53</height>
+      <textures>common.waiting.1.png;common.waiting.2.png;common.waiting.3.png;common.waiting.4.png;common.waiting.5.png;common.waiting.6.png;common.waiting.7.png;common.waiting.8.png</textures>
+      <Duration>0:0:01.5</Duration>
+      <keepaspectratio>yes</keepaspectratio>
+    </control>
+  </controls>
+</window>
