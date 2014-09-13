@@ -697,6 +697,13 @@ Trakt can also help you keep your watched flags in sync across multiple computer
               <ZipFileName>Installer{CopyFile}\{d33ca533-6914-44f5-87ea-a27c2058316f}-ro.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\ro.xml</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\ar.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ec736174-72ed-43da-b8eb-b118b785f859}-ar.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\ar.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -762,6 +769,891 @@ Trakt can also help you keep your watched flags in sync across multiple computer
 Trailers can be accessed from the F9 context menu (INFO button on remote).</Description>
         <Files>
           <Items />
+        </Files>
+      </GroupItem>
+      <GroupItem Name="TitanSkin">
+        <ParentGroup />
+        <DisplayName>Titan Skin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Titan Skin (1080p) for MP-TVSeries.</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.Actors.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c0d2d064-d744-44d3-98fc-4ab1f04568f1}-TVSeries.Actors.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.Actors.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.background.widebanner.4x2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7febc426-57c7-4b86-b342-2eccbbfd366a}-TVSeries.background.widebanner.4x2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.background.widebanner.4x2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.background.widebanner.6x2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e64693a1-33e9-4bc1-8c60-871008945d89}-TVSeries.background.widebanner.6x2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.background.widebanner.6x2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.background.widebanner.default.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{df71646f-d6b7-41ec-947b-5daade1632b6}-TVSeries.background.widebanner.default.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.background.widebanner.default.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.background.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8bbc1416-98fd-4b2a-8b88-1376dfb6d019}-TVSeries.background.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.background.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.dummy.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{59c3b4ac-63f0-479c-ae36-6cc4443a5401}-TVSeries.dummy.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.dummy.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.4x2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{eba40059-627c-4274-b15f-31507cc986b4}-TVSeries.facade.widebanner.4x2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.4x2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.6x2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{697f8387-a8a4-41e8-b125-ec94c60e5a07}-TVSeries.facade.widebanner.6x2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.6x2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.7x4.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9a6e50c7-9567-4b6b-b36a-749bc161ca7f}-TVSeries.facade.widebanner.7x4.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.7x4.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.default.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8be3c748-13c4-4c40-80f1-ed3f80726fc7}-TVSeries.facade.widebanner.default.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.default.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.facade.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{109f740e-c311-4cec-b874-2a47b6b26188}-TVSeries.facade.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.facade.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.FanArt.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ab5929c6-dd13-463c-a350-aa655b76bb7d}-TVSeries.FanArt.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.FanArt.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.hiddenmenu.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9597f873-37c8-49fd-a0d9-6f93377c9af1}-TVSeries.hiddenmenu.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.hiddenmenu.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.Info.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fbcf3e73-d26a-4bf6-9c81-84850a09f3f6}-TVSeries.Info.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.Info.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.PinCodeDialog.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fea93648-67f1-4ffc-ba75-abdbbe5fb2f1}-TVSeries.PinCodeDialog.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.PinCodeDialog.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.Playlist.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{49f17c79-2d12-420d-b7a7-a32e811b7d2e}-TVSeries.Playlist.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.Playlist.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.RatingDialog.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a3c346b2-c9e9-405b-bcb0-ca4b9c4b0bd1}-TVSeries.RatingDialog.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.RatingDialog.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.SkinSettings.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{18d66035-6637-43ee-a8fb-ffc8c40d7f19}-TVSeries.SkinSettings.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.SkinSettings.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.views.widebanner.4x2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{269a4aad-ad2c-4785-ba49-23f9b66cc5e4}-TVSeries.views.widebanner.4x2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.views.widebanner.4x2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.views.widebanner.6x2.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{46ad4577-37e4-4b65-9e31-b79328eba6a6}-TVSeries.views.widebanner.6x2.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.views.widebanner.6x2.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.views.widebanner.default.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9f2e05b1-6490-4436-9609-1ff4c5dcf62a}-TVSeries.views.widebanner.default.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.views.widebanner.default.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c6911a1a-ccbf-4534-bae4-dd558b31ec49}-TVSeries.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\hover_my tv series.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{594509bd-ef77-49f2-b248-e2363ab1fc71}-hover_my tv series.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\hover_my tv series.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\panel_thumbs2.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6b86c9b7-7499-4739-ae1e-d39be1a53241}-panel_thumbs2.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\panel_thumbs2.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated1.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a3c9f8f2-940e-4191-b0fb-abcc95431317}-Rated1.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated1.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated10.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9ccc73af-fd4c-4824-b1a8-6c7870943597}-Rated10.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated10.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated2.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{83228637-befb-42ca-b391-48fe5d73a445}-Rated2.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated2.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated3.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b6fca451-511f-498e-920f-d1f48cb92ac6}-Rated3.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated3.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated4.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{10de97a3-3905-4782-a430-3a341fe8be00}-Rated4.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated4.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated5.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{28660149-fbc1-47d0-99e9-86189e16b53b}-Rated5.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated5.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated6.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{af735ca4-0345-4306-b7b8-6bfd26316e07}-Rated6.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated6.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated7.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3bc74420-9aa7-43db-a7f4-7c475eab7409}-Rated7.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated7.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated8.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{78364180-91c7-4084-8a3e-f86be7a54744}-Rated8.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated8.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\Rated9.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b05b0b08-7b93-4e19-a4be-d774a7bbbdc1}-Rated9.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\Rated9.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_newlabel.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a92b5717-3cab-4eee-bffd-597f5875f81b}-tvseries_newlabel.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_newlabel.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_SeasonListIcon.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8e586bca-cc72-485d-b445-afcac95f4956}-tvseries_SeasonListIcon.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_SeasonListIcon.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_SeriesListIcon.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{efdfc8a3-4602-4429-8fcf-2d4ff5bb7750}-tvseries_SeriesListIcon.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_SeriesListIcon.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_thumb_mask.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6799c819-1fe1-4768-a364-c0a03da15ccb}-tvseries_thumb_mask.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_thumb_mask.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_thumb_shadow.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{aa1c5720-6e63-475c-84df-408fb058e2bb}-tvseries_thumb_shadow.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_thumb_shadow.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_UnWatched.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e9b7e072-90a6-4a08-9f77-a3956649e4c7}-tvseries_UnWatched.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_UnWatched.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_UnWatchedNA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e006c026-a1c7-4a45-8aef-9dece014a19b}-tvseries_UnWatchedNA.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_UnWatchedNA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_Watched.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d4cd4c23-1803-44e8-aea9-5c06fd3de93e}-tvseries_Watched.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_Watched.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_WatchedNA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{de8f5e9b-361b-4af4-a5cb-b6804ca0ff84}-tvseries_WatchedNA.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_WatchedNA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_widebanner_focus.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0a33ee21-a602-4db4-b716-6fbdb119f1b6}-tvseries_widebanner_focus.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_widebanner_focus.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\tvseries_widebanner_large_focus.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2eb159e8-2729-48ee-a808-38aff12c08de}-tvseries_widebanner_large_focus.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\tvseries_widebanner_large_focus.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\certification\TV-14.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{31ecba34-5eb4-4de8-9465-04ce2b2a5fc8}-TV-14.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\certification\TV-14.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\certification\TV-G.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0b3dd235-784a-46c1-827b-6fcbc2f6f048}-TV-G.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\certification\TV-G.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\certification\TV-MA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b7c663e9-9590-4338-819f-ff6ab8a47ec8}-TV-MA.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\certification\TV-MA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\certification\TV-PG.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5d9dc16f-f270-47c4-a4dd-0d1c54f8798b}-TV-PG.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\certification\TV-PG.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\certification\TV-Y.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{98aecca5-4538-4773-abf4-65cfbd3b7d29}-TV-Y.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\certification\TV-Y.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\certification\TV-Y7.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{1e6783f9-82eb-417b-aca6-25a76ad616fd}-TV-Y7.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\certification\TV-Y7.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{76cc9633-ebee-4eb4-aceb-e1ccb3fbd62d}-star.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star0.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{dee2b955-2242-42d3-a234-eb00c42fe592}-star0.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star0.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star10.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a46ed9b5-e21e-4ff8-b0af-fd0646e0fccb}-star10.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star10.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star100.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{feb4c0d6-8bc5-46ca-9b56-094264a85872}-star100.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star100.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star15.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{56ee4f53-2dc1-48aa-aa85-d07717267168}-star15.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star15.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star20.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9b1791b3-4596-4ef3-97d9-07ca8c35ece8}-star20.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star20.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star25.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8052ec9a-8b72-486d-8147-55b3a3e46a93}-star25.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star25.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{697ffacf-17e3-4312-b277-76d58255f609}-star2_.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_0.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{93744b2c-01de-4b1c-af01-13c0d8872daa}-star2_0.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_0.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_10.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{47d4f425-95a9-4f3c-91e6-a6bb8cfe3319}-star2_10.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_10.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_100.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9405d92e-f559-4032-90c4-ba68a9854351}-star2_100.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_100.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_15.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d99eccf9-8641-416e-8fa5-b8285092eff9}-star2_15.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_15.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_20.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4a79cbcb-661a-4b04-97a5-b977e7d2fc53}-star2_20.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_20.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_25.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{622ee861-e730-4289-8336-e8720d730af6}-star2_25.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_25.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_30.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3bbfa240-560f-4405-8b8e-210bacf5edd6}-star2_30.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_30.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_35.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9138389a-9a35-45a5-a8df-0fca22b55f62}-star2_35.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_35.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_40.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4353e90e-ab1a-4c4f-9ef9-4236b67515f5}-star2_40.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_40.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_45.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a3152c0d-aa24-4867-9c0f-f9150624dbfc}-star2_45.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_45.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_5.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f5cb6e65-3523-4e94-adad-838e2992197a}-star2_5.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_5.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_50.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9182eacd-fe6b-497f-ab9a-e4c17e08ee17}-star2_50.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_50.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_55.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4d800510-6303-4c21-955c-0df7d8b6ab47}-star2_55.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_55.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_60.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9634bf8a-08ce-4d0c-a9c3-d9d4666cbf5a}-star2_60.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_60.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_65.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c4b4e71b-d9bf-4c9e-a249-f05cb9611508}-star2_65.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_65.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_70.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6ef70020-01b1-4b07-aac4-099aa10ceadf}-star2_70.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_70.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_75.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4635f595-e85c-46ef-86d4-6002b474b4e2}-star2_75.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_75.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_80.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9bd577a2-ad87-4650-9fee-20977c9d6af2}-star2_80.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_80.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_85.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{79c3bc88-1952-433e-b4ee-8b27f7429942}-star2_85.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_85.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_90.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d393213b-6c8a-4694-aac3-afb8b32977a4}-star2_90.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_90.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_95.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{78036bda-fcf5-4353-95cd-8d5bc615911f}-star2_95.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_95.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star30.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e6a11fa8-26c4-41bd-9e0b-4bccbad99182}-star30.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star30.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star35.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9fde54e1-3c24-4560-8e37-ff1d9b65197c}-star35.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star35.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star40.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b4938a4b-5687-4fae-9a99-323714e542c0}-star40.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star40.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star45.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{171ddf8f-b8ca-49f0-87e3-d1478393f874}-star45.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star45.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star5.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{587ed553-0722-43b8-8fff-3ac759c4dd38}-star5.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star5.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star50.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{dac02351-f06f-4225-9e6d-057677553298}-star50.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star50.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star55.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2a066edc-b286-4b5b-8736-9d007056e1b8}-star55.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star55.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star60.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b7a6577a-4f3a-4c49-a0de-70937e71aa0d}-star60.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star60.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star65.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{ea98b35c-f3fc-471c-9f45-0b854f65929e}-star65.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star65.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star70.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6a492faa-f0a9-4b55-b63c-b518d732278d}-star70.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star70.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star75.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7a5d5023-e18d-497f-bbff-e70be1b83f68}-star75.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star75.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star80.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b0439b38-63ee-4deb-99fb-8605b02c5aa7}-star80.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star80.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star85.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{02673b6e-1006-4bc9-b00c-8380db7e3be9}-star85.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star85.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star90.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{bc2bf15f-0fa8-47f1-bbf2-d3b01c96153c}-star90.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star90.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\star95.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e0eee99b-6433-4de5-810b-c6c530cd6ed1}-star95.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\star95.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\1080p.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{08771055-cf0e-4bce-8579-cb48a0315f79}-1080p.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\1080p.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\2.0.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6c6e82c9-8836-41df-b86f-0e2421a0db51}-2.0.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\2.0.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\480.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{e3059c8c-3b92-4659-9544-186fa7cc817a}-480.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\480.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\5.1.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8cc4e8ed-cee1-4220-a152-6483077bbba8}-5.1.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\5.1.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\540.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{beb76bc9-cfcf-4859-aad4-747dd5e864c6}-540.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\540.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\720p.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fc2a7fd1-8848-4653-9c6d-5e64ad1c814a}-720p.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\720p.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\8.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0f6df77d-b1dd-4c4c-a554-1c9172e1b4cc}-8.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\8.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\aac.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{219ee1f4-8340-4fd0-99ec-aadae47a14ad}-aac.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\aac.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\ac-3.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{382f1839-2a3d-48f4-a769-9e96511e3f70}-ac-3.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\ac-3.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\divx.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{77c6715b-61e4-475a-b848-572c8936db91}-divx.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\divx.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\dts.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5bb76338-8655-45ca-a075-c537b48037b8}-dts.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\dts.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\dtshd_hra.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f68c961b-0e38-4965-ab17-fe20063c4277}-dtshd_hra.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\dtshd_hra.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\dtshd_ma.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{72235a0d-2506-4aba-a964-908381fb9b49}-dtshd_ma.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\dtshd_ma.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\flac.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a851749d-75d2-4bee-b3e0-e9b94e457e30}-flac.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\flac.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\fullscreen.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d093e6b0-3ba8-4486-aa4c-22326720f7dc}-fullscreen.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\fullscreen.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\h264.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2c84bee1-6af3-410b-b052-c2870b615cfb}-h264.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\h264.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\mp3.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{dcb5eb8c-1dae-4724-897e-ee6e80f2d5aa}-mp3.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\mp3.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\mpeg2.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d5cb6c9b-8073-4fca-9266-109f0757439e}-mpeg2.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\mpeg2.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\nosubtitles.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0e5c8d4d-4a87-4414-88c0-de00e7eeaada}-nosubtitles.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\nosubtitles.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\RA.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fb6da00d-3e08-4112-b3b7-b488bdcb102a}-RA.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\RA.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\real.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a9b93617-99c1-4de8-8402-c14b7693a170}-real.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\real.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\subtitles.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{628d9107-8a12-433f-abd4-3cd2a491dc71}-subtitles.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\subtitles.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\truehd.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{61036722-3949-41d5-90da-8d80a65d5ca2}-truehd.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\truehd.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\vc-1.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{990f5cd1-d07e-40cd-b5af-1688a4f0ccd2}-vc-1.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\vc-1.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\vorbis.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b5741236-2fda-4e60-9331-743411f079eb}-vorbis.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\vorbis.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\vp6f.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{9f3ed790-ec3a-49f9-b9e8-cfee7ec14538}-vp6f.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\vp6f.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\widescreen.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{20343c9f-70a5-41fa-b3c9-8b1aca1eca5c}-widescreen.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\widescreen.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\wma.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{38709cbb-8350-44d7-b1e4-1095fbf0928b}-wma.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\wma.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\wmv.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{74d5a173-9b2d-4a47-a354-f920bdecef46}-wmv.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\wmv.png</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\xvid.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2b60ea98-46bb-456b-980a-811a7b450967}-xvid.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\xvid.png</DestinationFilename>
+            </FileItem>
+          </Items>
         </Files>
       </GroupItem>
     </Items>
@@ -836,6 +1728,7 @@ Click Next to continue or Cancel to exit Setup.
           <string>Language</string>
           <string>DefaultSkin</string>
           <string>DefaultWideSkin</string>
+          <string>TitanSkin</string>
           <string>TraktPlugin</string>
           <string>TrailersPlugin</string>
           <string>ExtensionsPlugin</string>
@@ -890,7 +1783,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>4.0.2.0</Value>
+                    <Value>4.0.3.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -912,7 +1805,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>1.1.2.0</Value>
+                    <Value>1.1.5.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -939,7 +1832,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>1.2.1.195</Value>
+                    <Value>1.2.2.199</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -1367,20 +2260,19 @@ public class Script
     <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>4</Major>
-      <Minor>0</Minor>
-      <Build>3</Build>
-      <Revision>2081</Revision>
+      <Minor>1</Minor>
+      <Build>0</Build>
+      <Revision>2089</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Added a Trailers context menu item from Series, Season and Episode views. User can stream trailers via the Trailers\OnlineVideos plugins. 
-* Added Trailers MPEI package to main installer package.
-* Added a workaround when resuming from standby into a protected view, user will now return to the previous menu rather than attempt to show the PinCode dialog as this no longer works in MP 1.7 when invoked to early.
+    <VersionDescription>* Added Titan skin files to installer, a few bug fixes and enhancements.
+* Removal of follw.it (Service is shutting down end of September).
 * Updated translations from Transifex.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=64</OnlineLocation>
-    <ReleaseDate>2014-04-21T15:25:06</ReleaseDate>
+    <ReleaseDate>2014-09-13T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2057,6 +2949,13 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\ar.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ec736174-72ed-43da-b8eb-b118b785f859}-ar.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\ar.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>OnlineLinks\Forums.url</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{fd44e554-eb4f-4001-8e9f-cc14de2468dd}-Forums.url</ZipFileName>
         <DestinationFilename>%Config%\MP-TVSeries\Web\Forums.url</DestinationFilename>
@@ -2089,18 +2988,893 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <ZipFileName>Installer{CopyFile}\{e9ade0e4-eaf5-4a7a-93d6-a1ff34187141}-Wiki.url</ZipFileName>
         <DestinationFilename>%Config%\MP-TVSeries\Web\Wiki.url</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.Actors.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c0d2d064-d744-44d3-98fc-4ab1f04568f1}-TVSeries.Actors.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.Actors.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.background.widebanner.4x2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7febc426-57c7-4b86-b342-2eccbbfd366a}-TVSeries.background.widebanner.4x2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.background.widebanner.4x2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.background.widebanner.6x2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e64693a1-33e9-4bc1-8c60-871008945d89}-TVSeries.background.widebanner.6x2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.background.widebanner.6x2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.background.widebanner.default.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{df71646f-d6b7-41ec-947b-5daade1632b6}-TVSeries.background.widebanner.default.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.background.widebanner.default.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.background.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8bbc1416-98fd-4b2a-8b88-1376dfb6d019}-TVSeries.background.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.background.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.dummy.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{59c3b4ac-63f0-479c-ae36-6cc4443a5401}-TVSeries.dummy.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.dummy.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.4x2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{eba40059-627c-4274-b15f-31507cc986b4}-TVSeries.facade.widebanner.4x2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.4x2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.6x2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{697f8387-a8a4-41e8-b125-ec94c60e5a07}-TVSeries.facade.widebanner.6x2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.6x2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.7x4.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9a6e50c7-9567-4b6b-b36a-749bc161ca7f}-TVSeries.facade.widebanner.7x4.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.7x4.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.facade.widebanner.default.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8be3c748-13c4-4c40-80f1-ed3f80726fc7}-TVSeries.facade.widebanner.default.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.facade.widebanner.default.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.facade.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{109f740e-c311-4cec-b874-2a47b6b26188}-TVSeries.facade.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.facade.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.FanArt.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ab5929c6-dd13-463c-a350-aa655b76bb7d}-TVSeries.FanArt.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.FanArt.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.hiddenmenu.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9597f873-37c8-49fd-a0d9-6f93377c9af1}-TVSeries.hiddenmenu.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.hiddenmenu.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.Info.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fbcf3e73-d26a-4bf6-9c81-84850a09f3f6}-TVSeries.Info.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.Info.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.PinCodeDialog.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fea93648-67f1-4ffc-ba75-abdbbe5fb2f1}-TVSeries.PinCodeDialog.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.PinCodeDialog.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.Playlist.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{49f17c79-2d12-420d-b7a7-a32e811b7d2e}-TVSeries.Playlist.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.Playlist.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.RatingDialog.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a3c346b2-c9e9-405b-bcb0-ca4b9c4b0bd1}-TVSeries.RatingDialog.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.RatingDialog.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.SkinSettings.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{18d66035-6637-43ee-a8fb-ffc8c40d7f19}-TVSeries.SkinSettings.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.SkinSettings.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.views.widebanner.4x2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{269a4aad-ad2c-4785-ba49-23f9b66cc5e4}-TVSeries.views.widebanner.4x2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.views.widebanner.4x2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.views.widebanner.6x2.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{46ad4577-37e4-4b65-9e31-b79328eba6a6}-TVSeries.views.widebanner.6x2.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.views.widebanner.6x2.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.views.widebanner.default.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9f2e05b1-6490-4436-9609-1ff4c5dcf62a}-TVSeries.views.widebanner.default.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.views.widebanner.default.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c6911a1a-ccbf-4534-bae4-dd558b31ec49}-TVSeries.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\hover_my tv series.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{594509bd-ef77-49f2-b248-e2363ab1fc71}-hover_my tv series.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\hover_my tv series.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\panel_thumbs2.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6b86c9b7-7499-4739-ae1e-d39be1a53241}-panel_thumbs2.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\panel_thumbs2.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated1.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a3c9f8f2-940e-4191-b0fb-abcc95431317}-Rated1.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated1.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated10.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9ccc73af-fd4c-4824-b1a8-6c7870943597}-Rated10.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated10.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated2.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{83228637-befb-42ca-b391-48fe5d73a445}-Rated2.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated2.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated3.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b6fca451-511f-498e-920f-d1f48cb92ac6}-Rated3.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated3.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated4.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{10de97a3-3905-4782-a430-3a341fe8be00}-Rated4.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated4.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated5.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{28660149-fbc1-47d0-99e9-86189e16b53b}-Rated5.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated5.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated6.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{af735ca4-0345-4306-b7b8-6bfd26316e07}-Rated6.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated6.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated7.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3bc74420-9aa7-43db-a7f4-7c475eab7409}-Rated7.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated7.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated8.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{78364180-91c7-4084-8a3e-f86be7a54744}-Rated8.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated8.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\Rated9.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b05b0b08-7b93-4e19-a4be-d774a7bbbdc1}-Rated9.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\Rated9.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_newlabel.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a92b5717-3cab-4eee-bffd-597f5875f81b}-tvseries_newlabel.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_newlabel.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_SeasonListIcon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8e586bca-cc72-485d-b445-afcac95f4956}-tvseries_SeasonListIcon.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_SeasonListIcon.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_SeriesListIcon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{efdfc8a3-4602-4429-8fcf-2d4ff5bb7750}-tvseries_SeriesListIcon.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_SeriesListIcon.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_thumb_mask.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6799c819-1fe1-4768-a364-c0a03da15ccb}-tvseries_thumb_mask.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_thumb_mask.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_thumb_shadow.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{aa1c5720-6e63-475c-84df-408fb058e2bb}-tvseries_thumb_shadow.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_thumb_shadow.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_UnWatched.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e9b7e072-90a6-4a08-9f77-a3956649e4c7}-tvseries_UnWatched.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_UnWatched.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_UnWatchedNA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e006c026-a1c7-4a45-8aef-9dece014a19b}-tvseries_UnWatchedNA.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_UnWatchedNA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_Watched.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d4cd4c23-1803-44e8-aea9-5c06fd3de93e}-tvseries_Watched.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_Watched.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_WatchedNA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{de8f5e9b-361b-4af4-a5cb-b6804ca0ff84}-tvseries_WatchedNA.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_WatchedNA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_widebanner_focus.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0a33ee21-a602-4db4-b716-6fbdb119f1b6}-tvseries_widebanner_focus.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_widebanner_focus.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\tvseries_widebanner_large_focus.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2eb159e8-2729-48ee-a808-38aff12c08de}-tvseries_widebanner_large_focus.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\tvseries_widebanner_large_focus.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\certification\TV-14.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{31ecba34-5eb4-4de8-9465-04ce2b2a5fc8}-TV-14.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\certification\TV-14.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\certification\TV-G.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0b3dd235-784a-46c1-827b-6fcbc2f6f048}-TV-G.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\certification\TV-G.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\certification\TV-MA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b7c663e9-9590-4338-819f-ff6ab8a47ec8}-TV-MA.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\certification\TV-MA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\certification\TV-PG.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5d9dc16f-f270-47c4-a4dd-0d1c54f8798b}-TV-PG.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\certification\TV-PG.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\certification\TV-Y.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{98aecca5-4538-4773-abf4-65cfbd3b7d29}-TV-Y.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\certification\TV-Y.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\certification\TV-Y7.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{1e6783f9-82eb-417b-aca6-25a76ad616fd}-TV-Y7.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\certification\TV-Y7.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{76cc9633-ebee-4eb4-aceb-e1ccb3fbd62d}-star.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star0.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{dee2b955-2242-42d3-a234-eb00c42fe592}-star0.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star0.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star10.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a46ed9b5-e21e-4ff8-b0af-fd0646e0fccb}-star10.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star10.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star100.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{feb4c0d6-8bc5-46ca-9b56-094264a85872}-star100.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star100.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star15.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{56ee4f53-2dc1-48aa-aa85-d07717267168}-star15.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star15.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star20.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9b1791b3-4596-4ef3-97d9-07ca8c35ece8}-star20.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star20.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star25.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8052ec9a-8b72-486d-8147-55b3a3e46a93}-star25.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star25.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{697ffacf-17e3-4312-b277-76d58255f609}-star2_.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_0.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{93744b2c-01de-4b1c-af01-13c0d8872daa}-star2_0.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_0.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_10.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{47d4f425-95a9-4f3c-91e6-a6bb8cfe3319}-star2_10.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_10.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_100.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9405d92e-f559-4032-90c4-ba68a9854351}-star2_100.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_100.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_15.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d99eccf9-8641-416e-8fa5-b8285092eff9}-star2_15.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_15.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_20.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4a79cbcb-661a-4b04-97a5-b977e7d2fc53}-star2_20.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_20.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_25.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{622ee861-e730-4289-8336-e8720d730af6}-star2_25.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_25.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_30.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3bbfa240-560f-4405-8b8e-210bacf5edd6}-star2_30.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_30.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_35.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9138389a-9a35-45a5-a8df-0fca22b55f62}-star2_35.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_35.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_40.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4353e90e-ab1a-4c4f-9ef9-4236b67515f5}-star2_40.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_40.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_45.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a3152c0d-aa24-4867-9c0f-f9150624dbfc}-star2_45.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_45.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_5.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f5cb6e65-3523-4e94-adad-838e2992197a}-star2_5.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_5.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_50.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9182eacd-fe6b-497f-ab9a-e4c17e08ee17}-star2_50.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_50.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_55.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4d800510-6303-4c21-955c-0df7d8b6ab47}-star2_55.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_55.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_60.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9634bf8a-08ce-4d0c-a9c3-d9d4666cbf5a}-star2_60.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_60.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_65.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c4b4e71b-d9bf-4c9e-a249-f05cb9611508}-star2_65.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_65.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_70.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6ef70020-01b1-4b07-aac4-099aa10ceadf}-star2_70.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_70.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_75.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4635f595-e85c-46ef-86d4-6002b474b4e2}-star2_75.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_75.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_80.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9bd577a2-ad87-4650-9fee-20977c9d6af2}-star2_80.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_80.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_85.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{79c3bc88-1952-433e-b4ee-8b27f7429942}-star2_85.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_85.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_90.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d393213b-6c8a-4694-aac3-afb8b32977a4}-star2_90.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_90.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star2_95.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{78036bda-fcf5-4353-95cd-8d5bc615911f}-star2_95.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star2_95.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star30.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e6a11fa8-26c4-41bd-9e0b-4bccbad99182}-star30.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star30.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star35.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9fde54e1-3c24-4560-8e37-ff1d9b65197c}-star35.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star35.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star40.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b4938a4b-5687-4fae-9a99-323714e542c0}-star40.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star40.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star45.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{171ddf8f-b8ca-49f0-87e3-d1478393f874}-star45.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star45.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star5.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{587ed553-0722-43b8-8fff-3ac759c4dd38}-star5.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star5.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star50.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{dac02351-f06f-4225-9e6d-057677553298}-star50.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star50.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star55.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2a066edc-b286-4b5b-8736-9d007056e1b8}-star55.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star55.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star60.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b7a6577a-4f3a-4c49-a0de-70937e71aa0d}-star60.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star60.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star65.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{ea98b35c-f3fc-471c-9f45-0b854f65929e}-star65.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star65.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star70.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6a492faa-f0a9-4b55-b63c-b518d732278d}-star70.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star70.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star75.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7a5d5023-e18d-497f-bbff-e70be1b83f68}-star75.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star75.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star80.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b0439b38-63ee-4deb-99fb-8605b02c5aa7}-star80.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star80.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star85.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{02673b6e-1006-4bc9-b00c-8380db7e3be9}-star85.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star85.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star90.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{bc2bf15f-0fa8-47f1-bbf2-d3b01c96153c}-star90.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star90.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\star95.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e0eee99b-6433-4de5-810b-c6c530cd6ed1}-star95.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\star95.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\1080p.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{08771055-cf0e-4bce-8579-cb48a0315f79}-1080p.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\1080p.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\2.0.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6c6e82c9-8836-41df-b86f-0e2421a0db51}-2.0.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\2.0.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\480.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{e3059c8c-3b92-4659-9544-186fa7cc817a}-480.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\480.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\5.1.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8cc4e8ed-cee1-4220-a152-6483077bbba8}-5.1.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\5.1.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\540.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{beb76bc9-cfcf-4859-aad4-747dd5e864c6}-540.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\540.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\720p.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fc2a7fd1-8848-4653-9c6d-5e64ad1c814a}-720p.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\720p.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\8.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0f6df77d-b1dd-4c4c-a554-1c9172e1b4cc}-8.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\8.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\aac.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{219ee1f4-8340-4fd0-99ec-aadae47a14ad}-aac.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\aac.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\ac-3.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{382f1839-2a3d-48f4-a769-9e96511e3f70}-ac-3.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\ac-3.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\divx.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{77c6715b-61e4-475a-b848-572c8936db91}-divx.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\divx.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\dts.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5bb76338-8655-45ca-a075-c537b48037b8}-dts.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\dts.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\dtshd_hra.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f68c961b-0e38-4965-ab17-fe20063c4277}-dtshd_hra.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\dtshd_hra.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\dtshd_ma.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{72235a0d-2506-4aba-a964-908381fb9b49}-dtshd_ma.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\dtshd_ma.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\flac.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a851749d-75d2-4bee-b3e0-e9b94e457e30}-flac.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\flac.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\fullscreen.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d093e6b0-3ba8-4486-aa4c-22326720f7dc}-fullscreen.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\fullscreen.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\h264.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2c84bee1-6af3-410b-b052-c2870b615cfb}-h264.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\h264.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\mp3.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{dcb5eb8c-1dae-4724-897e-ee6e80f2d5aa}-mp3.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\mp3.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\mpeg2.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d5cb6c9b-8073-4fca-9266-109f0757439e}-mpeg2.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\mpeg2.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\nosubtitles.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0e5c8d4d-4a87-4414-88c0-de00e7eeaada}-nosubtitles.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\nosubtitles.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\RA.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fb6da00d-3e08-4112-b3b7-b488bdcb102a}-RA.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\RA.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\real.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a9b93617-99c1-4de8-8402-c14b7693a170}-real.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\real.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\subtitles.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{628d9107-8a12-433f-abd4-3cd2a491dc71}-subtitles.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\subtitles.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\truehd.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{61036722-3949-41d5-90da-8d80a65d5ca2}-truehd.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\truehd.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\vc-1.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{990f5cd1-d07e-40cd-b5af-1688a4f0ccd2}-vc-1.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\vc-1.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\vorbis.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b5741236-2fda-4e60-9331-743411f079eb}-vorbis.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\vorbis.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\vp6f.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{9f3ed790-ec3a-49f9-b9e8-cfee7ec14538}-vp6f.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\vp6f.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\widescreen.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{20343c9f-70a5-41fa-b3c9-8b1aca1eca5c}-widescreen.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\widescreen.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\wma.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{38709cbb-8350-44d7-b1e4-1095fbf0928b}-wma.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\wma.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\wmv.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{74d5a173-9b2d-4a47-a354-f920bdecef46}-wmv.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\wmv.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\TVSeries\Logos\xvid.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2b60ea98-46bb-456b-980a-811a7b450967}-xvid.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\TVSeries\Logos\xvid.png</DestinationFilename>
+      </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{937e68f3-f33e-4558-943d-950a552d7abf}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{aa2202e7-fa16-4b19-a2ed-19801cf6f999}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{af2fe646-1347-4ddf-b466-8aa90f0c21ce}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{b314314d-a326-4ba5-989e-9f6ee9e076af}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -2145,6 +3919,16 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <DestinationFilename>%Skin%\DefaultWide\</DestinationFilename>
         <Folder>..\skin files\DefaultWide</Folder>
         <Group>DefaultWideSkin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{8af95d38-f1a4-453b-9521-ab5f26f2d778}-</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\</DestinationFilename>
+        <Folder>..\skin files\Titan</Folder>
+        <Group>TitanSkin</Group>
         <Recursive>true</Recursive>
       </FolderGroup>
     </FolderGroups>
