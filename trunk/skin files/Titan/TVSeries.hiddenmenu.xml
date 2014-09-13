@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+  <controls>    
+
+	<control>
+		<id>1</id>
+		<type>image</type>
+		<posX>0</posX>
+		<posY>440</posY>
+		<width>64</width>
+		<height>199</height>
+		<texture>hiddenmenu_tab.png</texture>
+		<visible>[facadeview.list | facadeview.smallicons | facadeview.largeicons]+Control.HasFocus(50) + !string.contains(#Titan.HiddenMenu, false)</visible>
+		<animation effect="slide" start="-60,0" time="250" delay="400">WindowOpen</animation>
+		<animation effect="slide" start="0,0" end="-60,0" time="250" delay="100">WindowClose</animation>
+	</control>
+    
+	<control>
+		<id>1</id>
+		<type>image</type>
+		<posX>858</posX>
+		<posY>0</posY>
+		<texture>hiddenmenu_tab_up.png</texture>
+		<visible>[facadeview.filmstrip | facadeview.coverflow] + Control.HasFocus(50) + !string.contains(#Titan.HiddenMenu, false)</visible>
+		<animation effect="slide" start="0,-60" time="250" delay="400">WindowOpen</animation>
+		<animation effect="slide" start="0,0" end="0,-60" time="250" delay="100">WindowClose</animation>
+	</control>	
+	
+	<control>
+		<type>actiongroup</type>
+		<description>action menu</description>
+		<defaultcontrol>2</defaultcontrol>
+		<onexit>50</onexit>
+		<dimColor>00ffffff</dimColor>
+		<buttonX>0</buttonX>
+		<buttonY>0</buttonY>
+		<buttonwidth>497</buttonwidth>
+		<buttonheight>1080</buttonheight>
+		
+		<control>
+			<type>image</type>
+			<id>0</id>
+			<width>1920</width>
+			<height>1080</height>
+			<texture>semi_trans_back_hidden_menu.png</texture>
+			<visible>!Control.HasFocus(50)</visible>
+			<animation effect="fade" time="450">visible</animation>
+			<animation effect="fade" time="400">hidden</animation>
+		</control>
+	
+		<control>
+			<type>image</type>
+			<id>0</id>
+			<posY>0</posY>
+			<posX>0</posX>
+			<width>612</width>
+			<height>1074</height>
+			<texture>menu_bg.png</texture>
+			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+	
+		<control>
+			<type>image</type>
+			<id>0</id>
+			<posY>444</posY>
+			<posX>116</posX>
+			<width>369</width>
+			<height>1</height>
+			<texture>hiddenmenu_separator.png</texture>
+			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+		<control>
+			<type>image</type>
+			<id>0</id>
+			<posY>653</posY>
+			<posX>116</posX>
+			<width>376</width>
+			<height>1</height>
+			<texture>hiddenmenu_separator.png</texture>
+			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+		<control>
+			<type>image</type>
+			<id>0</id>
+			<posY>791</posY>
+			<posX>116</posX>
+			<width>376</width>
+			<height>1</height>
+			<texture>hiddenmenu_separator.png</texture>
+			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+		<control>
+			<description>Menu label</description>
+			<type>label</type>
+			<id>1</id>
+			<posX>116</posX>
+			<posY>100</posY>
+			<label>924</label>
+			<font>fontB16</font>
+			<textcolor>393939</textcolor>
+			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+    </control>
+		<control>
+			<description>Playlist label</description>
+			<type>label</type>
+			<id>1</id>
+			<posX>116</posX>
+			<posY>454</posY>
+			<label>136</label>
+			<font>fontB12</font>
+			<textcolor>393939</textcolor>
+ 			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+		<control>
+			<description>Settings label</description>
+			<type>label</type>
+			<id>1</id>
+			<posX>116</posX>
+			<posY>661</posY>
+			<label>100004</label>
+			<font>fontB12</font>
+			<textcolor>393939</textcolor>
+ 			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+		<control>
+			<description>Jump to label</description>
+			<type>label</type>
+			<id>1</id>
+			<posX>116</posX>
+			<posY>799</posY>
+			<label>1065</label>
+			<font>fontB12</font>
+			<textcolor>393939</textcolor>
+ 			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+		</control>
+    <control>
+      <type>group</type>
+      <description>group element</description>
+ 			<visible>!Control.HasFocus(50)</visible>
+    	<animation effect="fade" time="0">WindowClose</animation>
+    	<animation effect="slide" start="-150,0" time="100">visible</animation>
+    	<animation effect="fade" time="50">visible</animation>
+    	<animation effect="fade" time="0">hidden</animation>
+      <posX>53</posX>
+      <posY>155</posY>
+      <layout>StackLayout(0, Vertical, true)</layout>	
+			
+			<control>
+				<description>Switch View</description>
+				<type>button</type>
+				<id>2</id>
+				<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+				<textureNoFocus>-</textureNoFocus>
+				<width>499</width>
+				<height>69</height>
+				<textXOff>62</textXOff>
+				<textYOff>16</textYOff>
+				<label>457</label>
+				<onleft>50</onleft>
+				<onright>50</onright>
+        <ondown>5</ondown>
+        <onup>66615</onup>
+			</control>
+            
+      <control>
+				<description>Run Import</description>
+				<type>button</type>
+				<id>5</id>
+				<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+				<textureNoFocus>-</textureNoFocus>
+				<width>499</width>
+				<height>69</height>
+				<textXOff>62</textXOff>
+				<textYOff>16</textYOff>
+				<label>Run Import</label>
+				<onleft>50</onleft>
+				<onright>50</onright>
+      </control>
+             
+      <control>
+				<description>Change Layout</description>
+				<type>button</type>
+				<id>3</id>
+				<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+				<textureNoFocus>-</textureNoFocus>
+				<width>499</width>
+				<height>69</height>
+				<textXOff>62</textXOff>
+				<textYOff>16</textYOff>
+				<label>Change Layout</label>
+				<onleft>50</onleft>
+				<onright>50</onright>
+      </control>
+          
+      <control>
+				<description>Options</description>
+				<type>button</type>
+				<id>4</id>
+				<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+				<textureNoFocus>-</textureNoFocus>
+				<width>499</width>
+				<height>69</height>
+				<textXOff>62</textXOff>
+				<textYOff>16</textYOff>
+				<label>496</label>
+				<onleft>50</onleft>
+				<onright>50</onright>
+				<ondown>20</ondown>
+      </control>
+            
+      <control>
+        <description>Empty button</description>
+        <type>button</type>
+        <id>0</id>
+			  <textureFocus>-</textureFocus>
+			  <textureNoFocus>-</textureNoFocus>
+			  <width>499</width>
+			  <height>69</height>
+        <label>-</label>
+        <visible>true</visible>
+      </control>
+            
+     <control>
+	     <description>Current Playlist</description>
+    	 <type>button</type>
+    	 <id>20</id>
+    	 <textureFocus>hiddenmenu_item_selected.png</textureFocus>
+    	 <textureNoFocus>-</textureNoFocus>
+			 <width>499</width>
+			 <height>69</height>
+			 <textXOff>62</textXOff>
+			 <textYOff>16</textYOff>
+    	 <label>4555</label>
+    	 <action>33</action>
+    	 <onleft>50</onleft>
+    	 <onright>50</onright>
+    	 <onup>4</onup>
+     </control>	
+            
+    <control>
+      <description>My Playlists</description>
+ 		  <type>button</type>
+    	<id>9</id>
+    	<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+    	<textureNoFocus>-</textureNoFocus>
+			<width>499</width>
+			<height>69</height>
+			<textXOff>62</textXOff>
+			<textYOff>16</textYOff>
+    	<label>983</label>
+    	<onleft>50</onleft>
+    	<onright>50</onright>
+    	<ondown>66610</ondown>
+    </control>
+                
+    <control>
+      <description>Empty button</description>
+      <type>button</type>
+      <id>0</id>
+			<textureFocus>-</textureFocus>
+			<textureNoFocus>-</textureNoFocus>
+			<width>499</width>
+			<height>69</height>
+      <label>-</label>
+      <visible>true</visible>
+    </control>
+			
+		<control>
+		  <description>Video Settings</description>
+			<type>button</type>
+			<id>66610</id>
+			<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+			<textureNoFocus>-</textureNoFocus>
+			<width>499</width>
+			<height>69</height>
+			<textXOff>62</textXOff>
+			<textYOff>16</textYOff>
+			<label>6022</label>
+			<hyperlink>703</hyperlink>
+			<onleft>50</onleft>
+      <onright>50</onright>
+			<onup>9</onup>
+      <ondown>66614</ondown>
+		</control>
+            
+     <control>
+      <description>Empty button</description>
+      <type>button</type>
+      <id>0</id>
+			<textureFocus>-</textureFocus>
+			<textureNoFocus>-</textureNoFocus>
+			<width>499</width>
+			<height>69</height>
+      <label>-</label>
+      <visible>true</visible>
+    </control>
+
+    <control>
+      <description>SubCentral</description>
+      <type>button</type>
+      <id>66614</id>
+			<width>499</width>
+			<height>69</height>
+			<textXOff>62</textXOff>
+			<textYOff>16</textYOff>
+			<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+			<textureNoFocus>-</textureNoFocus>
+      <label>287</label>
+      <hyperlink>84623</hyperlink>
+      <onup>66610</onup>
+      <ondown>66615</ondown>
+			<onleft>50</onleft>
+      <onright>50</onright>
+			<visible>plugin.isenabled(SubCentral)</visible>
+    </control>		
+					
+    <control>
+      <description>Trakt</description>
+      <type>button</type>
+      <id>66615</id>
+			<width>499</width>
+			<height>69</height>
+			<textXOff>62</textXOff>
+			<textYOff>16</textYOff>
+			<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+			<textureNoFocus>-</textureNoFocus>
+      <label>Trakt</label>
+      <hyperlink>87258</hyperlink>
+      <onup>66614</onup>
+      <ondown>2</ondown>
+			<onleft>50</onleft>
+      <onright>50</onright>
+      <visible>plugin.isenabled(Trakt)</visible>
+    </control>
+  </control>
+</control>
+</controls>
+</window>
