@@ -409,6 +409,9 @@ namespace WindowPlugins.GUITVSeries
             #endregion
 
             #region Misc
+            // Publish custom plugin name to skin so skinners can have access to it globally for buttons / menus etc
+            GUIPropertyManager.SetProperty("#TVSeries.PluginName", pluginName);
+
             // publish skin properties for custom view menus on home screen
             PublishViewsToSkin();
 
