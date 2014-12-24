@@ -1952,17 +1952,29 @@ namespace WindowPlugins.GUITVSeries
                 Actors = m_SelectedSeries[DBOnlineSeries.cActors].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList()
             };
 
-            if (CurrentViewLevel == Listlevel.Series || CurrentViewLevel == Listlevel.Season)
-            {              
+            if (CurrentViewLevel == Listlevel.Series)
+            {
                 TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, fanart, people, true);
+            }
+            else if (CurrentViewLevel == Listlevel.Season)
+            {
+                string season = m_SelectedSeason[DBSeason.cIndex];
+                string seasonid = m_SelectedSeason[DBSeason.cID];
+
+                TraktPlugin.GUI.GUICommon.ShowTraktExtTVSeasonMenu(title, year, tvdbid, season, seasonid, fanart, people, false);
             }
             else if (CurrentViewLevel == Listlevel.Episode)
             {
+                string season = m_SelectedSeason[DBSeason.cIndex];
+                string episode = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex];
+                string episodeTvdbid = m_SelectedEpisode[DBOnlineEpisode.cID];
+                bool isWatched = m_SelectedEpisode[DBOnlineEpisode.cWatched];
+
                 people.Directors = m_SelectedEpisode[DBOnlineEpisode.cDirector].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
                 people.Writers = m_SelectedEpisode[DBOnlineEpisode.cWriter].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
                 people.GuestStars = m_SelectedEpisode[DBOnlineEpisode.cGuestStars].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
 
-                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, m_SelectedSeason[DBSeason.cIndex], m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex], tvdbid, m_SelectedEpisode[DBOnlineEpisode.cWatched], fanart, people, false);
+                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, season, episode, tvdbid, episodeTvdbid, isWatched, fanart, people, false);
             }
         }
 
