@@ -1945,6 +1945,7 @@ namespace WindowPlugins.GUITVSeries
             string title = m_SelectedSeries.ToString();
             string year = m_SelectedSeries.Year;
             string tvdbid = m_SelectedSeries[DBOnlineSeries.cID];
+            string imdbid = m_SelectedSeries[DBOnlineSeries.cIMDBID];
             string fanart = GUIPropertyManager.GetProperty("#TVSeries.Current.Fanart").Trim();
 
             var people = new TraktPlugin.GUI.SearchPeople
@@ -1954,14 +1955,14 @@ namespace WindowPlugins.GUITVSeries
 
             if (CurrentViewLevel == Listlevel.Series)
             {
-                TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, fanart, people, true);
+                TraktPlugin.GUI.GUICommon.ShowTraktExtTVShowMenu(title, year, tvdbid, imdbid, fanart, people, true);
             }
             else if (CurrentViewLevel == Listlevel.Season)
             {
                 string season = m_SelectedSeason[DBSeason.cIndex];
                 string seasonid = m_SelectedSeason[DBSeason.cID];
 
-                TraktPlugin.GUI.GUICommon.ShowTraktExtTVSeasonMenu(title, year, tvdbid, season, seasonid, fanart, people, false);
+                TraktPlugin.GUI.GUICommon.ShowTraktExtTVSeasonMenu(title, year, tvdbid, imdbid, season, seasonid, fanart, people, false);
             }
             else if (CurrentViewLevel == Listlevel.Episode)
             {
@@ -1974,7 +1975,7 @@ namespace WindowPlugins.GUITVSeries
                 people.Writers = m_SelectedEpisode[DBOnlineEpisode.cWriter].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
                 people.GuestStars = m_SelectedEpisode[DBOnlineEpisode.cGuestStars].ToString().Split('|').Select(a => a.Trim()).Where(a => a.Length > 0).ToList();
 
-                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, season, episode, tvdbid, episodeTvdbid, isWatched, fanart, people, false);
+                TraktPlugin.GUI.GUICommon.ShowTraktExtEpisodeMenu(title, year, season, episode, tvdbid, imdbid, episodeTvdbid, isWatched, fanart, people, false);
             }
         }
 
