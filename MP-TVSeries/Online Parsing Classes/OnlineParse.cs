@@ -1505,11 +1505,13 @@ namespace WindowPlugins.GUITVSeries
                     int episodeIdx = episode[DBOnlineEpisode.cEpisodeIndex];
                     int seasonIdx = episode[DBOnlineEpisode.cSeasonIndex];
 
-                    // check if episode its in the expected result
-                    if (!expectedEpisodes.Any(e => e[DBOnlineEpisode.cEpisodeIndex] == episodeIdx &&
-                                                   e[DBOnlineEpisode.cSeasonIndex] == seasonIdx))
+                    // check if episode is in the expected list of episodes
+                    // also check if episode is valid i.e. Idx > 0
+                    if (!expectedEpisodes.Any(e => (e[DBOnlineEpisode.cEpisodeIndex] == episodeIdx &&
+                                                   e[DBOnlineEpisode.cSeasonIndex] == seasonIdx)) ||
+                                                   episodeIdx == 0)
                     {
-                        string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online", seriesObj.ToString(), seasonIdx, episodeIdx);
+                        string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online or is invalid", seriesObj.ToString(), seasonIdx, episodeIdx);
                         m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
                         episode.DeleteOnlineEpisode();
                     }
