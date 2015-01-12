@@ -32,6 +32,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.labelRetrievingUserRatings.Label.Text = "Retrieving User Ratings";
             this.labelRetrievingFavourites.Label.Text = "Retrieving User Favourites";
             this.labelRetrievingEpisodeCounts.Label.Text = "Retrieving Episode Counts";
+            this.labelCleaningEpisodes.Label.Text = "Cleaning Online Episode References";
         }
 
         internal void Init()
@@ -65,6 +66,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 case ParsingAction.UpdateUserFavourites:
                 case ParsingAction.UpdateUserRatings:
                 case ParsingAction.UpdateEpisodeCounts:
+                case ParsingAction.CleanupEpisodes:
                     type = "series";
                     break;
 
@@ -151,6 +153,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         break;
                     case ParsingAction.UpdateUserFavourites:
                         SetProgressLabel(this.labelRetrievingFavourites, progress);
+                        break;
+                    case ParsingAction.CleanupEpisodes:
+                        SetProgressLabel(this.labelCleaningEpisodes, progress);
                         break;
                     default:
                         break;

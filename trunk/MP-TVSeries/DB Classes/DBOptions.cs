@@ -172,6 +172,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cSQLLoggingEnabled = "SQLLoggingEnabled";
         public const string cCheckPlayOutOfOrder = "CheckPlayOutOfOrder";
         public const string cFilterUnwatched = "FilterUnwatched";
+        public const string cCleanOnlineEpisodes = "CleanOnlineEpisodes";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -540,6 +541,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cAutoDownloadActors) == null)
                 SetOptions(cAutoDownloadActors, true);
+
+            if (GetOptions(cCleanOnlineEpisodes) == null)
+                SetOptions(cCleanOnlineEpisodes, true);
 
             #endregion
         }

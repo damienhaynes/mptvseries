@@ -288,9 +288,10 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dbOptCheckBoxCleanOnlineEpisodes = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptCheckBoxDownloadActors = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBox4 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBox1 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptCheckBoxGetTextBanners = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptChkBoxPlayOutOfOrderCheck = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionSQLLogging = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -863,10 +864,10 @@ namespace WindowPlugins.GUITVSeries
             // chkBlankBanners
             // 
             this.chkBlankBanners.AutoSize = true;
-            this.chkBlankBanners.Location = new System.Drawing.Point(10, 331);
+            this.chkBlankBanners.Location = new System.Drawing.Point(8, 358);
             this.chkBlankBanners.Name = "chkBlankBanners";
             this.chkBlankBanners.Size = new System.Drawing.Size(389, 17);
-            this.chkBlankBanners.TabIndex = 24;
+            this.chkBlankBanners.TabIndex = 25;
             this.chkBlankBanners.Text = "Download Series WideBanners that contain no graphical or text series names";
             this.toolTip_Help.SetToolTip(this.chkBlankBanners, "Enable to download blank series widebanners as well as localized banners.");
             this.chkBlankBanners.UseVisualStyleBackColor = true;
@@ -875,10 +876,10 @@ namespace WindowPlugins.GUITVSeries
             // checkDownloadEpisodeSnapshots
             // 
             this.checkDownloadEpisodeSnapshots.AutoSize = true;
-            this.checkDownloadEpisodeSnapshots.Location = new System.Drawing.Point(10, 308);
+            this.checkDownloadEpisodeSnapshots.Location = new System.Drawing.Point(8, 335);
             this.checkDownloadEpisodeSnapshots.Name = "checkDownloadEpisodeSnapshots";
             this.checkDownloadEpisodeSnapshots.Size = new System.Drawing.Size(172, 17);
-            this.checkDownloadEpisodeSnapshots.TabIndex = 23;
+            this.checkDownloadEpisodeSnapshots.TabIndex = 24;
             this.checkDownloadEpisodeSnapshots.Text = "Download Episode &Thumbnails";
             this.toolTip_Help.SetToolTip(this.checkDownloadEpisodeSnapshots, "Enable to download Episode Thumbnails if available.");
             this.checkDownloadEpisodeSnapshots.UseVisualStyleBackColor = true;
@@ -949,10 +950,10 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_AutoDownloadMissingArtwork
             // 
             this.checkBox_AutoDownloadMissingArtwork.AutoSize = true;
-            this.checkBox_AutoDownloadMissingArtwork.Location = new System.Drawing.Point(10, 378);
+            this.checkBox_AutoDownloadMissingArtwork.Location = new System.Drawing.Point(8, 405);
             this.checkBox_AutoDownloadMissingArtwork.Name = "checkBox_AutoDownloadMissingArtwork";
             this.checkBox_AutoDownloadMissingArtwork.Size = new System.Drawing.Size(337, 17);
-            this.checkBox_AutoDownloadMissingArtwork.TabIndex = 26;
+            this.checkBox_AutoDownloadMissingArtwork.TabIndex = 27;
             this.checkBox_AutoDownloadMissingArtwork.Text = "Download missing artwork for existing series/season on local scan";
             this.toolTip_Help.SetToolTip(this.checkBox_AutoDownloadMissingArtwork, "Only update new artwork when unchecked.  This can help speed up import for large " +
         "collections.");
@@ -962,10 +963,10 @@ namespace WindowPlugins.GUITVSeries
             // checkboxAutoDownloadFanartSeriesName
             // 
             this.checkboxAutoDownloadFanartSeriesName.AutoSize = true;
-            this.checkboxAutoDownloadFanartSeriesName.Location = new System.Drawing.Point(424, 404);
+            this.checkboxAutoDownloadFanartSeriesName.Location = new System.Drawing.Point(422, 431);
             this.checkboxAutoDownloadFanartSeriesName.Name = "checkboxAutoDownloadFanartSeriesName";
             this.checkboxAutoDownloadFanartSeriesName.Size = new System.Drawing.Size(265, 17);
-            this.checkboxAutoDownloadFanartSeriesName.TabIndex = 0;
+            this.checkboxAutoDownloadFanartSeriesName.TabIndex = 40;
             this.checkboxAutoDownloadFanartSeriesName.Text = "Download Fanart containing Series Names (Logos)";
             this.toolTip_Help.SetToolTip(this.checkboxAutoDownloadFanartSeriesName, "Enable to automatically download Fanart that contain series names in artwork, use" +
         "rs can\r\nstill choose Fanart that contain series names from the Fanart Chooser wi" +
@@ -2187,13 +2188,14 @@ namespace WindowPlugins.GUITVSeries
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OnlineData.AutoScroll = true;
+            this.panel_OnlineData.Controls.Add(this.dbOptCheckBoxCleanOnlineEpisodes);
             this.panel_OnlineData.Controls.Add(this.dbOptCheckBoxDownloadActors);
             this.panel_OnlineData.Controls.Add(this.dbOptionCheckBox4);
             this.panel_OnlineData.Controls.Add(this.label11);
             this.panel_OnlineData.Controls.Add(this.nudConsecFailures);
             this.panel_OnlineData.Controls.Add(this.label20);
             this.panel_OnlineData.Controls.Add(this.buttonArtworkDownloadLimits);
-            this.panel_OnlineData.Controls.Add(this.dbOptionCheckBox1);
+            this.panel_OnlineData.Controls.Add(this.dbOptCheckBoxGetTextBanners);
             this.panel_OnlineData.Controls.Add(this.label18);
             this.panel_OnlineData.Controls.Add(this.groupBox5);
             this.panel_OnlineData.Controls.Add(this.lblImportDelaySecs);
@@ -2236,15 +2238,15 @@ namespace WindowPlugins.GUITVSeries
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(197, 466);
+            this.label11.Location = new System.Drawing.Point(195, 493);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(43, 13);
-            this.label11.TabIndex = 31;
+            this.label11.TabIndex = 32;
             this.label11.Text = "failures.";
             // 
             // nudConsecFailures
             // 
-            this.nudConsecFailures.Location = new System.Drawing.Point(136, 462);
+            this.nudConsecFailures.Location = new System.Drawing.Point(134, 489);
             this.nudConsecFailures.Maximum = new decimal(new int[] {
             10,
             0,
@@ -2257,7 +2259,7 @@ namespace WindowPlugins.GUITVSeries
             0});
             this.nudConsecFailures.Name = "nudConsecFailures";
             this.nudConsecFailures.Size = new System.Drawing.Size(54, 20);
-            this.nudConsecFailures.TabIndex = 30;
+            this.nudConsecFailures.TabIndex = 31;
             this.nudConsecFailures.Value = new decimal(new int[] {
             3,
             0,
@@ -2268,18 +2270,18 @@ namespace WindowPlugins.GUITVSeries
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(7, 466);
+            this.label20.Location = new System.Drawing.Point(5, 493);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(121, 13);
-            this.label20.TabIndex = 29;
+            this.label20.TabIndex = 30;
             this.label20.Text = "Cancel downloads after ";
             // 
             // buttonArtworkDownloadLimits
             // 
-            this.buttonArtworkDownloadLimits.Location = new System.Drawing.Point(35, 402);
+            this.buttonArtworkDownloadLimits.Location = new System.Drawing.Point(33, 429);
             this.buttonArtworkDownloadLimits.Name = "buttonArtworkDownloadLimits";
             this.buttonArtworkDownloadLimits.Size = new System.Drawing.Size(209, 23);
-            this.buttonArtworkDownloadLimits.TabIndex = 27;
+            this.buttonArtworkDownloadLimits.TabIndex = 28;
             this.buttonArtworkDownloadLimits.Text = "Configure Artwork Download Limits...";
             this.buttonArtworkDownloadLimits.UseVisualStyleBackColor = true;
             this.buttonArtworkDownloadLimits.Click += new System.EventHandler(this.buttonArtworkDownloadLimits_Click);
@@ -2288,19 +2290,19 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(7, 283);
+            this.label18.Location = new System.Drawing.Point(5, 310);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(50, 13);
-            this.label18.TabIndex = 21;
+            this.label18.TabIndex = 22;
             this.label18.Text = "Artwork";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // groupBox5
             // 
-            this.groupBox5.Location = new System.Drawing.Point(65, 289);
+            this.groupBox5.Location = new System.Drawing.Point(63, 316);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(433, 2);
-            this.groupBox5.TabIndex = 22;
+            this.groupBox5.TabIndex = 23;
             this.groupBox5.TabStop = false;
             // 
             // lblImportDelaySecs
@@ -2324,26 +2326,26 @@ namespace WindowPlugins.GUITVSeries
             // checkBox_AutoUpdateAllFanart
             // 
             this.checkBox_AutoUpdateAllFanart.AutoSize = true;
-            this.checkBox_AutoUpdateAllFanart.Location = new System.Drawing.Point(424, 380);
+            this.checkBox_AutoUpdateAllFanart.Location = new System.Drawing.Point(422, 407);
             this.checkBox_AutoUpdateAllFanart.Name = "checkBox_AutoUpdateAllFanart";
             this.checkBox_AutoUpdateAllFanart.Size = new System.Drawing.Size(192, 17);
-            this.checkBox_AutoUpdateAllFanart.TabIndex = 38;
+            this.checkBox_AutoUpdateAllFanart.TabIndex = 39;
             this.checkBox_AutoUpdateAllFanart.Text = "Update all existing Fanart on Import";
             this.checkBox_AutoUpdateAllFanart.UseVisualStyleBackColor = true;
             this.checkBox_AutoUpdateAllFanart.CheckedChanged += new System.EventHandler(this.checkBox_AutoUpdateAllFanart_CheckedChanged);
             // 
             // label73
             // 
-            this.label73.Location = new System.Drawing.Point(570, 354);
+            this.label73.Location = new System.Drawing.Point(568, 381);
             this.label73.Name = "label73";
             this.label73.Size = new System.Drawing.Size(66, 21);
-            this.label73.TabIndex = 37;
+            this.label73.TabIndex = 38;
             this.label73.Text = "fanarts";
             this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // spinMaxFanarts
             // 
-            this.spinMaxFanarts.Location = new System.Drawing.Point(521, 355);
+            this.spinMaxFanarts.Location = new System.Drawing.Point(519, 382);
             this.spinMaxFanarts.Maximum = new decimal(new int[] {
             99,
             0,
@@ -2356,7 +2358,7 @@ namespace WindowPlugins.GUITVSeries
             0});
             this.spinMaxFanarts.Name = "spinMaxFanarts";
             this.spinMaxFanarts.Size = new System.Drawing.Size(36, 20);
-            this.spinMaxFanarts.TabIndex = 36;
+            this.spinMaxFanarts.TabIndex = 37;
             this.spinMaxFanarts.Value = new decimal(new int[] {
             3,
             0,
@@ -2366,19 +2368,19 @@ namespace WindowPlugins.GUITVSeries
             // 
             // label72
             // 
-            this.label72.Location = new System.Drawing.Point(449, 354);
+            this.label72.Location = new System.Drawing.Point(447, 381);
             this.label72.Name = "label72";
             this.label72.Size = new System.Drawing.Size(66, 21);
-            this.label72.TabIndex = 35;
+            this.label72.TabIndex = 36;
             this.label72.Text = "Retrieve:";
             this.label72.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label71
             // 
-            this.label71.Location = new System.Drawing.Point(449, 329);
+            this.label71.Location = new System.Drawing.Point(447, 356);
             this.label71.Name = "label71";
             this.label71.Size = new System.Drawing.Size(66, 21);
-            this.label71.TabIndex = 33;
+            this.label71.TabIndex = 34;
             this.label71.Text = "Resolution:";
             this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -2390,19 +2392,19 @@ namespace WindowPlugins.GUITVSeries
             "Both",
             "1280x720",
             "1920x1080"});
-            this.cboFanartResolution.Location = new System.Drawing.Point(521, 329);
+            this.cboFanartResolution.Location = new System.Drawing.Point(519, 356);
             this.cboFanartResolution.Name = "cboFanartResolution";
             this.cboFanartResolution.Size = new System.Drawing.Size(121, 21);
-            this.cboFanartResolution.TabIndex = 34;
+            this.cboFanartResolution.TabIndex = 35;
             this.cboFanartResolution.SelectedIndexChanged += new System.EventHandler(this.cboFanartResolution_SelectedIndexChanged);
             // 
             // chkAutoDownloadFanart
             // 
             this.chkAutoDownloadFanart.AutoSize = true;
-            this.chkAutoDownloadFanart.Location = new System.Drawing.Point(424, 308);
+            this.chkAutoDownloadFanart.Location = new System.Drawing.Point(422, 335);
             this.chkAutoDownloadFanart.Name = "chkAutoDownloadFanart";
             this.chkAutoDownloadFanart.Size = new System.Drawing.Size(202, 17);
-            this.chkAutoDownloadFanart.TabIndex = 32;
+            this.chkAutoDownloadFanart.TabIndex = 33;
             this.chkAutoDownloadFanart.Text = "Automatically download Series &Fanart";
             this.chkAutoDownloadFanart.UseVisualStyleBackColor = true;
             this.chkAutoDownloadFanart.CheckedChanged += new System.EventHandler(this.chkAutoDownloadFanart_CheckedChanged);
@@ -3205,16 +3207,31 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
             // 
+            // dbOptCheckBoxCleanOnlineEpisodes
+            // 
+            this.dbOptCheckBoxCleanOnlineEpisodes.AutoSize = true;
+            this.dbOptCheckBoxCleanOnlineEpisodes.Checked = true;
+            this.dbOptCheckBoxCleanOnlineEpisodes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptCheckBoxCleanOnlineEpisodes.Location = new System.Drawing.Point(8, 283);
+            this.dbOptCheckBoxCleanOnlineEpisodes.Name = "dbOptCheckBoxCleanOnlineEpisodes";
+            this.dbOptCheckBoxCleanOnlineEpisodes.Option = "CleanOnlineEpisodes";
+            this.dbOptCheckBoxCleanOnlineEpisodes.Size = new System.Drawing.Size(368, 17);
+            this.dbOptCheckBoxCleanOnlineEpisodes.TabIndex = 21;
+            this.dbOptCheckBoxCleanOnlineEpisodes.Text = "Remove online episode references from database when not found online";
+            this.dbOptCheckBoxCleanOnlineEpisodes.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptCheckBoxCleanOnlineEpisodes, "This option will help keep your database clean when enabled");
+            this.dbOptCheckBoxCleanOnlineEpisodes.UseVisualStyleBackColor = true;
+            // 
             // dbOptCheckBoxDownloadActors
             // 
             this.dbOptCheckBoxDownloadActors.AutoSize = true;
             this.dbOptCheckBoxDownloadActors.Checked = true;
             this.dbOptCheckBoxDownloadActors.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptCheckBoxDownloadActors.Location = new System.Drawing.Point(424, 428);
+            this.dbOptCheckBoxDownloadActors.Location = new System.Drawing.Point(422, 455);
             this.dbOptCheckBoxDownloadActors.Name = "dbOptCheckBoxDownloadActors";
             this.dbOptCheckBoxDownloadActors.Option = "AutoDownloadActors";
             this.dbOptCheckBoxDownloadActors.Size = new System.Drawing.Size(271, 17);
-            this.dbOptCheckBoxDownloadActors.TabIndex = 39;
+            this.dbOptCheckBoxDownloadActors.TabIndex = 0;
             this.dbOptCheckBoxDownloadActors.Text = "Automatically download actor thumbnails and details";
             this.dbOptCheckBoxDownloadActors.ToolTip = "";
             this.dbOptCheckBoxDownloadActors.UseVisualStyleBackColor = true;
@@ -3224,11 +3241,11 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBox4.AutoSize = true;
             this.dbOptionCheckBox4.Checked = true;
             this.dbOptionCheckBox4.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBox4.Location = new System.Drawing.Point(10, 438);
+            this.dbOptionCheckBox4.Location = new System.Drawing.Point(8, 465);
             this.dbOptionCheckBox4.Name = "dbOptionCheckBox4";
             this.dbOptionCheckBox4.Option = "checkArtwork";
             this.dbOptionCheckBox4.Size = new System.Drawing.Size(244, 17);
-            this.dbOptionCheckBox4.TabIndex = 28;
+            this.dbOptionCheckBox4.TabIndex = 29;
             this.dbOptionCheckBox4.Text = "Check artwork downloaded exists and is valid.";
             this.dbOptionCheckBox4.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBox4, "Enable this option for an additional check of all series posters and banners.\r\n\r\n" +
@@ -3236,18 +3253,18 @@ namespace WindowPlugins.GUITVSeries
         "ed.");
             this.dbOptionCheckBox4.UseVisualStyleBackColor = true;
             // 
-            // dbOptionCheckBox1
+            // dbOptCheckBoxGetTextBanners
             // 
-            this.dbOptionCheckBox1.AutoSize = true;
-            this.dbOptionCheckBox1.Location = new System.Drawing.Point(10, 355);
-            this.dbOptionCheckBox1.Name = "dbOptionCheckBox1";
-            this.dbOptionCheckBox1.Option = "GetTextBanners";
-            this.dbOptionCheckBox1.Size = new System.Drawing.Size(282, 17);
-            this.dbOptionCheckBox1.TabIndex = 25;
-            this.dbOptionCheckBox1.Text = "Download Series WideBanners containing \'Text\' name";
-            this.dbOptionCheckBox1.ToolTip = "Enable to download series widebanners that do not contain a graphical series name" +
+            this.dbOptCheckBoxGetTextBanners.AutoSize = true;
+            this.dbOptCheckBoxGetTextBanners.Location = new System.Drawing.Point(8, 382);
+            this.dbOptCheckBoxGetTextBanners.Name = "dbOptCheckBoxGetTextBanners";
+            this.dbOptCheckBoxGetTextBanners.Option = "GetTextBanners";
+            this.dbOptCheckBoxGetTextBanners.Size = new System.Drawing.Size(282, 17);
+            this.dbOptCheckBoxGetTextBanners.TabIndex = 26;
+            this.dbOptCheckBoxGetTextBanners.Text = "Download Series WideBanners containing \'Text\' name";
+            this.dbOptCheckBoxGetTextBanners.ToolTip = "Enable to download series widebanners that do not contain a graphical series name" +
     ".";
-            this.dbOptionCheckBox1.UseVisualStyleBackColor = true;
+            this.dbOptCheckBoxGetTextBanners.UseVisualStyleBackColor = true;
             // 
             // dbOptChkBoxPlayOutOfOrderCheck
             // 
@@ -3585,7 +3602,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.GroupBox groupBox12;
         private System.Windows.Forms.Panel panel_OnlineData;
         private System.Windows.Forms.Button buttonArtworkDownloadLimits;
-        private Configuration.DBOptionCheckBox dbOptionCheckBox1;
+        private Configuration.DBOptionCheckBox dbOptCheckBoxGetTextBanners;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label lblImportDelaySecs;
@@ -3739,5 +3756,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label20;
         private Configuration.DBOptionCheckBox dbOptionCheckBox4;
         private Configuration.DBOptionCheckBox dbOptCheckBoxDownloadActors;
+        private Configuration.DBOptionCheckBox dbOptCheckBoxCleanOnlineEpisodes;
     }
 }

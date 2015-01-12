@@ -834,6 +834,16 @@ namespace WindowPlugins.GUITVSeries
             return false;
         }
 
+        public void DeleteOnlineEpisode()
+        {
+            var conditions = new SQLCondition();
+            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, this[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
+            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, this[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeIndex, this[DBOnlineEpisode.cEpisodeIndex], SQLConditionType.Equal);
+
+            DBOnlineEpisode.Clear(conditions);
+        }
+
         public List<string> deleteEpisode(TVSeriesPlugin.DeleteMenuItems type, bool deleteFromSeasonOrSeries = false)
         {
             List<string> resultMsg = new List<string>();
