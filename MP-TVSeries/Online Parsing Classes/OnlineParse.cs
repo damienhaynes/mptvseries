@@ -51,6 +51,7 @@ namespace WindowPlugins.GUITVSeries
         GetOnlineUpdates,
         UpdateSeries,
         UpdateEpisodes,
+        CleanupEpisodes,
         UpdateEpisodeCounts,
         UpdateUserRatings,
         UpdateBanners,
@@ -62,7 +63,7 @@ namespace WindowPlugins.GUITVSeries
         UpdateEpisodeThumbNails,
         UpdateUserFavourites,
 
-        UpdateRecentlyAdded        
+        UpdateRecentlyAdded
     }
 
     public class ParsingProgress
@@ -110,6 +111,7 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.GetNewBanners, 
             ParsingAction.GetNewFanArt,
             ParsingAction.GetNewActors,
+            ParsingAction.CleanupEpisodes,
             ParsingAction.UpdateEpisodeThumbNails,
             ParsingAction.UpdateUserFavourites,
             ParsingAction.UpdateRecentlyAdded,
@@ -197,6 +199,8 @@ namespace WindowPlugins.GUITVSeries
         DateTime m_LastOnlineMirrorUpdate = DateTime.MinValue;
 
         public static bool IsMainOnlineParseComplete = true; // not including extra background threads
+
+        Dictionary<string, List<DBOnlineEpisode>> OnlineEpisodes = new Dictionary<string, List<DBOnlineEpisode>>();
 
         int RETRY_INTERVAL = 1000;
         int RETRY_MULTIPLIER = 2;
@@ -403,7 +407,12 @@ namespace WindowPlugins.GUITVSeries
                     
                     case ParsingAction.CheckArtwork:
                         if (DBOption.GetOptions(DBOption.cCheckArtwork) == 1)
-                        this.CheckBanners();
+                            this.CheckBanners();
+                        break;
+
+                    case ParsingAction.CleanupEpisodes:
+                        if (DBOption.GetOptions(DBOption.cCleanOnlineEpisodes) == 1)
+                            this.CleanEpisodes();
                         break;
 
                     case ParsingAction.GetOnlineUpdates:
@@ -1106,7 +1115,7 @@ namespace WindowPlugins.GUITVSeries
                     conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     conditions.Add(new DBEpisode(), DBEpisode.cCompositeUpdated, 0, SQLConditionType.Equal);
-                    episodesList = DBEpisode.Get(conditions, false);                    
+                    episodesList = DBEpisode.Get(conditions, false);
                 }
 
                 epCount += episodesList.Count;
@@ -1123,6 +1132,9 @@ namespace WindowPlugins.GUITVSeries
                             matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                         else // user mode
                             m_params.UserEpisodeMatcher.MatchEpisodesForSeries(series, episodesList, episodesParser.Results);
+
+                        // add online episode for cleanup task
+                        OnlineEpisodes.Add(series[DBOnlineSeries.cID], episodesParser.Results);
                     } 
                     else
                         MPTVSeriesLog.Write(string.Format("No episodes could be identified online for {0}, check that the online database has these episodes", series.ToString()));
@@ -1466,6 +1478,44 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
             }
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, seriesList.Count));
+        }
+
+        /// <summary>
+        /// Removes any episodes from the online_episodes table that no longer exists online
+        /// </summary>
+        private void CleanEpisodes()
+        {
+            MPTVSeriesLog.Write(bigLogMessage("Cleaning Online Episode References"));
+
+            int i = 0;
+            foreach (var series in OnlineEpisodes.Keys)
+            {
+                var seriesObj = Helper.getCorrespondingSeries(int.Parse(series));
+
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, seriesObj.ToString(), ++i, OnlineEpisodes.Keys.Count));
+
+                // get the current online episodes in database
+                var episodes = DBEpisode.Get(int.Parse(series), false);
+                if (episodes == null) continue;
+
+                foreach (var episode in episodes)
+                {
+                    var expectedEpisodes = OnlineEpisodes[series];
+
+                    int episodeIdx = episode[DBOnlineEpisode.cEpisodeIndex];
+                    int seasonIdx = episode[DBOnlineEpisode.cSeasonIndex];
+
+                    // check if episode its in the expected result
+                    if (!expectedEpisodes.Any(e => e[DBOnlineEpisode.cEpisodeIndex] == episodeIdx &&
+                                                   e[DBOnlineEpisode.cSeasonIndex] == seasonIdx))
+                    {
+                        string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online", seriesObj.ToString(), seasonIdx, episodeIdx);
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
+                        episode.DeleteOnlineEpisode();
+                    }
+                }
+            }
+            m_worker.ReportProgress(100, new ParsingProgress(ParsingAction.CleanupEpisodes, OnlineEpisodes.Keys.Count));
         }
 
         /// <summary>
