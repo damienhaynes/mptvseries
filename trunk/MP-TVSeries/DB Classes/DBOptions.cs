@@ -173,6 +173,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cCheckPlayOutOfOrder = "CheckPlayOutOfOrder";
         public const string cFilterUnwatched = "FilterUnwatched";
         public const string cCleanOnlineEpisodes = "CleanOnlineEpisodes";
+        public const string cCleanOnlineEpisodeZero = "CleanOnlineEpisodeZero";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -544,6 +545,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cCleanOnlineEpisodes) == null)
                 SetOptions(cCleanOnlineEpisodes, true);
+
+            if (GetOptions(cCleanOnlineEpisodeZero) == null)
+                SetOptions(cCleanOnlineEpisodeZero, false);
 
             #endregion
         }
