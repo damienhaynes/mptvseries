@@ -1637,7 +1637,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
             this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
-        "sn\'t have any.\r\nNote: appliable only when using SubCentral.");
+        "sn\'t have any.\r\nNote: applicable only when using SubCentral.");
             this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
             // 
             // dbOptChkBoxCountEmptyFutureEps
