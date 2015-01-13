@@ -331,8 +331,8 @@ namespace WindowPlugins.GUITVSeries
 
             chkUseRegionalDateFormatString.Checked = DBOption.GetOptions(DBOption.cUseRegionalDateFormatString);
 
-            if (!(Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled)))
-                dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Visible = false;
+            //if (!(Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled)))
+            //    dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Visible = false;
 
             dbOptionCheckBoxRemoveEpZero.Enabled = DBOption.GetOptions(DBOption.cCleanOnlineEpisodes);
             
