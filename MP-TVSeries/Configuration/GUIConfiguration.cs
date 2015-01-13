@@ -334,6 +334,8 @@ namespace WindowPlugins.GUITVSeries
             if (!(Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled)))
                 dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Visible = false;
 
+            dbOptionCheckBoxRemoveEpZero.Enabled = DBOption.GetOptions(DBOption.cCleanOnlineEpisodes);
+            
             tabControl_Details.SelectTab(1);
         }
 
@@ -4533,6 +4535,18 @@ namespace WindowPlugins.GUITVSeries
         private void nudConsecFailures_ValueChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cMaxConsecutiveDownloadErrors, (int)nudConsecFailures.Value);
+        }
+
+        private void dbOptCheckBoxCleanOnlineEpisodes_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dbOptCheckBoxCleanOnlineEpisodes.Checked)
+            {
+                dbOptionCheckBoxRemoveEpZero.Enabled = true;
+            }
+            else
+            {
+                dbOptionCheckBoxRemoveEpZero.Enabled = false;
+            }
         }
     }
     
