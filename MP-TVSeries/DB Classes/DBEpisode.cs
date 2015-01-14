@@ -844,6 +844,17 @@ namespace WindowPlugins.GUITVSeries
             DBOnlineEpisode.Clear(conditions);
         }
 
+        public void DeleteLocalEpisode()
+        {
+            if (string.IsNullOrEmpty(this[DBEpisode.cFilename]))
+                return;
+
+            var condition = new SQLCondition();
+            condition.Add(new DBEpisode(), DBEpisode.cFilename, this[DBEpisode.cFilename], SQLConditionType.Equal);
+
+            DBEpisode.Clear(condition);
+        }
+
         public List<string> deleteEpisode(TVSeriesPlugin.DeleteMenuItems type, bool deleteFromSeasonOrSeries = false)
         {
             List<string> resultMsg = new List<string>();
