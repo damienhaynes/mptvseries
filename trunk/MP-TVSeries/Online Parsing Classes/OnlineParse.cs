@@ -1515,6 +1515,9 @@ namespace WindowPlugins.GUITVSeries
                     {
                         string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online or is invalid", seriesObj.ToString(), seasonIdx, episodeIdx);
                         m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
+
+                        // delete local and online references in database
+                        episode.DeleteLocalEpisode();
                         episode.DeleteOnlineEpisode();
                     }
                 }
