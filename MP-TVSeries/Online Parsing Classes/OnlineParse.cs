@@ -1503,7 +1503,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (var episode in episodes)
                 {
                     var expectedEpisodes = OnlineEpisodes[series];
-
+                    
                     int episodeIdx = episode[DBOnlineEpisode.cEpisodeIndex];
                     int seasonIdx = episode[DBOnlineEpisode.cSeasonIndex];
 
@@ -1519,6 +1519,19 @@ namespace WindowPlugins.GUITVSeries
                         // delete local and online references in database
                         episode.DeleteLocalEpisode();
                         episode.DeleteOnlineEpisode();
+
+                        // check if we should clear the season as well
+                        int episodesLeftInSeason = episodes.Count(e => e[DBOnlineEpisode.cSeasonIndex] == episode[DBOnlineEpisode.cSeasonIndex]);
+                        if (episodesLeftInSeason == 1)
+                        {
+                            message = string.Format("{0} - Removing season {1}, season no longer has any associated episodes", seriesObj.ToString(), seasonIdx);
+                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
+
+                            var conditions = new SQLCondition();
+                            conditions.Add(new DBSeason(), DBSeason.cSeriesID, series, SQLConditionType.Equal);
+                            conditions.Add(new DBSeason(), DBSeason.cIndex, episode[DBOnlineEpisode.cSeasonIndex], SQLConditionType.Equal);
+                            DBSeason.Clear(conditions);
+                        }
                     }
                 }
             }

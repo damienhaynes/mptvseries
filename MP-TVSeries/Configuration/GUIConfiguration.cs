@@ -201,6 +201,8 @@ namespace WindowPlugins.GUITVSeries
             textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cPluginName);
             checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
+            dbOptCheckBoxCleanOnlineEpisodes.Enabled = checkBox_FullSeriesRetrieval.Checked;
+            dbOptCheckBoxRemoveEpZero.Enabled = checkBox_FullSeriesRetrieval.Checked;
             checkBox_AutoChooseSeries.Checked = DBOption.GetOptions(DBOption.cAutoChooseSeries);
             checkBox_AutoChooseOrder.Checked = DBOption.GetOptions(DBOption.cAutoChooseOrder);            
             checkBox_Episode_OnlyShowLocalFiles.Checked = !DBOption.GetOptions(DBOption.cOnlyShowLocalFiles);
@@ -334,7 +336,7 @@ namespace WindowPlugins.GUITVSeries
             //if (!(Helper.IsSubCentralAvailableAndEnabled && DBOption.GetOptions(DBOption.cSubCentralEnabled)))
             //    dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Visible = false;
 
-            dbOptionCheckBoxRemoveEpZero.Enabled = DBOption.GetOptions(DBOption.cCleanOnlineEpisodes);
+            dbOptCheckBoxRemoveEpZero.Enabled = DBOption.GetOptions(DBOption.cCleanOnlineEpisodes);
             
             tabControl_Details.SelectTab(1);
         }
@@ -2156,6 +2158,9 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_FullSeriesRetrieval_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cFullSeriesRetrieval, checkBox_FullSeriesRetrieval.Checked);
+
+            dbOptCheckBoxCleanOnlineEpisodes.Enabled = checkBox_FullSeriesRetrieval.Checked;
+            dbOptCheckBoxRemoveEpZero.Enabled = checkBox_FullSeriesRetrieval.Checked;
         }
 
         private void checkBox_AutoChooseSeries_CheckedChanged(object sender, EventArgs e)
@@ -4541,11 +4546,11 @@ namespace WindowPlugins.GUITVSeries
         {
             if (dbOptCheckBoxCleanOnlineEpisodes.Checked)
             {
-                dbOptionCheckBoxRemoveEpZero.Enabled = true;
+                dbOptCheckBoxRemoveEpZero.Enabled = true;
             }
             else
             {
-                dbOptionCheckBoxRemoveEpZero.Enabled = false;
+                dbOptCheckBoxRemoveEpZero.Enabled = false;
             }
         }
     }
