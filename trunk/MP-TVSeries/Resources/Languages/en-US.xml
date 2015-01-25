@@ -312,6 +312,7 @@
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Are you sure you want to continue?</string>
   <string name="Filters" Original="Filters">Filters</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">UnWatched Episodes</string>
-  <string name="AllEpisodes" Original="All Episodes">All Episodes</string>
-  <string name="Biography" Original="Biography">Biography</string>
+  <string name="OverrideLanguage" Original="Override Language Settings">Override Language Settings</string>
+  <string name="ChangeSeriesLanguage" Original="Change Series Meta Language">Change Series Meta Language</string>
+  
 </resources>
