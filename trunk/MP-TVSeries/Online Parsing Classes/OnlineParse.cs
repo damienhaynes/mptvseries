@@ -1500,6 +1500,7 @@ namespace WindowPlugins.GUITVSeries
 
                 bool cleanEpisodeZero = DBOption.GetOptions(DBOption.cCleanOnlineEpisodeZero);
 
+                var epsRemovedInSeason = new Dictionary<int, int>();
                 foreach (var episode in episodes)
                 {
                     var expectedEpisodes = OnlineEpisodes[series];
@@ -1520,9 +1521,21 @@ namespace WindowPlugins.GUITVSeries
                         episode.DeleteLocalEpisode();
                         episode.DeleteOnlineEpisode();
 
+                        // keep a counter of episodes we remove per season 
+                        // if amount removed equals total eps in season then we can remove season
+                        int season = episode[DBOnlineEpisode.cSeasonIndex];
+                        if (epsRemovedInSeason.ContainsKey(season))
+                        {
+                            epsRemovedInSeason[season] = epsRemovedInSeason[season] + 1;
+                        }
+                        else
+                        {
+                            epsRemovedInSeason.Add(season, 1);
+                        }
+
                         // check if we should clear the season as well
-                        int episodesLeftInSeason = episodes.Count(e => e[DBOnlineEpisode.cSeasonIndex] == episode[DBOnlineEpisode.cSeasonIndex]);
-                        if (episodesLeftInSeason == 1)
+                        int episodesInSeason = episodes.Where(e => e[DBOnlineEpisode.cSeasonIndex] == season).Count();
+                        if (episodesInSeason == epsRemovedInSeason[season])
                         {
                             message = string.Format("{0} - Removing season {1}, season no longer has any associated episodes", seriesObj.ToString(), seasonIdx);
                             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
