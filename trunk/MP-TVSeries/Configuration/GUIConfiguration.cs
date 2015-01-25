@@ -337,6 +337,8 @@ namespace WindowPlugins.GUITVSeries
             //    dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Visible = false;
 
             dbOptCheckBoxRemoveEpZero.Enabled = DBOption.GetOptions(DBOption.cCleanOnlineEpisodes);
+
+            checkBox_OverrideComboLang.Checked = DBOption.GetOptions(DBOption.cOverrideLanguage);
             
             tabControl_Details.SelectTab(1);
         }
@@ -355,8 +357,8 @@ namespace WindowPlugins.GUITVSeries
             // Get Online Languages and fill language combobox
             // do this in background thread so doesn't lockup during load
             LoadOnlineLanguages();
-
             LoadViews();
+
 			// Select First Item in list
 			if (_availViews.Items.Count > 0)
 				_availViews.SelectedIndex = 0;
@@ -397,7 +399,11 @@ namespace WindowPlugins.GUITVSeries
             if (onlineLanguages.Count != 0)
             {
                 MPTVSeriesLog.Write("Successfully retrieved {0} languages from online", onlineLanguages.Count);
-                comboOnlineLang.Enabled = true;
+
+                if (!DBOption.GetOptions(DBOption.cOverrideLanguage))
+                {
+                    comboOnlineLang.Enabled = true;
+                }
             }
         }
 
@@ -407,14 +413,22 @@ namespace WindowPlugins.GUITVSeries
             
             comboOnlineLang.Enabled = false;
 
-            // get the online languages from the interface            
-            onlineLanguages.AddRange(new GetLanguages().languages);
-            string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
-            foreach (Language lang in onlineLanguages)
+            // get the online languages from the interface
+            if (onlineLanguages.Count == 0)
             {
-                comboOnlineLang.Items.Add(lang.language);
-                if (lang.id.ToString() == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
-                if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                onlineLanguages.AddRange(new GetLanguages().languages);
+            }
+
+            // Not necessary to read into the combobox if not used!
+            if (!DBOption.GetOptions(DBOption.cOverrideLanguage))
+            {
+                string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
+                foreach (Language lang in onlineLanguages)
+                {
+                    comboOnlineLang.Items.Add(lang.language);
+                    if (lang.id.ToString() == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                    if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                }
             }
         }
         #endregion
@@ -1481,7 +1495,7 @@ namespace WindowPlugins.GUITVSeries
             //////////////////////////////////////////////////////////////////////////////
             #region Clears all fields so new data can be entered
 
-            this.detailsPropertyBindingSource.Clear();
+            this.dataGridView1.Rows.Clear();
             try
             {
                 if (this.pictureBox_Series.Image != null)
@@ -1847,8 +1861,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cPoster:
                                 case DBOnlineSeries.cViewTags:
                                 case DBOnlineSeries.cBanner:
-                                case DBOnlineSeries.cEpisodeOrders:                                
-                                case DBOnlineSeries.cLanguage:
+                                case DBOnlineSeries.cEpisodeOrders:
                                 case DBOnlineSeries.cSeriesID:
                                 case DBOnlineSeries.cOriginalName:
                                 case DBOnlineSeries.cHasNewEpisodes:
@@ -1866,6 +1879,11 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                     // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    break;
+
+                                case DBOnlineSeries.cLanguage:
+                                    if ( !String.IsNullOrEmpty(series[key]) && DBOption.GetOptions(DBOption.cOverrideLanguage) )
+                                        AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
 
                                 case DBOnlineSeries.cRating:
@@ -2015,32 +2033,87 @@ namespace WindowPlugins.GUITVSeries
 
                 }
             }
-            if(id < 0)
-            {
-                // Add new Row
-                id = this.detailsPropertyBindingSource.Add(new DetailsProperty(FieldPrettyName, FieldValue));
-            } this.dataGridView1.Rows[id].Cells[1].Value = FieldValue; // we just edit the value
 
-            // First Column (Name)
-            DataGridViewCell cell = this.dataGridView1.Rows[id].Cells[0];
-            cell.Style.BackColor = System.Drawing.SystemColors.Control;
-            cell.ReadOnly = true;
-
-            // Second Column (Value)
-            cell = this.dataGridView1.Rows[id].Cells[1];
-            cell.Tag = FieldName;
-            if (!CanModify)
+            if (id < 0)
             {
-                cell.ReadOnly = true;
-                cell.Style.BackColor = System.Drawing.SystemColors.Control;
+                DataGridViewRow dataGridDetailRow = new DataGridViewRow();
+                DataGridViewTextBoxCell cFieldName;
+
+                if ((FieldName == "language") && (DBOption.GetOptions(DBOption.cOverrideLanguage)))
+                {
+                    dataGridDetailRow = new DataGridViewRow();
+                    cFieldName = new DataGridViewTextBoxCell();
+                    DataGridViewComboBoxCell cbCell = new DataGridViewComboBoxCell();
+
+                    // First Column (Name)
+                    cFieldName.Value = FieldName;
+                    cFieldName.Style.BackColor = System.Drawing.SystemColors.Control;
+                    dataGridDetailRow.Cells.Add(cFieldName);
+                    cFieldName.ReadOnly = true;
+
+                    // Second Column (Value)
+                    if (onlineLanguages.Count == 0)
+                    {
+                        onlineLanguages.AddRange(new GetLanguages().languages);
+                    }
+
+                    foreach (Language lang in onlineLanguages)
+                    {
+                        cbCell.Items.Add(lang.language);
+                    }
+
+                    Language selectedLang = onlineLanguages.Find(x => x.abbreviation.Contains(FieldValue));
+                    for (int i = 0; i < cbCell.Items.Count; i++)
+                    {
+                        string s = cbCell.Items[i].ToString();
+                        if (cbCell.Items[i].ToString() == selectedLang.language)
+                        {
+                            cbCell.Value = cbCell.Items[i];
+                        }
+                    }
+
+                    cbCell.Tag = FieldName;
+
+                    dataGridDetailRow.Cells.Add(cbCell);
+                    cbCell.ReadOnly = false;
+
+                    // Add the row to the DataGridView
+                    dataGridView1.Rows.Add(dataGridDetailRow);
+                }
+                else
+                {
+                    cFieldName = new DataGridViewTextBoxCell();
+                    DataGridViewTextBoxCell cFieldValue = new DataGridViewTextBoxCell();
+
+                    // First Column (Name)
+                    cFieldName.Value = FieldName;
+                    cFieldName.Style.BackColor = System.Drawing.SystemColors.Control;
+                    dataGridDetailRow.Cells.Add(cFieldName);
+                    cFieldName.ReadOnly = true;
+
+                    cFieldValue.Value = FieldValue;
+                    cFieldValue.Tag = FieldName;
+
+                    dataGridDetailRow.Cells.Add(cFieldValue);
+
+                    if (!CanModify)
+                    {
+                        cFieldValue.ReadOnly = true;
+                        cFieldValue.Style.BackColor = System.Drawing.SystemColors.Control;
+                    }
+
+                    if (userEdited)
+                    {
+                        cFieldValue.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+
+                    }
+
+                    cFieldValue.Style.Alignment = TextAlign;
+
+                    // Add the rows to the DataGridView
+                    dataGridView1.Rows.Add(dataGridDetailRow);
+                }
             }
-            if (userEdited)
-            {
-                cell.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
-            }
-
-            cell.Style.Alignment = TextAlign;
-
         }
 
         private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -2068,19 +2141,32 @@ namespace WindowPlugins.GUITVSeries
                 switch (origFieldName)
                 {
                     case DBSeries.cScanIgnore:
-                    case DBOnlineSeries.cMyRating:                    
+                    case DBOnlineSeries.cLanguage:
+                    case DBOnlineSeries.cSummary:
+                    case DBOnlineSeries.cMyRating:
                         editFieldName = origFieldName;
                         bUserEdit = false;
                         break;
                 }
-                
+
                 string newValue = (String)cell.Value;
 
                 switch (nodeEdited.Name)
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeEdited.Tag;
-                        series[editFieldName] = newValue;
+                        if (editFieldName == "language")
+                        {
+                            Language selectedLang = onlineLanguages.Find(x => x.language.Contains(newValue));
+                            if (selectedLang != null)
+                            {
+                                series[editFieldName] = selectedLang.abbreviation;
+                            }
+                        }
+                        else
+                        {
+                            series[editFieldName] = newValue;
+                        }    
                         series.Commit();
 
                         if (bUserEdit)
@@ -2096,7 +2182,7 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         if (series[DBOnlineSeries.cPrettyName].ToString().Length > 0)
-                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];                        
+                            nodeEdited.Text = series[DBOnlineSeries.cPrettyName];
                         break;
 
                     case DBSeason.cTableName:
@@ -2120,7 +2206,7 @@ namespace WindowPlugins.GUITVSeries
 
                     case DBEpisode.cTableName:
                         DBEpisode episode = (DBEpisode)nodeEdited.Tag;
-                        
+
                         if (episode.onlineEpisode.FieldNames.Contains(origFieldName))
                         {
                             episode.onlineEpisode[editFieldName] = newValue;
@@ -2639,7 +2725,7 @@ namespace WindowPlugins.GUITVSeries
                     if (this.treeView_Library.Nodes.Count == 0)
                     {
                         // also clear the data pane
-                        this.detailsPropertyBindingSource.Clear();
+                        this.dataGridView1.Rows.Clear();
                         try
                         {
                             if (this.pictureBox_Series.Image != null)
@@ -3684,6 +3770,29 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void checkBox_OverrideComboLang_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cOverrideLanguage, checkBox_OverrideComboLang.Checked);
+            if (checkBox_OverrideComboLang.Checked)
+            {
+                // Disable and clear
+                comboOnlineLang.Items.Clear();
+                comboOnlineLang.Enabled = false;
+                DBOption.SetOptions(DBOption.cOnlineLanguage, "en"); //Set the default value.
+                Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty;
+
+                MPTVSeriesLog.Write("Now you can change the language on each Series in Details Tab");
+                // Reload the tree for showing the language property
+                LoadTree();
+            }
+            else
+            {
+                LoadOnlineLanguages();
+                // Reload the tree for hideing the language property
+                LoadTree();
+            }
+        }
+
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
@@ -4593,6 +4702,7 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
+    [Obsolete("Not Used Anymore", true)]
     public class DetailsProperty
     {
         String m_Property = String.Empty;
@@ -4615,6 +4725,7 @@ namespace WindowPlugins.GUITVSeries
                 this.m_Property = value;
             }
         }
+
         public String Value
         {
             get
@@ -4626,6 +4737,5 @@ namespace WindowPlugins.GUITVSeries
                 this.m_Value = value;
             }
         }
-
     }
 }

@@ -117,6 +117,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_AutoChooseSeries = new System.Windows.Forms.CheckBox();
             this.checkBox_OnlineSearch = new System.Windows.Forms.CheckBox();
             this.comboOnlineLang = new System.Windows.Forms.ComboBox();
+            this.checkBox_OverrideComboLang = new System.Windows.Forms.CheckBox();
             this.linkDelUpdateTime = new System.Windows.Forms.LinkLabel();
             this.txtMainMirror = new System.Windows.Forms.TextBox();
             this.chkBlankBanners = new System.Windows.Forms.CheckBox();
@@ -287,7 +288,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log = new System.Windows.Forms.ListBox();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.detailsPropertyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dbOptCheckBoxRemoveEpZero = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptCheckBoxCleanOnlineEpisodes = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptCheckBoxDownloadActors = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -361,7 +361,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabAbout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader_Series
@@ -838,6 +837,19 @@ namespace WindowPlugins.GUITVSeries
             this.comboOnlineLang.TabIndex = 8;
             this.toolTip_Help.SetToolTip(this.comboOnlineLang, "Select the language to download TV Series information in, defaults to English");
             this.comboOnlineLang.SelectedIndexChanged += new System.EventHandler(this.comboOnlineLang_SelectedIndexChanged);
+            // 
+            // checkBox_OverrideComboLang
+            // 
+            this.checkBox_OverrideComboLang.AutoSize = true;
+            this.checkBox_OverrideComboLang.Location = new System.Drawing.Point(259, 86);
+            this.checkBox_OverrideComboLang.Name = "checkBox_OverrideComboLang";
+            this.checkBox_OverrideComboLang.Size = new System.Drawing.Size(117, 17);
+            this.checkBox_OverrideComboLang.TabIndex = 1;
+            this.checkBox_OverrideComboLang.Text = "Override Language for Series";
+            this.toolTip_Help.SetToolTip(this.checkBox_OverrideComboLang, "Enable this option to change the Meta language for specific series..\rLanguage can" +
+        " be manually entered or corrected in Details tab");
+            this.checkBox_OverrideComboLang.UseVisualStyleBackColor = true;
+            this.checkBox_OverrideComboLang.CheckedChanged += new System.EventHandler(this.checkBox_OverrideComboLang_CheckedChanged);
             // 
             // linkDelUpdateTime
             // 
@@ -1711,7 +1723,6 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
-            this.dataGridView1.DataSource = this.detailsPropertyBindingSource;
             dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2228,6 +2239,7 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Controls.Add(this.linkDelUpdateTime);
             this.panel_OnlineData.Controls.Add(this.label26);
             this.panel_OnlineData.Controls.Add(this.comboOnlineLang);
+            this.panel_OnlineData.Controls.Add(this.checkBox_OverrideComboLang);
             this.panel_OnlineData.Controls.Add(this.checkBox_OnlineSearch);
             this.panel_OnlineData.Controls.Add(this.checkBox_AutoChooseSeries);
             this.panel_OnlineData.Controls.Add(this.checkBox_FullSeriesRetrieval);
@@ -3205,10 +3217,6 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridViewTextBoxColumn2.HeaderText = "Value";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             // 
-            // detailsPropertyBindingSource
-            // 
-            this.detailsPropertyBindingSource.DataSource = typeof(WindowPlugins.GUITVSeries.DetailsProperty);
-            // 
             // dbOptionCheckBoxRemoveEpZero
             // 
             this.dbOptCheckBoxRemoveEpZero.AutoSize = true;
@@ -3530,7 +3538,6 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox4.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.detailsPropertyBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3542,7 +3549,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ColumnHeader columnHeader_Season;
         private System.Windows.Forms.ColumnHeader columnHeader_Episode;
         private System.Windows.Forms.ColumnHeader columnHeader_OriginallyAired;
-        private System.Windows.Forms.BindingSource detailsPropertyBindingSource;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ListBox listBox_Log;
         private System.Windows.Forms.ToolTip toolTip_Help;
@@ -3650,6 +3656,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel linkDelUpdateTime;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.ComboBox comboOnlineLang;
+        private System.Windows.Forms.CheckBox checkBox_OverrideComboLang;
         private System.Windows.Forms.CheckBox checkBox_OnlineSearch;
         private System.Windows.Forms.CheckBox checkBox_AutoChooseSeries;
         private System.Windows.Forms.CheckBox checkBox_FullSeriesRetrieval;

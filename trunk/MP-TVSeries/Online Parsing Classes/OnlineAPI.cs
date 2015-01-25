@@ -70,6 +70,28 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     }
     #endregion
 
+    static private string GetLanguageOverride(String sSeriesID)
+    {
+        string sqlCon = string.Empty;
+        SQLCondition cond = new SQLCondition();
+
+        sqlCon = "id = " + sSeriesID;
+        cond.AddCustom(sqlCon);
+
+        // Get the language that the user has selected in the Detail View for the serie
+        List<DBValue> serieLanguage = DBOnlineSeries.GetSingleField(DBOnlineSeries.cLanguage, cond, new DBOnlineSeries());
+
+        if (serieLanguage.Count > 0)
+        {
+            return serieLanguage[0];
+        }
+        else
+        {
+            //If there is no language prefered for the series, the fallback is Language on the Online Data view.
+            return SelLanguageAsString;
+        }
+    }
+
     static public XmlNode GetMirrors(String sServer)
     {
       return Generic(sServer + apiURIs.Mirrors, false, Format.Xml);
@@ -123,14 +145,40 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static private XmlNode UpdateSeries(String sSeriesID, bool first)
     {
-      int series = Int32.Parse(sSeriesID);
-      return getFromCache(series, SelLanguageAsString + ".xml");
+        String SelLang = string.Empty;
+        bool bOverrideLanguage = false;
+
+        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
+        if (bOverrideLanguage)
+        {
+            SelLang = GetLanguageOverride(sSeriesID);
+            int series = Int32.Parse(sSeriesID);
+            return getFromCache(series, SelLang + ".xml", SelLang);
+        }
+        else
+        {
+            int series = Int32.Parse(sSeriesID);
+            return getFromCache(series, SelLanguageAsString + ".xml");
+        }
     }
 
     static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first)
     {
-        int series = Int32.Parse(sSeriesID);
-        return getFromCache(series, languageID + ".xml", languageID);
+        String SelLang = string.Empty;
+        bool bOverrideLanguage = false;
+
+        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
+        if (bOverrideLanguage)
+        {
+            SelLang = GetLanguageOverride(sSeriesID);
+            int series = Int32.Parse(sSeriesID);
+            return getFromCache(series, SelLang + ".xml", SelLang);
+        }
+        else
+        {
+            int series = Int32.Parse(sSeriesID);
+            return getFromCache(series, languageID + ".xml", languageID);
+        }
     }
 
     static public bool SubmitRating(RatingType type, string itemId, int rating)
@@ -190,7 +238,19 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode UpdateEpisodes(int seriesID, bool first)
     {
-      return getFromCache(seriesID, SelLanguageAsString + ".xml");
+        string SelLang = string.Empty;
+        bool bOverrideLanguage = false;
+
+        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
+        if (bOverrideLanguage)
+        {
+            SelLang = GetLanguageOverride(seriesID.ToString());
+            return getFromCache(seriesID, SelLang + ".xml");
+        }
+        else
+        {
+            return getFromCache(seriesID, SelLanguageAsString + ".xml");
+        }
     }
     
     static public XmlNode getBannerList(int seriesID)
@@ -280,7 +340,19 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode getFromCache(int seriesID, string elemName)
     {
-        return getFromCache(seriesID, true, elemName, SelLanguageAsString);
+        string SelLang = string.Empty;
+        bool bOverrideLanguage = false;
+
+        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
+        if (bOverrideLanguage)
+        {
+            SelLang = GetLanguageOverride(seriesID.ToString());
+            return getFromCache(seriesID, true, elemName, SelLang);
+        }
+        else
+        {
+            return getFromCache(seriesID, true, elemName, SelLanguageAsString);
+        }
     }
 
     static XmlNode getFromCache(int seriesID, string elemName, string languageID)

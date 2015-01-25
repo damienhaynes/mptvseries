@@ -176,6 +176,8 @@ namespace WindowPlugins.GUITVSeries
         public static string AdultSeries = "Adult Series";
         public static string KidsSeries = "Kids Series";
         public static string AvailableMedia = "Available Media";
+        public static string OverrideLanguage = "Override Language settings";
+        public static string ChangeSeriesLanguage = "Change Series Meta Language";
 
         // Fanart
         public static string FanArt = "Fanart";

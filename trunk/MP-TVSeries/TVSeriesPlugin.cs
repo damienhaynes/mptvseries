@@ -163,6 +163,8 @@ namespace WindowPlugins.GUITVSeries
         private bool m_bShowLastActiveModule = false;
         private int m_iLastActiveModule = 0;
         private bool m_PlaySelectedEpisodeAfterSubtitles = false;
+
+        List<Language> onlineLanguages = new List<Language>();
         #endregion
 
         #region Events
@@ -284,7 +286,8 @@ namespace WindowPlugins.GUITVSeries
             trailers,
             downloadTorrent,
             downloadNZB,
-            filterUnwatched
+            filterUnwatched,
+            actionChangeSeriesLanguage
         }
 
         enum eContextMenus
@@ -978,6 +981,15 @@ namespace WindowPlugins.GUITVSeries
                     }
                     #endregion
 
+                    #region Change Series Language
+                    if (CurrentViewLevel == Listlevel.Series && DBOption.GetOptions(DBOption.cOverrideLanguage))
+                    {
+                        pItem = new GUIListItem(Translation.ChangeSeriesLanguage + "...");
+                        dlg.Add(pItem);
+                        pItem.ItemId = (int)eContextItems.actionChangeSeriesLanguage;
+                    }
+                    #endregion
+
                     #region Subtitles - keep at the bottom for fast access (menu + up => there)
                     if (!emptyList && subtitleDownloadEnabled && CurrentViewLevel == Listlevel.Episode)
                     {
@@ -1372,6 +1384,18 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     #endregion
 
+                    #region Change Series Language
+                    case (int)eContextItems.actionChangeSeriesLanguage:
+                        {
+                            if (selectedSeries != null)
+                            {
+                                ShowChangeSeriesMetaLanguageMenu(selectedSeries);
+                                UpdateEpisodes(selectedSeries, null, null);
+                            }
+                        }
+                        break;
+                    #endregion
+                    
                     #region Subtitles
                     case (int)eContextItems.downloadSubtitle:
                         {
@@ -1838,8 +1862,50 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        #region SubCentral Menu
+        #region Show Change Series Language Menu
+        protected void ShowChangeSeriesMetaLanguageMenu(DBSeries selectedSeries)
+        {
+            if (DBOption.GetOptions(DBOption.cOverrideLanguage))
+            {
+                int iSelected = -1;
+                String selectedLang = String.Empty;
+                String newLang = String.Empty;
+                String selectedLanguage = selectedSeries[DBOnlineSeries.cLanguage];
+                List<GUIListItem> items = new List<GUIListItem>();
+                
+                if (onlineLanguages.Count == 0)
+                {
+                    onlineLanguages.AddRange(new GetLanguages().languages);
+                }
 
+                foreach (Language lang in onlineLanguages)
+                {
+                    items.Add(new GUIListItem(Helper.UppercaseFirst(lang.language)));
+                    if (lang.abbreviation == selectedLanguage)
+                    {
+                        selectedLang = lang.language;
+
+                        iSelected = items.FindIndex(item => item.Label.Equals(lang.language));
+                        items[iSelected].Label = lang.language + " (Selected)";
+                    }
+                }
+
+                ShowMenuDialog(Translation.ChangeSeriesLanguage, items, iSelected, out newLang);
+
+                if (!newLang.Equals(selectedLang))
+                {
+                    Language newSelectedLanguage = onlineLanguages.Find(lang => lang.language.Equals(newLang));
+                    if (newSelectedLanguage != null)
+                    {
+                        selectedSeries[DBOnlineSeries.cLanguage] = newSelectedLanguage.abbreviation;
+                        selectedSeries.Commit();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region SubCentral Menu
         protected void ShowSubtitleMenu(DBEpisode episode)
         {
             ShowSubtitleMenu(episode, false);
@@ -1856,7 +1922,6 @@ namespace WindowPlugins.GUITVSeries
                 GUIWindowManager.ActivateWindow(84623);
             }
         }
-
         #endregion
 
         #region My Torrent Menu
@@ -1892,7 +1957,6 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Trailers Menu
-
         internal static void ShowTrailerMenu()
         {
             var mediaItem = new MediaItem
@@ -1935,7 +1999,6 @@ namespace WindowPlugins.GUITVSeries
 
             Trailers.Trailers.SearchForTrailers(mediaItem);
         }
-
         #endregion
 
         #region Trakt Menu
@@ -4043,6 +4106,10 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.optionsDownloadAllEpisodesInfo;
 
+            pItem = new GUIListItem(Translation.OverrideLanguage + " (" + (DBOption.GetOptions(DBOption.cOverrideLanguage) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.actionChangeSeriesLanguage;
+
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
             {
@@ -4098,6 +4165,10 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.optionsDownloadAllEpisodesInfo:
                         DBOption.SetOptions(DBOption.cFullSeriesRetrieval, !DBOption.GetOptions(DBOption.cFullSeriesRetrieval));
+                        break;
+
+                    case (int)eContextItems.actionChangeSeriesLanguage:
+                        DBOption.SetOptions(DBOption.cOverrideLanguage, !DBOption.GetOptions(DBOption.cOverrideLanguage));
                         break;
                 }
             }
@@ -6369,7 +6440,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         private delegate int ShowMenuDialogDelegate(string heading, List<GUIListItem> items);
-
+        
         /// <summary>
         /// Displays a menu dialog from list of items
         /// </summary>
@@ -6405,6 +6476,57 @@ namespace WindowPlugins.GUITVSeries
             }
 
             return dlgMenu.SelectedLabel;
+        }
+
+        /// <summary>
+        /// Displays a menu dialog from list of items
+        /// </summary>
+        /// <returns>Selected item index, -1 if exited</returns>
+        public static void ShowMenuDialog(string heading, List<GUIListItem> items, out String selectedMenuItem)
+        {
+            ShowMenuDialog(heading, items, -1, out selectedMenuItem);
+        }
+
+        /// <summary>
+        /// Displays a menu dialog from list of items
+        /// </summary>
+        /// <returns>Selected label text, "" (empty) if exited</returns>
+        public static void ShowMenuDialog(string heading, List<GUIListItem> items, int selectedItemIndex, out String selectedMenuItem)
+        {
+            if (GUIGraphicsContext.form.InvokeRequired)
+            {
+                ShowMenuDialogDelegate d = ShowMenuDialog;
+                selectedMenuItem = (String)GUIGraphicsContext.form.Invoke(d, heading, items);
+                //return (String)GUIGraphicsContext.form.Invoke(d, heading, items);
+            }
+
+            GUIDialogMenu dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)MediaPortal.GUI.Library.GUIWindow.Window.WINDOW_DIALOG_MENU);
+            if (dlgMenu == null)
+                selectedMenuItem = "";
+            //if (dlgMenu == null) return "";
+
+            dlgMenu.Reset();
+
+            dlgMenu.SetHeading(heading);
+
+            foreach (GUIListItem item in items)
+            {
+                dlgMenu.Add(item);
+            }
+
+            if (selectedItemIndex >= 0)
+                dlgMenu.SelectedLabel = selectedItemIndex;
+
+            dlgMenu.DoModal(GUIWindowManager.ActiveWindow);
+
+            if (dlgMenu.SelectedLabelText == String.Empty)
+            {
+                selectedMenuItem = "";
+                //return "";
+            }
+
+            selectedMenuItem = dlgMenu.SelectedLabelText;
+            //return dlgMenu.SelectedLabelText;
         }
 
         /// <summary>
