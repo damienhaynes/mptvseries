@@ -1491,8 +1491,9 @@ namespace WindowPlugins.GUITVSeries
             foreach (var series in OnlineEpisodes.Keys)
             {
                 var seriesObj = Helper.getCorrespondingSeries(int.Parse(series));
+                string seriesName = seriesObj == null ? series : seriesObj.ToString();
 
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, seriesObj.ToString(), ++i, OnlineEpisodes.Keys.Count));
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, seriesName, ++i, OnlineEpisodes.Keys.Count));
 
                 // get the current online episodes in database
                 var episodes = DBEpisode.Get(int.Parse(series), false);
@@ -1514,7 +1515,7 @@ namespace WindowPlugins.GUITVSeries
                                                    e[DBOnlineEpisode.cSeasonIndex] == seasonIdx)) ||
                                                    (cleanEpisodeZero && episodeIdx == 0))
                     {
-                        string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online or is invalid", seriesObj.ToString(), seasonIdx, episodeIdx);
+                        string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online or is invalid", seriesName, seasonIdx, episodeIdx);
                         m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
 
                         // delete local and online references in database
@@ -1537,7 +1538,7 @@ namespace WindowPlugins.GUITVSeries
                         int episodesInSeason = episodes.Where(e => e[DBOnlineEpisode.cSeasonIndex] == season).Count();
                         if (episodesInSeason == epsRemovedInSeason[season])
                         {
-                            message = string.Format("{0} - Removing season {1}, season no longer has any associated episodes", seriesObj.ToString(), seasonIdx);
+                            message = string.Format("{0} - Removing season {1}, season no longer has any associated episodes", seriesName, seasonIdx);
                             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
 
                             var conditions = new SQLCondition();
