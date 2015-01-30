@@ -79,11 +79,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         cond.AddCustom(sqlCon);
 
         // Get the language that the user has selected in the Detail View for the serie
-        List<DBValue> serieLanguage = DBOnlineSeries.GetSingleField(DBOnlineSeries.cLanguage, cond, new DBOnlineSeries());
+        List<DBValue> seriesLanguage = DBOnlineSeries.GetSingleField(DBOnlineSeries.cLanguage, cond, new DBOnlineSeries());
 
-        if (serieLanguage.Count > 0)
+        if ((seriesLanguage.Count > 0) && (seriesLanguage[0] != ""))
         {
-            return serieLanguage[0];
+            return seriesLanguage[0];
         }
         else
         {
