@@ -175,6 +175,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cCleanOnlineEpisodes = "CleanOnlineEpisodes";
         public const string cCleanOnlineEpisodeZero = "CleanOnlineEpisodeZero";
         public const string cOverrideLanguage = "OverrideLanguage";
+        public const string cCountSpecialEpisodesAsWatched = "CountSpecialEpisodesAsWatched";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -553,6 +554,8 @@ namespace WindowPlugins.GUITVSeries
             if (GetOptions(cOverrideLanguage) == null)
                 SetOptions(cOverrideLanguage, false);
 
+            if (GetOptions(cCountSpecialEpisodesAsWatched) == null)
+                SetOptions(cCountSpecialEpisodesAsWatched, false);
             #endregion
         }
 

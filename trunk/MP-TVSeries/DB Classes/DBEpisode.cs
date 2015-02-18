@@ -91,6 +91,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cAudioBitrate = "AudioBitrate";
         public const String cAudioChannels = "AudioChannels";
         public const String cAudioTracks = "AudioTracks";
+        public const String cAudioLanguage = "AudioLanguage";
         public const String cTextCount = "TextCount";
         public const String cVideoWidth = "videoWidth";
         public const String cVideoHeight = "videoHeight";
@@ -170,6 +171,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cAudioFormat, "Audio Format");
             s_FieldToDisplayNameMap.Add(cAudioFormatProfile, "Audio Format Profile");
             s_FieldToDisplayNameMap.Add(cAudioTracks, "Audio Tracks");
+            s_FieldToDisplayNameMap.Add(cAudioLanguage, "Audio Language");
             s_FieldToDisplayNameMap.Add(cTextCount, "Subtitle Count");
             s_FieldToDisplayNameMap.Add(cLocalPlaytime, "Runtime");
             #endregion
@@ -639,6 +641,7 @@ namespace WindowPlugins.GUITVSeries
                         this[cAudioBitrate] = MI.AudioBitrate;
                         this[cAudioChannels] = MI.AudioChannelCount;
                         this[cAudioTracks] = MI.AudioStreamCount;
+                        this[cAudioLanguage] = MI.AudioLanguage;
 
                         this[cTextCount] = MI.SubtitleCount;
                         
@@ -1411,12 +1414,14 @@ namespace WindowPlugins.GUITVSeries
             m_bUpdateEpisodeCount = true;
 
             SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired");
+            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired, online_episodes.SeasonIndex");
+
             SQLiteResultSet results = DBTVSeries.Execute(query);
 
             epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
+            int sesonIndex = 0;
 
             // we either get two rows (one for normal episodes, one for double episodes), 
             // or we get no rows so we add them
@@ -1425,6 +1430,14 @@ namespace WindowPlugins.GUITVSeries
                 // increment watched count if episode is watched
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult))
                 {
+                    if (int.TryParse(results.Rows[i].fields[3], out sesonIndex))
+                    {
+                        // Count the Special (Season 0 (zero)) episodes as watched!
+                        if ((sesonIndex == 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
+                        {
+                            parseResult = 1;
+                        }
+                    }
                     epsWatched += parseResult;
                 }
 
@@ -1808,6 +1821,12 @@ namespace WindowPlugins.GUITVSeries
             return Get(stdGetSQL(conditions, true, includeStdCond, reverseJoin));
         }
 
+        public static DBEpisode Get(int seriesId, int seasonIdx, int episodeIdx)
+        {
+            List<DBEpisode> episodes = Get(seriesId, seasonIdx, true);
+            return episodes.FirstOrDefault(e => e[DBOnlineEpisode.cEpisodeIndex] == episodeIdx);
+        }
+
         public static List<DBEpisode> Get(string query)
         {
             lock (getEpsLock)
@@ -1827,12 +1846,6 @@ namespace WindowPlugins.GUITVSeries
                 }
                 return outList;
             }
-        }
-
-        public static DBEpisode Get(int seriesId, int seasonIdx, int episodeIdx)
-        {
-            List<DBEpisode> episodes = Get(seriesId, seasonIdx, true);
-            return episodes.FirstOrDefault(e => e[DBOnlineEpisode.cEpisodeIndex] == episodeIdx);
         }
 
         #endregion

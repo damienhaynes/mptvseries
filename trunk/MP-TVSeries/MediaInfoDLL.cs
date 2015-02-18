@@ -348,6 +348,19 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
         }
 
         /// <summary>
+        /// Returns the Language of the Audio channels in the 1st Audio stream
+        /// </summary>
+        public string AudioLanguage
+        {
+            get
+            {
+                string result = this.Get(StreamKind.Audio, 0, "Language");
+                MPTVSeriesLog.Write("Audio Language: ", result, MPTVSeriesLog.LogLevel.Debug);
+                return result.Length > 0 ? result : "-1";
+            }
+        }
+
+        /// <summary>
         /// Returns the number of Audio channels in the 1st Audio stream
         /// </summary>
         public string AudioChannelCount {
