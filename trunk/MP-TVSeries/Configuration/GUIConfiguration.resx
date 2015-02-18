@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAARwBBQEcAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAASQBBQEkAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -808,13 +808,6 @@ This setting can also be changed from within Media Portal in the plugins context
 This option is recommended if you want to prevent spoilers before watching an episodes.
 
 This setting can also be changed from within Media Portal in the plugins context menu.</value>
-  </data>
-  <data name="dbOptCheckBoxRemoveEpZero.ToolTip" xml:space="preserve">
-    <value>Sometimes the online database includes episodes with an index of zero. 
-These are typically removed once re-organised into valid specials.
-
-If you don't collect episodes with an episode index of zero you can enable 
-this option to cleanup such that your database remains clean.</value>
   </data>
   <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
     <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 

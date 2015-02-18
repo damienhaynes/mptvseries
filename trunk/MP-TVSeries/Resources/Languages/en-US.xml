@@ -314,5 +314,5 @@
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">UnWatched Episodes</string>
   <string name="OverrideLanguage" Original="Override Language Settings">Override Language Settings</string>
   <string name="ChangeSeriesLanguage" Original="Change Series Meta Language">Change Series Meta Language</string>
-  
+  <string name="CountSpecialEpisodesAsWatched" Original="Count Special Episodes As Watched">Count Special Episodes As Watched</string>
 </resources>

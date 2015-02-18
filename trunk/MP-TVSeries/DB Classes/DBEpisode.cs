@@ -1421,7 +1421,7 @@ namespace WindowPlugins.GUITVSeries
             epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
-            int sesonIndex = 0;
+            int seasonIndex = 0;
 
             // we either get two rows (one for normal episodes, one for double episodes), 
             // or we get no rows so we add them
@@ -1430,10 +1430,10 @@ namespace WindowPlugins.GUITVSeries
                 // increment watched count if episode is watched
                 if (int.TryParse(results.Rows[i].fields[1], out parseResult))
                 {
-                    if (int.TryParse(results.Rows[i].fields[3], out sesonIndex))
+                    if (int.TryParse(results.Rows[i].fields[3], out seasonIndex))
                     {
                         // Count the Special (Season 0 (zero)) episodes as watched!
-                        if ((sesonIndex == 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
+                        if ((seasonIndex == 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
                         {
                             parseResult = 1;
                         }
