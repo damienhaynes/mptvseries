@@ -43,6 +43,7 @@ using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.Configuration;
 using System.Xml;
 using MediaPortal.GUI.Library;
+using System.Globalization;
 
 #if DEBUG
 using System.Diagnostics;
@@ -339,6 +340,8 @@ namespace WindowPlugins.GUITVSeries
             dbOptCheckBoxRemoveEpZero.Enabled = DBOption.GetOptions(DBOption.cCleanOnlineEpisodes);
 
             checkBox_OverrideComboLang.Checked = DBOption.GetOptions(DBOption.cOverrideLanguage);
+
+            checkBox_CountSpecialEpisodesAsWatched.Checked = DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched);
             
             tabControl_Details.SelectTab(1);
         }
@@ -1640,6 +1643,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cVideoBitRate:
                                 case DBEpisode.cVideoAspectRatio:
                                 case DBEpisode.cAudioTracks:
+                                case DBEpisode.cAudioLanguage:
                                 case DBEpisode.cAudioCodec:
                                 case DBEpisode.cAudioFormat:
                                 case DBEpisode.cAudioFormatProfile:
@@ -2039,7 +2043,7 @@ namespace WindowPlugins.GUITVSeries
                 DataGridViewRow dataGridDetailRow = new DataGridViewRow();
                 DataGridViewTextBoxCell cFieldName;
 
-                if ((FieldName == "language") && (DBOption.GetOptions(DBOption.cOverrideLanguage)))
+                if ((FieldName == DBOnlineSeries.cLanguage) && (DBOption.GetOptions(DBOption.cOverrideLanguage)))
                 {
                     dataGridDetailRow = new DataGridViewRow();
                     cFieldName = new DataGridViewTextBoxCell();
@@ -2084,6 +2088,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     cFieldName = new DataGridViewTextBoxCell();
                     DataGridViewTextBoxCell cFieldValue = new DataGridViewTextBoxCell();
+
+                    if (FieldName == DBEpisode.cAudioLanguage)
+                        FieldValue = GetAudioLanguageDisplayName(FieldValue);
 
                     // First Column (Name)
                     cFieldName.Value = FieldName;
@@ -2896,7 +2903,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
 
-                        cache.dump();                        
+                        cache.dump();
                         break;
 
                     case DBEpisode.cTableName:
@@ -3793,6 +3800,11 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        private void checkBox_DontCountSpecialEpisodes_CheckedChanged(object sender, EventArgs e)
+        {
+            DBOption.SetOptions(DBOption.cCountSpecialEpisodesAsWatched, checkBox_CountSpecialEpisodesAsWatched.Checked);
+        }
+
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
@@ -4662,6 +4674,25 @@ namespace WindowPlugins.GUITVSeries
                 dbOptCheckBoxRemoveEpZero.Enabled = false;
             }
         }
+
+        #region Get the Culture DisplayName from Two Letter ISO
+        public string GetAudioLanguageDisplayName(String TwoLetterISOLanguage)
+        {
+            String CultureDisplayName = TwoLetterISOLanguage;
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+            foreach (var culture in cultures)
+            {
+                if (culture.TwoLetterISOLanguageName == TwoLetterISOLanguage)
+                {
+                    CultureDisplayName = culture.DisplayName;
+                    break;
+                }
+            }
+
+            return CultureDisplayName;
+        }
+        #endregion
     }
     
     public class BannerComboItem

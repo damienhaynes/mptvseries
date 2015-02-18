@@ -287,7 +287,8 @@ namespace WindowPlugins.GUITVSeries
             downloadTorrent,
             downloadNZB,
             filterUnwatched,
-            actionChangeSeriesLanguage
+            actionChangeSeriesLanguage,
+            actionCountSpecialEpisodesAsWatched
         }
 
         enum eContextMenus
@@ -4110,6 +4111,10 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.actionChangeSeriesLanguage;
 
+            pItem = new GUIListItem(Translation.CountSpecialEpisodesAsWatched + " (" + (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched) ? Translation.on : Translation.off) + ")");
+            dlg.Add(pItem);
+            pItem.ItemId = (int)eContextItems.actionCountSpecialEpisodesAsWatched;
+
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
             {
@@ -4169,6 +4174,23 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.actionChangeSeriesLanguage:
                         DBOption.SetOptions(DBOption.cOverrideLanguage, !DBOption.GetOptions(DBOption.cOverrideLanguage));
+                        break;
+
+                    case (int)eContextItems.actionCountSpecialEpisodesAsWatched:
+                        DBOption.SetOptions(DBOption.cCountSpecialEpisodesAsWatched, !DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched));
+
+                        // Set number of watched/unwatched episodes
+                        allSeries = DBSeries.Get(new SQLCondition());
+                        foreach (var series in allSeries)
+                        {
+                            int epsTotal = 0;
+                            int epsUnWatched = 0;
+                            DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
+                            series[DBOnlineSeries.cEpisodeCount] = epsTotal;
+                            series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
+                            series.Commit();
+                        }
+                        LoadFacade();
                         break;
                 }
             }

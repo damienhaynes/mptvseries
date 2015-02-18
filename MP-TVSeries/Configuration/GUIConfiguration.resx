@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAAQQBBQEEAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAARwBBQEcAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -842,9 +842,6 @@ If Trakt plugin is installed and TVSeries plugin is enabled for sync, it's recom
 Note: if you are using the Trakt plugin, it's recommended you enable rate dialog after watched from there. This setting can be used to send
 ratings to both thetvdb.com and trakt or just thetvdb.com.</value>
   </data>
-  <metadata name="detailsPropertyBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>404, 12</value>
-  </metadata>
   <data name="label70.Text" xml:space="preserve">
     <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
 Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
@@ -884,32 +881,6 @@ Be sure to enable 'run before matching' for this to work before it reaches the p
   </data>
   <data name="label68.Text" xml:space="preserve">
     <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
-  </data>
-  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
-    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
-A prompt will be shown if trying to playback out of order.
-
-Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
-so that a proper check can be performed.
-
-The check is ignored in the following conditions:
-* Playback of Specials (and next unwatched Specials).
-* Playback of Watched/Seen episodes.
-* Playback using Playlist player.</value>
-  </data>
-  <data name="dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip" xml:space="preserve">
-    <value>If enabled and episode has been rated, mark the episode as watched.
-
-This setting is only applicable to episode ratings from theTVDB.com (if enabled). It's recommended
-that syncing to trakt.tv via Trakt plugin is enabled if syncing of watched episodes is wanted.
-
-If Trakt plugin is installed and TVSeries plugin is enabled for sync, it's recommended this option is disabled.</value>
-  </data>
-  <data name="optionAsk2Rate.ToolTip" xml:space="preserve">
-    <value>Tick this to have the plugin automatically pop-up a rating's windows after you have watched an episodes which hasn't been rated yet.
-
-Note: if you are using the Trakt plugin, it's recommended you enable rate dialog after watched from there. This setting can be used to send
-ratings to both thetvdb.com and trakt or just thetvdb.com.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>39</value>

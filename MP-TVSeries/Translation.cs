@@ -178,6 +178,7 @@ namespace WindowPlugins.GUITVSeries
         public static string AvailableMedia = "Available Media";
         public static string OverrideLanguage = "Override Language settings";
         public static string ChangeSeriesLanguage = "Change Series Meta Language";
+        public static string CountSpecialEpisodesAsWatched = "Count Special Episodes As Watched";
 
         // Fanart
         public static string FanArt = "Fanart";

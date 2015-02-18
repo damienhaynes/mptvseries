@@ -168,6 +168,16 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_Episode_HideUnwatchedThumbnail = new System.Windows.Forms.CheckBox();
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
             this.numericUpDownImportDelay = new System.Windows.Forms.NumericUpDown();
+            this.dbOptCheckBoxCleanOnlineEpisodes = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionCheckBox4 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptChkBoxPlayOutOfOrderCheck = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionSQLLogging = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.checkBox_CountSpecialEpisodesAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptCheckBoxRemoveEpZero = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -176,6 +186,8 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_SeriesPoster = new System.Windows.Forms.PictureBox();
             this.comboBox_PosterSelection = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pictureBox_Series = new System.Windows.Forms.PictureBox();
             this.comboBox_BannerSelection = new System.Windows.Forms.ComboBox();
             this.panDBLocation = new System.Windows.Forms.Panel();
@@ -208,10 +220,12 @@ namespace WindowPlugins.GUITVSeries
             this.tabOnlineData = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.dbOptCheckBoxDownloadActors = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.nudConsecFailures = new System.Windows.Forms.NumericUpDown();
             this.label20 = new System.Windows.Forms.Label();
             this.buttonArtworkDownloadLimits = new System.Windows.Forms.Button();
+            this.dbOptCheckBoxGetTextBanners = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.lblImportDelaySecs = new System.Windows.Forms.Label();
@@ -231,11 +245,15 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dbOptionCheckBox3 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.lblRecentAddedDays = new System.Windows.Forms.Label();
             this.cbNewEpisodeThumbIndicator = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.laOnPlaySeriesOrSeasonAction = new System.Windows.Forms.Label();
             this.cbOnPlaySeriesOrSeasonAction = new System.Windows.Forms.ComboBox();
+            this.dbOptChkBoxScanFullscreenVideo = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionCheckBox2 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionCheckBoxSubstituteMissingArtwork = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.label77 = new System.Windows.Forms.Label();
             this.label76 = new System.Windows.Forms.Label();
             this.label75 = new System.Windows.Forms.Label();
@@ -247,6 +265,7 @@ namespace WindowPlugins.GUITVSeries
             this.label38 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.tab_view = new System.Windows.Forms.TabPage();
+            this.playlistSettings = new WindowPlugins.GUITVSeries.Configuration.PlaylistSettings();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label19 = new System.Windows.Forms.Label();
             this.buttonPinCode = new System.Windows.Forms.Button();
@@ -267,6 +286,7 @@ namespace WindowPlugins.GUITVSeries
             this.btnLogoDeleteAll = new System.Windows.Forms.Button();
             this.tabFormattingRules = new System.Windows.Forms.TabPage();
             this.label64 = new System.Windows.Forms.Label();
+            this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
             this.tabLayoutSettings = new System.Windows.Forms.TabPage();
             this.label37 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -285,27 +305,8 @@ namespace WindowPlugins.GUITVSeries
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabAbout = new System.Windows.Forms.TabPage();
-            this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dbOptCheckBoxRemoveEpZero = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptCheckBoxCleanOnlineEpisodes = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptCheckBoxDownloadActors = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBox4 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptCheckBoxGetTextBanners = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptChkBoxPlayOutOfOrderCheck = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionSQLLogging = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBox3 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptChkBoxCountEmptyFutureEps = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptChkBoxScanFullscreenVideo = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBox2 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBoxSubstituteMissingArtwork = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
-            this.playlistSettings = new WindowPlugins.GUITVSeries.Configuration.PlaylistSettings();
-            this.formattingConfiguration1 = new WindowPlugins.GUITVSeries.Configuration.FormattingConfiguration();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
+            this.listBox_Log = new System.Windows.Forms.ListBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudWatchedAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScanRemoteShareFrequency)).BeginInit();
@@ -843,7 +844,7 @@ namespace WindowPlugins.GUITVSeries
             this.checkBox_OverrideComboLang.AutoSize = true;
             this.checkBox_OverrideComboLang.Location = new System.Drawing.Point(259, 86);
             this.checkBox_OverrideComboLang.Name = "checkBox_OverrideComboLang";
-            this.checkBox_OverrideComboLang.Size = new System.Drawing.Size(117, 17);
+            this.checkBox_OverrideComboLang.Size = new System.Drawing.Size(164, 17);
             this.checkBox_OverrideComboLang.TabIndex = 1;
             this.checkBox_OverrideComboLang.Text = "Override Language for Series";
             this.toolTip_Help.SetToolTip(this.checkBox_OverrideComboLang, "Enable this option to change the Meta language for specific series..\rLanguage can" +
@@ -1578,6 +1579,152 @@ namespace WindowPlugins.GUITVSeries
             0});
             this.numericUpDownImportDelay.ValueChanged += new System.EventHandler(this.numericUpDownImportDelay_ValueChanged);
             // 
+            // dbOptCheckBoxCleanOnlineEpisodes
+            // 
+            this.dbOptCheckBoxCleanOnlineEpisodes.AutoSize = true;
+            this.dbOptCheckBoxCleanOnlineEpisodes.Checked = true;
+            this.dbOptCheckBoxCleanOnlineEpisodes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptCheckBoxCleanOnlineEpisodes.Location = new System.Drawing.Point(8, 283);
+            this.dbOptCheckBoxCleanOnlineEpisodes.Name = "dbOptCheckBoxCleanOnlineEpisodes";
+            this.dbOptCheckBoxCleanOnlineEpisodes.Option = "CleanOnlineEpisodes";
+            this.dbOptCheckBoxCleanOnlineEpisodes.Size = new System.Drawing.Size(368, 17);
+            this.dbOptCheckBoxCleanOnlineEpisodes.TabIndex = 21;
+            this.dbOptCheckBoxCleanOnlineEpisodes.Text = "Remove online episode references from database when not found online";
+            this.dbOptCheckBoxCleanOnlineEpisodes.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptCheckBoxCleanOnlineEpisodes, "This option will help keep your database clean when enabled.\r\n\r\nThis option is on" +
+        "ly applicable if all episode information is downloaded.");
+            this.dbOptCheckBoxCleanOnlineEpisodes.UseVisualStyleBackColor = true;
+            this.dbOptCheckBoxCleanOnlineEpisodes.CheckedChanged += new System.EventHandler(this.dbOptCheckBoxCleanOnlineEpisodes_CheckedChanged);
+            // 
+            // dbOptionCheckBox4
+            // 
+            this.dbOptionCheckBox4.AutoSize = true;
+            this.dbOptionCheckBox4.Checked = true;
+            this.dbOptionCheckBox4.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptionCheckBox4.Location = new System.Drawing.Point(8, 486);
+            this.dbOptionCheckBox4.Name = "dbOptionCheckBox4";
+            this.dbOptionCheckBox4.Option = "checkArtwork";
+            this.dbOptionCheckBox4.Size = new System.Drawing.Size(244, 17);
+            this.dbOptionCheckBox4.TabIndex = 30;
+            this.dbOptionCheckBox4.Text = "Check artwork downloaded exists and is valid.";
+            this.dbOptionCheckBox4.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBox4, "Enable this option for an additional check of all series posters and banners.\r\n\r\n" +
+        "If artwork is not found on disk or is corrupt, then entry from database is clear" +
+        "ed.");
+            this.dbOptionCheckBox4.UseVisualStyleBackColor = true;
+            // 
+            // dbOptChkBoxPlayOutOfOrderCheck
+            // 
+            this.dbOptChkBoxPlayOutOfOrderCheck.AutoSize = true;
+            this.dbOptChkBoxPlayOutOfOrderCheck.Location = new System.Drawing.Point(404, 332);
+            this.dbOptChkBoxPlayOutOfOrderCheck.Name = "dbOptChkBoxPlayOutOfOrderCheck";
+            this.dbOptChkBoxPlayOutOfOrderCheck.Option = "CheckPlayOutOfOrder";
+            this.dbOptChkBoxPlayOutOfOrderCheck.Size = new System.Drawing.Size(255, 17);
+            this.dbOptChkBoxPlayOutOfOrderCheck.TabIndex = 40;
+            this.dbOptChkBoxPlayOutOfOrderCheck.Text = "Check on playback of episode is not out of order";
+            this.dbOptChkBoxPlayOutOfOrderCheck.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxPlayOutOfOrderCheck, resources.GetString("dbOptChkBoxPlayOutOfOrderCheck.ToolTip"));
+            this.dbOptChkBoxPlayOutOfOrderCheck.UseVisualStyleBackColor = true;
+            // 
+            // dbOptionSQLLogging
+            // 
+            this.dbOptionSQLLogging.AutoSize = true;
+            this.dbOptionSQLLogging.Location = new System.Drawing.Point(404, 23);
+            this.dbOptionSQLLogging.Name = "dbOptionSQLLogging";
+            this.dbOptionSQLLogging.Option = "SQLLoggingEnabled";
+            this.dbOptionSQLLogging.Size = new System.Drawing.Size(278, 17);
+            this.dbOptionSQLLogging.TabIndex = 28;
+            this.dbOptionSQLLogging.Text = "Enable Verbose SQL Logging (Impacts Performance!)";
+            this.dbOptionSQLLogging.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptionSQLLogging, "Enable verbose SQL Logging, WARNING!!! This will impact performance if enabled.");
+            this.dbOptionSQLLogging.UseVisualStyleBackColor = true;
+            this.dbOptionSQLLogging.CheckStateChanged += new System.EventHandler(this.dbOptionSQLLogging_CheckStateChanged);
+            // 
+            // dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay
+            // 
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.AutoSize = true;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Location = new System.Drawing.Point(404, 355);
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Name = "dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Option = "SubCentral_SubtitleDownloadOnPlay";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Size = new System.Drawing.Size(281, 17);
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 42;
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
+        "sn\'t have any.\r\nNote: applicable only when using SubCentral.");
+            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_CountSpecialEpisodesAsWatched
+            // 
+            this.checkBox_CountSpecialEpisodesAsWatched.AutoSize = true;
+            this.checkBox_CountSpecialEpisodesAsWatched.Location = new System.Drawing.Point(404, 378);
+            this.checkBox_CountSpecialEpisodesAsWatched.Name = "checkBox_CountSpecialEpisodesAsWatched";
+            this.checkBox_CountSpecialEpisodesAsWatched.Option = "checkBox_DontCountSpecialEpisodes";
+            this.checkBox_CountSpecialEpisodesAsWatched.Size = new System.Drawing.Size(270, 17);
+            this.checkBox_CountSpecialEpisodesAsWatched.TabIndex = 42;
+            this.checkBox_CountSpecialEpisodesAsWatched.Text = "Count the Special (Season 0) episodes as watched ";
+            this.checkBox_CountSpecialEpisodesAsWatched.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.checkBox_CountSpecialEpisodesAsWatched, "Check this option if you what the Special (Season 0) episodes \r\nto be counted as " +
+        "watched episodes in the total watched field.");
+            this.checkBox_CountSpecialEpisodesAsWatched.UseVisualStyleBackColor = true;
+            this.checkBox_CountSpecialEpisodesAsWatched.CheckedChanged += new System.EventHandler(this.checkBox_DontCountSpecialEpisodes_CheckedChanged);
+            // 
+            // dbOptChkBoxCountEmptyFutureEps
+            // 
+            this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
+            this.dbOptChkBoxCountEmptyFutureEps.Checked = true;
+            this.dbOptChkBoxCountEmptyFutureEps.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 307);
+            this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
+            this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
+            this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
+            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 39;
+            this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
+            this.dbOptChkBoxCountEmptyFutureEps.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
+        "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
+        "an see when browsing GUI.");
+            this.dbOptChkBoxCountEmptyFutureEps.UseVisualStyleBackColor = true;
+            // 
+            // dbOptionCheckBoxMarkRatedEpsAsWatched
+            // 
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 215);
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(305, 17);
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 35;
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online at theTVDB.com";
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, resources.GetString("dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip"));
+            this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
+            // 
+            // optionAsk2Rate
+            // 
+            this.optionAsk2Rate.AutoSize = true;
+            this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
+            this.optionAsk2Rate.Name = "optionAsk2Rate";
+            this.optionAsk2Rate.Option = "askToRate";
+            this.optionAsk2Rate.Size = new System.Drawing.Size(234, 17);
+            this.optionAsk2Rate.TabIndex = 11;
+            this.optionAsk2Rate.Text = "&Popup Rate Dialog after episode is watched";
+            this.optionAsk2Rate.ToolTip = "";
+            this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, resources.GetString("optionAsk2Rate.ToolTip"));
+            this.optionAsk2Rate.UseVisualStyleBackColor = true;
+            this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
+            // 
+            // dbOptCheckBoxRemoveEpZero
+            // 
+            this.dbOptCheckBoxRemoveEpZero.AutoSize = true;
+            this.dbOptCheckBoxRemoveEpZero.Location = new System.Drawing.Point(33, 306);
+            this.dbOptCheckBoxRemoveEpZero.Name = "dbOptCheckBoxRemoveEpZero";
+            this.dbOptCheckBoxRemoveEpZero.Option = "";
+            this.dbOptCheckBoxRemoveEpZero.Size = new System.Drawing.Size(236, 17);
+            this.dbOptCheckBoxRemoveEpZero.TabIndex = 22;
+            this.dbOptCheckBoxRemoveEpZero.Text = "Remove Episode \'0\' even when exists online";
+            this.dbOptCheckBoxRemoveEpZero.ToolTip = "";
+            this.dbOptCheckBoxRemoveEpZero.UseVisualStyleBackColor = true;
+            // 
             // splitMain_Log
             // 
             this.splitMain_Log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1708,7 +1855,6 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -1751,6 +1897,22 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
+            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             // 
             // pictureBox_Series
             // 
@@ -2249,6 +2411,20 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.TabIndex = 0;
             this.panel_OnlineData.Tag = "Online Data";
             // 
+            // dbOptCheckBoxDownloadActors
+            // 
+            this.dbOptCheckBoxDownloadActors.AutoSize = true;
+            this.dbOptCheckBoxDownloadActors.Checked = true;
+            this.dbOptCheckBoxDownloadActors.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptCheckBoxDownloadActors.Location = new System.Drawing.Point(422, 476);
+            this.dbOptCheckBoxDownloadActors.Name = "dbOptCheckBoxDownloadActors";
+            this.dbOptCheckBoxDownloadActors.Option = "AutoDownloadActors";
+            this.dbOptCheckBoxDownloadActors.Size = new System.Drawing.Size(271, 17);
+            this.dbOptCheckBoxDownloadActors.TabIndex = 1;
+            this.dbOptCheckBoxDownloadActors.Text = "Automatically download actor thumbnails and details";
+            this.dbOptCheckBoxDownloadActors.ToolTip = "";
+            this.dbOptCheckBoxDownloadActors.UseVisualStyleBackColor = true;
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -2299,6 +2475,19 @@ namespace WindowPlugins.GUITVSeries
             this.buttonArtworkDownloadLimits.Text = "Configure Artwork Download Limits...";
             this.buttonArtworkDownloadLimits.UseVisualStyleBackColor = true;
             this.buttonArtworkDownloadLimits.Click += new System.EventHandler(this.buttonArtworkDownloadLimits_Click);
+            // 
+            // dbOptCheckBoxGetTextBanners
+            // 
+            this.dbOptCheckBoxGetTextBanners.AutoSize = true;
+            this.dbOptCheckBoxGetTextBanners.Location = new System.Drawing.Point(8, 403);
+            this.dbOptCheckBoxGetTextBanners.Name = "dbOptCheckBoxGetTextBanners";
+            this.dbOptCheckBoxGetTextBanners.Option = "GetTextBanners";
+            this.dbOptCheckBoxGetTextBanners.Size = new System.Drawing.Size(282, 17);
+            this.dbOptCheckBoxGetTextBanners.TabIndex = 27;
+            this.dbOptCheckBoxGetTextBanners.Text = "Download Series WideBanners containing \'Text\' name";
+            this.dbOptCheckBoxGetTextBanners.ToolTip = "Enable to download series widebanners that do not contain a graphical series name" +
+    ".";
+            this.dbOptCheckBoxGetTextBanners.UseVisualStyleBackColor = true;
             // 
             // label18
             // 
@@ -2515,6 +2704,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Controls.Add(this.dbOptChkBoxPlayOutOfOrderCheck);
             this.groupBox1.Controls.Add(this.dbOptionSQLLogging);
             this.groupBox1.Controls.Add(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay);
+            this.groupBox1.Controls.Add(this.checkBox_CountSpecialEpisodesAsWatched);
             this.groupBox1.Controls.Add(this.dbOptionCheckBox3);
             this.groupBox1.Controls.Add(this.lblRecentAddedDays);
             this.groupBox1.Controls.Add(this.nudRecentlyAddedDays);
@@ -2560,6 +2750,21 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // dbOptionCheckBox3
+            // 
+            this.dbOptionCheckBox3.AutoSize = true;
+            this.dbOptionCheckBox3.Checked = true;
+            this.dbOptionCheckBox3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptionCheckBox3.Location = new System.Drawing.Point(404, 146);
+            this.dbOptionCheckBox3.Name = "dbOptionCheckBox3";
+            this.dbOptionCheckBox3.Option = "SortSpecialSeasonLast";
+            this.dbOptionCheckBox3.Size = new System.Drawing.Size(188, 17);
+            this.dbOptionCheckBox3.TabIndex = 32;
+            this.dbOptionCheckBox3.Text = "Sort Specials at end of season list.";
+            this.dbOptionCheckBox3.ToolTip = "Enable this option to sort specials at end of season list rather than first item." +
+    "";
+            this.dbOptionCheckBox3.UseVisualStyleBackColor = true;
             // 
             // lblRecentAddedDays
             // 
@@ -2621,6 +2826,44 @@ namespace WindowPlugins.GUITVSeries
             this.cbOnPlaySeriesOrSeasonAction.Size = new System.Drawing.Size(262, 21);
             this.cbOnPlaySeriesOrSeasonAction.TabIndex = 23;
             this.cbOnPlaySeriesOrSeasonAction.SelectedIndexChanged += new System.EventHandler(this.cbOnPlaySeriesOrSeasonAction_SelectedIndexChanged);
+            // 
+            // dbOptChkBoxScanFullscreenVideo
+            // 
+            this.dbOptChkBoxScanFullscreenVideo.AutoSize = true;
+            this.dbOptChkBoxScanFullscreenVideo.Location = new System.Drawing.Point(32, 309);
+            this.dbOptChkBoxScanFullscreenVideo.Name = "dbOptChkBoxScanFullscreenVideo";
+            this.dbOptChkBoxScanFullscreenVideo.Option = "AutoScanLocalFilesFSV";
+            this.dbOptChkBoxScanFullscreenVideo.Size = new System.Drawing.Size(266, 17);
+            this.dbOptChkBoxScanFullscreenVideo.TabIndex = 21;
+            this.dbOptChkBoxScanFullscreenVideo.Text = "Scan remote shares while fullscreen video is active";
+            this.dbOptChkBoxScanFullscreenVideo.ToolTip = "";
+            this.dbOptChkBoxScanFullscreenVideo.UseVisualStyleBackColor = true;
+            // 
+            // dbOptionCheckBox2
+            // 
+            this.dbOptionCheckBox2.AutoSize = true;
+            this.dbOptionCheckBox2.Checked = true;
+            this.dbOptionCheckBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dbOptionCheckBox2.Location = new System.Drawing.Point(404, 238);
+            this.dbOptionCheckBox2.Name = "dbOptionCheckBox2";
+            this.dbOptionCheckBox2.Option = "SkipSeasonViewOnSingleSeason";
+            this.dbOptionCheckBox2.Size = new System.Drawing.Size(234, 17);
+            this.dbOptionCheckBox2.TabIndex = 36;
+            this.dbOptionCheckBox2.Text = "Skip season view if there is only one season";
+            this.dbOptionCheckBox2.ToolTip = "";
+            this.dbOptionCheckBox2.UseVisualStyleBackColor = true;
+            // 
+            // dbOptionCheckBoxSubstituteMissingArtwork
+            // 
+            this.dbOptionCheckBoxSubstituteMissingArtwork.AutoSize = true;
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(404, 284);
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Name = "dbOptionCheckBoxSubstituteMissingArtwork";
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Option = "SubstituteMissingArtwork";
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Size = new System.Drawing.Size(280, 17);
+            this.dbOptionCheckBoxSubstituteMissingArtwork.TabIndex = 38;
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Text = "Substitute Missing Season Posters with Series Posters";
+            this.dbOptionCheckBoxSubstituteMissingArtwork.ToolTip = "";
+            this.dbOptionCheckBoxSubstituteMissingArtwork.UseVisualStyleBackColor = true;
             // 
             // label77
             // 
@@ -2743,6 +2986,16 @@ namespace WindowPlugins.GUITVSeries
             this.tab_view.TabIndex = 7;
             this.tab_view.Text = "Views/Filters";
             this.tab_view.UseVisualStyleBackColor = true;
+            // 
+            // playlistSettings
+            // 
+            this.playlistSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.playlistSettings.AutoScroll = true;
+            this.playlistSettings.Location = new System.Drawing.Point(-1, 353);
+            this.playlistSettings.Name = "playlistSettings";
+            this.playlistSettings.Size = new System.Drawing.Size(866, 196);
+            this.playlistSettings.TabIndex = 1;
             // 
             // groupBox8
             // 
@@ -2978,6 +3231,16 @@ namespace WindowPlugins.GUITVSeries
     "t attribute to false in your TVSeries.SkinSettings.xml \r\nlocated in your skin di" +
     "rectory.\r\n";
             // 
+            // formattingConfiguration1
+            // 
+            this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.formattingConfiguration1.Location = new System.Drawing.Point(8, 44);
+            this.formattingConfiguration1.Name = "formattingConfiguration1";
+            this.formattingConfiguration1.Size = new System.Drawing.Size(780, 593);
+            this.formattingConfiguration1.TabIndex = 6;
+            // 
             // tabLayoutSettings
             // 
             this.tabLayoutSettings.AutoScroll = true;
@@ -3190,32 +3453,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout.Text = "About";
             this.tabAbout.UseVisualStyleBackColor = true;
             // 
-            // listBox_Log
-            // 
-            this.listBox_Log.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox_Log.FormattingEnabled = true;
-            this.listBox_Log.HorizontalScrollbar = true;
-            this.listBox_Log.Location = new System.Drawing.Point(10, 10);
-            this.listBox_Log.Name = "listBox_Log";
-            this.listBox_Log.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.listBox_Log.Size = new System.Drawing.Size(130, 26);
-            this.listBox_Log.TabIndex = 5;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Property";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 150;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Value";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Value";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             // 
             // dbOptionCheckBoxRemoveEpZero
             // 
@@ -3246,209 +3483,6 @@ namespace WindowPlugins.GUITVSeries
         "ly applicable if all episode information is downloaded.");
             this.dbOptCheckBoxCleanOnlineEpisodes.UseVisualStyleBackColor = true;
             this.dbOptCheckBoxCleanOnlineEpisodes.CheckedChanged += new System.EventHandler(this.dbOptCheckBoxCleanOnlineEpisodes_CheckedChanged);
-            // 
-            // dbOptCheckBoxDownloadActors
-            // 
-            this.dbOptCheckBoxDownloadActors.AutoSize = true;
-            this.dbOptCheckBoxDownloadActors.Checked = true;
-            this.dbOptCheckBoxDownloadActors.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptCheckBoxDownloadActors.Location = new System.Drawing.Point(422, 476);
-            this.dbOptCheckBoxDownloadActors.Name = "dbOptCheckBoxDownloadActors";
-            this.dbOptCheckBoxDownloadActors.Option = "AutoDownloadActors";
-            this.dbOptCheckBoxDownloadActors.Size = new System.Drawing.Size(271, 17);
-            this.dbOptCheckBoxDownloadActors.TabIndex = 1;
-            this.dbOptCheckBoxDownloadActors.Text = "Automatically download actor thumbnails and details";
-            this.dbOptCheckBoxDownloadActors.ToolTip = "";
-            this.dbOptCheckBoxDownloadActors.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionCheckBox4
-            // 
-            this.dbOptionCheckBox4.AutoSize = true;
-            this.dbOptionCheckBox4.Checked = true;
-            this.dbOptionCheckBox4.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBox4.Location = new System.Drawing.Point(8, 486);
-            this.dbOptionCheckBox4.Name = "dbOptionCheckBox4";
-            this.dbOptionCheckBox4.Option = "checkArtwork";
-            this.dbOptionCheckBox4.Size = new System.Drawing.Size(244, 17);
-            this.dbOptionCheckBox4.TabIndex = 30;
-            this.dbOptionCheckBox4.Text = "Check artwork downloaded exists and is valid.";
-            this.dbOptionCheckBox4.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBox4, "Enable this option for an additional check of all series posters and banners.\r\n\r\n" +
-        "If artwork is not found on disk or is corrupt, then entry from database is clear" +
-        "ed.");
-            this.dbOptionCheckBox4.UseVisualStyleBackColor = true;
-            // 
-            // dbOptCheckBoxGetTextBanners
-            // 
-            this.dbOptCheckBoxGetTextBanners.AutoSize = true;
-            this.dbOptCheckBoxGetTextBanners.Location = new System.Drawing.Point(8, 403);
-            this.dbOptCheckBoxGetTextBanners.Name = "dbOptCheckBoxGetTextBanners";
-            this.dbOptCheckBoxGetTextBanners.Option = "GetTextBanners";
-            this.dbOptCheckBoxGetTextBanners.Size = new System.Drawing.Size(282, 17);
-            this.dbOptCheckBoxGetTextBanners.TabIndex = 27;
-            this.dbOptCheckBoxGetTextBanners.Text = "Download Series WideBanners containing \'Text\' name";
-            this.dbOptCheckBoxGetTextBanners.ToolTip = "Enable to download series widebanners that do not contain a graphical series name" +
-    ".";
-            this.dbOptCheckBoxGetTextBanners.UseVisualStyleBackColor = true;
-            // 
-            // dbOptChkBoxPlayOutOfOrderCheck
-            // 
-            this.dbOptChkBoxPlayOutOfOrderCheck.AutoSize = true;
-            this.dbOptChkBoxPlayOutOfOrderCheck.Location = new System.Drawing.Point(405, 332);
-            this.dbOptChkBoxPlayOutOfOrderCheck.Name = "dbOptChkBoxPlayOutOfOrderCheck";
-            this.dbOptChkBoxPlayOutOfOrderCheck.Option = "CheckPlayOutOfOrder";
-            this.dbOptChkBoxPlayOutOfOrderCheck.Size = new System.Drawing.Size(255, 17);
-            this.dbOptChkBoxPlayOutOfOrderCheck.TabIndex = 40;
-            this.dbOptChkBoxPlayOutOfOrderCheck.Text = "Check on playback of episode is not out of order";
-            this.dbOptChkBoxPlayOutOfOrderCheck.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxPlayOutOfOrderCheck, resources.GetString("dbOptChkBoxPlayOutOfOrderCheck.ToolTip"));
-            this.dbOptChkBoxPlayOutOfOrderCheck.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionSQLLogging
-            // 
-            this.dbOptionSQLLogging.AutoSize = true;
-            this.dbOptionSQLLogging.Location = new System.Drawing.Point(404, 23);
-            this.dbOptionSQLLogging.Name = "dbOptionSQLLogging";
-            this.dbOptionSQLLogging.Option = "SQLLoggingEnabled";
-            this.dbOptionSQLLogging.Size = new System.Drawing.Size(278, 17);
-            this.dbOptionSQLLogging.TabIndex = 28;
-            this.dbOptionSQLLogging.Text = "Enable Verbose SQL Logging (Impacts Performance!)";
-            this.dbOptionSQLLogging.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptionSQLLogging, "Enable verbose SQL Logging, WARNING!!! This will impact performance if enabled.");
-            this.dbOptionSQLLogging.UseVisualStyleBackColor = true;
-            this.dbOptionSQLLogging.CheckStateChanged += new System.EventHandler(this.dbOptionSQLLogging_CheckStateChanged);
-            // 
-            // dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay
-            // 
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.AutoSize = true;
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Location = new System.Drawing.Point(405, 355);
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Name = "dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay";
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Option = "SubCentral_SubtitleDownloadOnPlay";
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Size = new System.Drawing.Size(281, 17);
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.TabIndex = 42;
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.Text = "Offer to download subtitles before playing (SubCentral)";
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay, "Check this option to enable subtitle download before playing the episode that doe" +
-        "sn\'t have any.\r\nNote: applicable only when using SubCentral.");
-            this.dbOptChkBox_SubCentral_DownloadSubtitlesOnPlay.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionCheckBox3
-            // 
-            this.dbOptionCheckBox3.AutoSize = true;
-            this.dbOptionCheckBox3.Checked = true;
-            this.dbOptionCheckBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBox3.Location = new System.Drawing.Point(404, 146);
-            this.dbOptionCheckBox3.Name = "dbOptionCheckBox3";
-            this.dbOptionCheckBox3.Option = "SortSpecialSeasonLast";
-            this.dbOptionCheckBox3.Size = new System.Drawing.Size(188, 17);
-            this.dbOptionCheckBox3.TabIndex = 32;
-            this.dbOptionCheckBox3.Text = "Sort Specials at end of season list.";
-            this.dbOptionCheckBox3.ToolTip = "Enable this option to sort specials at end of season list rather than first item." +
-    "";
-            this.dbOptionCheckBox3.UseVisualStyleBackColor = true;
-            // 
-            // dbOptChkBoxCountEmptyFutureEps
-            // 
-            this.dbOptChkBoxCountEmptyFutureEps.AutoSize = true;
-            this.dbOptChkBoxCountEmptyFutureEps.Checked = true;
-            this.dbOptChkBoxCountEmptyFutureEps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptChkBoxCountEmptyFutureEps.Location = new System.Drawing.Point(404, 307);
-            this.dbOptChkBoxCountEmptyFutureEps.Name = "dbOptChkBoxCountEmptyFutureEps";
-            this.dbOptChkBoxCountEmptyFutureEps.Option = "CountEmptyAndFutureAiredEps";
-            this.dbOptChkBoxCountEmptyFutureEps.Size = new System.Drawing.Size(289, 17);
-            this.dbOptChkBoxCountEmptyFutureEps.TabIndex = 39;
-            this.dbOptChkBoxCountEmptyFutureEps.Text = "Count episodes that have no AirDate or Air in the Future";
-            this.dbOptChkBoxCountEmptyFutureEps.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptChkBoxCountEmptyFutureEps, "Check this option if you want to calculate episode counts were episodes do not ha" +
-        "ve an airdate or airs at a future date\r\nThis will only count episodes that you c" +
-        "an see when browsing GUI.");
-            this.dbOptChkBoxCountEmptyFutureEps.UseVisualStyleBackColor = true;
-            // 
-            // dbOptChkBoxScanFullscreenVideo
-            // 
-            this.dbOptChkBoxScanFullscreenVideo.AutoSize = true;
-            this.dbOptChkBoxScanFullscreenVideo.Location = new System.Drawing.Point(32, 309);
-            this.dbOptChkBoxScanFullscreenVideo.Name = "dbOptChkBoxScanFullscreenVideo";
-            this.dbOptChkBoxScanFullscreenVideo.Option = "AutoScanLocalFilesFSV";
-            this.dbOptChkBoxScanFullscreenVideo.Size = new System.Drawing.Size(266, 17);
-            this.dbOptChkBoxScanFullscreenVideo.TabIndex = 21;
-            this.dbOptChkBoxScanFullscreenVideo.Text = "Scan remote shares while fullscreen video is active";
-            this.dbOptChkBoxScanFullscreenVideo.ToolTip = "";
-            this.dbOptChkBoxScanFullscreenVideo.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionCheckBox2
-            // 
-            this.dbOptionCheckBox2.AutoSize = true;
-            this.dbOptionCheckBox2.Checked = true;
-            this.dbOptionCheckBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dbOptionCheckBox2.Location = new System.Drawing.Point(404, 238);
-            this.dbOptionCheckBox2.Name = "dbOptionCheckBox2";
-            this.dbOptionCheckBox2.Option = "SkipSeasonViewOnSingleSeason";
-            this.dbOptionCheckBox2.Size = new System.Drawing.Size(234, 17);
-            this.dbOptionCheckBox2.TabIndex = 36;
-            this.dbOptionCheckBox2.Text = "Skip season view if there is only one season";
-            this.dbOptionCheckBox2.ToolTip = "";
-            this.dbOptionCheckBox2.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionCheckBoxSubstituteMissingArtwork
-            // 
-            this.dbOptionCheckBoxSubstituteMissingArtwork.AutoSize = true;
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(404, 284);
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Name = "dbOptionCheckBoxSubstituteMissingArtwork";
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Option = "SubstituteMissingArtwork";
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Size = new System.Drawing.Size(280, 17);
-            this.dbOptionCheckBoxSubstituteMissingArtwork.TabIndex = 38;
-            this.dbOptionCheckBoxSubstituteMissingArtwork.Text = "Substitute Missing Season Posters with Series Posters";
-            this.dbOptionCheckBoxSubstituteMissingArtwork.ToolTip = "";
-            this.dbOptionCheckBoxSubstituteMissingArtwork.UseVisualStyleBackColor = true;
-            // 
-            // dbOptionCheckBoxMarkRatedEpsAsWatched
-            // 
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.AutoSize = true;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Location = new System.Drawing.Point(404, 215);
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Name = "dbOptionCheckBoxMarkRatedEpsAsWatched";
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Option = "MarkRatedEpisodeAsWatched";
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Size = new System.Drawing.Size(305, 17);
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.TabIndex = 35;
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.Text = "Mark Episodes as Watched if rated online at theTVDB.com";
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.dbOptionCheckBoxMarkRatedEpsAsWatched, resources.GetString("dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip"));
-            this.dbOptionCheckBoxMarkRatedEpsAsWatched.UseVisualStyleBackColor = true;
-            // 
-            // optionAsk2Rate
-            // 
-            this.optionAsk2Rate.AutoSize = true;
-            this.optionAsk2Rate.Location = new System.Drawing.Point(11, 123);
-            this.optionAsk2Rate.Name = "optionAsk2Rate";
-            this.optionAsk2Rate.Option = "askToRate";
-            this.optionAsk2Rate.Size = new System.Drawing.Size(234, 17);
-            this.optionAsk2Rate.TabIndex = 11;
-            this.optionAsk2Rate.Text = "&Popup Rate Dialog after episode is watched";
-            this.optionAsk2Rate.ToolTip = "";
-            this.toolTip_InfoHelp.SetToolTip(this.optionAsk2Rate, resources.GetString("optionAsk2Rate.ToolTip"));
-            this.optionAsk2Rate.UseVisualStyleBackColor = true;
-            this.optionAsk2Rate.CheckedChanged += new System.EventHandler(this.optionAsk2Rate_CheckedChanged);
-            // 
-            // playlistSettings
-            // 
-            this.playlistSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.playlistSettings.AutoScroll = true;
-            this.playlistSettings.Location = new System.Drawing.Point(-1, 353);
-            this.playlistSettings.Name = "playlistSettings";
-            this.playlistSettings.Size = new System.Drawing.Size(866, 196);
-            this.playlistSettings.TabIndex = 1;
-            // 
-            // formattingConfiguration1
-            // 
-            this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.formattingConfiguration1.Location = new System.Drawing.Point(8, 44);
-            this.formattingConfiguration1.Name = "formattingConfiguration1";
-            this.formattingConfiguration1.Size = new System.Drawing.Size(780, 593);
-            this.formattingConfiguration1.TabIndex = 6;
-            // 
             // aboutScreen
             // 
             this.aboutScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -3460,6 +3494,17 @@ namespace WindowPlugins.GUITVSeries
             this.aboutScreen.Name = "aboutScreen";
             this.aboutScreen.Size = new System.Drawing.Size(871, 640);
             this.aboutScreen.TabIndex = 0;
+            // 
+            // listBox_Log
+            // 
+            this.listBox_Log.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox_Log.FormattingEnabled = true;
+            this.listBox_Log.HorizontalScrollbar = true;
+            this.listBox_Log.Location = new System.Drawing.Point(10, 10);
+            this.listBox_Log.Name = "listBox_Log";
+            this.listBox_Log.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.listBox_Log.Size = new System.Drawing.Size(130, 26);
+            this.listBox_Log.TabIndex = 5;
             // 
             // ConfigurationForm
             // 
@@ -3782,5 +3827,6 @@ namespace WindowPlugins.GUITVSeries
         private Configuration.DBOptionCheckBox dbOptCheckBoxDownloadActors;
         private Configuration.DBOptionCheckBox dbOptCheckBoxCleanOnlineEpisodes;
         private Configuration.DBOptionCheckBox dbOptCheckBoxRemoveEpZero;
+        private Configuration.DBOptionCheckBox checkBox_CountSpecialEpisodesAsWatched;
     }
 }
