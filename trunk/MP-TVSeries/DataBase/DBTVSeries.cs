@@ -134,6 +134,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 InitDB();
             }
+
             SQLite.NET.SQLiteResultSet result;
             try
             {
@@ -144,7 +145,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("Commit failed on this command: <" + sCommand + "> (" + ex.Message + ").");
+                MPTVSeriesLog.Write("SQL Execution Failed, Reason = '{0}', SQL = '{1}'", ex.Message, sCommand);
                 return new SQLiteResultSet();
             }
         }

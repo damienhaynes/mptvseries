@@ -555,7 +555,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cOverrideLanguage, false);
 
             if (GetOptions(cCountSpecialEpisodesAsWatched) == null)
-                SetOptions(cCountSpecialEpisodesAsWatched, true);
+                SetOptions(cCountSpecialEpisodesAsWatched, false);
             #endregion
         }
 
