@@ -864,7 +864,11 @@ namespace WindowPlugins.GUITVSeries
                     season.Commit();
 
                     seriesEpsTotal += count;
-                    seriesEpsUnWatched += unWatchedCount;
+                    // Count the Special (Season 0 (zero)) episodes as watched!
+                    if ( (season[DBSeason.cIndex] != 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)) )
+                    {
+                        seriesEpsUnWatched += unWatchedCount;
+                    }
                 }
 
                 // update series counts
@@ -898,10 +902,17 @@ namespace WindowPlugins.GUITVSeries
                 epsUnWatched = 0;
              
                 DBEpisode.GetSeasonEpisodeCounts(series, season, out epsTotal, out epsUnWatched);
-                season[DBSeason.cEpisodeCount] = epsTotal; seriesEpsTotal += epsTotal;
-                season[DBSeason.cEpisodesUnWatched] = epsUnWatched; seriesEpsUnWatched += epsUnWatched;
+                season[DBSeason.cEpisodeCount] = epsTotal;
+                season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
                 season[DBSeason.cUnwatchedItems] = epsUnWatched > 0;
                 season.Commit();
+
+                seriesEpsTotal += epsTotal;
+                // Count the Special (Season 0 (zero)) episodes as watched!
+                if ((season[DBSeason.cIndex] != 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
+                {
+                    seriesEpsUnWatched += epsUnWatched;
+                }
 
                 MPTVSeriesLog.Write(string.Format("Series \"{0} Season {1}\" has {2}/{3} unwatched episodes", series.ToString(), season[DBSeason.cIndex], epsUnWatched, epsTotal), MPTVSeriesLog.LogLevel.Debug);
             }
