@@ -78,7 +78,7 @@ namespace WindowPlugins.GUITVSeries
                                         {
                                             MinLSDistance = ur.Min(r => r.LSDistance),
                                             SeriesScored = ur.OrderBy(r => r.LSDistance).FirstOrDefault(),
-                                            SeriesUserLang = ur.FirstOrDefault(r => r.Series["language"] == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString),
+                                            SeriesUserLang = ur.FirstOrDefault(r => r.Series["language"] == r.Series[DBOnlineSeries.cLanguage]),
                                             SeriesEng = ur.FirstOrDefault(r => r.Series["language"] == "en"),
                                         };
 

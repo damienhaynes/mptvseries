@@ -1338,7 +1338,17 @@ namespace WindowPlugins.GUITVSeries
                         m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], name), nIndex, seriesList.Count, series, name));
                     }
                 });
-                bannerParser.DownloadBanners(Online_Parsing_Classes.OnlineAPI.SelLanguageAsString);               
+                
+                // Other language for the Series?
+                if (DBOption.GetOptions(DBOption.cOverrideLanguage))
+                {
+                    //Get the prefered language for the Series.
+                    bannerParser.DownloadBanners(Online_Parsing_Classes.OnlineAPI.GetLanguageOverride(series[DBOnlineSeries.cID]));
+                }
+                else
+                {
+                    bannerParser.DownloadBanners(Online_Parsing_Classes.OnlineAPI.SelLanguageAsString);
+                }
 
                 // update database with available banners
                 SeriesBannersMap seriesArtwork = Helper.getElementFromList<SeriesBannersMap, string>(series[DBSeries.cID], "SeriesID", 0, bannerParser.SeriesBannersMap);
@@ -2139,9 +2149,11 @@ namespace WindowPlugins.GUITVSeries
         #region SeriesHelpers
         public static DBOnlineSeries SearchForSeries(string seriesName, bool bNoExactMatch, IFeedback feedback)
         {
+            string SelLang = string.Empty;
             string nameToSearch = seriesName;
 
-            while (true) {
+            while (true) 
+            {
                 // query online db for possible matches
                 GetSeries GetSeriesParser = new GetSeries(nameToSearch);
 
@@ -2164,12 +2176,24 @@ namespace WindowPlugins.GUITVSeries
                 Dictionary<int, DBOnlineSeries> uniqueSeriesIds = new Dictionary<int, DBOnlineSeries>();
                 foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) // make them unique (each seriesID) - if possible in users lang
                 {
+                    // Other language for the Series?
+                    if (DBOption.GetOptions(DBOption.cOverrideLanguage))
+                    {
+                        //Get the prefered language for the Series.
+                        SelLang = Online_Parsing_Classes.OnlineAPI.GetLanguageOverride(onlineSeries[DBOnlineSeries.cID]);
+                    }
+                    else
+                    {
+                        SelLang = Online_Parsing_Classes.OnlineAPI.SelLanguageAsString;
+                    }
+
                     if (!uniqueSeriesIds.ContainsKey(onlineSeries[DBOnlineSeries.cID]))
                         uniqueSeriesIds.Add(onlineSeries[DBOnlineSeries.cID], onlineSeries);
-                    else if (onlineSeries["language"] == Online_Parsing_Classes.OnlineAPI.SelLanguageAsString)
+                    else if (onlineSeries["language"] == SelLang)
                         uniqueSeriesIds[onlineSeries[DBOnlineSeries.cID]] = onlineSeries;
                 }
-                foreach (KeyValuePair<int, DBOnlineSeries> onlineSeries in uniqueSeriesIds) {
+                foreach (KeyValuePair<int, DBOnlineSeries> onlineSeries in uniqueSeriesIds)
+                {
                     Choices.Add(new CItem(onlineSeries.Value[DBOnlineSeries.cPrettyName],
                         "SeriesID: " + onlineSeries.Value[DBOnlineSeries.cID] + Environment.NewLine +
                         onlineSeries.Value[DBOnlineSeries.cSummary],

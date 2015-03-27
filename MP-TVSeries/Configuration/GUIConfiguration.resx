@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAASQBBQEkAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAATQBBQE0AQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -820,6 +820,10 @@ The check is ignored in the following conditions:
 * Playback of Specials (and next unwatched Specials).
 * Playback of Watched/Seen episodes.
 * Playback using Playlist player.</value>
+  </data>
+  <data name="checkBox_CountSpecialEpisodesAsWatched.ToolTip" xml:space="preserve">
+    <value>Check this option if you want to calculate episode counts were Special (Season 0) episodes to be counted as watched episodes in the Series view.
+This will only count episodes that you can see when browsing GUI.</value>
   </data>
   <data name="dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip" xml:space="preserve">
     <value>If enabled and episode has been rated, mark the episode as watched.

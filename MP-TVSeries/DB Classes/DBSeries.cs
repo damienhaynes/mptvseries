@@ -865,7 +865,7 @@ namespace WindowPlugins.GUITVSeries
 
                     seriesEpsTotal += count;
                     // Count the Special (Season 0 (zero)) episodes as watched!
-                    if ( (season[DBSeason.cIndex] != 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)) )
+                    if ((season[DBSeason.cIndex] != 0) || (season[DBSeason.cIndex] == 0 && !DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
                     {
                         seriesEpsUnWatched += unWatchedCount;
                     }
@@ -909,7 +909,7 @@ namespace WindowPlugins.GUITVSeries
 
                 seriesEpsTotal += epsTotal;
                 // Count the Special (Season 0 (zero)) episodes as watched!
-                if ((season[DBSeason.cIndex] != 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
+                if ((season[DBSeason.cIndex] != 0) || (season[DBSeason.cIndex] == 0 && !DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
                 {
                     seriesEpsUnWatched += epsUnWatched;
                 }

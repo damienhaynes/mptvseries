@@ -471,12 +471,12 @@ namespace WindowPlugins.GUITVSeries
         public static string GetRandomBanner(List<string> BannerList)
         {
             const string graphicalBannerRecognizerSubstring = "-g";
-            string langIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelLanguageAsString + "-";
+            string englishLangIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelLanguageAsString + "-";
 
             // random banners are prefered in the following order
-            // 1) own lang + graphical
-            // 2) own lang but not graphical
-            // 3) english + graphical (english really is any other language banners that are in db)
+            // 1) Series Language with Graphical
+            // 2) Series Language but not Graphical
+            // 3) english with graphical (english really is any other language banners that are in db)
             // 4) english but not graphical
 
             string randImage = null;
@@ -485,37 +485,41 @@ namespace WindowPlugins.GUITVSeries
 
             if (randImage == null)
             {
-                List<string> langG = new List<string>();
-                List<string> lang = new List<string>();
-                List<string> engG = new List<string>();
-                List<string> eng = new List<string>();
+                List<string> SeriesLanguageWithGraphical = new List<string>();
+                List<string> SeriesLanguageWithoutGraphical = new List<string>();
+                List<string> EnglishLanguageWithGraphical = new List<string>();
+                List<string> EnglishLanguageWithoutGraphical = new List<string>();
                 for (int i = 0; i < BannerList.Count; i++)
                 {
                     if (File.Exists(BannerList[i]))
                     {
                         if (BannerList[i].Contains(graphicalBannerRecognizerSubstring))
                         {
-                            if (BannerList[i].Contains(langIdentifier))
-                                langG.Add(BannerList[i]);
+                            if (BannerList[i].Contains(englishLangIdentifier))
+                                EnglishLanguageWithGraphical.Add(BannerList[i]);
                             else
-                                engG.Add(BannerList[i]);
+                                SeriesLanguageWithGraphical.Add(BannerList[i]);
                         }
                         else
                         {
-                            if (BannerList[i].Contains(langIdentifier))
-                                lang.Add(BannerList[i]);
+                            if (BannerList[i].Contains(englishLangIdentifier))
+                                SeriesLanguageWithoutGraphical.Add(BannerList[i]);
                             else
-                                eng.Add(BannerList[i]);
+                                EnglishLanguageWithoutGraphical.Add(BannerList[i]);
                         }
                     }
                 }
 
                 try
                 {
-                    if (langG.Count > 0) randImage = langG[new Random().Next(0, langG.Count)];
-                    else if (lang.Count > 0) randImage = lang[new Random().Next(0, lang.Count)];
-                    else if (engG.Count > 0) randImage = engG[new Random().Next(0, engG.Count)];
-                    else if (eng.Count > 0) randImage = eng[new Random().Next(0, eng.Count)];
+                    if (SeriesLanguageWithGraphical.Count > 0) 
+                        randImage = SeriesLanguageWithGraphical[new Random().Next(0, SeriesLanguageWithGraphical.Count)];
+                    else if (SeriesLanguageWithoutGraphical.Count > 0) 
+                        randImage = SeriesLanguageWithoutGraphical[new Random().Next(0, SeriesLanguageWithoutGraphical.Count)];
+                    else if (EnglishLanguageWithGraphical.Count > 0) 
+                        randImage = EnglishLanguageWithGraphical[new Random().Next(0, EnglishLanguageWithGraphical.Count)];
+                    else if (EnglishLanguageWithoutGraphical.Count > 0) 
+                        randImage = EnglishLanguageWithoutGraphical[new Random().Next(0, EnglishLanguageWithoutGraphical.Count)];
                     else return string.Empty;
                 }
                 catch
