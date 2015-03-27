@@ -341,8 +341,6 @@ namespace WindowPlugins.GUITVSeries
 
             checkBox_OverrideComboLang.Checked = DBOption.GetOptions(DBOption.cOverrideLanguage);
 
-            checkBox_CountSpecialEpisodesAsWatched.Checked = DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched);
-            
             tabControl_Details.SelectTab(1);
         }
 
@@ -3798,11 +3796,6 @@ namespace WindowPlugins.GUITVSeries
                 // Reload the tree for hideing the language property
                 LoadTree();
             }
-        }
-
-        private void checkBox_DontCountSpecialEpisodes_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cCountSpecialEpisodesAsWatched, checkBox_CountSpecialEpisodesAsWatched.Checked);
         }
 
         private void linkDelUpdateTime_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
