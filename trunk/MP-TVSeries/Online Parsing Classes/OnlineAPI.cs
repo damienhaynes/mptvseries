@@ -68,9 +68,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       }
       set { selLang = value; }
     }
-    #endregion
 
-    static private string GetLanguageOverride(String sSeriesID)
+    public static string GetLanguageOverride(String sSeriesID)
     {
         string sqlCon = string.Empty;
         SQLCondition cond = new SQLCondition();
@@ -78,7 +77,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         sqlCon = "id = " + sSeriesID;
         cond.AddCustom(sqlCon);
 
-        // Get the language that the user has selected in the Detail View for the serie
+        // Get the language that the user has selected for the serie
         List<DBValue> seriesLanguage = DBOnlineSeries.GetSingleField(DBOnlineSeries.cLanguage, cond, new DBOnlineSeries());
 
         if ((seriesLanguage.Count > 0) && (seriesLanguage[0] != ""))
@@ -87,10 +86,11 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         }
         else
         {
-            //If there is no language prefered for the series, the fallback is Language on the Online Data view.
+            //If there is no language prefered for the series, the fallback is SelLanguageAsString (en).
             return SelLanguageAsString;
         }
     }
+    #endregion
 
     static public XmlNode GetMirrors(String sServer)
     {

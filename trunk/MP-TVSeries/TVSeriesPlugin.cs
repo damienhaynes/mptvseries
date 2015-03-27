@@ -287,8 +287,7 @@ namespace WindowPlugins.GUITVSeries
             downloadTorrent,
             downloadNZB,
             filterUnwatched,
-            actionChangeSeriesLanguage,
-            actionCountSpecialEpisodesAsWatched
+            actionChangeSeriesLanguage
         }
 
         enum eContextMenus
@@ -4111,10 +4110,6 @@ namespace WindowPlugins.GUITVSeries
             dlg.Add(pItem);
             pItem.ItemId = (int)eContextItems.actionChangeSeriesLanguage;
 
-            pItem = new GUIListItem(Translation.CountSpecialEpisodesAsWatched + " (" + (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched) ? Translation.on : Translation.off) + ")");
-            dlg.Add(pItem);
-            pItem.ItemId = (int)eContextItems.actionCountSpecialEpisodesAsWatched;
-
             dlg.DoModal(GUIWindowManager.ActiveWindow);
             if (dlg.SelectedId >= 0)
             {
@@ -4175,56 +4170,10 @@ namespace WindowPlugins.GUITVSeries
                     case (int)eContextItems.actionChangeSeriesLanguage:
                         DBOption.SetOptions(DBOption.cOverrideLanguage, !DBOption.GetOptions(DBOption.cOverrideLanguage));
                         break;
-
-                    case (int)eContextItems.actionCountSpecialEpisodesAsWatched:
-                        DBOption.SetOptions(DBOption.cCountSpecialEpisodesAsWatched, !DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched));
-
-                        // Set number of watched/unwatched episodes in the background thread
-                        allSeries = DBSeries.Get(new SQLCondition());
-
-                        if (allSeries.Count > 0)
-                        {
-                            MPTVSeriesLog.Write("Begin Count Special Episode as Watched/ Unwatched");
-                            BackgroundWorker backgroundWorker = new BackgroundWorker();
-                            backgroundWorker.DoWork += new DoWorkEventHandler(asyncCountSpecialEpisodesAsWatched);
-                            backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncCountSpecialEpisodesAsWatchedCompleted);
-                            backgroundWorker.ProgressChanged += new ProgressChangedEventHandler((s, e) =>
-                            {
-                                if (backgroundWorker.IsBusy)
-                                {
-                                    object[] userState = e.UserState as object[];
-                                    backgroundWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeCounts, (userState[0] as DBSeries).ToString(), (int)userState[1], allSeries.Count));
-                                }
-                            });
-                            backgroundWorker.RunWorkerAsync(allSeries);
-                        }
-                        break;
                 }
             }
         }
         #endregion
-
-        void asyncCountSpecialEpisodesAsWatched(object sender, DoWorkEventArgs e)
-        {
-            System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Lowest;
-
-            List<DBSeries> allSeries = (List<DBSeries>)e.Argument;
-            foreach (var series in allSeries)
-            {
-                int epsTotal = 0;
-                int epsUnWatched = 0;
-                DBEpisode.GetSeriesEpisodeCounts(series[DBSeries.cID], out epsTotal, out epsUnWatched);
-                series[DBOnlineSeries.cEpisodeCount] = epsTotal;
-                series[DBOnlineSeries.cEpisodesUnWatched] = epsUnWatched;
-                series.Commit();
-            }
-        } 
-        
-        void asyncCountSpecialEpisodesAsWatchedCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            MPTVSeriesLog.Write("Count Special Episode as Watched/ Unwatched completed!");
-            LoadFacade();
-        }
 
        #region View Tags Menu
         private void ShowViewTagsMenu(bool add, DBSeries series)

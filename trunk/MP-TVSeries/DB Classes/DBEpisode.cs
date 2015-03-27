@@ -1421,7 +1421,7 @@ namespace WindowPlugins.GUITVSeries
             epsTotal = 0;
             int parseResult = 0;
             int epsWatched = 0;
-            int seasonIndex = 0;
+            int seasonIndex = -1;
 
             // we either get two rows (one for normal episodes, one for double episodes), 
             // or we get no rows so we add them
@@ -1456,7 +1456,13 @@ namespace WindowPlugins.GUITVSeries
                     }
                     else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
                     {
-                        // no airdate field set, this occurs for specials most of the time                    
+                        // no airdate field set, this occurs for specials most of the time
+                        epsTotal++;
+                    }
+                    else if (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched))
+                    {
+                        // Need to increment epsTotal when the cCountSpecialEpisodesAsWatched = true. 
+                        // Otherwise the epsUnWatched become wrong.
                         epsTotal++;
                     }
                 }

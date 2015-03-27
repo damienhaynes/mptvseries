@@ -48,6 +48,7 @@ namespace WindowPlugins.GUITVSeries
 
     abstract class Artwork<T> : IComparable<T> where T : Artwork<T>
     {
+        public string SeriesID = string.Empty;
         public string SeriesName = string.Empty;
         public string OnlinePath = string.Empty;
         public string FileName = string.Empty;
@@ -62,8 +63,19 @@ namespace WindowPlugins.GUITVSeries
             // 2. Highest Rated
             // 3. Number of Votes
 
-            double thisArtwork = this.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
-            double otherArtwork = other.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
+            double thisArtwork;
+            double otherArtwork; 
+            if(DBOption.GetOptions(DBOption.cOverrideLanguage))
+            {
+                thisArtwork = this.Language == OnlineAPI.GetLanguageOverride(this.SeriesID) ? 100.0 : 0.0;
+                otherArtwork = other.Language == OnlineAPI.GetLanguageOverride(other.SeriesID) ? 100.0 : 0.0;
+
+            }
+            else
+            { 
+                thisArtwork = this.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
+                otherArtwork = other.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
+            }
 
             if (this.Rating == other.Rating)
             {
@@ -75,7 +87,7 @@ namespace WindowPlugins.GUITVSeries
             otherArtwork += other.Rating;
 
             return otherArtwork.CompareTo(thisArtwork);
-        }        
+        }
     }
 
     class WideBannerSeries : Artwork<WideBannerSeries>
@@ -165,10 +177,11 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if (!string.IsNullOrEmpty(banner.SelectSingleNode("RatingCount").InnerText))
-                    seriesWideBanners.RatingCount = int.Parse(banner.SelectSingleNode("RatingCount").InnerText);                                
+                    seriesWideBanners.RatingCount = int.Parse(banner.SelectSingleNode("RatingCount").InnerText);
 
-                widebannerSeriesList.Add(seriesWideBanners);                
-            }           
+                seriesWideBanners.SeriesID = seriesID;
+                widebannerSeriesList.Add(seriesWideBanners);
+            }
             // sort by highest rated
             widebannerSeriesList.Sort();
 
@@ -208,6 +221,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!string.IsNullOrEmpty(banner.SelectSingleNode("RatingCount").InnerText))
                     seriesPoster.RatingCount = int.Parse(banner.SelectSingleNode("RatingCount").InnerText);
 
+                seriesPoster.SeriesID = seriesID;
                 posterSeriesList.Add(seriesPoster);
             }
 
@@ -253,6 +267,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!seasons.Contains(seasonPoster.SeasonIndex))
                     seasons.Add(seasonPoster.SeasonIndex);
 
+                seasonPoster.SeriesID = seriesID;
                 posterSeasonList.Add(seasonPoster);
             }
 
@@ -276,9 +291,9 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-          
+
             map.SeasonPosters = posterSeasonList;
-            #endregion                       
+            #endregion
 
             // series already in?
             if (SeriesBannersMap.Contains(map))
@@ -289,8 +304,9 @@ namespace WindowPlugins.GUITVSeries
                 seriesMap.SeriesPosters.AddRange(map.SeriesPosters);
             }
             else
+            {
                 SeriesBannersMap.Add(map);
-         
+            }
         }
 
         public void DownloadBanners(string onlineLanguage)
