@@ -69,7 +69,6 @@ namespace WindowPlugins.GUITVSeries
             {
                 thisArtwork = this.Language == OnlineAPI.GetLanguageOverride(this.SeriesID) ? 100.0 : 0.0;
                 otherArtwork = other.Language == OnlineAPI.GetLanguageOverride(other.SeriesID) ? 100.0 : 0.0;
-
             }
             else
             { 
