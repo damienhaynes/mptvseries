@@ -145,34 +145,26 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static private XmlNode UpdateSeries(String sSeriesID, bool first)
     {
-        String SelLang = string.Empty;
-        bool bOverrideLanguage = false;
+        int series = Int32.Parse(sSeriesID);
 
-        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
-        if (bOverrideLanguage)
+        if(DBOption.GetOptions(DBOption.cOverrideLanguage))
         {
-            SelLang = GetLanguageOverride(sSeriesID);
-            int series = Int32.Parse(sSeriesID);
+            string SelLang = GetLanguageOverride(sSeriesID);    
             return getFromCache(series, SelLang + ".xml", SelLang);
         }
         else
         {
-            int series = Int32.Parse(sSeriesID);
             return getFromCache(series, SelLanguageAsString + ".xml");
         }
     }
 
     static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first)
     {
-        String SelLang = string.Empty;
-        bool bOverrideLanguage = false;
-
-        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
-        if (bOverrideLanguage)
+        if(DBOption.GetOptions(DBOption.cOverrideLanguage))
         {
-            SelLang = GetLanguageOverride(sSeriesID);
+            languageID = GetLanguageOverride(sSeriesID);
             int series = Int32.Parse(sSeriesID);
-            return getFromCache(series, SelLang + ".xml", SelLang);
+            return getFromCache(series, languageID + ".xml", languageID);
         }
         else
         {
@@ -238,13 +230,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode UpdateEpisodes(int seriesID, bool first)
     {
-        string SelLang = string.Empty;
-        bool bOverrideLanguage = false;
-
-        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
-        if (bOverrideLanguage)
+        if (DBOption.GetOptions(DBOption.cOverrideLanguage))
         {
-            SelLang = GetLanguageOverride(seriesID.ToString());
+            string SelLang = GetLanguageOverride(seriesID.ToString());
             return getFromCache(seriesID, SelLang + ".xml");
         }
         else
@@ -340,13 +328,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static XmlNode getFromCache(int seriesID, string elemName)
     {
-        string SelLang = string.Empty;
-        bool bOverrideLanguage = false;
-
-        bOverrideLanguage = DBOption.GetOptions(DBOption.cOverrideLanguage);
-        if (bOverrideLanguage)
+        if (DBOption.GetOptions(DBOption.cOverrideLanguage))
         {
-            SelLang = GetLanguageOverride(seriesID.ToString());
+            string SelLang = GetLanguageOverride(seriesID.ToString());
             return getFromCache(seriesID, true, elemName, SelLang);
         }
         else
