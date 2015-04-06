@@ -307,6 +307,4 @@
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Уверены, что хотите продолжить?</string>
   <string name="Filters" Original="Filters">Фильтры</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Непросмотренные эпизоды</string>
-  <string name="AllEpisodes" Original="All Episodes">Все эпизоды</string>
-  <string name="Biography" Original="Biography">Биография</string>
 </resources>

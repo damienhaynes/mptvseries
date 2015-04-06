@@ -204,7 +204,7 @@ Fortsätt?</string>
   <string name="AirsDay" Original="Airs Day">Visas på</string>
   <string name="AirsTime" Original="Airs Time">Visas klockan</string>
   <string name="Cast" Original="Cast">Rollbesättning</string>
-  <string name="Certification" Original="Certification">Certifiering</string>
+  <string name="Certification" Original="Certification">Åldersgräns</string>
   <string name="Director" Original="Director">Regi</string>
   <string name="Directors" Original="Directors">Regi</string>
   <string name="FileSize" Original="File Size">Fil-storlek</string>
@@ -314,6 +314,7 @@ Vill du registrera dig eller logga in på trakt.tv nu?</string>
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Vill du fortsätta?</string>
   <string name="Filters" Original="Filters">Filter</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Osedda avsnitt</string>
-  <string name="AllEpisodes" Original="All Episodes">Alla avsnitt</string>
-  <string name="Biography" Original="Biography">Biografi</string>
+  <string name="OverrideLanguage" Original="Override Language Settings">Ändra språkinställningar</string>
+  <string name="ChangeSeriesLanguage" Original="Change Series Meta Language">Ändra språk för  TV-seriens metadata</string>
+  <string name="CountSpecialEpisodesAsWatched" Original="Count Special Episodes As Watched">Räkna specialavsnitt som sedda</string>
 </resources>

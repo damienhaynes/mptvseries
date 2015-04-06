@@ -310,6 +310,4 @@
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Haluatko varmasti jatkaa?</string>
   <string name="Filters" Original="Filters">Suodattimet</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Katsomattomat jaksot</string>
-  <string name="AllEpisodes" Original="All Episodes">Kaikki jaksot</string>
-  <string name="Biography" Original="Biography">Elämänkerta</string>
 </resources>
