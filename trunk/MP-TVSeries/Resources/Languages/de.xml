@@ -23,14 +23,14 @@
   <string name="on" Original="on">ein</string>
   <string name="off" Original="off">aus</string>
   <string name="Play_Random_Episode" Original="Play Random Episode">Zufällige Folge wiedergeben</string>
-  <string name="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Zufällige, erste noch nicht gesehene Folge einer Serie abspielen</string>
+  <string name="Play_Random_First_Unwatched_Episode" Original="Play Random First Unwatched Episode">Zufällig eine erste noch nicht gesehene Folge einer Serie abspielen</string>
   <string name="Delete_that_series" Original="Delete that series?">Diese Serie löschen?</string>
   <string name="Delete_that_season" Original="Delete that season?">Diese Staffel löschen?</string>
   <string name="Delete_that_episode" Original="Delete that episode?">Diese Folge löschen?</string>
   <string name="Confirm" Original="Confirm">Bestätigung</string>
   <string name="Completed" Original="Completed">Fertig</string>
   <string name="No_subtitles_found" Original="No subtitles found">Keine Untertitel gefunden</string>
-  <string name="CFS_No_Results_Found" Original="No Results Found!">keine Ergebnisse gefunden</string>
+  <string name="CFS_No_Results_Found" Original="No Results Found!">Keine Ergebnisse gefunden</string>
   <string name="_Hidden_to_prevent_spoilers_" Original=" * Hidden to prevent spoilers *"> * Versteckt um Spoiler zu vermeiden *</string>
   <string name="Yes" Original="Yes">Ja</string>
   <string name="No" Original="No">Nein</string>
@@ -54,9 +54,9 @@
   <string name="Favourites" Original="Favourites">Favoriten</string>
   <string name="updateMI" Original="Update Mediainfo of local file">Aktualisiere Medieninformationen der lokalen Dateien</string>
   <string name="RateSeries" Original="Rate this Series">Diese Serie bewerten</string>
-  <string name="RateEpisode" Original="Rate this Episode">Diese Episode bewerten</string>
+  <string name="RateEpisode" Original="Rate this Episode">Diese Folge bewerten</string>
   <string name="ResetRating" Original="Reset Rating">Bewertung zurücksetzen</string>
-  <string name="AskToRate" Original="Ask me to rate unrated episodes">Erinnerung, nicht bewertete Episoden zu bewerten</string>
+  <string name="AskToRate" Original="Ask me to rate unrated episodes">Erinnerung, nicht bewertete Folgen zu bewerten</string>
   <string name="DontAskToRate" Original="Don't ask me to rate again">Nicht mehr an Bewertung erinnern</string>
   <string name="RatingStar" Original="Star">Stern</string>
   <string name="RatingStars" Original="Stars">Sterne</string>
@@ -181,7 +181,7 @@
   <string name="Top10Online" Original="Top 10 (Online)">Top 10 (Online)</string>
   <string name="Top10User" Original="Top 10 (User)">Top 10 (User)</string>
   <string name="Top25Online" Original="Top 25 (Online)">Top 25 (Online)</string>
-  <string name="Top25User" Original="Top 25 (User)">Top 25(User)</string>
+  <string name="Top25User" Original="Top 25 (User)">Top 25 (User)</string>
   <string name="Subtitles" Original="Subtitles">Untertitel</string>
   <string name="MultiAudio" Original="Multiple Audio Tracks">Multiple Audio Tracks</string>
   <string name="OnlineFavourites" Original="Online Favourites">Online Favoriten</string>
@@ -238,7 +238,7 @@
   <string name="PlayNow" Original="Play Now">Jetzt abspielen</string>
   <string name="NoSubtitleDownload" Original="No Subtitle Download">Kein Untertitel-Download</string>
   <string name="DeleteSubtitles" Original="Delete Subtitles">Untertitel löschen</string>
-  <string name="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Kein Episoden-Dateiname in Datenbank</string>
+  <string name="EpisodeFilenameEmpty" Original="Episode Filename is Empty in Database">Kein Folgen-Dateiname in Datenbank</string>
   <string name="UnableToDeleteSubtitleFile" Original="Unable to Delete Subtitle File: {0}">Untertitel-Datei kann nicht gelöscht werden: {0}</string>
   <string name="PathNotAvailable" Original="Path is not available: {0}">Pfad nicht verfügbar: {0}</string>
   <string name="UnableToDeleteSubtitles" Original="Unable to Delete Subtitles">Untertitel können nicht gelöscht werden</string>
@@ -253,16 +253,16 @@
   <string name="FirstUnwatchedEpisode" Original="First unwatched episode">Erste ungesehene Folge</string>
   <string name="FirstUnwatchedEpisodeOtherwiseRandom" Original="First unwatched episode otherwise random">Erste ungesehene Folge, sonst zufällig</string>
   <string name="RandomUnwatchedEpisode" Original="Random unwatched episode">Zufälige ungesehene Folge</string>
-  <string name="LatestEpisode" Original="latest episode">Neueste Episode</string>
+  <string name="LatestEpisode" Original="latest episode">Neueste Folge</string>
   <string name="UnableToFindAny" Original="Unable to find any {0}">Es wurde nichts gefunden {0}</string>
-  <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Es wurde keine Episode gefunden</string>
+  <string name="UnableToFindAnyEpisode" Original="Unable to find any episode">Es wurde keine Folge gefunden</string>
   <string name="SortBy" Original="Sort By">Sortieren nach</string>
   <string name="DVDOrder" Original="DVD Order">Reihenfolge DVD</string>
   <string name="AiredOrder" Original="Aired Order">Reihenfolge Ausstrahlung</string>
   <string name="AbsoluteOrder" Original="Absolute Order">Absolute Reihenfolge</string>
   <string name="Title" Original="Title">Titel</string>
   <string name="ChangeOnlineMatchOrder" Original="Change Online Matching Method">Methode zum Online-Abgleich ändern</string>
-  <string name="InsertDiskMessageLine1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Episode</string>
+  <string name="InsertDiskMessageLine1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Folge</string>
   <string name="InsertDiskMessageLine2" Original="is currently not available.">ist momentan nicht verfügbar.</string>
   <string name="InsertDiskMessageLine3" Original="Please insert or connect media">Bitte Medium mit der folgenden Bezeichnung</string>
   <string name="InsertDiskMessageLine4" Original="labeled: {0}">einlegen oder verbinden: {0}</string>
@@ -279,8 +279,8 @@
   <string name="Timeout" Original="Timeout">Zeitüberschreitung</string>
   <string name="NoActors" Original="There are no Actors for this series.">Keine Darsteller für diese Serie vorhanden</string>
   <string name="GettingActors" Original="Getting Actors from Online">Schauspieler werden aus dem Netz geladen</string>
-  <string name="ShowAllEpisodes" Original="Show all Episodes">Alle Episoden anzeigen</string>
-  <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Lade alle Folgen Informationen herunter</string>
+  <string name="ShowAllEpisodes" Original="Show all Episodes">Alle Folgen anzeigen</string>
+  <string name="DownloadAllEpisodeInfo" Original="Download All Episode Info">Lade alle Folgen-Informationen herunter</string>
   <string name="Calendar" Original="Calendar">Kalender</string>
   <string name="Recommendations" Original="Recommendations">Vorschläge</string>
   <string name="Trending" Original="Trending">Populär</string>
@@ -295,7 +295,7 @@
   <string name="SearchActorInMovies" Original="Search for Actor in Movies">Suche nach einem Schauspieler in den Filmen</string>
   <string name="AddToCustomList" Original="Add {0} to Custom List...">{0} zu Benutzerliste hinzufügen</string>
   <string name="insertDisk" Original="Please insert Disk">Bitte Disk einlegen</string>
-  <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Episode</string>
+  <string name="InsertDiskMessage1" Original="The media for the episode you have selected">Das Medium für die ausgewählte Folge</string>
   <string name="InsertDiskMessage2" Original="is currently not available.">ist momentan nicht verfügbar.</string>
   <string name="InsertDiskMessage3" Original="Please insert or connect media">Bitte Medium mit der folgenden Bezeichnung</string>
   <string name="InsertDiskMessage4" Original="labeled: {0}">einlegen oder verbinden: {0}</string>
@@ -311,7 +311,8 @@
   <string name="PlaybackOutOfOrderLine1" Original="The next unwatched episode is:">Noch nicht angesehen/gesammelt</string>
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Sind Sie sicher dass Sie fortfahren möchten?</string>
   <string name="Filters" Original="Filters">Filter</string>
-  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Ungesehene Episoden</string>
-  <string name="AllEpisodes" Original="All Episodes">Alle Episoden</string>
-  <string name="Biography" Original="Biography">Biografie</string>
+  <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Ungesehene Folgen</string>
+  <string name="OverrideLanguage" Original="Override Language Settings">Spracheinstellungen überschreiben</string>
+  <string name="ChangeSeriesLanguage" Original="Change Series Meta Language">Serien-Metasprache ändern</string>
+  <string name="CountSpecialEpisodesAsWatched" Original="Count Special Episodes As Watched">Special-Folgen zu Gesehenen hinzuzählen</string>
 </resources>

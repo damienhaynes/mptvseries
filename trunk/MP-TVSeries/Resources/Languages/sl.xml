@@ -312,6 +312,7 @@
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Ali želite nadaljevati?</string>
   <string name="Filters" Original="Filters">Filtri</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Neogledane epizode</string>
-  <string name="AllEpisodes" Original="All Episodes">Vse epizode</string>
-  <string name="Biography" Original="Biography">Življenjepis</string>
+  <string name="OverrideLanguage" Original="Override Language Settings">Preskoči nastavitve jezika</string>
+  <string name="ChangeSeriesLanguage" Original="Change Series Meta Language">Spremeni meta jezik serij</string>
+  <string name="CountSpecialEpisodesAsWatched" Original="Count Special Episodes As Watched">Štel posebne epizode kot ogledane</string>
 </resources>

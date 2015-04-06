@@ -312,6 +312,6 @@
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Voulez vous continuer?</string>
   <string name="Filters" Original="Filters">Filtres</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Episodes non visionnés</string>
-  <string name="AllEpisodes" Original="All Episodes">La totalité des épisodes</string>
-  <string name="Biography" Original="Biography">Biographie</string>
+  <string name="OverrideLanguage" Original="Override Language Settings">Modifier les paramètres de la langue</string>
+  <string name="CountSpecialEpisodesAsWatched" Original="Count Special Episodes As Watched">Marquez les épisodes spéciaux comme vus</string>
 </resources>

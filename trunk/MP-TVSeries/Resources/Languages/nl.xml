@@ -40,6 +40,8 @@
   <string name="wrongSkin" Original="Wrong Skin file">Verkeerd skin bestand</string>
   <string name="special" Original="Special">Extra</string>
   <string name="specials" Original="Specials">Extra\'s</string>
+  <string name="delPhyiscalWarning" Original="You are about to permanently delete {0} physical file(s).Would you like to proceed?">U staat op het punt om {0} bestand(en) permanent te verwijderen.
+Wilt u doorgaan?</string>
   <string name="Force_Online_Match" Original="Force New Online Lookup For Series">Forceer online ophalen van series</string>
   <string name="Load_via_NewsLeecher" Original="Load via NewsLeecher">Laad via NewsLeecher</string>
   <string name="Download" Original="Download">Download</string>
@@ -287,6 +289,7 @@
   <string name="Shouts" Original="Shouts">Stemmen</string>
   <string name="MainMenu" Original="Main Menu">Hoofd menu</string>
   <string name="AddToWatchList" Original="Add {0} to Watchlist">Voeg {0} toe aan kijklijst</string>
+  <string name="TraktNotLoggedIn" Original="You can not do this operation without being\nlogged in. Would you like to Signup or Login\nto trakt.tv now?">Je kunt deze taak niet uitvoeren wanneer je niet bent ingelogd. Wil je je nu registreren of aanmelden bij trakt.tv?</string>
   <string name="RelatedSeries" Original="RelatedSeries">Gerelateerde series</string>
   <string name="SearchTorrent" Original="Torrent Search">Zoek torrents</string>
   <string name="SearchNZB" Original="NZB Search">Zoek NZB bestanden</string>
@@ -310,6 +313,7 @@
   <string name="PlaybackOutOfOrderLine2" Original="Are you sure you want to continue?">Weet je zeker dat je verder wilt gaan?</string>
   <string name="Filters" Original="Filters">Filters</string>
   <string name="UnwatchedEpisodes" Original="Unwatched Episodes">Onbekeken afleveringen</string>
-  <string name="AllEpisodes" Original="All Episodes">Alle afleveringen</string>
-  <string name="Biography" Original="Biography">Biografie</string>
+  <string name="OverrideLanguage" Original="Override Language Settings">Overschrijf Taalinstellingen</string>
+  <string name="ChangeSeriesLanguage" Original="Change Series Meta Language">Wijzig Meta-taal Series</string>
+  <string name="CountSpecialEpisodesAsWatched" Original="Count Special Episodes As Watched">Tel \'Special\' Afleveringen als bekeken</string>
 </resources>
