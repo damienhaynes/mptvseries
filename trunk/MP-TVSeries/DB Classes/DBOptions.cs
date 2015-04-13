@@ -176,6 +176,8 @@ namespace WindowPlugins.GUITVSeries
         public const string cCleanOnlineEpisodeZero = "CleanOnlineEpisodeZero";
         public const string cOverrideLanguage = "OverrideLanguage";
         public const string cCountSpecialEpisodesAsWatched = "CountSpecialEpisodesAsWatched";
+        public const string cTraktCommunityRatings = "TraktCommunityRatings";
+        public const string cTraktLastDateUpdated = "TraktLastDateUpdated";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -556,6 +558,10 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cCountSpecialEpisodesAsWatched) == null)
                 SetOptions(cCountSpecialEpisodesAsWatched, false);
+
+            if (GetOptions(cTraktCommunityRatings) == null)
+                SetOptions(cTraktCommunityRatings, false);
+
             #endregion
         }
 

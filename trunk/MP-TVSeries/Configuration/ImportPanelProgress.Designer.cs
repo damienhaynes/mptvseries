@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panelProgress = new System.Windows.Forms.Panel();
+            this.labelCleaningEpisodes = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingActorThumbProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingEpisodeCounts = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingFavourites = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
@@ -50,7 +51,7 @@
             this.labelRetrievingEpisodeThumbsProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingFanartProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.labelRetrievingSeriesArtworkProgress = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
-            this.labelCleaningEpisodes = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
+            this.labelRetrievingCommunityRatings = new WindowPlugins.GUITVSeries.Configuration.ProgressLabel();
             this.panelProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +59,7 @@
             // 
             this.panelProgress.AutoScroll = true;
             this.panelProgress.BackColor = System.Drawing.SystemColors.Window;
+            this.panelProgress.Controls.Add(this.labelRetrievingCommunityRatings);
             this.panelProgress.Controls.Add(this.labelCleaningEpisodes);
             this.panelProgress.Controls.Add(this.labelRetrievingActorThumbProgress);
             this.panelProgress.Controls.Add(this.labelRetrievingEpisodeCounts);
@@ -83,8 +85,16 @@
             this.panelProgress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelProgress.Location = new System.Drawing.Point(0, 0);
             this.panelProgress.Name = "panelProgress";
-            this.panelProgress.Size = new System.Drawing.Size(695, 593);
+            this.panelProgress.Size = new System.Drawing.Size(695, 642);
             this.panelProgress.TabIndex = 31;
+            // 
+            // labelCleaningEpisodes
+            // 
+            this.labelCleaningEpisodes.Location = new System.Drawing.Point(12, 578);
+            this.labelCleaningEpisodes.Name = "labelCleaningEpisodes";
+            this.labelCleaningEpisodes.Size = new System.Drawing.Size(656, 39);
+            this.labelCleaningEpisodes.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
+            this.labelCleaningEpisodes.TabIndex = 40;
             // 
             // labelRetrievingActorThumbProgress
             // 
@@ -98,7 +108,7 @@
             // 
             // labelRetrievingEpisodeCounts
             // 
-            this.labelRetrievingEpisodeCounts.Location = new System.Drawing.Point(12, 507);
+            this.labelRetrievingEpisodeCounts.Location = new System.Drawing.Point(12, 544);
             this.labelRetrievingEpisodeCounts.Name = "labelRetrievingEpisodeCounts";
             this.labelRetrievingEpisodeCounts.Size = new System.Drawing.Size(656, 39);
             this.labelRetrievingEpisodeCounts.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
@@ -106,7 +116,7 @@
             // 
             // labelRetrievingFavourites
             // 
-            this.labelRetrievingFavourites.Location = new System.Drawing.Point(12, 473);
+            this.labelRetrievingFavourites.Location = new System.Drawing.Point(12, 510);
             this.labelRetrievingFavourites.Name = "labelRetrievingFavourites";
             this.labelRetrievingFavourites.Size = new System.Drawing.Size(656, 39);
             this.labelRetrievingFavourites.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
@@ -294,13 +304,13 @@
             this.labelRetrievingSeriesArtworkProgress.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
             this.labelRetrievingSeriesArtworkProgress.TabIndex = 20;
             // 
-            // labelCleaningEpisodes
+            // labelRetrievingCommunityRatings
             // 
-            this.labelCleaningEpisodes.Location = new System.Drawing.Point(12, 541);
-            this.labelCleaningEpisodes.Name = "labelCleaningEpisodes";
-            this.labelCleaningEpisodes.Size = new System.Drawing.Size(656, 39);
-            this.labelCleaningEpisodes.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
-            this.labelCleaningEpisodes.TabIndex = 40;
+            this.labelRetrievingCommunityRatings.Location = new System.Drawing.Point(12, 475);
+            this.labelRetrievingCommunityRatings.Name = "labelRetrievingCommunityRatings";
+            this.labelRetrievingCommunityRatings.Size = new System.Drawing.Size(656, 39);
+            this.labelRetrievingCommunityRatings.Status = WindowPlugins.GUITVSeries.Configuration.ProgressLabelStatus.Waiting;
+            this.labelRetrievingCommunityRatings.TabIndex = 41;
             // 
             // ImportPanelProgress
             // 
@@ -308,7 +318,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelProgress);
             this.Name = "ImportPanelProgress";
-            this.Size = new System.Drawing.Size(695, 593);
+            this.Size = new System.Drawing.Size(695, 642);
             this.panelProgress.ResumeLayout(false);
             this.panelProgress.PerformLayout();
             this.ResumeLayout(false);
@@ -340,5 +350,6 @@
         private ProgressLabel labelRetrievingEpisodeCounts;
         private ProgressLabel labelRetrievingActorThumbProgress;
         private ProgressLabel labelCleaningEpisodes;
+        private ProgressLabel labelRetrievingCommunityRatings;
     }
 }

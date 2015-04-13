@@ -22,20 +22,18 @@
 #endregion
 
 using System;
-using MediaPortal.Configuration;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using MediaPortal.GUI.Library;
-using MediaPortal.Util;
-using MediaPortal.Ripper;
 using System.Globalization;
+using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Linq;
-using System.Net;
-using System.IO;
+using System.Text;
 using System.Xml;
+using MediaPortal.Configuration;
+using MediaPortal.GUI.Library;
+using MediaPortal.Ripper;
+using MediaPortal.Util;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -752,6 +750,25 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 return File.Exists(Path.Combine(Config.GetSubFolder(Config.Dir.Plugins, "Windows"), "TraktPlugin.dll")) && IsPluginEnabled("Trakt");
+            }
+        }
+
+        public static bool IsTVSeriesEnabledInTrakt
+        {
+            get
+            {
+                string Username = null;
+                string Password = null;
+
+                using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings())
+                {
+                    Username = xmlreader.GetValueAsString("Trakt", "Username", string.Empty);
+                    Password = xmlreader.GetValueAsString("Trakt", "Password", string.Empty);
+                }
+
+                return TraktPlugin.TraktSettings.TVSeries >= 0 &&
+                       !string.IsNullOrEmpty(Username) &&
+                       !string.IsNullOrEmpty(Password);
             }
         }
 

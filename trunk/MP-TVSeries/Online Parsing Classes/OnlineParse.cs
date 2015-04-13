@@ -29,8 +29,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
-using MediaPortal.Dialogs;
-using MediaPortal.GUI.Library;
 using WindowPlugins.GUITVSeries.Feedback;
 
 namespace WindowPlugins.GUITVSeries
@@ -53,6 +51,7 @@ namespace WindowPlugins.GUITVSeries
         UpdateEpisodes,
         CleanupEpisodes,
         UpdateEpisodeCounts,
+        UpdateCommunityRatings,
         UpdateUserRatings,
         UpdateBanners,
         UpdateFanart,
@@ -112,6 +111,7 @@ namespace WindowPlugins.GUITVSeries
             ParsingAction.GetNewFanArt,
             ParsingAction.GetNewActors,
             ParsingAction.CleanupEpisodes,
+            ParsingAction.UpdateCommunityRatings,
             ParsingAction.UpdateEpisodeThumbNails,
             ParsingAction.UpdateUserFavourites,
             ParsingAction.UpdateRecentlyAdded,
@@ -336,6 +336,7 @@ namespace WindowPlugins.GUITVSeries
             BackgroundWorker tMediaInfo = null;
             BackgroundWorker tEpisodeCounts = null;
             BackgroundWorker tUserRatings = null;
+            BackgroundWorker tTraktCommunityRatings = null;
 
             // remove first update episode count as this is added twice in some Import Actions
             // we could do distinct() but that removes last
@@ -492,6 +493,14 @@ namespace WindowPlugins.GUITVSeries
                             UpdateEpisodeThumbNails();
                         break;
 
+                    case ParsingAction.UpdateCommunityRatings:
+                        if (DBOption.GetOptions(DBOption.cTraktCommunityRatings) == 1)
+                        {
+                            tTraktCommunityRatings = new BackgroundWorker();
+                            UpdateTraktCommunityRatings(tTraktCommunityRatings);
+                        }
+                        break;
+
                     case ParsingAction.UpdateUserRatings:
                         if (DBOption.GetOptions(DBOption.cOnlineParseEnabled) == 1)
                             UpdateOnlineMirror();
@@ -529,7 +538,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 Thread.Sleep(1000);
             }
-            while ((tMediaInfo != null && tMediaInfo.IsBusy) || (tEpisodeCounts != null && tEpisodeCounts.IsBusy) || (tUserRatings != null && tUserRatings.IsBusy));
+            while ((tMediaInfo != null && tMediaInfo.IsBusy) || (tEpisodeCounts != null && tEpisodeCounts.IsBusy) ||(tUserRatings != null && tUserRatings.IsBusy) || tTraktCommunityRatings != null && tTraktCommunityRatings.IsBusy);
             
             // lets save the updateTimestamp
             if (updates != null && updates.OnlineTimeStamp > 0)
@@ -1001,6 +1010,8 @@ namespace WindowPlugins.GUITVSeries
             UpdateSeries UpdateSeriesParser = new UpdateSeries(generateIDListOfString(SeriesList, DBSeries.cID));
             
             int nIndex = 0;
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+
             foreach (DBOnlineSeries updatedSeries in UpdateSeriesParser.ResultsLazy) {
                 m_bDataUpdated = true;
                 if (m_worker.CancellationPending)
@@ -1032,7 +1043,16 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cHasNewEpisodes: //gets cleared and updated at end of scan
                                 case DBOnlineSeries.cTraktIgnore:
                                 case DBOnlineSeries.cOriginalName:
+                                case DBOnlineSeries.cTraktID:
                                     break;
+
+                                // dont update community ratings if we get from trakt
+                                case DBOnlineSeries.cRating:
+                                case DBOnlineSeries.cRatingCount:
+                                    if (traktCommunityRatings)
+                                        break;
+                                    goto default;
+                                    
                                 case DBOnlineSeries.cEpisodeOrders:
                                     if (bUpdateNewSeries)
                                         goto default;
@@ -1793,7 +1813,203 @@ namespace WindowPlugins.GUITVSeries
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, seriesList.Count));
         }
 
-        public void UpdateUserRatings(BackgroundWorker tUserRatings)
+        void UpdateTraktCommunityRatings(BackgroundWorker tTraktCommunityRatings)
+        {
+            // check if trakt is installed and MP-TVseries is enabled
+            // although its not required for a user to be logged in and have tvseries enabled
+            // we do this so it only gets pulled down for people that support trakt rather than leech
+            // it also will reduce the load on trakt 
+            if (!Helper.IsTraktAvailableAndEnabled || !Helper.IsTVSeriesEnabledInTrakt)
+            {
+                MPTVSeriesLog.Write("Aborting Trakt community ratings as requirements not met, be sure trakt is installed, logged in and TVSeries plugin handler enabled");
+                return;
+            }
+
+            MPTVSeriesLog.Write(bigLogMessage("Updating Trakt Community Ratings"), MPTVSeriesLog.LogLevel.Normal);
+
+            var condition = new SQLCondition();
+            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            var series = DBSeries.Get(condition, false, false);
+
+            tTraktCommunityRatings.DoWork += new DoWorkEventHandler(asyncTraktCommunityRatings);
+            tTraktCommunityRatings.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncTraktCommunityRatingsCompleted);
+            tTraktCommunityRatings.RunWorkerAsync(series);
+        }
+
+        void asyncTraktCommunityRatingsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MPTVSeriesLog.Write(bigLogMessage("Trakt Community Ratings Updated in Database"), MPTVSeriesLog.LogLevel.Debug);
+
+            // store last time updated
+            DBOption.SetOptions(DBOption.cTraktLastDateUpdated, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+        }
+
+        void asyncTraktCommunityRatings(object sender, DoWorkEventArgs e)
+        {
+            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+            var seriesList = (List<DBSeries>)e.Argument;
+
+            // get list of updated shows from trakt
+            DateTime dteLastUpdated = DateTime.MinValue;
+            string strLastUpdated = DBOption.GetOptions(DBOption.cTraktLastDateUpdated);
+            
+            IEnumerable<TraktPlugin.TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
+
+            #region Recently Updated Shows
+            if (!string.IsNullOrEmpty(strLastUpdated))
+            {
+                if (DateTime.TryParse(strLastUpdated, out dteLastUpdated))
+                {
+                    MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Last Update Time = '{0}'", strLastUpdated), MPTVSeriesLog.LogLevel.Normal);
+                    updatedShows = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToString("yyyy-MM-dd"));
+                }
+            }
+            #endregion
+
+            int nIndex = 0;
+            foreach (var series in seriesList)
+            {
+                // Update Progress
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+
+                // get the trakt id for the series
+                // if not found do a lookup and store it for next time
+                string traktid = series[DBOnlineSeries.cTraktID];
+                string seriesName = series[DBOnlineSeries.cPrettyName];
+
+                #region Trakt ID Lookup
+                if (string.IsNullOrEmpty(traktid))
+                {
+                    MPTVSeriesLog.Write(string.Format("Searching for series Trakt ID, Title = '{0}', TVDb ID = '{1}'", seriesName, series[DBSeries.cID] ?? "<empty>"), MPTVSeriesLog.LogLevel.Debug);
+
+                    string tvdbId = series[DBSeries.cID];
+                    if (string.IsNullOrEmpty(tvdbId))
+                        continue;
+
+                    // search by tvdb id
+                    var searchResults = TraktPlugin.TraktAPI.TraktAPI.SearchById("tvdb", tvdbId);
+
+                    // if there is more than one result it could be an episode or season with the same id
+                    // get the first show result from the list
+                    if (searchResults == null || searchResults.Count() == 0)
+                    {
+                        MPTVSeriesLog.Write("Aborting community series rating, failed to retrieve Trakt ID. Title = '{0}', TVDb ID = '{1}'", seriesName, tvdbId); 
+                        continue;
+                    }
+                    
+                    // match up series with our search result
+                    var traktSeries = searchResults.FirstOrDefault(r => r.Type == "show");
+                    if (traktSeries == null || traktSeries.Show.Ids.Tvdb != int.Parse(tvdbId))
+                    {
+                        MPTVSeriesLog.Write("Aborting community series rating, failed to retrieve Trakt ID. Title = '{0}', TVDb ID = '{1}'", seriesName, tvdbId); 
+                        continue;
+                    }
+
+                    // store the id for later
+                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Trakt ID = {1}", seriesName, traktid), nIndex, seriesList.Count, series, null));
+
+                    traktid = traktSeries.Show.Ids.Trakt.ToString();
+                    series[DBOnlineSeries.cTraktID] = traktid;
+                    series.Commit();
+                }
+                #endregion
+
+                #region Series Community Ratings
+                // only update ratings for series if it is a series that has recently been updated on trakt.
+                // we don't want to update every series and underlying episode every sync!!!
+                if (updatedShows != null)
+                {
+                    // if the series hasn't been updated recently continue on to next
+                    var updatedShow = updatedShows.FirstOrDefault(u => u.Show.Ids.Trakt.ToString() == traktid);
+
+                    if (updatedShow == null)
+                    {
+                        MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been found in the update list. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid), MPTVSeriesLog.LogLevel.Debug);
+                        continue;
+                    }
+                    else
+                    {
+                        // check that the show updated_at is newer than last time we did an update
+                        if (DateTime.Parse(updatedShow.UpdatedAt) < dteLastUpdated)
+                        {
+                            MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been updated recently. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}', Local Update Time = '{3}', Online Update Time = '{4}'", seriesName, series[DBSeries.cID], traktid, dteLastUpdated, DateTime.Parse(updatedShow.UpdatedAt)), MPTVSeriesLog.LogLevel.Debug);
+                            continue;
+                        }
+                    }
+                }
+
+                // get series ratings from trakt
+                MPTVSeriesLog.Write(string.Format("Requesting series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid), MPTVSeriesLog.LogLevel.Debug);
+
+                var seriesRatings = TraktPlugin.TraktAPI.TraktAPI.GetShowRatings(traktid);
+                if (seriesRatings == null)
+                {
+                    MPTVSeriesLog.Write("Failed to get series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid);
+                    continue;
+                }
+
+                // update database with community rating and votes - if it has changed
+                if (series[DBOnlineSeries.cRatingCount] != seriesRatings.Votes)
+                {
+                    string rating = Math.Round(seriesRatings.Rating ?? 0.0, 2).ToString();
+
+                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Rating = {1}, Votes = {2}", seriesName, rating, seriesRatings.Votes), nIndex, seriesList.Count, series, null));
+
+                    series[DBOnlineSeries.cRating] = rating;
+                    series[DBOnlineSeries.cRatingCount] = seriesRatings.Votes;
+                    series.Commit();
+                }
+                #endregion
+
+                #region Episode Community Ratings
+                // to get the episode ratings we could call the GetEpisodeRatings method on each episode but that's too much work
+                // if we call the summary method for seasons, we can get each underlying episode
+                // if we also request the 'episodes' extended parameter. We also need to get 'full' data to get the ratings
+                // as an added bonus we can also get season overviews and ratings which are not provided by theTVDb API
+                MPTVSeriesLog.Write(string.Format("Requesting season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid), MPTVSeriesLog.LogLevel.Debug);
+                var seasons = TraktPlugin.TraktAPI.TraktAPI.GetShowSeasons(traktid, "episodes,full");
+                if (seasons == null)
+                {
+                    MPTVSeriesLog.Write("Failed to get season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid);
+                    continue;
+                }
+
+                // get episodes from local database for current series
+                var conditions = new SQLCondition();               
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                var episodes = DBEpisode.Get(conditions, false);
+                if (episodes == null) continue;
+
+                foreach (var episode in episodes)
+                {
+                    var traktSeason = seasons.FirstOrDefault(s => s.Number == episode[DBOnlineEpisode.cSeasonIndex]);
+                    if (traktSeason == null) continue;
+
+                    var traktEpisode = traktSeason.Episodes.FirstOrDefault(ep => ep.Number == episode[DBOnlineEpisode.cEpisodeIndex]);
+                    if (traktEpisode == null) continue;
+
+                    // update database with community rating and votes - if it has changed
+                    if (episode[DBOnlineEpisode.cRatingCount] != traktEpisode.Votes)
+                    {
+                        string rating = Math.Round(traktEpisode.Rating ?? 0.0, 2).ToString();
+
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Episode = {1}x{2}, Rating = {3}, Votes = {4}", seriesName, traktSeason.Number, traktEpisode.Number, rating, traktEpisode.Votes), nIndex, seriesList.Count, series, null));
+                        
+                        episode[DBOnlineEpisode.cRating] = rating;
+                        episode[DBOnlineEpisode.cRatingCount] = traktEpisode.Votes;
+                        episode.Commit();
+                    }
+                }
+
+                #endregion
+
+                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, seriesList.Count));
+            }
+        }
+
+        void UpdateUserRatings(BackgroundWorker tUserRatings)
         {
             MPTVSeriesLog.Write(bigLogMessage("Updating User Ratings"), MPTVSeriesLog.LogLevel.Normal);
             
@@ -1817,7 +2033,8 @@ namespace WindowPlugins.GUITVSeries
         {
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-            string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);            
+            string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
 
             if (!String.IsNullOrEmpty(sAccountID))
             {
@@ -1826,7 +2043,7 @@ namespace WindowPlugins.GUITVSeries
                 int nIndex = 0;
                 if (DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings)) // i.e. update Series AND Underlying Episodes
                 {
-                    bool MarkWatched = DBOption.GetOptions(DBOption.cMarkRatedEpisodeAsWatched);
+                    bool markWatched = DBOption.GetOptions(DBOption.cMarkRatedEpisodeAsWatched);
                     
                     // get all episodes in database
                     List<DBEpisode> episodes = DBEpisode.Get(new SQLCondition());
@@ -1846,7 +2063,8 @@ namespace WindowPlugins.GUITVSeries
                             series[DBOnlineSeries.cMyRating] = userRatings.SeriesUserRating;
 
                         // Dont clear site rating if user rating does not exist
-                        if (!String.IsNullOrEmpty(userRatings.SeriesCommunityRating))
+                        // also dont update if we get community ratings from trakt
+                        if (!traktCommunityRatings && !String.IsNullOrEmpty(userRatings.SeriesCommunityRating))
                             series[DBOnlineSeries.cRating] = userRatings.SeriesCommunityRating;
                         
                         series.Commit();
@@ -1857,9 +2075,14 @@ namespace WindowPlugins.GUITVSeries
                             if (userRatings.EpisodeRatings.ContainsKey(episode[DBOnlineEpisode.cID]))
                             {
                                 episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].UserRating;
-                                episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].CommunityRating;
+                                
+                                // dont update community rating if we get from trakt.tv
+                                if (!traktCommunityRatings)
+                                {
+                                    episode[DBOnlineEpisode.cRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].CommunityRating;
+                                }
 
-                                if (MarkWatched)
+                                if (markWatched)
                                 {
                                     episode[DBOnlineEpisode.cWatched] = true;
                                     if (episode[DBOnlineEpisode.cPlayCount] == 0)
@@ -1895,7 +2118,8 @@ namespace WindowPlugins.GUITVSeries
 
                         if (userRatings.SeriesCommunityRatings.ContainsKey(series[DBSeries.cID]))
                         {
-                            if (!String.IsNullOrEmpty(userRatings.SeriesCommunityRatings[series[DBSeries.cID]]))
+                            // dont update community rating if we get from trakt.tv
+                            if (!traktCommunityRatings && !String.IsNullOrEmpty(userRatings.SeriesCommunityRatings[series[DBSeries.cID]]))
                             {
                                 series[DBOnlineSeries.cRating] = userRatings.SeriesCommunityRatings[series[DBSeries.cID]];
                                 series.Commit();

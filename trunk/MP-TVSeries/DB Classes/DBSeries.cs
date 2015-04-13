@@ -23,12 +23,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 using System.IO;
-using System.Xml;
 using System.Linq;
+using SQLite.NET;
 
 namespace WindowPlugins.GUITVSeries
 {
