@@ -243,7 +243,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cImportDontClearMissingLocalFiles, 0);
 
             if (GetOptions(cCheckArtwork) == null) 
-                SetOptions(cCheckArtwork, 1);
+                SetOptions(cCheckArtwork, 0);
                 
             if (GetOptions(cPluginName) == null)
                 SetOptions(cPluginName, "My TV Series");
@@ -413,7 +413,7 @@ namespace WindowPlugins.GUITVSeries
 				SetOptions(cRatingDisplayStars, 10); // 5 or 10 Stars
 
             if (GetOptions(cSortSpecials) == null)
-                SetOptions(cSortSpecials, 1);
+                SetOptions(cSortSpecials, 0);
 
             if (GetOptions(cBackdropLoadingDelay) == null)
                 SetOptions(cBackdropLoadingDelay, 250); //milliseconds
@@ -539,7 +539,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cSQLLoggingEnabled, false);
 
             if (GetOptions(cCheckPlayOutOfOrder) == null)
-                SetOptions(cCheckPlayOutOfOrder, false);
+                SetOptions(cCheckPlayOutOfOrder, true);
 
             if (GetOptions(cFilterUnwatched) == null)
                 SetOptions(cFilterUnwatched, false);
