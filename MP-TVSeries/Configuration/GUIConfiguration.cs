@@ -1870,7 +1870,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeSortOrder:
                                 case DBSeries.cHidden:
                                 case DBSeries.cScanIgnore:
-                                case DBOnlineSeries.cRatingCount:                                
+                                case DBOnlineSeries.cRatingCount:
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
                                      break;
@@ -1879,6 +1879,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cID:
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
+                                case DBOnlineSeries.cTraktID:
                                     // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
                                     break;

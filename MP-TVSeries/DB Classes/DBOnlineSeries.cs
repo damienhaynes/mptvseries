@@ -80,9 +80,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cViewTags = "ViewTags";
 
         public const String cSeriesID = "SeriesID";
+        
         public const String cBanner = "banner";
         public const String cLanguage = "language";
         public const String cIMDBID = "IMDB_ID";
+        public const String cTraktID = "TraktID";
         public const String cZap2ITID = "zap2it_id";
         public const String cContentRating = "ContentRating";
         public const String cNetworkID = "NetworkID";
@@ -117,6 +119,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cSortName, "Sort By");
             s_FieldToDisplayNameMap.Add(cLanguage, "Language");
             s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
+            s_FieldToDisplayNameMap.Add(cTraktID, "Trakt ID");
             s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
             s_FieldToDisplayNameMap.Add(cChosenEpisodeOrder, "Episode Order");
             s_FieldToDisplayNameMap.Add(cContentRating, "Content Rating");
@@ -141,8 +144,7 @@ namespace WindowPlugins.GUITVSeries
             //////////////////////////////////////////////////
 
             // make sure the table is created on first run
-            DBOnlineSeries dummy = new DBOnlineSeries();           
-
+            DBOnlineSeries dummy = new DBOnlineSeries();
         }
 
         // returns a list of all series with information stored in the database. 

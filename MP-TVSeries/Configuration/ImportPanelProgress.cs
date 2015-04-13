@@ -30,6 +30,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
             this.labelRetrievingActorThumbProgress.Label.Text = "Retrieving Actor Thumbnails and Details";
 
             this.labelRetrievingUserRatings.Label.Text = "Retrieving User Ratings";
+            this.labelRetrievingCommunityRatings.Label.Text = "Retrieving Trakt Community Ratings";
             this.labelRetrievingFavourites.Label.Text = "Retrieving User Favourites";
             this.labelRetrievingEpisodeCounts.Label.Text = "Retrieving Episode Counts";
             this.labelCleaningEpisodes.Label.Text = "Cleaning Online Episode References";
@@ -63,6 +64,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 case ParsingAction.GetNewBanners:
                 case ParsingAction.GetNewFanArt:
                 case ParsingAction.GetNewActors:
+                case ParsingAction.UpdateCommunityRatings:
                 case ParsingAction.UpdateUserFavourites:
                 case ParsingAction.UpdateUserRatings:
                 case ParsingAction.UpdateEpisodeCounts:
@@ -134,6 +136,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                         break;
                     case ParsingAction.UpdateUserRatings:
                         SetProgressLabel(this.labelRetrievingUserRatings, progress);
+                        break;
+                    case ParsingAction.UpdateCommunityRatings:
+                        SetProgressLabel(this.labelRetrievingCommunityRatings, progress);
                         break;
                     case ParsingAction.UpdateBanners:
                         SetProgressLabel(this.labelRetrievingSeriesArtworkProgress, progress);
