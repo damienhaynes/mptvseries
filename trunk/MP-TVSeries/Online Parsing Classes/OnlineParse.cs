@@ -1854,7 +1854,7 @@ namespace WindowPlugins.GUITVSeries
             // get list of updated shows from trakt
             DateTime dteLastUpdated = DateTime.MinValue;
             string strLastUpdated = DBOption.GetOptions(DBOption.cTraktLastDateUpdated);
-            
+            HashSet<string> recentSeries = new HashSet<string>();
             IEnumerable<TraktPlugin.TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
 
             #region Recently Updated Shows
@@ -1863,8 +1863,15 @@ namespace WindowPlugins.GUITVSeries
                 if (DateTime.TryParse(strLastUpdated, out dteLastUpdated))
                 {
                     MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Last Update Time = '{0}'", strLastUpdated), MPTVSeriesLog.LogLevel.Normal);
-                    updatedShows = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToString("yyyy-MM-dd"));
+                    updatedShows = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"));
                 }
+
+                #region Forced Updates
+                // if there has been some new episodes recently added to the database (since last trakt update)
+                // force an update on the series such that the ratings are up to date
+                var recentlyAddedEpisodes = DBEpisode.GetMostRecent(dteLastUpdated);
+                recentlyAddedEpisodes.GroupBy(ep => ep[DBOnlineEpisode.cSeriesID]).ToList().ForEach(s => recentSeries.Add(s.Key));
+                #endregion
             }
             #endregion
 
@@ -1876,15 +1883,15 @@ namespace WindowPlugins.GUITVSeries
 
                 // get the trakt id for the series
                 // if not found do a lookup and store it for next time
+                string tvdbId = series[DBSeries.cID];
                 string traktid = series[DBOnlineSeries.cTraktID];
                 string seriesName = series[DBOnlineSeries.cPrettyName];
 
                 #region Trakt ID Lookup
                 if (string.IsNullOrEmpty(traktid))
                 {
-                    MPTVSeriesLog.Write(string.Format("Searching for series Trakt ID, Title = '{0}', TVDb ID = '{1}'", seriesName, series[DBSeries.cID] ?? "<empty>"), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("Searching for series Trakt ID, Title = '{0}', TVDb ID = '{1}'", seriesName, tvdbId ?? "<empty>"), MPTVSeriesLog.LogLevel.Debug);
 
-                    string tvdbId = series[DBSeries.cID];
                     if (string.IsNullOrEmpty(tvdbId))
                         continue;
 
@@ -1915,38 +1922,43 @@ namespace WindowPlugins.GUITVSeries
                     series.Commit();
                 }
                 #endregion
-
+                
                 #region Series Community Ratings
                 // only update ratings for series if it is a series that has recently been updated on trakt.
                 // we don't want to update every series and underlying episode every sync!!!
-                if (updatedShows != null)
+                // skip update check on a series if it was recently added
+                if (updatedShows != null && !recentSeries.Contains(tvdbId))
                 {
                     // if the series hasn't been updated recently continue on to next
                     var updatedShow = updatedShows.FirstOrDefault(u => u.Show.Ids.Trakt.ToString() == traktid);
 
                     if (updatedShow == null)
                     {
-                        MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been found in the update list. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid), MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been found in the update list. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
                         continue;
                     }
                     else
                     {
                         // check that the show updated_at is newer than last time we did an update
-                        if (DateTime.Parse(updatedShow.UpdatedAt) < dteLastUpdated)
+                        DateTime dteShowUpdated;
+                        if (DateTime.TryParse(updatedShow.UpdatedAt, out dteShowUpdated))
                         {
-                            MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been updated recently. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}', Local Update Time = '{3}', Online Update Time = '{4}'", seriesName, series[DBSeries.cID], traktid, dteLastUpdated, DateTime.Parse(updatedShow.UpdatedAt)), MPTVSeriesLog.LogLevel.Debug);
-                            continue;
+                            if (dteShowUpdated.ToUniversalTime() < dteLastUpdated.ToUniversalTime())
+                            {
+                                MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been updated recently. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}', Local Update Time = '{3}', Online Update Time = '{4}'", seriesName, tvdbId, traktid, dteLastUpdated, DateTime.Parse(updatedShow.UpdatedAt)), MPTVSeriesLog.LogLevel.Debug);
+                                continue;
+                            }
                         }
                     }
                 }
 
                 // get series ratings from trakt
-                MPTVSeriesLog.Write(string.Format("Requesting series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(string.Format("Requesting series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
 
                 var seriesRatings = TraktPlugin.TraktAPI.TraktAPI.GetShowRatings(traktid);
                 if (seriesRatings == null)
                 {
-                    MPTVSeriesLog.Write("Failed to get series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid);
+                    MPTVSeriesLog.Write("Failed to get series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid);
                     continue;
                 }
 
@@ -1968,17 +1980,17 @@ namespace WindowPlugins.GUITVSeries
                 // if we call the summary method for seasons, we can get each underlying episode
                 // if we also request the 'episodes' extended parameter. We also need to get 'full' data to get the ratings
                 // as an added bonus we can also get season overviews and ratings which are not provided by theTVDb API
-                MPTVSeriesLog.Write(string.Format("Requesting season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(string.Format("Requesting season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
                 var seasons = TraktPlugin.TraktAPI.TraktAPI.GetShowSeasons(traktid, "episodes,full");
                 if (seasons == null)
                 {
-                    MPTVSeriesLog.Write("Failed to get season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, series[DBSeries.cID], traktid);
+                    MPTVSeriesLog.Write("Failed to get season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid);
                     continue;
                 }
 
                 // get episodes from local database for current series
-                var conditions = new SQLCondition();               
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                var conditions = new SQLCondition();
+                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, tvdbId, SQLConditionType.Equal);
                 var episodes = DBEpisode.Get(conditions, false);
                 if (episodes == null) continue;
 

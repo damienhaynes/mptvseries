@@ -21,16 +21,14 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Linq;
-using SQLite.NET;
-using MediaPortal.Database;
-using System.Text.RegularExpressions;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using SQLite.NET;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -1694,7 +1692,23 @@ namespace WindowPlugins.GUITVSeries
             condition.SetLimit(limit);
 
             return Get(condition, false);
-        }        
+        }
+
+        public static List<DBEpisode> GetMostRecent(DateTime localDate, int limit=1000)
+        {
+            // create date based on stored format
+            string date = localDate.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
+
+            // Create Conditions for SQL Query
+            SQLCondition condition = new SQLCondition();
+            condition.Add(new DBEpisode(), DBEpisode.cFileDateAdded, date, SQLConditionType.GreaterEqualThan);
+            condition.AddOrderItem(DBEpisode.Q(cFileDateAdded), SQLCondition.orderType.Descending);
+
+            // Only get from database what we need
+            condition.SetLimit(limit);
+
+            return Get(condition, false);
+        }
         #endregion
 
         #region Next Episode Helpers
