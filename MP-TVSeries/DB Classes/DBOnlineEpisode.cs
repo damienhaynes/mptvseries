@@ -69,6 +69,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cProductionCode = "ProductionCode";
         public const String cAbsoluteNumber = "absolute_number";
         public const String cSeasonID = "seasonid";
+        public const String cThumbAdded = "thumb_added";
+        public const String cThumbHeight = "thumb_height";
+        public const String cThumbWidth = "thumb_width";
         #endregion
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();

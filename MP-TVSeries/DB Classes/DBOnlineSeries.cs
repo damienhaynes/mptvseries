@@ -93,6 +93,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cFanart = "fanart";
         public const String cLastUpdated = "lastupdated";
         public const String cPoster = "poster";
+        public const String cTMSWantedOld = "tms_wanted_old"; //wtf is this?
+        public const String cAliasNames = "AliasNames";
 
         public const String cHasNewEpisodes = "HasNewEpisodes";
 

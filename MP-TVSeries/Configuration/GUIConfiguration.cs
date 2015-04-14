@@ -1612,9 +1612,14 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cSeasonID:
                                 case DBOnlineEpisode.cDVDChapter:
                                 case DBOnlineEpisode.cDVDDiscID:
+                                case DBOnlineEpisode.cDVDEpisodeNumber:
+                                case DBOnlineEpisode.cDVDSeasonNumber:
                                 case DBOnlineEpisode.cAbsoluteNumber:
                                 case DBEpisode.cIsAvailable:
                                 case DBOnlineEpisode.cRatingCount:
+                                case DBOnlineEpisode.cThumbAdded:
+                                case DBOnlineEpisode.cThumbHeight:
+                                case DBOnlineEpisode.cThumbWidth:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -1871,6 +1876,9 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cHidden:
                                 case DBSeries.cScanIgnore:
                                 case DBOnlineSeries.cRatingCount:
+                                case DBOnlineSeries.cTMSWantedOld:
+                                case DBOnlineSeries.cAliasNames:
+                                case DBOnlineSeries.cTraktID:
                                      // hide these fields as we are not so interested in, 
                                      // possibly add a toggle option to display all fields later
                                      break;
@@ -1879,7 +1887,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cID:
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
-                                case DBOnlineSeries.cTraktID:
                                     // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
                                     break;
