@@ -2045,9 +2045,9 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 #endregion
-
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, seriesList.Count));
             }
+
+            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, seriesList.Count));
         }
 
         void UpdateUserRatings(BackgroundWorker tUserRatings)
