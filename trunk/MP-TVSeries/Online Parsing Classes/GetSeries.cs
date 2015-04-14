@@ -21,13 +21,10 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using System.Xml;
 using System.Linq;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -56,13 +53,22 @@ namespace WindowPlugins.GUITVSeries
         {
             string cleanedName = name.ToLowerInvariant().Trim().CleanStringOfSpecialChars();
             
-            // calculate distances
-            var bestMatch = (from candidate in candidates
+            // calculate distances - series without alias
+            var bestMatch = (from candidate in candidates.Where(c => string.IsNullOrEmpty(c[DBOnlineSeries.cAliasNames]))
                              select new
                              {
                                  LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, candidate[DBOnlineSeries.cPrettyName].ToString().ToLowerInvariant().CleanStringOfSpecialChars()),
                                  Series = candidate
                              });
+
+            // calculate distances - series with alias
+            bestMatch = bestMatch.Union(from candidate in candidates.Where(c => !string.IsNullOrEmpty(c[DBOnlineSeries.cAliasNames]))
+                                          from alias in candidate[DBOnlineSeries.cAliasNames].ToString().Split('|')
+                                          select new
+                                          {
+                                              LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, alias.ToLowerInvariant().CleanStringOfSpecialChars()),
+                                              Series = candidate
+                                          });
 
             // make them unique
             // note: this is different from onlineparse, should probably pick one implementation (read: this one!)           
