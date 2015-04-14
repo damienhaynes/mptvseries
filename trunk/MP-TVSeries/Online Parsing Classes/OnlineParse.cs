@@ -1118,6 +1118,9 @@ namespace WindowPlugins.GUITVSeries
             int epCount = 0;
             int nIndex = 0;
             bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+            
+            // clear reference to existing online episodes
+            OnlineEpisodes.Clear();
 
             foreach (DBSeries series in seriesList) 
             {
@@ -1145,7 +1148,7 @@ namespace WindowPlugins.GUITVSeries
                 if (bFullSeriesRetrieval || episodesList.Count > 0) 
                 {
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));                    
+                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
                     if (episodesParser.Results.Count > 0) 
                     {
                         MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\"", episodesParser.Results.Count.ToString().PadLeft(3, '0'), series.ToString()), MPTVSeriesLog.LogLevel.Debug);
@@ -1160,7 +1163,7 @@ namespace WindowPlugins.GUITVSeries
                     } 
                     else
                         MPTVSeriesLog.Write(string.Format("No episodes could be identified online for {0}, check that the online database has these episodes", series.ToString()));
-
+                    
                     if (bFullSeriesRetrieval) 
                     {
                         // add all online episodes to the database                 
@@ -1246,7 +1249,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!bUpdateScan)
                     onlineUpdateNeeded = true;
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, epCount));            
+            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, epCount));
         }
 
         private void UpdateEpisodes(List<DBValue> episodesUpdated)
