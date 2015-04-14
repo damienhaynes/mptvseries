@@ -1117,6 +1117,8 @@ namespace WindowPlugins.GUITVSeries
 
             int epCount = 0;
             int nIndex = 0;
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+
             foreach (DBSeries series in seriesList) 
             {
                 List<DBEpisode> episodesList = null;
@@ -1194,6 +1196,13 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                         // do nothing here, those information are local only
                                         break;
+
+                                    // dont update community ratings if we get from trakt
+                                    case DBOnlineEpisode.cRating:
+                                    case DBOnlineEpisode.cRatingCount:
+                                        if (traktCommunityRatings)
+                                            break;
+                                        goto default;
 
                                     case DBOnlineEpisode.cSeasonIndex:
                                     case DBOnlineEpisode.cEpisodeIndex:
@@ -1862,8 +1871,25 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (DateTime.TryParse(strLastUpdated, out dteLastUpdated))
                 {
-                    MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Last Update Time = '{0}'", strLastUpdated), MPTVSeriesLog.LogLevel.Normal);
-                    updatedShows = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"));
+                    int page = 1;
+                    int maxPageSize = 1000;
+
+                    MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Page = '{0}', Last Update Time = '{1}'", page, strLastUpdated), MPTVSeriesLog.LogLevel.Normal);
+                    var updatedShowsResult = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), page, maxPageSize);
+                    if (updatedShowsResult != null)
+                    { 
+                        updatedShows = updatedShowsResult.Shows;
+                    }
+
+                    while (updatedShowsResult != null && updatedShowsResult.Shows.Count() == maxPageSize)
+                    {
+                        MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Page = '{0}'", page), MPTVSeriesLog.LogLevel.Normal);
+                        updatedShowsResult = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), ++page, maxPageSize);
+                        if (updatedShowsResult != null)
+                        {
+                            updatedShows.Union(updatedShowsResult.Shows);
+                        }
+                    }
                 }
 
                 #region Forced Updates
@@ -1915,9 +1941,9 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // store the id for later
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Trakt ID = {1}", seriesName, traktid), nIndex, seriesList.Count, series, null));
-
                     traktid = traktSeries.Show.Ids.Trakt.ToString();
+                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Trakt Lookup Complete, ID = {1}", seriesName, traktid), nIndex, seriesList.Count, series, null));
+
                     series[DBOnlineSeries.cTraktID] = traktid;
                     series.Commit();
                 }
