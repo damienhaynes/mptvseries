@@ -21,15 +21,12 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
 using System.IO;
-using MediaPortal.Database;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
+using SQLite.NET;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -67,6 +64,10 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
+
+        public const String cRating = "Rating";
+        public const String cMyRating = "myRating";
+        public const String cRatingCount = "RatingCount";
         #endregion
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -187,7 +188,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             AddColumn(cID, new DBField(DBField.cTypeString, true));
             AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
             AddColumn(cIndex, new DBField(DBField.cTypeInt));
@@ -202,6 +202,9 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            AddColumn(cRating, new DBField(DBField.cTypeString));
+            AddColumn(cRatingCount, new DBField(DBField.cTypeInt));
+            AddColumn(cMyRating, new DBField(DBField.cTypeString));
         }
 
         public void ChangeSeriesID(int nSeriesID)

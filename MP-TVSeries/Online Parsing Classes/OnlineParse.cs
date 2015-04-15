@@ -2034,28 +2034,52 @@ namespace WindowPlugins.GUITVSeries
                 }
                 #endregion
 
-                #region Episode Community Ratings
+                #region Season and Episode Community Ratings
                 // to get the episode ratings we could call the GetEpisodeRatings method on each episode but that's too much work
                 // if we call the summary method for seasons, we can get each underlying episode
                 // if we also request the 'episodes' extended parameter. We also need to get 'full' data to get the ratings
                 // as an added bonus we can also get season overviews and ratings which are not provided by theTVDb API
                 MPTVSeriesLog.Write(string.Format("Requesting season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
-                var seasons = TraktPlugin.TraktAPI.TraktAPI.GetShowSeasons(traktid, "episodes,full");
-                if (seasons == null)
+                var traktSeasons = TraktPlugin.TraktAPI.TraktAPI.GetShowSeasons(traktid, "episodes,full");
+                if (traktSeasons == null)
                 {
                     MPTVSeriesLog.Write("Failed to get season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid);
                     continue;
                 }
 
+                #region Seasons
+                // get seasons from local database for current series
+                var conditions = new SQLCondition(new DBSeason(), DBSeason.cSeriesID, tvdbId, SQLConditionType.Equal);
+                var seasons = DBSeason.Get(conditions, false);
+                foreach (var season in seasons)
+                {
+                    var traktSeason = traktSeasons.FirstOrDefault(s => s.Number == season[DBSeason.cIndex]);
+                    if (traktSeason == null) continue;
+
+                    // update database with community rating and votes - if it has changed
+                    if (season[DBSeason.cRatingCount] != traktSeason.Votes)
+                    {
+                        string rating = Math.Round(traktSeason.Rating ?? 0.0, 2).ToString();
+
+                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Season = {1}, Rating = {2}, Votes = {3}", seriesName, traktSeason.Number, rating, traktSeason.Votes), nIndex, seriesList.Count, series, null));
+
+                        season[DBOnlineEpisode.cRating] = rating;
+                        season[DBOnlineEpisode.cRatingCount] = traktSeason.Votes;
+                        season.Commit();
+                    }
+                }
+
+                #endregion
+
+                #region Episodes
                 // get episodes from local database for current series
-                var conditions = new SQLCondition();
-                conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, tvdbId, SQLConditionType.Equal);
+                conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, tvdbId, SQLConditionType.Equal);
                 var episodes = DBEpisode.Get(conditions, false);
                 if (episodes == null) continue;
 
                 foreach (var episode in episodes)
                 {
-                    var traktSeason = seasons.FirstOrDefault(s => s.Number == episode[DBOnlineEpisode.cSeasonIndex]);
+                    var traktSeason = traktSeasons.FirstOrDefault(s => s.Number == episode[DBOnlineEpisode.cSeasonIndex]);
                     if (traktSeason == null) continue;
 
                     var traktEpisode = traktSeason.Episodes.FirstOrDefault(ep => ep.Number == episode[DBOnlineEpisode.cEpisodeIndex]);
@@ -2073,6 +2097,7 @@ namespace WindowPlugins.GUITVSeries
                         episode.Commit();
                     }
                 }
+                #endregion
 
                 #endregion
             }
