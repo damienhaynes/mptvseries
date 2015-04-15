@@ -1535,7 +1535,7 @@ namespace WindowPlugins.GUITVSeries
 
                         // if we have logos add them to the list
                         string logos = localLogos.getLogos(ref episode, 200, 500, true);
-                        if (logos.Length > 0)
+                        if (logos != null && logos.Length > 0)
                         {
                             BannerComboItem newItem = new BannerComboItem("EpisodeImage/Logos", logos);
                             comboBox_BannerSelection.Items.Add(newItem);
