@@ -1746,6 +1746,12 @@ namespace WindowPlugins.GUITVSeries
                                     // possibly add a toggle option to display all fields later
                                     break;
 
+                                case DBSeason.cMyRating:
+                                case DBSeason.cTitle:
+                                case DBSeason.cSummary:
+                                    AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], true);
+                                    break;
+
                                 default:
                                     AddPropertyBindingSource(DBSeason.PrettyFieldName(key), key, season[key], false);
                                     break;
@@ -2157,6 +2163,7 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineSeries.cLanguage:
                     case DBOnlineSeries.cSummary:
                     case DBOnlineSeries.cMyRating:
+                    case DBSeason.cTitle:
                         editFieldName = origFieldName;
                         bUserEdit = false;
                         break;
