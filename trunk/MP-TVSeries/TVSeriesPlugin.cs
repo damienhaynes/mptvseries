@@ -3078,7 +3078,7 @@ namespace WindowPlugins.GUITVSeries
                                         }
                                         else
                                         {
-                                            item = new GUIListItem(FieldGetter.resolveDynString(m_sFormatSeasonCol2, season));
+                                            item = new GUIListItem(string.IsNullOrEmpty(season[DBSeason.cTitle]) ? FieldGetter.resolveDynString(m_sFormatSeasonCol2, season) : season[DBSeason.cTitle].ToString());
                                             item.Label2 = FieldGetter.resolveDynString(m_sFormatSeasonCol3, season);
                                             item.Label3 = FieldGetter.resolveDynString(m_sFormatSeasonCol1, season);
 
