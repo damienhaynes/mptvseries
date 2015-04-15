@@ -65,6 +65,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";
 
+        public const String cTitle = "Title";
+        public const String cSummary = "Summary";
+
         public const String cRating = "Rating";
         public const String cMyRating = "myRating";
         public const String cRatingCount = "RatingCount";
@@ -202,6 +205,8 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            AddColumn(cSummary, new DBField(DBField.cTypeString));
+            AddColumn(cTitle, new DBField(DBField.cTypeString));
             AddColumn(cRating, new DBField(DBField.cTypeString));
             AddColumn(cRatingCount, new DBField(DBField.cTypeInt));
             AddColumn(cMyRating, new DBField(DBField.cTypeString));

@@ -2067,6 +2067,13 @@ namespace WindowPlugins.GUITVSeries
                         season[DBOnlineEpisode.cRatingCount] = traktSeason.Votes;
                         season.Commit();
                     }
+
+                    // bonus: update the season summary while we are here
+                    if (!string.IsNullOrEmpty(traktSeason.Overview) && traktSeason.Overview != season[DBSeason.cSummary])
+                    {
+                        season[DBSeason.cSummary] = traktSeason.Overview;
+                        season.Commit();
+                    }
                 }
 
                 #endregion
