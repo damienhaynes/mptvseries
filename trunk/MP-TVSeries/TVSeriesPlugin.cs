@@ -3681,6 +3681,7 @@ namespace WindowPlugins.GUITVSeries
                     if (CurrentViewLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
                     parsingActions.Add(ParsingAction.UpdateEpisodes);
                     if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                    parsingActions.Add(ParsingAction.UpdateCommunityRatings);
                     parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
 
                     m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));
