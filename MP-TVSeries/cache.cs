@@ -180,14 +180,16 @@ namespace WindowPlugins.GUITVSeries
         public static void addChangeEpisode(DBEpisode episode)
         {
             if (episode == null) return;
+
             _cache.AddDummy(episode[DBSeason.cSeriesID]);
             singleSeriesRef = _cache.getSubItem(episode[DBSeason.cSeriesID]);
+
             if (singleSeriesRef == null) return;
             singleSeriesRef.AddDummy(episode[DBSeason.cIndex]);
-            // use addRaw for episode!!
-            //MPTVSeriesLog.Write("Cache: Adding/Changing Episode: " + episode[DBEpisode.cCompositeID], MPTVSeriesLog.LogLevel.Debug);
+            
             var hc = singleSeriesRef.getSubItem(episode[DBSeason.cIndex]);
-            if (hc != null) hc.AddRaw(episode[DBEpisode.cEpisodeIndex], episode);
+            if (hc != null)
+                hc.AddRaw(episode[DBEpisode.cEpisodeIndex], episode);
         }
 
         public static void addChangeSeries(DBSeries series)

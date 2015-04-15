@@ -3564,6 +3564,9 @@ namespace WindowPlugins.GUITVSeries
 
         public static void setGUIProperty(string name, string value, bool log=false)
         {
+            if (value == null)
+                value = " ";
+
             string property = name;
             if (!property.StartsWith("#"))
                 property = string.Concat("#TVSeries.", property);
