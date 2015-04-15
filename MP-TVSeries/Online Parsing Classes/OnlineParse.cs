@@ -497,7 +497,7 @@ namespace WindowPlugins.GUITVSeries
                         if (DBOption.GetOptions(DBOption.cTraktCommunityRatings) == 1)
                         {
                             tTraktCommunityRatings = new BackgroundWorker();
-                            UpdateTraktCommunityRatings(tTraktCommunityRatings);
+                            UpdateTraktCommunityRatings(tTraktCommunityRatings, m_params.m_series, m_params.m_episodes);
                         }
                         break;
 
@@ -1825,7 +1825,7 @@ namespace WindowPlugins.GUITVSeries
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, seriesList.Count));
         }
 
-        void UpdateTraktCommunityRatings(BackgroundWorker tTraktCommunityRatings)
+        void UpdateTraktCommunityRatings(BackgroundWorker tTraktCommunityRatings, List<DBValue> seriesIds, List<DBValue> episodeIds)
         {
             // check if trakt is installed and MP-TVseries is enabled
             // although its not required for a user to be logged in and have tvseries enabled
@@ -1839,29 +1839,56 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write(bigLogMessage("Updating Trakt Community Ratings"), MPTVSeriesLog.LogLevel.Normal);
 
-            var condition = new SQLCondition();
-            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
-            var series = DBSeries.Get(condition, false, false);
+            var series = new List<DBSeries>();
+            bool forceUpdate = false;
+
+            if (seriesIds == null && episodeIds == null)
+            {
+                // get all series
+                var condition = new SQLCondition();
+                condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+                condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+                condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+                series = DBSeries.Get(condition, false, false);
+            }
+            else
+            {
+                forceUpdate = true;
+
+                // if there are no series ids, then we must be updating a season / episode
+                if (seriesIds != null && seriesIds.Count > 0)
+                {
+                    // update only select series - typically only a single series
+                    seriesIds.ForEach(id => series.Add(DBSeries.Get(id, false)));
+                }
+                else if (episodeIds != null & episodeIds.Count > 0)
+                {
+                    // get the series being updated from from the first episode id
+                    var episodes = DBEpisode.Get("SELECT * FROM online_episodes WHERE EpisodeID = " + episodeIds.First());
+                    series.Add(DBSeries.Get(episodes.First()[DBOnlineEpisode.cSeriesID], false));
+                }
+            }
 
             tTraktCommunityRatings.DoWork += new DoWorkEventHandler(asyncTraktCommunityRatings);
             tTraktCommunityRatings.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncTraktCommunityRatingsCompleted);
-            tTraktCommunityRatings.RunWorkerAsync(series);
+
+            // parse a tuple into the worker method where T1=The list of series and T2=Force Update
+            // Force update if only updating selected series
+            tTraktCommunityRatings.RunWorkerAsync(Tuple.Create(series, forceUpdate));
         }
 
         void asyncTraktCommunityRatingsCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MPTVSeriesLog.Write(bigLogMessage("Trakt Community Ratings Updated in Database"), MPTVSeriesLog.LogLevel.Debug);
-
-            // store last time updated
-            DBOption.SetOptions(DBOption.cTraktLastDateUpdated, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
 
         void asyncTraktCommunityRatings(object sender, DoWorkEventArgs e)
         {
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            var seriesList = (List<DBSeries>)e.Argument;
+            
+            var tupleParams = e.Argument as Tuple<List<DBSeries>, bool>;
+            List<DBSeries> seriesList = tupleParams.Item1;
+            bool forceUpdate = tupleParams.Item2;
 
             // get list of updated shows from trakt
             DateTime dteLastUpdated = DateTime.MinValue;
@@ -1870,7 +1897,7 @@ namespace WindowPlugins.GUITVSeries
             IEnumerable<TraktPlugin.TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
 
             #region Recently Updated Shows
-            if (!string.IsNullOrEmpty(strLastUpdated))
+            if (!string.IsNullOrEmpty(strLastUpdated) && !forceUpdate)
             {
                 if (DateTime.TryParse(strLastUpdated, out dteLastUpdated))
                 {
@@ -1953,6 +1980,8 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
                 
                 #region Series Community Ratings
+
+                #region Update Check
                 // only update ratings for series if it is a series that has recently been updated on trakt.
                 // we don't want to update every series and underlying episode every sync!!!
                 // skip update check on a series if it was recently added
@@ -1980,6 +2009,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 }
+                #endregion
 
                 // get series ratings from trakt
                 MPTVSeriesLog.Write(string.Format("Requesting series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
@@ -2047,6 +2077,11 @@ namespace WindowPlugins.GUITVSeries
                 #endregion
             }
 
+            // store last time updated
+            if (!forceUpdate)
+            {
+                DBOption.SetOptions(DBOption.cTraktLastDateUpdated, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            }
             m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, seriesList.Count));
         }
 

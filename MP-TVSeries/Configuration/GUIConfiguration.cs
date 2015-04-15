@@ -2451,35 +2451,40 @@ namespace WindowPlugins.GUITVSeries
 
         private void UpdateNode(TreeNode nodeUpdated)
         {
-            if (nodeUpdated != null) {
+            if (nodeUpdated != null)
+            {
+                SQLCondition conditions = new SQLCondition();
                 List<DBValue> epIdsUpdates = new List<DBValue>();
                 List<DBValue> seriesIDsUpdates = new List<DBValue>();
 
-                switch (nodeUpdated.Name) {
-                    case DBSeries.cTableName: {
-                            DBSeries series = nodeUpdated.Tag as DBSeries;
-                            seriesIDsUpdates.Add(series[DBSeries.cID]);
-                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
-                        }
+                switch (nodeUpdated.Name)
+                {
+                    case DBSeries.cTableName:
+                        DBSeries series = nodeUpdated.Tag as DBSeries;
+                        seriesIDsUpdates.Add(series[DBSeries.cID]);
+                        conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                        epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
                         break;
 
-                    case DBSeason.cTableName: {
-                            DBSeason season = nodeUpdated.Tag as DBSeason;
-                            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                            cond.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                            epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, cond, new DBOnlineEpisode()));
-                        }
+                    case DBSeason.cTableName:
+                        DBSeason season = nodeUpdated.Tag as DBSeason;
+                        conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
+                        epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
                         break;
 
-                    case DBEpisode.cTableName: {
-                            DBEpisode episode = nodeUpdated.Tag as DBEpisode;
-                            epIdsUpdates.Add(episode[DBOnlineEpisode.cID]);
-                        }
+                    case DBEpisode.cTableName:
+                        DBEpisode episode = nodeUpdated.Tag as DBEpisode;
+                        epIdsUpdates.Add(episode[DBOnlineEpisode.cID]);
                         break;
                 }
-                if (epIdsUpdates.Count > 0) {
-                    Parsing_Start((new CParsingParameters(new List<ParsingAction> { ParsingAction.UpdateSeries, ParsingAction.UpdateEpisodes, ParsingAction.UpdateEpisodeThumbNails }, seriesIDsUpdates, epIdsUpdates)));
+                if (epIdsUpdates.Count > 0)
+                {
+                    Parsing_Start((new CParsingParameters(new List<ParsingAction> { ParsingAction.UpdateSeries,
+                                                                                    ParsingAction.UpdateEpisodes, 
+                                                                                    ParsingAction.UpdateEpisodeThumbNails, 
+                                                                                    ParsingAction.UpdateCommunityRatings
+                                                                                  }, seriesIDsUpdates, epIdsUpdates)));
                 }
             }
         }
