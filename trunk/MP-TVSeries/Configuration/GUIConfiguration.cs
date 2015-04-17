@@ -600,7 +600,14 @@ namespace WindowPlugins.GUITVSeries
             if (initLoading) return;
             if (null == load) load = new loadingDisplay();
            
-            this.treeView_Library.Nodes.Clear();
+            // clear current selection
+            treeView_Library.Nodes.Clear();
+            pictureBox_Series.Image = null;
+            pictureBox_SeriesPoster.Image = null;
+            comboBox_BannerSelection.Items.Clear();            
+            comboBox_PosterSelection.Items.Clear();
+            dataGridView1.Rows.Clear();
+
             SQLCondition condition = new SQLCondition();
             List<DBSeries> seriesList = DBSeries.Get(condition);
             load.updateStats(seriesList.Count, 0, 0);
@@ -4034,11 +4041,16 @@ namespace WindowPlugins.GUITVSeries
             if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 // we delete everything
-                DBTVSeries.Execute("delete from online_episodes");
-                DBTVSeries.Execute("delete from local_episodes");
-                DBTVSeries.Execute("delete from season");
-                DBTVSeries.Execute("delete from local_series");
-                DBTVSeries.Execute("delete from online_series");
+                DBTVSeries.Execute("DELETE FROM online_episodes");
+                DBTVSeries.Execute("DELETE FROM local_episodes");
+                DBTVSeries.Execute("DELETE FROM season");
+                DBTVSeries.Execute("DELETE FROM local_series");
+                DBTVSeries.Execute("DELETE FROM online_series");
+
+                // delete last update options
+                DBTVSeries.Execute("DELETE FROM options WHERE property = 'UpdateScanLastTime'");
+                DBTVSeries.Execute("DELETE FROM options WHERE property = 'UpdateTimeStamp'");
+                DBTVSeries.Execute("DELETE FROM options WHERE property = 'TraktLastDateUpdated'");
 
                 MPTVSeriesLog.Write("Database series, seasons and episodes deleted");
                 LoadTree();
