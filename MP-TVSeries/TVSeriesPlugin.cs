@@ -5510,7 +5510,10 @@ namespace WindowPlugins.GUITVSeries
                 }
             }
 
+            // publish selected season skin properties
+            // set the show summary in season summary if not available
             pushFieldsToSkin(m_SelectedSeason, "Season");
+            setGUIProperty("Season.Summary", string.IsNullOrEmpty(m_SelectedSeason[DBSeason.cSummary]) ? m_SelectedSeries[DBOnlineSeries.cSummary] : m_SelectedSeason[DBSeason.cSummary]);
 
             // Load Fanart			
             m_FanartItem = m_SelectedSeason;
