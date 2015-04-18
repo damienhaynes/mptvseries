@@ -49,11 +49,7 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// ASCII chars that are considered "special" in the context of CleanStringOfSpecialChars
         /// </summary>
-        static int[] specialCharsFromTo = new int[] { 0,  31, 
-                                                     33,  47, 
-                                                     58,  64, 
-                                                     91,  96, 
-                                                    123, 127 };
+        static int[] specialCharsFromTo = new int[] { 0, 31, 47, 58, 64, 91, 96, 123, 125, 127 };
         /// <summary>
         /// Cleans a string of Punctuation and other Special Characters (removes them)
         /// Leaves ASCII Chars: 0-9, a-z, A-Z, space
