@@ -704,6 +704,13 @@ Trakt can also help you keep your watched flags in sync across multiple computer
               <ZipFileName>Installer{CopyFile}\{ec736174-72ed-43da-b8eb-b118b785f859}-ar.xml</ZipFileName>
               <DestinationFilename>%Language%\MP-TVSeries\ar.xml</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\MP-TVSeries\Resources\Languages\sq.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{904b23d9-ef1f-4967-a676-de12ed7f5160}-sq.xml</ZipFileName>
+              <DestinationFilename>%Language%\MP-TVSeries\sq.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -1783,7 +1790,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>4.0.3.0</Value>
+                    <Value>5.3.1.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -1805,7 +1812,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>1.1.5.0</Value>
+                    <Value>1.2.1.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -2260,19 +2267,29 @@ public class Script
     <UpdateUrl>http://mptvseries.googlecode.com/svn/trunk/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>4</Major>
-      <Minor>1</Minor>
+      <Minor>2</Minor>
       <Build>0</Build>
-      <Revision>2089</Revision>
+      <Revision>2138</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Added Titan skin files to installer, a few bug fixes and enhancements.
-* Removal of follw.it (Service is shutting down end of September).
+    <VersionDescription>* Added new fields to the Season table so user can override the Season Title and Summary.
+* Added an option in configuration that will retieve community ratings from trakt.tv. Ratings for shows, seasons and episodes are much better there than at thetvdb.com and with the help of the TraktPlugin it's a logical choice for ratings. This feature is only supported if you have the latest Trakt plugin installed (v5.3.1+) and have a valid login and MP-TVSeries plugin enabled in Trakt configuration. As an added bonus, season ratings will also be imported (these are not supported at thetvdb.com) and also season summaries.
+* Added an option in configuration which automatically counts any special episodes (i.e. episodes in Season 0) as watched when viewing the watched count at the Series level. Thanks to community member barneh. This may be useful for people that like to see how many episodes left to watch at the series level minus any specials.
+* Added a new Language field for the Audio sound track in MediaInfo. Thanks to community member barneh.
+* Added support to choose a different language per series. Thanks to community member barneh. From the configuration Online Data tab select to override language per series, then in the  Details tab select your language on already imported series.
+* Added an option in configuration when cleans up episodes from the database if they no longer exist online. This is only applicable for users which download all episode information.
+* Publish custom plugin name to skin in the #TVSeries.PluginName property.
+* Remove TVDb warning dialog when rating in TVSeries if the Account ID is not set and using the internal rate dialog. 
+* Fixed Sub-Central option in configuration not appearing if launching from the desktop shortcut.
+* Fixed the StopTime field in the database not being prescence in the database after a fresh import on a clean database. Previously it was only created after an episode was partially watched with-in tvseries.
+* Fixed a bug in configuration not clearing the tab when clicking on the Empty database link.
+* Fixed a bug in the Titan skin where season title was not displayed in Filmstrip/Coverflow layouts.
 * Updated translations from Transifex.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=64</OnlineLocation>
-    <ReleaseDate>2014-09-13T15:25:06</ReleaseDate>
+    <ReleaseDate>2015-04-18T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -2952,6 +2969,13 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <LocalFileName>..\MP-TVSeries\Resources\Languages\ar.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{ec736174-72ed-43da-b8eb-b118b785f859}-ar.xml</ZipFileName>
         <DestinationFilename>%Language%\MP-TVSeries\ar.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\MP-TVSeries\Resources\Languages\sq.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{904b23d9-ef1f-4967-a676-de12ed7f5160}-sq.xml</ZipFileName>
+        <DestinationFilename>%Language%\MP-TVSeries\sq.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
         <Param1 />

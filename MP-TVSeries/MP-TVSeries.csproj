@@ -428,8 +428,14 @@
     <None Include="Resources\Images\arrow_up_small.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Languages\ar.xml" />
+    <Content Include="Resources\Languages\bg.xml" />
+    <Content Include="Resources\Languages\ku.xml" />
+    <Content Include="Resources\Languages\ro.xml" />
+    <Content Include="Resources\Languages\sq.xml" />
     <Content Include="Resources\Languages\tr.xml" />
     <Content Include="Resources\Languages\uk.xml" />
+    <Content Include="Resources\Languages\vi.xml" />
     <Content Include="Resources\Languages\zh.xml" />
     <None Include="Resources\Images\busy.gif" />
     <None Include="Resources\Images\big_spinner.gif" />

@@ -19,7 +19,7 @@
   <string name="Force_Local_Scan" Original="Force Local Scan ">Lokalen Scan erzwingen </string>
   <string name="Force_Online_Refresh" Original="Force Online Refresh ">Online-Aktualisierung erzwingen </string>
   <string name="In_Progress_with_Barracks" Original="(In Progress)">(..in Arbeit...)</string>
-  <string name="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Beschreibung noch nicht gesehener Folgen verstecken</string>
+  <string name="Hide_summary_on_unwatched" Original="Hide the episode's summary on unwatched episodes">Beschreibung noch nicht gesehenen Folgen verstecken</string>
   <string name="on" Original="on">ein</string>
   <string name="off" Original="off">aus</string>
   <string name="Play_Random_Episode" Original="Play Random Episode">Zufällige Folge wiedergeben</string>
