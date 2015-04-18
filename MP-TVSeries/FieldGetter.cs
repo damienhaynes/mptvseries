@@ -312,6 +312,14 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
+                // remove regional info from number when applying formatting rules
+                // the formatting rules expects decimal values with a dot seperator
+                // Ratings could be inserted with comma seperator and are commonly used
+                // in formatting rules to evaluate rating images
+                // Note: this is probably not the best way to handle this, probably better off enforcing how we write to db!
+                if (m.Value == "Rating" && what.IndexOf("Eval", 0) >= 0)
+                    result = result.Replace(',', '.');
+
                 value = value.Replace(Identifier + m.Value + ">", result);
             }            
             return value;
