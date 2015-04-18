@@ -1910,14 +1910,14 @@ namespace WindowPlugins.GUITVSeries
                     { 
                         updatedShows = updatedShowsResult.Shows;
                     }
-
+                    
                     while (updatedShowsResult != null && updatedShowsResult.Shows.Count() == maxPageSize)
                     {
                         MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Page = '{0}'", ++page), MPTVSeriesLog.LogLevel.Normal);
                         updatedShowsResult = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), page, maxPageSize);
                         if (updatedShowsResult != null)
                         {
-                            updatedShows.Union(updatedShowsResult.Shows);
+                            updatedShows = updatedShows.Union(updatedShowsResult.Shows);
                         }
                     }
                 }
