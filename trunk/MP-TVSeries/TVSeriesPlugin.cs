@@ -5474,9 +5474,12 @@ namespace WindowPlugins.GUITVSeries
             if (dummyIsWatched != null) dummyIsWatched.Visible = (int.Parse(season[DBOnlineSeries.cEpisodesUnWatched]) == 0);
             if (dummyIsAvailable != null) dummyIsAvailable.Visible = season[DBSeason.cHasLocalFiles];
 
-            setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatSeasonTitle, season));
+            // override the season title and descriptions if they're not empty
+            // this will ensure that the #TVSeries.Description and #TVSeries.Title properties contain custom season info
+            // Note: tvseries is due for a big overhaul!
+            setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(!string.IsNullOrEmpty(m_SelectedSeason[DBSeason.cTitle]) ? "<Season.Title>" : m_sFormatSeasonTitle, season));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatSeasonSubtitle, season));
-            setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatSeasonMain, season));
+            setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(!string.IsNullOrEmpty(m_SelectedSeason[DBSeason.cSummary]) ? "<Season.Summary>" : m_sFormatSeasonMain, season));
 
             // Delayed Image Loading of Season Banners
             string filename = ImageAllocator.GetSeasonBannerAsFilename(season);
