@@ -139,7 +139,7 @@
 		<posX>510</posX>
 		<posY>1015</posY>
 		<label>#TVSeries.Series.Pretty_Name: #TVSeries.Season.SeasonLabel</label>
-		<visible>[facadeview.list | facadeview.largeicons] + control.isvisible(1238)</visible>
+		<visible>[facadeview.list | facadeview.filmstrip | facadeview.coverflow] + control.isvisible(1238)</visible>
 	  <animation effect="fade" time="250">WindowOpen</animation>
 	  <animation effect="fade" time="250">WindowClose</animation>
   </control>
