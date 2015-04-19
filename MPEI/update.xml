@@ -150,7 +150,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Fixed an issue where series were not correctly matching if two series differed only by an exclamation mark e.g. Betrayal -&gt; Betrayal!
 * Added PDB debug file to installer.</VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
-        <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=64</OnlineLocation>
+        <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
         <ReleaseDate>2015-04-19T15:25:06</ReleaseDate>
         <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
         <Location>.\Release\[Name]-[Version].mpe1</Location>
