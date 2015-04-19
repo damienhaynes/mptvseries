@@ -105,6 +105,16 @@ namespace WindowPlugins.GUITVSeries.MathParser
                 return result;
             });
 
+            addFunction("FormatThousands", delegate(string number)
+            {
+                int iNumber = 0;
+                if (int.TryParse(number, out iNumber))
+                {
+                    number = iNumber.ToString("N0", CultureInfo.CurrentCulture);
+                }
+                return number;
+            });
+
             addFunction(string.Empty, delegate(double number) { return number; }); // simple parenthesis, needs to be last in list
 
             addConstant("PI", delegate() { return Math.PI; });
