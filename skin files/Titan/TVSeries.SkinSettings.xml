@@ -97,7 +97,7 @@
 <Enabled>1<Format><Episode.InfoPanelLine1Key><FormatAs>
 <Enabled>1<Format><Episode.InfoPanelLine1Value><FormatAs>Eval(Round(<Episode.Rating>*10)/10)
 <Enabled>1<Format><Episode.InfoPanelLine7Value><FormatAs>Rated<Episode.myRating>.png
-<Enabled>1<Format><Episode.InfoPanelLine8Value><FormatAs>(<Episode.RatingCount> Trans(Votes))
+<Enabled>1<Format><Episode.InfoPanelLine8Value><FormatAs>(Eval(FormatThousands(<Episode.RatingCount>)) Trans(Votes))
 <Enabled>1<Format><Episode.InfoPanelLine2Key><FormatAs>FILE SIZE
 <Enabled>1<Format><Episode.InfoPanelLine2Value><FormatAs><Episode.FileSize>
 <Enabled>1<Format><Episode.InfoPanelLine3Key><FormatAs>video INFO
@@ -115,7 +115,7 @@
 <Enabled>1<Format><Series.InfoPanelLine1Key><FormatAs>RATING
 <Enabled>1<Format><Series.InfoPanelLine1Value><FormatAs><FormatAs>Eval(Round(<Series.Rating>*10)/10)
 <Enabled>1<Format><Series.InfoPanelLine8Value><FormatAs>Rated<Series.myRating>.png
-<Enabled>1<Format><Series.InfoPanelLine9Value><FormatAs>(<Series.RatingCount> Trans(Votes))
+<Enabled>1<Format><Series.InfoPanelLine9Value><FormatAs>(Eval(FormatThousands(<Series.RatingCount>)) Trans(Votes))
 <Enabled>1<Format><Series.InfoPanelLine2Key><FormatAs>Eval(PrettyNumber100(<Series.EpisodesUnWatched>))
 <Enabled>1<Format><Series.InfoPanelLine2Value><FormatAs><Series.FirstAired> (Trans(AiredStatus<Series.Status>))
 <Enabled>1<Format><Series.InfoPanelLine3Key><FormatAs><Series.EpisodesWatched>
