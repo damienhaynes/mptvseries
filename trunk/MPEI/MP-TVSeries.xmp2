@@ -2281,10 +2281,9 @@ public class Script
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed community ratings not being displayed when using a comma for decimal seperator in regional settings.
+    <VersionDescription>* Fixed community ratings not being displayed when using a comma for decimal separator in regional settings.
 * Fixed an issue where series were not correctly matching if two series differed only by an exclamation mark e.g. Betrayal -&gt; Betrayal!
-* Added PDB debug file to installer.
-* Updated translations from Transifex.</VersionDescription>
+* Added PDB debug file to installer.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=64</OnlineLocation>
     <ReleaseDate>2015-04-19T15:25:06</ReleaseDate>
@@ -3896,14 +3895,14 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{aa2202e7-fa16-4b19-a2ed-19801cf6f999}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{49ccfaa0-3426-47bc-a7f4-109154f16f48}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{b314314d-a326-4ba5-989e-9f6ee9e076af}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{29401aee-4194-46b4-80ac-07d9f23f5932}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
