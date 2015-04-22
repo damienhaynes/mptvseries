@@ -2053,11 +2053,10 @@ namespace WindowPlugins.GUITVSeries
                         userEdited = true;
                         break;
                     }
-
                 }
             }
 
-            if (id < 0)
+            if (!userEdited)
             {
                 DataGridViewRow dataGridDetailRow = new DataGridViewRow();
                 DataGridViewTextBoxCell cFieldName;
@@ -2128,17 +2127,17 @@ namespace WindowPlugins.GUITVSeries
                         cFieldValue.Style.BackColor = System.Drawing.SystemColors.Control;
                     }
 
-                    if (userEdited)
-                    {
-                        cFieldValue.Style.ForeColor = System.Drawing.SystemColors.HotTrack;
-
-                    }
-
                     cFieldValue.Style.Alignment = TextAlign;
 
                     // Add the rows to the DataGridView
                     dataGridView1.Rows.Add(dataGridDetailRow);
                 }
+            }
+            else
+            {
+                // user edit, replace the existing value
+                dataGridView1.Rows[id].Cells[1].Value = FieldValue;
+                dataGridView1.Rows[id].Cells[1].Style.ForeColor = System.Drawing.SystemColors.HotTrack;
             }
         }
 
