@@ -2732,6 +2732,8 @@ namespace WindowPlugins.GUITVSeries
             if (localEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                 localEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
 
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+            
             // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
             foreach (String key in onlineEpisode.FieldNames)
             {
@@ -2747,6 +2749,13 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineEpisode.cMyRating:
                         // do nothing here, those information are local only
                         break;
+
+                    // dont update community ratings if we get from trakt
+                    case DBOnlineEpisode.cRating:
+                    case DBOnlineEpisode.cRatingCount:
+                        if (traktCommunityRatings)
+                            break;
+                        goto default;
 
                     case DBOnlineEpisode.cSeasonIndex:
                     case DBOnlineEpisode.cEpisodeIndex:
