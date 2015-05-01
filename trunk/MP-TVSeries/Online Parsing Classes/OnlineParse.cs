@@ -2081,6 +2081,8 @@ namespace WindowPlugins.GUITVSeries
                 #region Episodes
                 // get episodes from local database for current series
                 conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, tvdbId, SQLConditionType.Equal);
+                conditions.AddOrderItem(DBOnlineEpisode.Q(DBOnlineEpisode.cID), SQLCondition.orderType.Ascending);
+
                 var episodes = DBEpisode.Get(conditions, false);
                 if (episodes == null) continue;
 
