@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ExtensionCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Items>    
+  <Items>
     <PackageClass>
       <Version>2.0</Version>
       <Groups>
@@ -140,18 +140,19 @@
         <Version>
           <Major>4</Major>
           <Minor>2</Minor>
-          <Build>1</Build>
-          <Revision>2142</Revision>
+          <Build>2</Build>
+          <Revision>2151</Revision>
         </Version>
         <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-        <VersionDescription>* Fixed community ratings not being displayed when using a comma for decimal separator in regional settings.
-* Fixed an issue where series were not correctly matching if two series differed only by an exclamation mark e.g. Betrayal -&gt; Betrayal!
-* Added PDB debug file to installer.</VersionDescription>
+        <VersionDescription>* Fixed trakt community ratings sometimes being overwritten with tvdb ratings.
+* Fixed user edited fields not being reflected in the configuration tool after reload.
+* Added new skin setting function 'FormatThousands' to allow you format large numbers e.g trakt community votes e.g 41983 -&gt; 41,983.
+* Added new formatting rules to the Titan skin so it displays vote counts for ratings with thousands separators. </VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
         <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
-        <ReleaseDate>2015-04-19T15:25:06</ReleaseDate>
+        <ReleaseDate>2015-05-02T15:25:06</ReleaseDate>
         <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
         <Location>.\Release\[Name]-[Version].mpe1</Location>
         <Params>
