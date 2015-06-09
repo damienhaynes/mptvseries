@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!--version="1.0" encoding="utf-8"-->
 <window>
   <controls>
     <control>
@@ -46,10 +45,10 @@
           <animation effect="slide" time="70" start="-300,0" reversible="false">visible</animation>
           <animation effect="slide" time="70" end="-300,0" reversible="false">hidden</animation>
           <control>
-            <description>Switch View</description>
+            <description>Change View</description>
             <type>button</type>
             <id>2</id>
-            <label>Switch View</label>
+            <label>#TVSeries.Translation.ChangeView.Label...</label>
             <onleft>50</onleft>
             <onright>50</onright>
             <onup>99999</onup>
@@ -60,7 +59,7 @@
             <description>Filters</description>
             <type>button</type>
             <id>10</id>
-            <label>Filters</label>
+            <label>#TVSeries.Translation.Filters.Label...</label>
             <onleft>50</onleft>
             <onright>50</onright>
             <onup>2</onup>
@@ -71,7 +70,7 @@
             <description>Change Layout</description>
             <type>button</type>
             <id>3</id>
-            <label>Change Layout</label>
+            <label>#TVSeries.Translation.ChangeLayout.Label...</label>
             <onleft>50</onleft>
             <onright>50</onright>
             <onup>10</onup>
@@ -94,7 +93,7 @@
             <description>My Playlists</description>
             <type>button</type>
             <id>9</id>
-            <label>983</label>
+            <label>#(L(983))...</label>
             <onleft>50</onleft>
             <onright>50</onright>
             <ondown>4</ondown>
@@ -105,7 +104,7 @@
             <description>Options</description>
             <type>button</type>
             <id>4</id>
-            <label>496</label>
+            <label>#TVSeries.Translation.Options.Label...</label>
             <onleft>50</onleft>
             <onright>50</onright>
             <onup>9</onup>
