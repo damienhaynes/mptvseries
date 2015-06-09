@@ -22,31 +22,23 @@
 #endregion
 
 using System;
-using System.Windows.Forms;
-using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
-using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using aclib.Performance;
+using Cornerstone.MP;
 using MediaPortal.Configuration;
+using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
 using MediaPortal.Player;
-using MediaPortal.Dialogs;
 using MediaPortal.Util;
-using Action = MediaPortal.GUI.Library.Action;
-using WindowPlugins.GUITVSeries;
-using System.Threading;
-using System.Collections.Generic;
-using WindowPlugins.GUITVSeries.Feedback;
-using aclib.Performance;
-using Cornerstone.MP;
-using System.Xml;
-using WindowPlugins.GUITVSeries.GUI;
-using TraktPlugin.TraktAPI;
-using TraktPlugin.TraktHandlers;
-using TraktPlugin.TraktAPI.DataStructures;
-using Trailers;
 using Trailers.Providers;
+using WindowPlugins.GUITVSeries.Feedback;
+using WindowPlugins.GUITVSeries.GUI;
+using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -658,22 +650,6 @@ namespace WindowPlugins.GUITVSeries
 
             LoadFacade();
             m_Facade.Focus = true;
-
-            // Update Button Labels with translations
-            if (viewMenuButton != null)
-                viewMenuButton.Label = Translation.ButtonSwitchView;
-
-            if (filterButton != null)
-                filterButton.Label = Translation.Filters;
-
-            if (ImportButton != null)
-                ImportButton.Label = Translation.ButtonRunImport;
-
-            if (LayoutMenuButton != null)
-                LayoutMenuButton.Label = Translation.ButtonChangeLayout;
-
-            if (OptionsMenuButton != null)
-                OptionsMenuButton.Label = Translation.ButtonOptions;
 
             setProcessAnimationStatus(m_parserUpdaterWorking);
 
