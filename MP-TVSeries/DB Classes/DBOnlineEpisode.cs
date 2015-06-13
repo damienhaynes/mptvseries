@@ -55,8 +55,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cAirsBeforeEpisode = "airsbefore_episode";
         public const String cAirsAfterSeason = "airsafter_season";
         public const String cRating = "Rating";
-        public const String cMyRating = "myRating";
         public const String cRatingCount = "RatingCount";
+        public const String cMyRating = "myRating";
+        public const String cMyRatingAt = "myRatingAt";
         public const String cCombinedEpisodeNumber = "Combined_episodenumber";
         public const String cCombinedSeason = "Combined_season";
         public const String cDVDChapter = "DVD_chapter";

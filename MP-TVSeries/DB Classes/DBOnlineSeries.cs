@@ -69,8 +69,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cTaggedToDownload = "taggedToDownload";
 
         public const String cRating = "Rating";
-        public const String cMyRating = "myRating";
         public const String cRatingCount = "RatingCount";
+        
+        public const String cMyRating = "myRating";
+        public const String cMyRatingAt = "myRatingAt";
 
         public const String cEpisodeCount = "EpisodeCount";
         public const String cEpisodesUnWatched = "EpisodesUnWatched";

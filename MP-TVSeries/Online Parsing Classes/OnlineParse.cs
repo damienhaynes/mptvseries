@@ -33,7 +33,6 @@ using WindowPlugins.GUITVSeries.Feedback;
 
 namespace WindowPlugins.GUITVSeries
 {
-
     public enum ParsingAction
     {
         NoExactMatch,
@@ -1039,6 +1038,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cCurrentBannerFileName:
                                 case DBOnlineSeries.cCurrentPosterFileName:
                                 case DBOnlineSeries.cMyRating:
+                                case DBOnlineSeries.cMyRatingAt:
                                 case DBOnlineSeries.cViewTags:
                                 case DBOnlineSeries.cHasNewEpisodes: //gets cleared and updated at end of scan
                                 case DBOnlineSeries.cTraktIgnore:
@@ -1196,6 +1196,7 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cPlayCount:
                                     case DBOnlineEpisode.cHidden:                                    
                                     case DBOnlineEpisode.cMyRating:
+                                    case DBOnlineEpisode.cMyRatingAt:
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                         // do nothing here, those information are local only
                                         break;
@@ -2170,7 +2171,10 @@ namespace WindowPlugins.GUITVSeries
                         // We should also update Community Rating as theTVDB Updates API doesnt take into consideration
                         // Series/Episodes that have rating changes.
                         if (!String.IsNullOrEmpty(userRatings.SeriesUserRating))
+                        {
                             series[DBOnlineSeries.cMyRating] = userRatings.SeriesUserRating;
+                            series[DBOnlineSeries.cMyRatingAt] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        }
 
                         // Dont clear site rating if user rating does not exist
                         // also dont update if we get community ratings from trakt
@@ -2185,7 +2189,8 @@ namespace WindowPlugins.GUITVSeries
                             if (userRatings.EpisodeRatings.ContainsKey(episode[DBOnlineEpisode.cID]))
                             {
                                 episode[DBOnlineEpisode.cMyRating] = userRatings.EpisodeRatings[episode[DBOnlineEpisode.cID]].UserRating;
-                                
+                                episode[DBOnlineEpisode.cMyRatingAt] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                                 // dont update community rating if we get from trakt.tv
                                 if (!traktCommunityRatings)
                                 {
@@ -2222,6 +2227,7 @@ namespace WindowPlugins.GUITVSeries
                             if (!String.IsNullOrEmpty(userRatings.SeriesUserRatings[series[DBSeries.cID]]))
                             {
                                 series[DBOnlineSeries.cMyRating] = userRatings.SeriesUserRatings[series[DBSeries.cID]];
+                                series[DBOnlineSeries.cMyRatingAt] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                 series.Commit();
                             }
                         }
@@ -2749,6 +2755,7 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineEpisode.cPlayCount:
                     case DBOnlineEpisode.cHidden:
                     case DBOnlineEpisode.cMyRating:
+                    case DBOnlineEpisode.cMyRatingAt:
                         // do nothing here, those information are local only
                         break;
 

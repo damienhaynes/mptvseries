@@ -3784,6 +3784,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Apply to local database
             item["myRating"] = value;
+            item["myRatingAt"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             // recalculate rating/votes
             double currRating = string.IsNullOrEmpty(item["Rating"]) ? 0.0 : (double)item["Rating"];

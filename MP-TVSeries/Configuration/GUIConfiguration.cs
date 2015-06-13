@@ -1624,6 +1624,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cAbsoluteNumber:
                                 case DBEpisode.cIsAvailable:
                                 case DBOnlineEpisode.cRatingCount:
+                                case DBOnlineEpisode.cMyRatingAt:
                                 case DBOnlineEpisode.cThumbAdded:
                                 case DBOnlineEpisode.cThumbHeight:
                                 case DBOnlineEpisode.cThumbWidth:
@@ -1749,6 +1750,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeason.cUnwatchedItems:
                                 case DBSeason.cHasEpisodes:
                                 case DBSeason.cHasEpisodesTemp:
+                                case DBSeason.cMyRatingAt:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -1864,6 +1866,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cOnlineDataImported:
                                 case DBSeries.cDuplicateLocalName:
                                 case DBOnlineSeries.cTraktIgnore:
+                                case DBOnlineSeries.cMyRatingAt:
                                     // hide these fields, they are handled internally
                                     break;
                                 
@@ -2169,6 +2172,7 @@ namespace WindowPlugins.GUITVSeries
                     case DBOnlineSeries.cLanguage:
                     case DBOnlineSeries.cSummary:
                     case DBOnlineSeries.cMyRating:
+                    case DBOnlineSeries.cMyRatingAt:
                     case DBSeason.cTitle:
                         editFieldName = origFieldName;
                         bUserEdit = false;
