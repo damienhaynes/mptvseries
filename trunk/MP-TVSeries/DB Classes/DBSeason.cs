@@ -69,8 +69,11 @@ namespace WindowPlugins.GUITVSeries
         public const String cSummary = "Summary";
 
         public const String cRating = "Rating";
-        public const String cMyRating = "myRating";
         public const String cRatingCount = "RatingCount";
+
+        public const String cMyRating = "myRating";
+        public const String cMyRatingAt = "myRatingAt";
+        
         #endregion
 
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
@@ -210,6 +213,7 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cRating, new DBField(DBField.cTypeString));
             AddColumn(cRatingCount, new DBField(DBField.cTypeInt));
             AddColumn(cMyRating, new DBField(DBField.cTypeString));
+            AddColumn(cMyRatingAt, new DBField(DBField.cTypeString));
         }
 
         public void ChangeSeriesID(int nSeriesID)
