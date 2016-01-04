@@ -151,6 +151,10 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cPlayCount, new DBField(DBField.cType.Int));
             base.AddColumn(cLastWatchedDate, new DBField(DBField.cTypeString));
             base.AddColumn(cFirstWatchedDate, new DBField(DBField.cTypeString));
+            base.AddColumn(cRating, new DBField(DBField.cTypeString));
+            base.AddColumn(cRatingCount, new DBField(DBField.cTypeString));
+            base.AddColumn(cMyRating, new DBField(DBField.cTypeString));
+            base.AddColumn(cMyRatingAt, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeSummary, new DBField(DBField.cTypeString));
             base.AddColumn(cFirstAired, new DBField(DBField.cTypeString));
             base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));

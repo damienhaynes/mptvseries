@@ -209,6 +209,10 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
             base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
+            base.AddColumn(cRating, new DBField(DBField.cTypeString));
+            base.AddColumn(cRatingCount, new DBField(DBField.cTypeString));
+            base.AddColumn(cMyRating, new DBField(DBField.cTypeString));
+            base.AddColumn(cMyRatingAt, new DBField(DBField.cTypeString));
             base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
             base.AddColumn(cTraktIgnore, new DBField(DBField.cTypeInt));
 

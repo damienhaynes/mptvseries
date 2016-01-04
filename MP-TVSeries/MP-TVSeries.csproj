@@ -528,8 +528,6 @@
     <Compile Include="Local Parsing Classes\DeviceManager.cs" />
     <Compile Include="Local Parsing Classes\DriveInfoExtensions.cs" />
     <Compile Include="Online Parsing Classes\UserInputResult.cs" />
-    <Compile Include="Properties\VersionInfo.cs" />
-    <None Include="Properties\VersionInfo.cs.tmpl" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -560,6 +558,7 @@
   </Target>-->
   <PropertyGroup>
     <PostBuildEvent>if exist $(ProjectDir)PostBuild.bat call $(ProjectDir)PostBuild.bat $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
-    <PreBuildEvent>subwcrev "$(SolutionDir)." "$(ProjectDir)Properties\VersionInfo.cs.tmpl" "$(ProjectDir)Properties\VersionInfo.cs"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
