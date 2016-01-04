@@ -61,6 +61,20 @@
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
+    
+    <control>
+      <description>Season UserRating</description>
+      <type>image</type>
+      <id>1</id>
+      <posX>380</posX>
+      <posY>360</posY>
+      <width>122</width>
+      <height>122</height>
+      <texture>#TVSeries.Season.UserRating</texture>
+      <visible>control.isvisible(1238)+facadeview.list</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
 
 
     <control>
@@ -171,7 +185,21 @@
       <height>27</height>
       <align>left</align>
       <texture>#TVSeries.Series.RatingPath</texture>
-      <visible>[facadeview.list|facadeview.largeicons]+[control.isvisible(1237)|control.isvisible(1238)]</visible>
+      <visible>[facadeview.list|facadeview.largeicons]+control.isvisible(1237)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+    
+    <control>
+      <type>image</type>
+      <id>1</id>
+      <posX>561</posX>
+      <posY>345</posY>
+      <width>316</width>
+      <height>27</height>
+      <align>left</align>
+      <texture>#TVSeries.Season.RatingPath</texture>
+      <visible>facadeview.list+control.isvisible(1238)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
@@ -200,7 +228,6 @@
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
 
-
     <control>
       <description>Rating Value (Series)</description>
       <type>label</type>
@@ -211,7 +238,22 @@
       <width>255</width>
       <font>fontB12</font>
       <textcolor>FF00b7ff</textcolor>
-      <visible>[facadeview.list | facadeview.largeicons]+[control.isvisible(1237)|control.isvisible(1238)]</visible>
+      <visible>[facadeview.list | facadeview.largeicons]+control.isvisible(1237)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+    
+    <control>
+      <description>Rating Value (Season)</description>
+      <type>label</type>
+      <label>#TVSeries.Season.CommunityRating #TVSeries.Season.Votes</label>
+      <id>0</id>
+      <posX>890</posX>
+      <posY>343</posY>
+      <width>255</width>
+      <font>fontB12</font>
+      <textcolor>FF00b7ff</textcolor>
+      <visible>facadeview.list+control.isvisible(1238)+!string.equals(#TVSeries.Season.RatingCount,0)+!string.equals(#TVSeries.Season.RatingCount,)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
@@ -481,7 +523,7 @@
       <width>255</width>
       <font>fontB12</font>
       <textcolor>FF00b7ff</textcolor>
-      <visible>facadeview.list+control.isvisible(1239)</visible>
+      <visible>facadeview.list+control.isvisible(1239)+!string.equals(#TVSeries.Episode.RatingCount,0)+!string.equals(#TVSeries.Episode.RatingCount,)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>

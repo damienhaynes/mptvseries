@@ -112,6 +112,8 @@
 <Enabled>1<Format><Episode.Aired><FormatAs><Episode.FirstAired>
 <Enabled>1<Format><Season.SeasonIndex><FormatAs><Season.SeasonIndex>
 <Enabled>1<Format><Season.SeasonLabel><FormatAs>Season <Season.SeasonIndex>
+<Enabled>1<Format><Season.CommunityRating><FormatAs><FormatAs>Eval(Round(<Season.Rating>*10)/10)
+<Enabled>1<Format><Season.Votes><FormatAs>(Eval(FormatThousands(<Season.RatingCount>)) Trans(Votes))
 <Enabled>1<Format><Series.InfoPanelLine1Key><FormatAs>RATING
 <Enabled>1<Format><Series.InfoPanelLine1Value><FormatAs><FormatAs>Eval(Round(<Series.Rating>*10)/10)
 <Enabled>1<Format><Series.InfoPanelLine8Value><FormatAs>Rated<Series.myRating>.png
@@ -134,6 +136,7 @@
 <Enabled>1<Format><Season.InfoPanelLine2Key><FormatAs>Eval(PrettyNumber100(<Season.EpisodesUnWatched>))
 <Enabled>1<Format><Season.InfoPanelLine3Key><FormatAs><Season.EpisodesWatched>
 <Enabled>1<Format><Season.EpisodesWatched><FormatAs>Eval(PrettyNumber100(<Season.EpisodeCount>-<Season.EpisodesUnWatched>))
+<Enabled>1<Format><Season.UserRating><FormatAs>Rated<Season.myRating>.png
 <Enabled>1<Format>x () fps<FormatAs>N / A
 <Enabled>1<Format>0 bytes<FormatAs>N / A
 <Enabled>1<Format>(Trans(MyRating): )<FormatAs> 
@@ -154,6 +157,7 @@
 <Enabled>1<Format><Series.RatingPath2><FormatAs>TVSeries\star2_Eval(10*Round(<Series.Rating>*2)/2).png
 <Enabled>1<Format><Series.LogoPath><FormatAs><Series.ID>.png
 <Enabled>1<Format><Series.EpisodeCount><FormatAs><Series.EpisodeCount>
+<Enabled>1<Format><Season.RatingPath><FormatAs>TVSeries\starEval(10*Round(<Season.Rating>*2)/2).png
 <Enabled>1<Format><Season.EpisodeCount><FormatAs><Season.EpisodeCount>
 <Enabled>1<Format>SeriesUnWatched<FormatAs>Eval(PrettyNumber100(<Series.EpisodesUnWatched>))
 <Enabled>1<Format>SeasonUnWatched<FormatAs>Eval(PrettyNumber10(<Season.EpisodesUnWatched>))
