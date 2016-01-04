@@ -341,37 +341,6 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Added season ratings to Season view in Titan skin. Requires trakt community ratings to be enabled in configuration, thetvdb.com does not provide season ratings.
 
 Note: Skinners will need to double check what is being used for labels on side menu button and ensure they're still correct.
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </VersionDescription>
         <DevelopmentStatus>Stable</DevelopmentStatus>
         <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
