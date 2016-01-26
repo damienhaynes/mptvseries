@@ -89,7 +89,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cTraktID = "TraktID";
         public const String cZap2ITID = "zap2it_id";
         public const String cContentRating = "ContentRating";
-        public const String cNetworkID = "NetworkID";
+        public const String cNetworkID = "Network";
         public const String cAdded = "added";
         public const String cAddedBy = "addedBy";
         public const String cFanart = "fanart";
