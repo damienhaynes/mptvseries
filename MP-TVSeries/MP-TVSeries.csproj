@@ -116,6 +116,9 @@
     <Reference Include="Trailers">
       <HintPath>..\External\Trailers.dll</HintPath>
     </Reference>
+    <Reference Include="TraktAPI">
+      <HintPath>..\External\TraktAPI.dll</HintPath>
+    </Reference>
     <Reference Include="TraktPlugin">
       <HintPath>..\External\TraktPlugin.dll</HintPath>
     </Reference>

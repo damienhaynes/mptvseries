@@ -1886,7 +1886,8 @@ namespace WindowPlugins.GUITVSeries
         void asyncTraktCommunityRatings(object sender, DoWorkEventArgs e)
         {
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            
+            Thread.CurrentThread.Name = "Ratings";
+
             var tupleParams = e.Argument as Tuple<List<DBSeries>, bool>;
             List<DBSeries> seriesList = tupleParams.Item1;
             bool forceUpdate = tupleParams.Item2;
@@ -1895,8 +1896,21 @@ namespace WindowPlugins.GUITVSeries
             DateTime dteLastUpdated = DateTime.MinValue;
             string strLastUpdated = DBOption.GetOptions(DBOption.cTraktLastDateUpdated);
             HashSet<string> recentSeries = new HashSet<string>();
-            IEnumerable<TraktPlugin.TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
+            IEnumerable<TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
 
+            // ensure we set the TraktAPI client ID if we are using the configuration tool
+            // dont't need to worry about this when running inside MP as it will be initialised by
+            // the trakt plugin - we could register an ID for the tvseries plugin
+            if (Settings.isConfig)
+            {
+                TraktAPI.TraktAPI.ClientId = "49e6907e6221d3c7e866f9d4d890c6755590cf4aa92163e8490a17753b905e57";
+                using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings())
+                {
+                    // this should not be required but for some reason trakt is complaining.
+                    TraktAPI.TraktAPI.UserAccessToken = xmlreader.GetValueAsString("Trakt", "UserAccessToken", "");
+                }
+            }
+ 
             #region Recently Updated Shows
             if (!string.IsNullOrEmpty(strLastUpdated) && !forceUpdate)
             {
@@ -1906,7 +1920,7 @@ namespace WindowPlugins.GUITVSeries
                     int maxPageSize = 1000;
 
                     MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Page = '{0}', Last Update Time = '{1}'", page, strLastUpdated), MPTVSeriesLog.LogLevel.Normal);
-                    var updatedShowsResult = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), page, maxPageSize);
+                    var updatedShowsResult = TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), page, maxPageSize);
                     if (updatedShowsResult != null)
                     { 
                         updatedShows = updatedShowsResult.Shows;
@@ -1915,7 +1929,7 @@ namespace WindowPlugins.GUITVSeries
                     while (updatedShowsResult != null && updatedShowsResult.Shows.Count() == maxPageSize)
                     {
                         MPTVSeriesLog.Write(string.Format("Requesting list of recently updated series from trakt.tv, Page = '{0}'", ++page), MPTVSeriesLog.LogLevel.Normal);
-                        updatedShowsResult = TraktPlugin.TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), page, maxPageSize);
+                        updatedShowsResult = TraktAPI.TraktAPI.GetRecentlyUpdatedShows(dteLastUpdated.ToUniversalTime().ToString("yyyy-MM-dd"), page, maxPageSize);
                         if (updatedShowsResult != null)
                         {
                             updatedShows = updatedShows.Union(updatedShowsResult.Shows);
@@ -1953,7 +1967,7 @@ namespace WindowPlugins.GUITVSeries
                         continue;
 
                     // search by tvdb id
-                    var searchResults = TraktPlugin.TraktAPI.TraktAPI.SearchById("tvdb", tvdbId);
+                    var searchResults = TraktAPI.TraktAPI.SearchById("tvdb", tvdbId, "show");
 
                     // if there is more than one result it could be an episode or season with the same id
                     // get the first show result from the list
@@ -2015,7 +2029,7 @@ namespace WindowPlugins.GUITVSeries
                 // get series ratings from trakt
                 MPTVSeriesLog.Write(string.Format("Requesting series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
 
-                var seriesRatings = TraktPlugin.TraktAPI.TraktAPI.GetShowRatings(traktid);
+                var seriesRatings = TraktAPI.TraktAPI.GetShowRatings(traktid);
                 if (seriesRatings == null)
                 {
                     MPTVSeriesLog.Write("Failed to get series ratings from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid);
@@ -2041,7 +2055,7 @@ namespace WindowPlugins.GUITVSeries
                 // if we also request the 'episodes' extended parameter. We also need to get 'full' data to get the ratings
                 // as an added bonus we can also get season overviews and ratings which are not provided by theTVDb API
                 MPTVSeriesLog.Write(string.Format("Requesting season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
-                var traktSeasons = TraktPlugin.TraktAPI.TraktAPI.GetShowSeasons(traktid, "episodes,full");
+                var traktSeasons = TraktAPI.TraktAPI.GetShowSeasons(traktid, "episodes,full");
                 if (traktSeasons == null)
                 {
                     MPTVSeriesLog.Write("Failed to get season information for series from trakt.tv. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid);

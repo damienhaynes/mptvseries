@@ -753,18 +753,14 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                string Username = null;
-                string Password = null;
+                string UserAccessToken = null;
 
                 using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings())
                 {
-                    Username = xmlreader.GetValueAsString("Trakt", "Username", string.Empty);
-                    Password = xmlreader.GetValueAsString("Trakt", "Password", string.Empty);
+                    UserAccessToken = xmlreader.GetValueAsString("Trakt", "UserAccessToken", string.Empty);
                 }
 
-                return TraktPlugin.TraktSettings.TVSeries >= 0 &&
-                       !string.IsNullOrEmpty(Username) &&
-                       !string.IsNullOrEmpty(Password);
+                return TraktPlugin.TraktSettings.TVSeries >= 0 && !string.IsNullOrEmpty(UserAccessToken);
             }
         }
 
