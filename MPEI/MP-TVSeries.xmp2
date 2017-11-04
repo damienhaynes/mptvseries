@@ -37,7 +37,7 @@
       <GroupItem Name="DefaultSkin">
         <ParentGroup />
         <DisplayName>Default Skin</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
+        <DefaulChecked>false</DefaulChecked>
         <Description>Default Skin (4:3) for MP-TVSeries.</Description>
         <Files>
           <Items>
@@ -222,7 +222,7 @@
       <GroupItem Name="DefaultWideSkin">
         <ParentGroup />
         <DisplayName>Default Wide Skin</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
+        <DefaulChecked>false</DefaulChecked>
         <Description>Default Wide Skin (16:9) for MP-TVSeries.</Description>
         <Files>
           <Items>
@@ -432,7 +432,7 @@ Trakt can also help you keep your watched flags in sync across multiple computer
       <GroupItem Name="ExtensionsPlugin">
         <ParentGroup />
         <DisplayName>Extensions Plugin</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
+        <DefaulChecked>false</DefaulChecked>
         <Description>The Extensions plugin for MediaPortal allows you to browse, install, update and uninstall plugin/skin extensions all from the GUI.</Description>
         <Files>
           <Items />
@@ -777,7 +777,7 @@ Trakt can also help you keep your watched flags in sync across multiple computer
       <GroupItem Name="TrailersPlugin">
         <ParentGroup />
         <DisplayName>Trailers Plugin</DisplayName>
-        <DefaulChecked>true</DefaulChecked>
+        <DefaulChecked>false</DefaulChecked>
         <Description>Trailers plugin allows streaming of Movie, Show, Season and Episode videos (trailers, teasers, clips and featurettes). If no associated video is found at themoviedb.org then you can manually search on YouTube, iTunes or IMDb.
 
 Trailers can be accessed from the F9 context menu (INFO button on remote).</Description>
@@ -1797,7 +1797,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>5.6.1.0</Value>
+                    <Value>6.0.1.3</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -2275,37 +2275,16 @@ public class Script
     <Version>
       <Major>4</Major>
       <Minor>3</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Removed plugin override of button labels in skin side menu. This change may break some skins side menus.
-* Added RatedAt fields to the OnlineSeries, OnlineEpisode and Seasons table. This will be used to record when an item was rated.
-* Added auto backup and restore for database volume if corrupt. If the database integrity is good on startup then its backed up, if it's corrupt the corrupted database is backed up and the last known good one is restored automatically.
-* Added season ratings to Season view in Titan skin. Requires trakt community ratings to be enabled in configuration, thetvdb.com does not provide season ratings.
-
-Note: Skinners will need to double check what is being used for labels on side menu button and ensure they're still correct.
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-</VersionDescription>
+    <VersionDescription>* Updated support for Trakt plugin v6.0.1. This is required for trakt community ratings during import.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2016-01-04T15:25:06</ReleaseDate>
+    <ReleaseDate>2017-11-04T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -3914,14 +3893,14 @@ Note: Skinners will need to double check what is being used for labels on side m
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\sidebanner.bmp</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{cf90d2ba-9f58-413e-abe2-c76ba947d796}-sidebanner.bmp</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{ffeace7e-3fb1-4b77-8cb1-f650fe93e133}-sidebanner.bmp</ZipFileName>
         <DestinationFilename />
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\MP-TVSeries\Resources\Images\icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{09086e7b-6033-4bed-8094-a45621f64e29}-icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{e0488d53-cbb4-41a9-aa69-6cbe5f435b82}-icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
