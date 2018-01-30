@@ -1612,7 +1612,8 @@ namespace WindowPlugins.GUITVSeries
                 {
                     ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
                 }
-                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+                // sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+		sqlWhat = Regex.Replace(sqlWhat, ordercol + "\b", ordercol + " as " + ordercol.Replace(".", "")) + " ";
                 orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
