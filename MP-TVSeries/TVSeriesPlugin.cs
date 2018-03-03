@@ -2096,23 +2096,30 @@ namespace WindowPlugins.GUITVSeries
                             // check if we are entering a protected view
                             if (view[DBView.cParentalControl])
                             {
-                                GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
-                                pinCodeDlg.Reset();
-
-                                pinCodeDlg.MasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
-                                pinCodeDlg.EnteredPinCode = string.Empty;
-                                pinCodeDlg.SetHeading(Translation.PinCode);
-                                pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, viewName));
-                                pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
-                                pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
-                                pinCodeDlg.DoModal(GUIWindowManager.ActiveWindow);
-                                if (!pinCodeDlg.IsCorrect)
+                                if (IsParentalControlDisabled)
                                 {
-                                    MPTVSeriesLog.Write("PinCode entered was incorrect, showing Views Menu");
-                                    return;
+                                    logicalView.IsLocked = false;
                                 }
                                 else
-                                    logicalView.IsLocked = false;
+                                {
+                                    GUIPinCode pinCodeDlg = (GUIPinCode)GUIWindowManager.GetWindow(GUIPinCode.ID);
+                                    pinCodeDlg.Reset();
+
+                                    pinCodeDlg.MasterCode = DBOption.GetOptions(DBOption.cParentalControlPinCode);
+                                    pinCodeDlg.EnteredPinCode = string.Empty;
+                                    pinCodeDlg.SetHeading(Translation.PinCode);
+                                    pinCodeDlg.SetLine(1, string.Format(Translation.PinCodeDlgLabel1, viewName));
+                                    pinCodeDlg.SetLine(2, Translation.PinCodeDlgLabel2);
+                                    pinCodeDlg.Message = Translation.PinCodeMessageIncorrect;
+                                    pinCodeDlg.DoModal(GUIWindowManager.ActiveWindow);
+                                    if (!pinCodeDlg.IsCorrect)
+                                    {
+                                        MPTVSeriesLog.Write("PinCode entered was incorrect, showing Views Menu");
+                                        return;
+                                    }
+                                    else
+                                        logicalView.IsLocked = false;
+                                }
                             }
                         }
                     }
@@ -3574,6 +3581,32 @@ namespace WindowPlugins.GUITVSeries
             set { m_bIsNetworkAvailable = value; }
         }
 
+        private bool IsParentalControlDisabled
+        {
+            get
+            {
+                var dbOptStartTime = DBOption.GetOptions(DBOption.cParentalControlDisableAfter);
+                var dbOptEndTime = DBOption.GetOptions(DBOption.cParentalControlDisableBefore);
+
+                // if the end time is less than start time, then treat it as the next day
+                var startTime = new DateTime();
+                var endTime = new DateTime();
+                DateTime.TryParse(dbOptStartTime, out startTime);
+                DateTime.TryParse(dbOptEndTime, out endTime);
+
+                if (startTime > endTime)
+                    endTime = endTime.AddDays(1);
+
+                MPTVSeriesLog.Write($"Checking if parental controls are in unrestricted period. Start Time = {startTime}, End Time = {endTime}", MPTVSeriesLog.LogLevel.Debug);
+
+                // check if we're in the unrestricted period
+                if (DateTime.Now >= startTime && DateTime.Now <= endTime)
+                    return true;
+                
+                return false;
+            }
+        }
+
         private void UpdateEpisodes(DBSeries series, DBSeason season, DBEpisode episode)
         {
             List<DBValue> epIDsUpdates = new List<DBValue>();
@@ -4764,10 +4797,10 @@ namespace WindowPlugins.GUITVSeries
         {
             bool pinInCorrect = true;
 
-            if (view.ParentalControl && logicalView.IsLocked)
+            if (view.ParentalControl && logicalView.IsLocked && !IsParentalControlDisabled)
             {
                 // We can't show a dialog on top when there is no main window
-                if (!m_bPluginLoaded && m_bShowLastActiveModule && (m_iLastActiveModule == GetID))
+                if (!m_bPluginLoaded && m_bShowLastActiveModule && m_iLastActiveModule == GetID)
                 {
                     return false;
                 }

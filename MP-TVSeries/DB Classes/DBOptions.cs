@@ -169,6 +169,8 @@ namespace WindowPlugins.GUITVSeries
         public const string cActorLayout = "ActorLayout";
         public const string cAutoGenerateEpisodeTitles = "AutoGenerateEpisodeTitles";
         public const string cParentalControlResetInterval = "ParentalControlResetInterval";
+        public const string cParentalControlDisableAfter = "ParentalControlDisableAfter";
+        public const string cParentalControlDisableBefore = "ParentalControlDisableBefore";
         public const string cSQLLoggingEnabled = "SQLLoggingEnabled";
         public const string cCheckPlayOutOfOrder = "CheckPlayOutOfOrder";
         public const string cFilterUnwatched = "FilterUnwatched";
@@ -528,6 +530,12 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cAutoGenerateEpisodeTitles) == null)
                 SetOptions(cAutoGenerateEpisodeTitles, true);
+
+            if (GetOptions(cParentalControlDisableAfter) == null)
+                SetOptions(cParentalControlDisableAfter, new DateTime(2018, 02, 25, 21, 0, 0).ToShortTimeString());
+
+            if (GetOptions(cParentalControlDisableBefore) == null)
+                SetOptions(cParentalControlDisableBefore, new DateTime(2018, 02, 26, 3, 0, 0).ToShortTimeString());
 
             if (GetOptions(cParentalControlResetInterval) == null)
                 SetOptions(cParentalControlResetInterval, 60);

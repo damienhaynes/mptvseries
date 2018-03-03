@@ -341,6 +341,9 @@ namespace WindowPlugins.GUITVSeries
 
             checkBox_OverrideComboLang.Checked = DBOption.GetOptions(DBOption.cOverrideLanguage);
 
+            dtpParentalAfter.Text = DBOption.GetOptions(DBOption.cParentalControlDisableAfter);
+            dtpParentalBefore.Text = DBOption.GetOptions(DBOption.cParentalControlDisableBefore);
+
             tabControl_Details.SelectTab(1);
         }
 
@@ -4488,6 +4491,22 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cParentalControlPinCode, pinCodeDlg.Pin);
         }
 
+        private void dtpParentalAfter_ValueChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(dtpParentalAfter.Text))
+                return;
+
+            DBOption.SetOptions(DBOption.cParentalControlDisableAfter, dtpParentalAfter.Text);
+        }
+
+        private void dtpParentalBefore_ValueChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(dtpParentalBefore.Text))
+                return;
+
+            DBOption.SetOptions(DBOption.cParentalControlDisableBefore, dtpParentalBefore.Text);
+        }
+
         private void buttonViewTemplates_Click(object sender, EventArgs e) {
             ViewTemplates dialog = new ViewTemplates();
             DialogResult result = dialog.ShowDialog(this);
@@ -4721,8 +4740,9 @@ namespace WindowPlugins.GUITVSeries
             return CultureDisplayName;
         }
         #endregion
+
     }
-    
+
     public class BannerComboItem
     {
         public String sName = String.Empty;

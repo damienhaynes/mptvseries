@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAAVwBBQFcAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAAXQBBQF0AQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -657,15 +657,82 @@
   <metadata name="toolTip_Help.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>817, 8</value>
   </metadata>
-  <data name="addLogo.ToolTip" xml:space="preserve">
-    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
-what video and audio codecs the epsiode is encoded in etc...
+  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>16, 6</value>
+  </metadata>
+  <data name="label70.Text" xml:space="preserve">
+    <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
+Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
+successfully match up with episodes in the online database.
 
-A Logo package must be installed to display logos succesfully in Media Portal</value>
+If an expression can not evaluate these items, the next expression in the list is used.
+</value>
   </data>
-  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
-    <value>Enable this option to use the TV Series found online when only one exact match was found.
-In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAryAAAK8gE9UvcRAAABC0lE
+        QVRYR+3UMWoCURSFYSshIGQBgVSCVXYgZAEBl5EqkB0ILsPKHWQfgm02kSqtIEzOG7xyZvI/x+razIGP
+        wcNw7wMfM2ma5q6wzIRlJiwzYZkJS3dD3s/PamhuwNINZCPlpc/2VyU0N2DprmQl5YXiJK+CobkBS1fJ
+        Qn4lDlD8yLP8C80NWDrIo3yLLw8HeZBOaG7A0kG+xJf27aQTmhuwdL2sxZfVfMglNDdg6SxvUi6bL6o5
+        ylLa0NyApTtnLv1LN6RcyifBuQFLp8ykdumG7GVKcwOWDlL+Cl/S9yKd0NyApYOMBxgPMB5gPMDdD1AW
+        bK9ov/8emhuwzIRlJiwzYZkJy0xY5mkmfzsOY4DZydpyAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAryAAAK8gE9UvcRAAABCUlE
+        QVRYR+3VMWoCURjEcauAIOQAglXAKjcQPIDgMawEbyB4jFS5Qe4hpPUSqdIGAuu8xS/Mbv5PQ4rPZgd+
+        iKPMe8iCo6Zp7grLTFhmwjITlpmwDJBnebliKp3QrsMyQFZSPqgpF+yEdh2WATJcYLjAcIHhAukXmMip
+        7PzDUR5o12EZLnmST/HxWz6k/V+gXYdlsJSf/lv8kJovWUgb2nVYhl724gfVbOUntOuwDJA38cP6XqUT
+        2nVYBsij1B7KdxlLJ7TrsAyVzKX/UJaHbia/QrsOy3Ala4nDy8O5FAztOizDjRykfGnXvquEdh2W4Q/Z
+        XF6roV2HZSYsM2GZCctMWGbCMk8zOgOx+mOAlkSO8gAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="label69.Text" xml:space="preserve">
+    <value>String Replacements can be used to remove common string patterns that may confuse the plugins parsing engine. 
+It can also be helpful in replacing strange episode names that may not get automatically matched e.g:
+replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
+
+Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
+  </data>
+  <data name="label68.Text" xml:space="preserve">
+    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
+  </data>
+  <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAryAAAK8gE9UvcRAAABsElE
+        QVRIS7XVvStFcRzHcQ9JIo/JQDKZPKTkoUiJrEoWWQwyWGSyWCwWxWY1GCwk/wAKhWRgoiiGa7FIeYiu
+        9+c4v+Nc7u/ccw4+9Qq/c/t+3HN+55ysZDLpCJkudCPb+csSM9OZG7FgGs9YQK0W0iVqQR6aMIhV6MNy
+        gykUISVhC0owgUO8wAz+7gJ98BKmoBV78A9K5xVb6ISXTAUd0Nc3Q96xi1msuWtyAp22fKQkqKAGZzBD
+        TjEAk0ncYQaFWkgXW4Eu5pKOu3SKquFPM1o+f7XHVqDz+KDjuEcjYsVWMK9jLu3z2LEVbOuYq1cLcRNU
+        oLv0EvVaiBA9OhqgR0mbraAcVe7PXC1EiDbIETQoYSv4TSqQgAad/0fBCDREVv66oBgHMAVDcQt6MA7/
+        9dG5X4YZvoPSqAW68LovtMPWteBGu2YTZrhu0n54MzMVFGAMVzBDtFP0HNrAo7smT9C3cxKmQPfBPsyA
+        INcYhpcwBWXQf3oL/zDjDboh51CHlIQpMNHTdBF6+OlDxxiFHow/XpUmUQpM2qE3l97JOVoISpwCpRJ6
+        +WhrBuarIJn1ARzK2wSsxnLDAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="dbCheckBoxTraktCommunityRatings.ToolTip" xml:space="preserve">
+    <value>Ratings from trakt.tv are much better for tv shows and episodes than thetvdb.com.
+
+This option will only work if you have a trakt account and also have enabled MP-TVSeries plugin in the Trakt plugin.
+
+Note: if you want to sync your trakt user ratings to tvseries, you must do this from the Trakt plugin as it's a sync operation.</value>
+  </data>
+  <data name="checkBox_AutoUpdateEpisodeRatings.ToolTip" xml:space="preserve">
+    <value>Only update user series ratings when unchecked.  Saves up to 3 minutes per scan.
+
+This option is not needed when syncing user ratings from trakt.tv using the Trakt plugin. See the trakt plugin to enable this option.</value>
+  </data>
+  <data name="checkBox_ScanOnStartup.ToolTip" xml:space="preserve">
+    <value>When MP-TV Series loads on MediaPortal (re)start, enable/disable a
+local/online refresh of series.
+
+This is active when first starting MP or when resuming from standby. A manual scan
+can be started within plugin.</value>
   </data>
   <data name="txtUserID.ToolTip" xml:space="preserve">
     <value>Enter your TVDB Account Identifier here (Note: this is NOT your username).
@@ -676,143 +743,9 @@ ratings and favourites.
 Note: if you are using the trakt plugin to sync watched items to trakt.tv, it's recommended you just that service
 as it's better designed to handle syncing functionality.</value>
   </data>
-  <data name="checkBox_ScanOnStartup.ToolTip" xml:space="preserve">
-    <value>When MP-TV Series loads on MediaPortal (re)start, enable/disable a
-local/online refresh of series.
-
-This is active when first starting MP or when resuming from standby. A manual scan
-can be started within plugin.</value>
-  </data>
-  <data name="checkBox_AutoUpdateEpisodeRatings.ToolTip" xml:space="preserve">
-    <value>Only update user series ratings when unchecked.  Saves up to 3 minutes per scan.
-
-This option is not needed when syncing user ratings from trakt.tv using the Trakt plugin. See the trakt plugin to enable this option.</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="button_TestReparse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAAbBJREFUSEu11b0rRXEcx3EPSSKPyUAymTyk5KFIiaxKFlkMMlhkslgsFsVmNRgsJP8A
-        CoVkYKIohmuxSHmIrvfnOL/jXO7v3HMOPvUKv3P7ftxzfuecrGQy6QiZLnQj2/nLEjPTmRuxYBrPWECt
-        FtIlakEemjCIVejDcoMpFCElYQtKMIFDvMAM/u4CffASpqAVe/APSucVW+iEl0wFHdDXN0PesYtZrLlr
-        cgKdtnykJKigBmcwQ04xAJNJ3GEGhVpIF1uBLuaSjrt0iqrhTzNaPn+1x1ag8/ig47hHI2LFVjCvYy7t
-        89ixFWzrmKtXC3ETVKC79BL1WogQPToaoEdJm62gHFXuz1wtRIg2yBE0KGEr+E0qkIAGnf9HwQg0RFb+
-        uqAYBzAFQ3ELejAO//XRuV+GGb6D0qgFuvC6L7TD1rXgRrtmE2a4btJ+eDMzFRRgDFcwQ7RT9BzawKO7
-        Jk/Qt3MSpkD3wT7MgCDXGIaXMAVl0H96C/8w4w26IedQh5SEKTDR03QRevjpQ8cYhR6MP16VJlEKTNqh
-        N5feyTlaCEqcAqUSevloawbmqyCZ9QEcytsErMZywwAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 6</value>
-  </metadata>
-  <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database
-
-Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column three of the series view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.AirsDay&gt; e.g. Sunday</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Episode.Summary&gt; e.g. Everyone on Earth is excited about a comet passing by.....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1: The Return</value>
-  </data>
-  <data name="richTextBox_episodeFormat_Col3.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column three of the episode view.
-You can right click on this textbox to bring up a menu of available fields from the database
-
-Default: &lt;Episode.FirstAired&gt; e.g. 2004-07-11</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Title.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the title information pane of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Pretty_Name&gt; Season &lt;Season.SeasonIndex&gt; e.g. The 4400 Season 1</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Col2.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in column two of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: Season &lt;Season.SeasonIndex&gt; e.g. Season 1</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Subtitle.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the sub-title information pane of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
-  </data>
-  <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
-    <value>Enter in the field(s) to be displayed in the main information pane of the season view.
-You can right click on this textbox to bring up a menu of available fields from the database.
-
-Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
-
-Use can enter '\n' to create newlines between fields</value>
-  </data>
-  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
-    <value>Enable this option to display all episodes in Media Portal GUI including files without any file reference.
-Disable to only show episodes that have a local file reference.
-
-This setting can also be changed from within Media Portal</value>
-  </data>
-  <data name="checkBox_Episode_HideUnwatchedThumbnail.ToolTip" xml:space="preserve">
-    <value>Enable this option to disable the thumbnail for episodes that haven't been watched yet.
-This option is recommended if you want to prevent spoilers before watching an episodes.
-
-This setting can also be changed from within Media Portal in the plugins context menu.</value>
-  </data>
-  <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
-    <value>Enable this option to disable the overview for episodes that haven't been watched yet.
-This option is recommended if you want to prevent spoilers before watching an episodes.
-
-This setting can also be changed from within Media Portal in the plugins context menu.</value>
+  <data name="checkBox_AutoChooseSeries.ToolTip" xml:space="preserve">
+    <value>Enable this option to use the TV Series found online when only one exact match was found.
+In all other cases you will be presented with a choice from available matches and or the ability to search manually</value>
   </data>
   <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
     <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
@@ -838,58 +771,125 @@ that syncing to trakt.tv via Trakt plugin is enabled if syncing of watched episo
 
 If Trakt plugin is installed and TVSeries plugin is enabled for sync, it's recommended this option is disabled.</value>
   </data>
+  <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
+    <value>Enable this option to disable the overview for episodes that haven't been watched yet.
+This option is recommended if you want to prevent spoilers before watching an episodes.
+
+This setting can also be changed from within Media Portal in the plugins context menu.</value>
+  </data>
+  <data name="checkBox_Episode_HideUnwatchedThumbnail.ToolTip" xml:space="preserve">
+    <value>Enable this option to disable the thumbnail for episodes that haven't been watched yet.
+This option is recommended if you want to prevent spoilers before watching an episodes.
+
+This setting can also be changed from within Media Portal in the plugins context menu.</value>
+  </data>
+  <data name="checkBox_Episode_OnlyShowLocalFiles.ToolTip" xml:space="preserve">
+    <value>Enable this option to display all episodes in Media Portal GUI including files without any file reference.
+Disable to only show episodes that have a local file reference.
+
+This setting can also be changed from within Media Portal</value>
+  </data>
   <data name="optionAsk2Rate.ToolTip" xml:space="preserve">
     <value>Tick this to have the plugin automatically pop-up a rating's windows after you have watched an episodes which hasn't been rated yet.
 
 Note: if you are using the Trakt plugin, it's recommended you enable rate dialog after watched from there. This setting can be used to send
 ratings to both thetvdb.com and trakt or just thetvdb.com.</value>
   </data>
-  <data name="dbCheckBoxTraktCommunityRatings.ToolTip" xml:space="preserve">
-    <value>Ratings from trakt.tv are much better for tv shows and episodes than thetvdb.com.
+  <data name="addLogo.ToolTip" xml:space="preserve">
+    <value>Click to add a logo rule, rules can be defined to indicate what Network the episode was orginally aired in or
+what video and audio codecs the epsiode is encoded in etc...
 
-This option will only work if you have a trakt account and also have enabled MP-TVSeries plugin in the Trakt plugin.
+A Logo package must be installed to display logos succesfully in Media Portal</value>
+  </data>
+  <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
 
-Note: if you want to sync your trakt user ratings to tvseries, you must do this from the Trakt plugin as it's a sync operation.</value>
-  </data>
-  <data name="label70.Text" xml:space="preserve">
-    <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 
-Episode Number from a Folder Structure / Filename in your Import Paths. This information is required to 
-successfully match up with episodes in the online database.
+Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
 
-If an expression can not evaluate these items, the next expression in the list is used.
-</value>
+Use can enter '\n' to create newlines between fields</value>
   </data>
-  <data name="button_MoveExpUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAAQtJREFUWEft1DFqAlEUhWErISBkAYFUglV2IGQBAZeRKpAdCC7Dyh1kH4JtNpEqrSBM
-        zhu8cmbyP8fq2syBj8HDcO8DHzNpmuausMyEZSYsM2GZCUt3Q97Pz2pobsDSDWQj5aXP9lclNDdg6a5k
-        JeWF4iSvgqG5AUtXyUJ+JQ5Q/Miz/AvNDVg6yKN8iy8PB3mQTmhuwNJBvsSX9u2kE5obsHS9rMWX1XzI
-        JTQ3YOksb1Iumy+qOcpS2tDcgKU7Zy79SzekXMonwbkBS6fMpHbphuxlSnMDlg5S/gpf0vcindDcgKWD
-        jAcYDzAeYDzA3Q9QFmyvaL//HpobsMyEZSYsM2GZCctMWOZpJn87DmOA2cnacgAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="button_MoveExpDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK8gAA
-        CvIBPVL3EQAAAQlJREFUWEft1TFqAlEYxHGrgCDkAIJVwCo3EDyA4DGsBG8geIxUuUHuIaT1EqnSBgLr
-        vMUvzG7+T0OKz2YHfoijzHvIgqOmae4Ky0xYZsIyE5aZsAyQZ3m5Yiqd0K7DMkBWUj6oKRfshHYdlgEy
-        XGC4wHCB4QLpF5jIqez8w1EeaNdhGS55kk/x8Vs+pP1foF2HZbCUn/5b/JCaL1lIG9p1WIZe9uIH1Wzl
-        J7TrsAyQN/HD+l6lE9p1WAbIo9QeyncZSye067AMlcyl/1CWh24mv0K7DstwJWuJw8vDuRQM7Tosw40c
-        pHxp176rhHYdluEP2Vxeq6Fdh2UmLDNhmQnLTFhmwjJPMzoDsfpjgJZEjvIAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="label69.Text" xml:space="preserve">
-    <value>String Replacements can be used to remove common string patterns that may confuse the plugins parsing engine. 
-It can also be helpful in replacing strange episode names that may not get automatically matched e.g:
-replace 'ttscc' with 'Terminator the Sarah Connor Chronicles'
+  <data name="richTextBox_seasonFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
 
-Be sure to enable 'run before matching' for this to work before it reaches the parsing engine.</value>
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
   </data>
-  <data name="label68.Text" xml:space="preserve">
-    <value>Check the table below if the plugin was able to parse all of the episodes located in your Import Paths  defined above. Episodes not parsed correctly will be highlighted. If renaming your files does not help, you can modify the plugins parser behaviour from the left hand side tree view.</value>
+  <data name="richTextBox_seasonFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: Season &lt;Season.SeasonIndex&gt; e.g. Season 1</value>
+  </data>
+  <data name="richTextBox_seasonFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the season view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Pretty_Name&gt; Season &lt;Season.SeasonIndex&gt; e.g. The 4400 Season 1</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Col3.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column three of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database
+
+Default: &lt;Episode.FirstAired&gt; e.g. 2004-07-11</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1: The Return</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Episode.Summary&gt; e.g. Everyone on Earth is excited about a comet passing by.....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_episodeFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the episode view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Episode.SeasonIndex&gt;x&lt;Episode.EpisodeIndex&gt;: &lt;Episode.LocalEpisodeName&gt; e.g. 1x01: The Return</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Col3.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column three of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.AirsDay&gt; e.g. Sunday</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Main.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the main information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Defaults to: &lt;Series.Summary&gt; e.g. The 4400 tells the stories of 4,400 abductees....
+
+Use can enter '\n' to create newlines between fields</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Subtitle.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the sub-title information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Genre&gt; e.g. Science Fiction</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Col2.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in column two of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database
+
+Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
+  </data>
+  <data name="richTextBox_seriesFormat_Title.ToolTip" xml:space="preserve">
+    <value>Enter in the field(s) to be displayed in the title information pane of the series view.
+You can right click on this textbox to bring up a menu of available fields from the database.
+
+Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>39</value>
