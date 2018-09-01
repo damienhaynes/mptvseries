@@ -43,7 +43,8 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region privates
-        private static SQLiteClient m_db = null;        
+        private static SQLiteClient m_db = null;
+        static object dbLock = new object();
 
         private static bool m_bIndexOnlineEpisodes;
         private static bool m_bIndexLocalEpisodes;
@@ -226,7 +227,10 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 MPTVSeriesLog.Write(string.Format("Executing SQL query. Query = '{0}'", query), MPTVSeriesLog.LogLevel.DebugSQL);
-                result = m_db.Execute(query);
+                lock (dbLock)
+                {
+                    result = m_db.Execute(query);
+                }
                 MPTVSeriesLog.Write(string.Format("Successfully executed SQL query. Row Count = '{0}'", result.Rows.Count), MPTVSeriesLog.LogLevel.DebugSQL);
                 return result;
             }
