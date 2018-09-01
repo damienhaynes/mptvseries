@@ -701,28 +701,27 @@ namespace WindowPlugins.GUITVSeries
         int totalFanart;
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            try {
-                if (m_Facade != null) {
+            try
+            {
+                if (m_Facade != null)
+                {
                     GUIListItem loadedItem = e.UserState as GUIListItem;
-                    if (loadedItem != null) {                        
-                        m_Facade.Add(loadedItem);                   
-                        // we use this to tell the gui how many fanart we are loading
-                        TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, e.ProgressPercentage, totalFanart));
-                        TVSeriesPlugin.setGUIProperty("FanArt.Count", e.ProgressPercentage.ToString());
-                        if (m_Facade != null) this.m_Facade.Focus = true;
-                    }
-                    else if (e.ProgressPercentage > 0) {
-                        // we use this to tell the gui how many fanart we are loading
-                        TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, 0, e.ProgressPercentage));
-                        totalFanart = e.ProgressPercentage;
+                    if (loadedItem != null)
+                    {
+                        m_Facade.Add(loadedItem);
+                        if (m_Facade != null)
+                            this.m_Facade.Focus = true;
                     }
                 }
+
+                // report progress to GUI
+                TVSeriesPlugin.setGUIProperty("FanArt.LoadingPercentage", e.ProgressPercentage.ToString());
             }
-            catch (Exception ex) {
-                MPTVSeriesLog.Write("Error: Fanart Chooser worker_ProgressChanged() experienced an error: " + ex.Message);               
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Error: Fanart Chooser worker_ProgressChanged() experienced an error: " + ex.Message);
             }
         }
-
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -960,21 +959,23 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // Inform skin message how many fanarts are online
-                loadingWorker.ReportProgress(onlineFanart.Count < 100 ? onlineFanart.Count : 100);
+                totalFanart = onlineFanart.Count;
+                TVSeriesPlugin.setGUIProperty("FanArt.Count", totalFanart.ToString());
+                loadingWorker.ReportProgress(0);
                 
                 // let's get all the ones we have available locally (from online)
                 int i = 0;
-                foreach (DBFanart f in onlineFanart)
+                foreach (DBFanart fanart in onlineFanart)
                 {                    
-                    if(f.isAvailableLocally)
+                    if(fanart.isAvailableLocally)
                     {
-                        if (f.Disabled)
+                        if (fanart.Disabled)
                             item = new GUIListItem(Translation.FanartDisableLabel);
                         else
                             item = new GUIListItem(Translation.FanArtLocal);
                         item.IsRemote = false;
                         
-                        if (f.Chosen) 
+                        if (fanart.Chosen) 
                             item.IsRemote = true;
                         else 
                             item.IsDownloading = false;
@@ -985,23 +986,23 @@ namespace WindowPlugins.GUITVSeries
                         item.IsRemote = false;
                         item.IsDownloading = true;
                     }                    
-                    string filename = f[DBFanart.cThumbnailPath];
+                    string filename = fanart[DBFanart.cThumbnailPath];
                     string localFilename = string.Empty;
                     filename = filename.Replace("/", @"\");
 
                     // we depend on fanart names containing the series ID
                     // if it does not exist, prefix the existing one with it
-                    if (!filename.Contains(f[DBFanart.cSeriesID]))
+                    if (!filename.Contains(fanart[DBFanart.cSeriesID]))
                     {
                         try
                         {
                             // banner path looks like _cache\fanart\original\5b64ef95b86b2.jpg
                             string[] filePaths = filename.Split('\\');
-                            localFilename = filename.Replace(filePaths[3], $"{f[DBFanart.cSeriesID]}-{filePaths[3]}");
+                            localFilename = filename.Replace(filePaths[3], $"{fanart[DBFanart.cSeriesID]}-{filePaths[3]}");
 
                             // update path
-                            f[DBFanart.cThumbnailPath] = localFilename;
-                            f.Commit();
+                            fanart[DBFanart.cThumbnailPath] = localFilename;
+                            fanart.Commit();
                         }
                         catch
                         {
@@ -1034,13 +1035,15 @@ namespace WindowPlugins.GUITVSeries
                     {
                         item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(localFilename, new Size(0, 0), false);
                     }
-                    item.TVTag = f;
+                    item.TVTag = fanart;
                     
                     // Subscribe to Item Selected Event
                     item.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
-                    
-                    // This will need to be tweaked for more than 100 fanarts
-                    loadingWorker.ReportProgress((i < 100 ? ++i: 100), item);                    
+
+                    int progress = (int)((double)++i / totalFanart * 100);
+                    loadingWorker.ReportProgress(progress, item);
+
+                    TVSeriesPlugin.setGUIProperty("FanArt.LoadingStatus", string.Format(Translation.FanArtOnlineLoading, i, totalFanart));
 
                     if (loadingWorker.CancellationPending)
                         return;
