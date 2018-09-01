@@ -658,7 +658,7 @@ namespace WindowPlugins.GUITVSeries
             if (series == null) return;
 
             string sName = (DBOption.GetOptions(DBOption.cUseSortName) ? series[DBOnlineSeries.cSortName] : series[DBOnlineSeries.cPrettyName]);
-            TreeNode seriesNode = new TreeNode(sName);
+            TreeNode seriesNode = new TreeNode(System.Web.HttpUtility.HtmlDecode(sName));
             seriesNode.Name = DBSeries.cTableName;
             seriesNode.Tag = (DBSeries)series;
             this.treeView_Library.Nodes.Insert(index, seriesNode);
@@ -1676,7 +1676,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
+                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, System.Web.HttpUtility.HtmlDecode(episode[key]));
                                     break;
 
                             }
@@ -1936,7 +1936,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 default:
-                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
+                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, System.Web.HttpUtility.HtmlDecode(series[key]));
                                     break;
 
                             }
@@ -4208,26 +4208,7 @@ namespace WindowPlugins.GUITVSeries
         {
             System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/");
         }
-
-        /*private void chkOnlineFavourites_CheckedChanged(object sender, EventArgs e)
-        {
-            DBView view = new DBView(1);
-            if (!chkOnlineFavourites.Checked)
-            {
-                view[DBView.cViewConfig] = @"series<;><Series.isFavourite>;=;1<;><;>" +
-                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-            }
-            else
-            {
-                view[DBView.cViewConfig] = @"series<;><Series.isOnlineFavourite>;=;1<;><;>" +
-                                    "<nextStep>season<;><;><Season.seasonIndex>;asc<;>" +
-                                    "<nextStep>episode<;><;><Episode.EpisodeIndex>;asc<;>";
-            }
-            view.Commit();
-            DBOption.SetOptions(DBOption.cOnlineFavourites, chkOnlineFavourites.Checked);
-        }*/
-
+        
         private void chkAutoDownloadFanart_CheckedChanged(object sender, EventArgs e)
         {
             // Enable/Disable Fanart controls
@@ -4781,40 +4762,4 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
-    [Obsolete("Not Used Anymore", true)]
-    public class DetailsProperty
-    {
-        String m_Property = String.Empty;
-        String m_Value = String.Empty;
-
-        public DetailsProperty(String property, String value)
-        {
-            this.m_Property = property;
-            this.m_Value = value;
-        }
-
-        public String Property
-        {
-            get
-            {
-                return this.m_Property;
-            }
-            set
-            {
-                this.m_Property = value;
-            }
-        }
-
-        public String Value
-        {
-            get
-            {
-                return this.m_Value;
-            }
-            set
-            {
-                this.m_Value = value;
-            }
-        }
-    }
 }
