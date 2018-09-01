@@ -16,7 +16,7 @@ using MediaPortal.Common.Utils;
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -47,5 +47,5 @@ using MediaPortal.Common.Utils;
 // 4th Digit represents the SVN revision
 // AssemblyVersion is updated by Pre-Build step
 // Assume TortoiseSVN is in enviroment to run: subwcrev.exe
-[assembly: AssemblyVersion("4.3.1.0")]
-[assembly: AssemblyFileVersion("4.3.1.0")]
+[assembly: AssemblyVersion("4.3.2.0")]
+[assembly: AssemblyFileVersion("4.3.2.0")]

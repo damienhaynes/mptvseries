@@ -131,25 +131,50 @@ namespace WindowPlugins.GUITVSeries
             setDownloadStatus();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         static void downloadingWorker_DoWork(object sender, DoWorkEventArgs e)
         {            
             do
             {
-                DBFanart f;
+                DBFanart fanart;
                 setDownloadStatus();
                 lock (toDownload)
                 { 
-                    f = toDownload.Dequeue();                     
+                    fanart = toDownload.Dequeue();                     
                 }
 
                 bool bDownloadSuccess = true;
                 // ZF: async download of the fanart. Cancelling now works
-                if (f != null && !f.isAvailableLocally)
+                if (fanart != null && !fanart.isAvailableLocally)
                 {
-                    string filename = f[DBFanart.cBannerPath];
+                    string filename = fanart[DBFanart.cBannerPath];
+                    string localFilename = string.Empty;
                     filename = filename.Replace("/", @"\");
+
+                    // we depend on fanart names containing the series ID
+                    // if it does not exist, prefix the existing one with it
+                    if (!filename.Contains(fanart[DBFanart.cSeriesID]))
+                    {
+                        try
+                        {
+                            // banner path looks like fanart\original\5b64ef95b86b2.jpg
+                            string[] filePaths = filename.Split('\\');
+                            localFilename = filename.Replace(filePaths[2], $"{fanart[DBFanart.cSeriesID]}-{filePaths[2]}");
+                        }
+                        catch
+                        {
+                            MPTVSeriesLog.Write("Error normalising fanart path");
+                        }
+                    }
+                    else
+                        localFilename = filename;
+
                     string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + filename;
-                    int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, filename);
+                    int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, localFilename);
                     while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID))
                     {
                         if (downloadingWorker.CancellationPending) 
@@ -157,20 +182,20 @@ namespace WindowPlugins.GUITVSeries
                             // Cancel, clean up pending download
                             bDownloadSuccess = false;
                             Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                            MPTVSeriesLog.Write("cancel Fanart download: " + f.FullLocalPath);
+                            MPTVSeriesLog.Write("Cancel Fanart download: " + fanart.FullLocalPath);
                         }
                         System.Windows.Forms.Application.DoEvents();
                     }
                     // Download is either completed or canceled
                     if (bDownloadSuccess) 
                     {
-                        f[DBFanart.cLocalPath] = filename.Replace(Settings.GetPath(Settings.Path.fanart), string.Empty);
-                        f.Commit();
-                        MPTVSeriesLog.Write("Successfully downloaded Fanart: " + f.FullLocalPath);
-                        downloadingWorker.ReportProgress(0, f[DBFanart.cIndex]);                      
+                        fanart[DBFanart.cLocalPath] = localFilename.Replace(Settings.GetPath(Settings.Path.fanart), string.Empty);
+                        fanart.Commit();
+                        MPTVSeriesLog.Write("Successfully downloaded Fanart: " + fanart.FullLocalPath);
+                        downloadingWorker.ReportProgress(0, fanart[DBFanart.cIndex]);                      
                     }
                     else 
-                        MPTVSeriesLog.Write("Error downloading Fanart: " + f.FullLocalPath);
+                        MPTVSeriesLog.Write("Error downloading Fanart: " + fanart.FullLocalPath);
                 }
             } 
             while (toDownload.Count > 0 && !downloadingWorker.CancellationPending);
@@ -961,11 +986,36 @@ namespace WindowPlugins.GUITVSeries
                         item.IsDownloading = true;
                     }                    
                     string filename = f[DBFanart.cThumbnailPath];
+                    string localFilename = string.Empty;
                     filename = filename.Replace("/", @"\");
+
+                    // we depend on fanart names containing the series ID
+                    // if it does not exist, prefix the existing one with it
+                    if (!filename.Contains(f[DBFanart.cSeriesID]))
+                    {
+                        try
+                        {
+                            // banner path looks like _cache\fanart\original\5b64ef95b86b2.jpg
+                            string[] filePaths = filename.Split('\\');
+                            localFilename = filename.Replace(filePaths[3], $"{f[DBFanart.cSeriesID]}-{filePaths[3]}");
+
+                            // update path
+                            f[DBFanart.cThumbnailPath] = localFilename;
+                            f.Commit();
+                        }
+                        catch
+                        {
+                            MPTVSeriesLog.Write("Error normalising fanart thumbnail path");
+                        }
+                    }
+                    else
+                        localFilename = filename;
+
+
                     string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + filename;
 
                     bool bDownloadSuccess = true;
-                    int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, filename);
+                    int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, localFilename);
                     while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID))
                     {
                         if (loadingWorker.CancellationPending)
@@ -973,16 +1023,16 @@ namespace WindowPlugins.GUITVSeries
                             // ZF: Cancel, clean up pending download
                             bDownloadSuccess = false;
                             Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                            MPTVSeriesLog.Write("Cancelling fanart thumbnail download: " + filename);
+                            MPTVSeriesLog.Write("Cancelling fanart thumbnail download: " + localFilename);
                         }
                         System.Windows.Forms.Application.DoEvents();
                     }
 
                     // ZF: should be downloaded now
-                    filename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), filename);
+                    localFilename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename);
                     if (bDownloadSuccess)
                     {
-                        item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(filename, new System.Drawing.Size(0, 0), false);
+                        item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(localFilename, new Size(0, 0), false);
                     }
                     item.TVTag = f;
                     

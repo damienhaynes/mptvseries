@@ -1803,7 +1803,18 @@ namespace WindowPlugins.GUITVSeries
 
                         string onlineFilename = download[DBFanart.cBannerPath];
                         string localFilename = onlineFilename.Replace("/", @"\");
-                        
+
+                        // we depend on fanart names containing the series ID
+                        // if it does not exist, prefix the existing one with it
+                        if (!localFilename.Contains(series[DBSeries.cID]))
+                        {
+                            string path = Path.GetDirectoryName(localFilename);
+                            string file = Path.GetFileName(localFilename);
+                            
+                            string newfile = $"{series[DBSeries.cID]}-{file}";
+                            localFilename = Path.Combine(path, newfile);
+                        }
+
                         string result = Online_Parsing_Classes.OnlineAPI.DownloadBanner(onlineFilename, Settings.Path.fanart, localFilename);
 
                         if (result != null)
@@ -3257,32 +3268,5 @@ namespace WindowPlugins.GUITVSeries
             return b.ToString();
         }
         #endregion
-    }
-
-    class testing
-    {
-        static List<string> generateIDListOfString<T>(List<T> entities, string fieldname) where T : DBTable
-        {
-            // generate a comma separated list of all the ids
-            List<String> sSeriesIDs = new List<String>(entities.Count);
-            if (entities.Count > 0)
-                foreach (DBTable entity in entities)
-                    sSeriesIDs.Add(entity[fieldname].ToString());
-            return sSeriesIDs;
-        }
-
-        static string prettyStars(int length)
-        {
-            StringBuilder b = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
-                b.Append('*');
-            return b.ToString();
-        }
-
-        static string bigLogMessage(string msg)
-        {
-            return string.Format("***************     {0}     ***************", msg);
-        }
-
     }
 }
