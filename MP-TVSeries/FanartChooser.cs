@@ -710,7 +710,14 @@ namespace WindowPlugins.GUITVSeries
                     {
                         m_Facade.Add(loadedItem);
                         if (m_Facade != null)
+                        {
                             this.m_Facade.Focus = true;
+
+                            if (loadedItem.Selected)
+                            {
+                                onFacadeItemSelected(loadedItem, m_Facade);
+                            }
+                        }
                     }
                 }
 
@@ -1037,6 +1044,11 @@ namespace WindowPlugins.GUITVSeries
                     }
                     item.TVTag = fanart;
                     
+                    if (i == 0)
+                    {
+                        item.Selected = true;
+                    }
+
                     // Subscribe to Item Selected Event
                     item.OnItemSelected += new GUIListItem.ItemSelectedHandler(onFacadeItemSelected);
 
