@@ -213,7 +213,7 @@ namespace WindowPlugins.GUITVSeries
                 // because the replacement itself might be dynamic again, we resolve the result again
                 if(replacementOccured) value = resolveDynString(value, item, splitFields, applyUserFormatting);
             }
-            return value;
+            return System.Web.HttpUtility.HtmlDecode(value);
         }
         #endregion
 
