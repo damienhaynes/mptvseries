@@ -97,6 +97,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cPoster = "poster";
         public const String cTMSWantedOld = "tms_wanted_old"; //wtf is this?
         public const String cAliasNames = "AliasNames";
+        public const String cLastEpisodeAirDate = "finale_aired";
+        public const String cSlug = "slug";
 
         public const String cHasNewEpisodes = "HasNewEpisodes";
 
@@ -130,7 +132,8 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
             s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
             s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
-            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");            
+            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
+            s_FieldToDisplayNameMap.Add(cLastEpisodeAirDate, "Last Episode Air Date");
             #endregion
             ///////////////////////////////////////////////////
 

@@ -73,6 +73,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cThumbAdded = "thumb_added";
         public const String cThumbHeight = "thumb_height";
         public const String cThumbWidth = "thumb_width";
+        public const String cIsMovie = "is_movie";
         #endregion
 
         public static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();

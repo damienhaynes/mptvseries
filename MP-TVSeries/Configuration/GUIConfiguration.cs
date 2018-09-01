@@ -1631,6 +1631,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cThumbAdded:
                                 case DBOnlineEpisode.cThumbHeight:
                                 case DBOnlineEpisode.cThumbWidth:
+                                case DBOnlineEpisode.cIsMovie:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -1898,7 +1899,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cTMSWantedOld:
                                 case DBOnlineSeries.cAliasNames:
                                 case DBOnlineSeries.cTraktID:
-                                     // hide these fields as we are not so interested in, 
+                                case DBOnlineSeries.cSlug:
+                                     // hide these fields as we are not so interested in,   
                                      // possibly add a toggle option to display all fields later
                                      break;
 
@@ -2117,7 +2119,7 @@ namespace WindowPlugins.GUITVSeries
                         FieldValue = GetAudioLanguageDisplayName(FieldValue);
 
                     // First Column (Name)
-                    cFieldName.Value = FieldName;
+                    cFieldName.Value = FieldPrettyName;
                     cFieldName.Style.BackColor = System.Drawing.SystemColors.Control;
                     dataGridDetailRow.Cells.Add(cFieldName);
                     cFieldName.ReadOnly = true;
