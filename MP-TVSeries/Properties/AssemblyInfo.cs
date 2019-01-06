@@ -1,7 +1,6 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using MediaPortal.Common.Utils;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using MediaPortal.Common.Utils;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -9,14 +8,14 @@ using MediaPortal.Common.Utils;
 [assembly: AssemblyTitle("MP-TVSeries")]
 [assembly: AssemblyDescription("MP-TVSeries plugin for MediaPortal")]
 #if DEBUG
-    [assembly: AssemblyConfiguration("Debug")]
+[assembly: AssemblyConfiguration("Debug")]
 #else
     [assembly: AssemblyConfiguration("Release")]
 #endif
 
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MP-TVSeries")]
-[assembly: AssemblyCopyright("Copyright © 2018")]
+[assembly: AssemblyCopyright("Copyright © 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -47,5 +46,5 @@ using MediaPortal.Common.Utils;
 // 4th Digit represents the SVN revision
 // AssemblyVersion is updated by Pre-Build step
 // Assume TortoiseSVN is in enviroment to run: subwcrev.exe
-[assembly: AssemblyVersion("4.3.2.0")]
-[assembly: AssemblyFileVersion("4.3.2.0")]
+[assembly: AssemblyVersion("4.3.3.0")]
+[assembly: AssemblyFileVersion("4.3.3.0")]

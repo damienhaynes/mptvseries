@@ -21,24 +21,20 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using MediaPortal.Configuration;
+using MediaPortal.Dialogs;
+using MediaPortal.GUI.Library;
+using MediaPortal.GUI.Video;
+using MediaPortal.Player;
+using MediaPortal.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
-using MediaPortal.Configuration;
-using MediaPortal.GUI.Library;
-using MediaPortal.GUI.Video;
-using MediaPortal.Player;
-using MediaPortal.Dialogs;
-using MediaPortal.Util;
-using MediaPortal.Playlists;
-using MediaPortal.Video.Database;
-using WindowPlugins.GUITVSeries;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -99,6 +95,7 @@ namespace WindowPlugins.GUITVSeries
             g_Player.PlayBackEnded += new MediaPortal.Player.g_Player.EndedHandler(OnPlayBackEnded);
             g_Player.PlayBackStarted += new MediaPortal.Player.g_Player.StartedHandler(OnPlayBackStarted);
             g_Player.PlayBackChanged += new g_Player.ChangedHandler(OnPlaybackChanged);
+            GUIVideoOverlay.SetGuiPropertiesUpdate += new GUIVideoOverlay.SetGuiProperties(SetGuiPropertiesUpdate);
             PlayPropertyUpdater.WorkerSupportsCancellation = true;
             PlayPropertyUpdater.DoWork += new DoWorkEventHandler(SetPlayProperties_DoWork);
         }
@@ -304,6 +301,14 @@ namespace WindowPlugins.GUITVSeries
             SetGUIProperties((bool)e.Argument);
         }
 
+        private void SetGuiPropertiesUpdate(g_Player.MediaType type, string filename)
+        {
+          if (PlayBackOpIsOfConcern(type, filename))
+          {
+            SetGUIProperties(false);
+          }
+        }
+
         /// <summary>
         /// Sets the following Properties:
         /// "#Play.Current.Title"
@@ -444,7 +449,7 @@ namespace WindowPlugins.GUITVSeries
                 // If the file is an image file, it should be mounted before playing
                 string filename = m_currentEpisode[DBEpisode.cFilename];
                 if (m_bIsImageFile) { 
-                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename, false)) {                        
+                    if (!GUIVideoFiles.MountImageFile(GUIWindowManager.ActiveWindow, filename, false)) {
                         return false;
                     }
                 }
@@ -587,8 +592,6 @@ namespace WindowPlugins.GUITVSeries
             if (PlayBackOpIsOfConcern(type, filename))
             {
                 LogPlayBackOp("started", filename);
-                // really stupid, you have to wait until the player itself sets the properties (a few seconds) and after that set them
-                PlayPropertyUpdater.RunWorkerAsync(false);
             }
         }
         #endregion
@@ -705,7 +708,7 @@ namespace WindowPlugins.GUITVSeries
         void LogPlayBackOp(string OperationType, string filename)
         {
             MPTVSeriesLog.Write(string.Format("Playback {0} for: {1}", OperationType, filename), MPTVSeriesLog.LogLevel.Normal);
-        }        
+        }
 
         #endregion
     }
