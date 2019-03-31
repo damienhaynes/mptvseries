@@ -299,6 +299,27 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
             }
         }
 
+        public string VideoColourPrimaries
+        {
+          get
+          {
+            string result = this.Get(StreamKind.Video, 0, "colour_primaries");
+            MPTVSeriesLog.Write("Video Colour Primaries: ", result, MPTVSeriesLog.LogLevel.Debug);
+
+            return result.Length > 0 ? result : "-1";
+          }
+        }
+
+        public string VideoFormatCommercial
+        {
+          get
+          {
+            string result = this.Get(StreamKind.Video, 0, "Format_Commercial_IfAny");
+            MPTVSeriesLog.Write("Video Format Commercial: ", result, MPTVSeriesLog.LogLevel.Debug);
+
+            return result.Length > 0 ? result : "-1";
+          }
+        }
         #endregion
 
         #region Audio Properties

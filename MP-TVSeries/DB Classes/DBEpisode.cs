@@ -99,7 +99,9 @@ namespace WindowPlugins.GUITVSeries
         public const String cVideoCodec = "VideoCodec";                
         public const String cVideoFormat = "VideoFormat";
         public const String cVideoFormatProfile = "VideoFormatProfile";
-        
+        public const String cVideoColourPrimaries = "VideoColourPrimaries";
+        public const String cVideoFormatCommercial = "VideoFormatCommercial";
+
         public const String cStopTime = "StopTime";
         public const String cDateWatched = "DateWatched";
 
@@ -162,6 +164,8 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cVideoFormat, "Video Format");
             s_FieldToDisplayNameMap.Add(cVideoFormatProfile, "Video Format Profile");
             s_FieldToDisplayNameMap.Add(cVideoFrameRate, "Video Frame Rate");
+            s_FieldToDisplayNameMap.Add(cVideoColourPrimaries, "Video Colour Primaries");
+            s_FieldToDisplayNameMap.Add(cVideoFormatCommercial, "Video Commercial Name");
             s_FieldToDisplayNameMap.Add(cAudioBitrate, "Audio Bit Rate");
             s_FieldToDisplayNameMap.Add(cVolumeLabel, "Volume Label");
             s_FieldToDisplayNameMap.Add(cAudioChannels, "Audio Channels");
@@ -633,7 +637,9 @@ namespace WindowPlugins.GUITVSeries
                         this[cVideoWidth] = MI.VideoWidth;
                         this[cVideoHeight] = MI.VideoHeight;
                         this[cVideoAspectRatio] = MI.VideoAspectRatio;
-
+                        this[cVideoColourPrimaries] = MI.VideoColourPrimaries;
+                        this[cVideoFormatCommercial] = MI.VideoFormatCommercial;
+                        
                         this[cAudioCodec] = MI.AudioCodec;                        
                         this[cAudioFormat] = MI.AudioCodecFormat;
                         this[cAudioFormatProfile] = MI.AudioFormatProfile;
