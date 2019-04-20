@@ -285,7 +285,7 @@ namespace WindowPlugins.GUITVSeries.MediaInfoLib
 
         public string VideoPlaytime {
             get {
-                string result = this.Get(StreamKind.Video, 0, "Duration");
+                string result = this.Get(StreamKind.General, 0, "Duration");
                 MPTVSeriesLog.Write("Video Duration: ", result, MPTVSeriesLog.LogLevel.Debug);
                 return result.Length > 0 ? result : "-1";
             }

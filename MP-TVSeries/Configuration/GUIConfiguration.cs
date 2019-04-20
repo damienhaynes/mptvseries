@@ -1657,6 +1657,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cVideoFormatProfile:
                                 case DBEpisode.cVideoBitRate:
                                 case DBEpisode.cVideoAspectRatio:
+                                case DBEpisode.cVideoColourPrimaries:
+                                case DBEpisode.cVideoFormatCommercial:
                                 case DBEpisode.cAudioTracks:
                                 case DBEpisode.cAudioLanguage:
                                 case DBEpisode.cAudioCodec:
@@ -1682,7 +1684,7 @@ namespace WindowPlugins.GUITVSeries
 
                             }
                         }
-                        // let configs now what was selected (for samples)
+                        // let configs know what was selected (for samples)
                         if (!SkinSettings.ImportFormatting) {
                             this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
                             this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
