@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using SQLite.NET;
+using TvDatabase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -902,10 +903,23 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // support for duplicate episodes - this will only happen from series/season deletes
                                 var files = episodes.Select(e => e[DBEpisode.cFilename].ToString()).Distinct();
+                                // for use of in MPtvDB
+                                TvBusinessLayer layer = new TvBusinessLayer();
                                 foreach (var f in files)
                                 {
                                     MPTVSeriesLog.Write(string.Format("Deleting file: {0}", f));
                                     File.Delete(f);
+                                    // Also delete recording in MPtvDB
+                                    try
+                                    {
+                                        layer.GetRecordingByFileName(f).Delete();
+                                        MPTVSeriesLog.Write(string.Format("Also Deleting line in MP table recording"));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // this should succeed only when there is a record in MP database..
+                                        MPTVSeriesLog.Write(string.Format("Seems no recording line to delete in MPtvDB : {0}", ex.Message));
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -1618,8 +1632,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
                 }
-                // sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
-		sqlWhat = Regex.Replace(sqlWhat, ordercol + "\b", ordercol + " as " + ordercol.Replace(".", "")) + " ";
+                sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
                 orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
