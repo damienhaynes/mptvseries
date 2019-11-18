@@ -254,6 +254,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public string DownloadBanner(string onlineFilename, Settings.Path localPath, string localFilename)
     {
         WebClient webClient = new WebClient();
+        // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+        ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xc00;
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
         string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + onlineFilename;
         webClient.Headers.Add("user-agent", Settings.UserAgent);
@@ -280,6 +282,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public int StartFileDownload(string fullURL, Settings.Path localPath, string localFilename)
     {
       WebClient webClient = new WebClient();
+      // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+      ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xc00;
       int nDownloadGUID = nDownloadGUIDGenerator;
       nDownloadGUIDGenerator++;
 
@@ -469,6 +473,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       HttpWebResponse response = null;
       try
       {
+        // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+        ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xc00;
+
         request = (HttpWebRequest)WebRequest.Create(sUrl);
         // Note: some network proxies require the useragent string to be set or they will deny the http request
         // this is true for instance for EVERY thailand internet connection (also needs to be set for banners/episodethumbs and any other http request we send)
