@@ -901,24 +901,19 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
+                                // We need to know if tvplugin is used
+                                bool MPUseTVServer = MediaPortal.Util.Utils.UsingTvServer;
                                 // support for duplicate episodes - this will only happen from series/season deletes
                                 var files = episodes.Select(e => e[DBEpisode.cFilename].ToString()).Distinct();
-                                // for use of in MPtvDB
-                                TvBusinessLayer layer = new TvBusinessLayer();
                                 foreach (var f in files)
                                 {
                                     MPTVSeriesLog.Write(string.Format("Deleting file: {0}", f));
                                     File.Delete(f);
-                                    // Also delete recording in MPtvDB
-                                    try
+                                    // May be a possibility to make changes in MpTvDb
+                                    if (MPUseTVServer)
                                     {
-                                        layer.GetRecordingByFileName(f).Delete();
-                                        MPTVSeriesLog.Write(string.Format("Also Deleting line in MP table recording"));
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        // this should succeed only when there is a record in MP database..
-                                        MPTVSeriesLog.Write(string.Format("Seems no recording line to delete in MPtvDB : {0}", ex.Message));
+                                        // Also try to delete recording in MPtvDB
+                                        DeleteFromMPTVDB(f);
                                     }
                                 }
                             }
@@ -1055,7 +1050,22 @@ namespace WindowPlugins.GUITVSeries
             return resultMsg;
         }
 
-        public List<string> deleteLocalSubTitles()
+    private static void DeleteFromMPTVDB(string f)
+    {
+      TvBusinessLayer layer = new TvBusinessLayer();
+      try
+      {
+        layer.GetRecordingByFileName(f).Delete();
+        MPTVSeriesLog.Write(string.Format("Also Deleting line in MP table recording"));
+      }
+      catch (Exception ex)
+      {
+        // this should succeed only when there is a record in MP database..
+        MPTVSeriesLog.Write(string.Format("Seems no recording line to delete in MPtvDB"));
+      }
+    }
+
+    public List<string> deleteLocalSubTitles()
         {
             List<string> resultMsg = new List<string>(); 
 
