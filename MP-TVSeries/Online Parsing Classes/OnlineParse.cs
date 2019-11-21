@@ -918,15 +918,15 @@ namespace WindowPlugins.GUITVSeries
             long curTimeStamp = DateTime.UtcNow.ToEpoch();
             long sinceLastUpdate = curTimeStamp - lastUpdateTimeStamp;
 
-            Online_Parsing_Classes.OnlineAPI.UpdateType uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.all;
+            Online_Parsing_Classes.OnlineAPI.UpdateType uType = Online_Parsing_Classes.OnlineAPI.UpdateType.all;
             if (sinceLastUpdate < 3600 * 24)
-                uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.day;
+                uType = Online_Parsing_Classes.OnlineAPI.UpdateType.day;
             else if (sinceLastUpdate < 3600 * 24 * 7)
-                uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.week;
+                uType = Online_Parsing_Classes.OnlineAPI.UpdateType.week;
             else if (sinceLastUpdate < 3600 * 24 * 30)
-                uType = WindowPlugins.GUITVSeries.Online_Parsing_Classes.OnlineAPI.UpdateType.month;
+                uType = Online_Parsing_Classes.OnlineAPI.UpdateType.month;
 
-            Online_Parsing_Classes.GetUpdates GU = new WindowPlugins.GUITVSeries.Online_Parsing_Classes.GetUpdates(uType);
+            Online_Parsing_Classes.GetUpdates GU = new Online_Parsing_Classes.GetUpdates(uType);
             
             MPTVSeriesLog.Write("Series with Updates: {0}", GU.UpdatedSeries.Count);
             MPTVSeriesLog.Write("Episodes with Updates: {0}", GU.UpdatedEpisodes.Count);

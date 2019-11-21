@@ -221,7 +221,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
     static public XmlNode Updates(UpdateType type)
     {            
-            string typeName = Enum.GetName(typeof(UpdateType), type);
+      string typeName = Enum.GetName(typeof(UpdateType), type);
       return Generic(string.Format(apiURIs.Updates, typeName), true, true, Format.Zip, "updates_" + typeName, -1);
     }
 
@@ -399,30 +399,30 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       {
         if (format == Format.Zip)
         {
-                    if (!String.IsNullOrEmpty(entryNameToGetIfZip) && seriesIDIfZip != 0)
+          if (!String.IsNullOrEmpty(entryNameToGetIfZip) && seriesIDIfZip != 0)
           {
             Dictionary<string, XmlDocument> x = DecompressZipToXmls(data);
             entryNameToGetIfZip += ".xml";
             XmlNode root = null;
-                        // save all xmls in zip to cache
-                        foreach (var key in x.Keys)
+            // save all xmls in zip to cache
+            foreach (var key in x.Keys)
             {
                 string filename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}\{1}", seriesIDIfZip, key));
-                Helper.SaveXmlCache(filename, x[key].FirstChild.NextSibling);
+                Helper.SaveXmlCache(filename, x[key].FirstChild.NextSibling ?? x[key].FirstChild );
             }
-                        // get what we are looking for            
-                        if (x.ContainsKey(entryNameToGetIfZip))
+            // get what we are looking for            
+            if (x.ContainsKey(entryNameToGetIfZip))
             {
                 root = x[entryNameToGetIfZip].FirstChild.NextSibling;
                 return root;
             }
             else MPTVSeriesLog.Write("Decompression returned null or not the requested entry");
           }
-                }
+        }
         else
         {
                     
-                    StreamReader reader = new StreamReader(data);
+            StreamReader reader = new StreamReader(data);
             String sXmlData = string.Empty;
             try
             {
@@ -465,25 +465,58 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         // this happens if no active mirror is set
         return null;
       }
+
+      string newUrl = null;
       HttpWebRequest request = null;
       HttpWebResponse response = null;
+
       try
       {
+        // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+        ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
+
         request = (HttpWebRequest)WebRequest.Create(sUrl);
         // Note: some network proxies require the useragent string to be set or they will deny the http request
         // this is true for instance for EVERY thailand internet connection (also needs to be set for banners/episodethumbs and any other http request we send)
         request.UserAgent = Settings.UserAgent;
-        request.Timeout = 60000;    
+        request.Timeout = 60000;
+
+        // turn off auto-redirection on the initial request. 
+        // then we can pull out the header and do the redirection manually by making a new request.
+        request.AllowAutoRedirect = false;
         response = (HttpWebResponse)request.GetResponse();
 
+        MPTVSeriesLog.Write( $"Status Code={ response.StatusCode }, Headers={ response.Headers.ToString().Trim() }", MPTVSeriesLog.LogLevel.Debug );
+
+        // check for redirect
+        switch ( response.StatusCode )
+        {
+          case HttpStatusCode.Redirect:
+          case HttpStatusCode.MovedPermanently:
+          case HttpStatusCode.RedirectKeepVerb:
+          case HttpStatusCode.RedirectMethod:
+            newUrl = response.Headers["Location"];
+            if ( newUrl == null )
+              return null;
+
+            if ( newUrl.IndexOf( "://", System.StringComparison.Ordinal ) == -1 )
+            {
+              // doesn't have a URL Schema, meaning it's a relative or absolute URL
+              var u = new Uri( new Uri( sUrl ), newUrl );
+              newUrl = u.ToString();
+            }
+
+            // now re-request using new url
+            return RetrieveData( newUrl );
+        }
+       
         if (response != null) // Get the stream associated with the response.
           return response.GetResponseStream();
-
       }
       catch (Exception e)
       {
         // can't connect, timeout, etc
-        MPTVSeriesLog.Write("Can't connect to " + sUrl + " : " + e.Message);
+        MPTVSeriesLog.Write("Can't connect to " + newUrl ?? sUrl + " : " + e.Message);
       }
       finally
       {

@@ -335,6 +335,8 @@ namespace WindowPlugins.GUITVSeries
 
         public static void SaveXmlCache(string filename, XmlNode node)
         {
+            filename = filename.Replace( ".zip", string.Empty );
+
             // create cached document
             try
             {
