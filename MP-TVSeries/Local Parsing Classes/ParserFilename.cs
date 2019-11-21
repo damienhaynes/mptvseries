@@ -179,6 +179,7 @@ namespace WindowPlugins.GUITVSeries
 
         string RunReplacements(Dictionary<Regex, string> replacements, string runAgainst)
         {
+            string _beforeReplacement = runAgainst;
             foreach (var replacement in replacements)
             {
               if (replacement.Key.IsMatch(runAgainst)
@@ -191,6 +192,7 @@ namespace WindowPlugins.GUITVSeries
                          ? replacement.Key.Replace(runAgainst, m => " " + Parse1To19RomanNumberOrKeep(m.Value) + " ") 
                          : replacement.Key.Replace(runAgainst, replacement.Value);
             }
+          MPTVSeriesLog.Write("Replacement: " + _beforeReplacement + " -> "  + runAgainst, MPTVSeriesLog.LogLevel.Debug);
           return runAgainst;
         }
 
@@ -223,7 +225,7 @@ namespace WindowPlugins.GUITVSeries
 
                             if (GroupValue.Length > 0 && GroupName != "unknown")
                             {
-                                // ´run after replacements on captures
+                                // Â´run after replacements on captures
                                 GroupValue = RunReplacements(replacementRegexAfter, GroupValue);
 
                                 GroupValue = GroupValue.Trim();

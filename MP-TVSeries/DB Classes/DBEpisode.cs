@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using SQLite.NET;
+using TvDatabase;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -900,12 +901,20 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
+                                // We need to know if tvplugin is used
+                                bool MPUseTVServer = MediaPortal.Util.Utils.UsingTvServer;
                                 // support for duplicate episodes - this will only happen from series/season deletes
                                 var files = episodes.Select(e => e[DBEpisode.cFilename].ToString()).Distinct();
                                 foreach (var f in files)
                                 {
                                     MPTVSeriesLog.Write(string.Format("Deleting file: {0}", f));
                                     File.Delete(f);
+                                    // May be a possibility to make changes in MpTvDb
+                                    if (MPUseTVServer)
+                                    {
+                                        // Also try to delete recording in MPtvDB
+                                        DeleteFromMPTVDB(f);
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -1041,7 +1050,22 @@ namespace WindowPlugins.GUITVSeries
             return resultMsg;
         }
 
-        public List<string> deleteLocalSubTitles()
+    private static void DeleteFromMPTVDB(string f)
+    {
+      TvBusinessLayer layer = new TvBusinessLayer();
+      try
+      {
+        layer.GetRecordingByFileName(f).Delete();
+        MPTVSeriesLog.Write(string.Format("Also Deleting line in MP table recording"));
+      }
+      catch (Exception ex)
+      {
+        // this should succeed only when there is a record in MP database..
+        MPTVSeriesLog.Write(string.Format("Seems no recording line to delete in MPtvDB"));
+      }
+    }
+
+    public List<string> deleteLocalSubTitles()
         {
             List<string> resultMsg = new List<string>(); 
 
@@ -1619,6 +1643,7 @@ namespace WindowPlugins.GUITVSeries
                     ordecolsplit = ordecolsplit.Split(new char[] { '.' })[1];
                 }
                 sqlWhat = sqlWhat.Replace(ordercol, ordercol + " as " + ordercol.Replace(".", "") + " ");
+                //sqlWhat = Regex.Replace(sqlWhat, ordercol + "\b", ordercol + " as " + ordercol.Replace(".", "")) + " ";
                 orderBy = " order by " + ordercol.Replace(".", "") + (orderBy.Contains(" desc ") ? " desc " : " asc ");
             }
 
