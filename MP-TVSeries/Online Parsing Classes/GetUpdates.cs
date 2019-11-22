@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Linq;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
@@ -36,9 +37,46 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 MPTVSeriesLog.Write("Downloading all updates");
 
             XmlNode updates = OnlineAPI.Updates(type);
-            if (updates == null)
-                return;
-       
+            if ( updates == null )
+            {
+              // manually define what series need updating basis whether the series is continuing and has local episodes
+              SQLCondition condition = new SQLCondition();
+              condition.Add( new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan );
+              condition.Add( new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal );
+              condition.Add( new DBOnlineSeries(), DBOnlineSeries.cStatus, "Ended", SQLConditionType.NotEqual );
+              condition.Add( new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal );
+              condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
+              condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
+        
+              var lContinuingSeries = DBSeries.Get( condition, false, false );
+        
+              series = new Dictionary<DBValue, long>();
+              episodes = new Dictionary<DBValue, long>();
+              banners = new Dictionary<DBValue, long>();
+              fanart = new Dictionary<DBValue, long>();
+
+              MPTVSeriesLog.Write( $"Failed to get updates file from online, manually defining series and images for updates. Continuing Series with Local Files={lContinuingSeries.Count}" );
+
+              // force our local download cache to expire after a day
+              timestamp = DateTime.UtcNow.Subtract(new TimeSpan(1,0,0,0)).ToFileTime();
+              foreach ( var lSeries in lContinuingSeries)
+              {
+                string lSeriesId = lSeries[DBOnlineSeries.cID];
+          
+                series.Add( lSeriesId, timestamp );
+                banners.Add( lSeriesId, timestamp );
+                fanart.Add( lSeriesId, timestamp );
+
+                var lEpisodes = DBEpisode.Get( int.Parse( lSeriesId ) );
+                foreach (var episode in lEpisodes)
+                {
+                  episodes.Add( episode[DBOnlineEpisode.cID], timestamp );
+                }
+              }
+              
+              return;
+            }
+
             long.TryParse(updates.Attributes["time"].Value, out this.timestamp);
 
             // get all the series ids

@@ -927,11 +927,12 @@ namespace WindowPlugins.GUITVSeries
                 uType = Online_Parsing_Classes.OnlineAPI.UpdateType.month;
 
             Online_Parsing_Classes.GetUpdates GU = new Online_Parsing_Classes.GetUpdates(uType);
-            
-            MPTVSeriesLog.Write("Series with Updates: {0}", GU.UpdatedSeries.Count);
-            MPTVSeriesLog.Write("Episodes with Updates: {0}", GU.UpdatedEpisodes.Count);
-            MPTVSeriesLog.Write("Series with Updated Fanart: {0}", GU.UpdatedFanart.Count);
-            MPTVSeriesLog.Write("Series with Updated Banners: {0}", GU.UpdatedBanners.Count);
+            if ( GU.UpdatedSeries == null ) return null;
+
+            MPTVSeriesLog.Write("Series with Updates: {0}", GU.UpdatedSeries?.Count);
+            MPTVSeriesLog.Write("Episodes with Updates: {0}", GU.UpdatedEpisodes?.Count);
+            MPTVSeriesLog.Write("Series with Updated Fanart: {0}", GU.UpdatedFanart?.Count);
+            MPTVSeriesLog.Write("Series with Updated Banners: {0}", GU.UpdatedBanners?.Count);
 
             #region remove cache files that need updating
 
@@ -2369,8 +2370,11 @@ namespace WindowPlugins.GUITVSeries
 
                     MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]), MPTVSeriesLog.LogLevel.Debug);
                     WebClient webClient = new WebClient();
-                    webClient.Headers.Add("user-agent", Settings.UserAgent);                    
-                    
+                    webClient.Headers.Add("user-agent", Settings.UserAgent);
+
+                    // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+                    ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
+
                     try
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(completePath));

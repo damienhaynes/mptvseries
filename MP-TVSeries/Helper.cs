@@ -335,8 +335,6 @@ namespace WindowPlugins.GUITVSeries
 
         public static void SaveXmlCache(string filename, XmlNode node)
         {
-            filename = filename.Replace( ".zip", string.Empty );
-
             // create cached document
             try
             {
@@ -804,6 +802,9 @@ namespace WindowPlugins.GUITVSeries
         {
             WebClient webClient = new WebClient();
             webClient.Headers.Add("user-agent", Settings.UserAgent);
+
+            // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+            ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
 
             try
             {

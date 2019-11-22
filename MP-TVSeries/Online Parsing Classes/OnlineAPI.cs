@@ -257,7 +257,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         string fullLocalPath = Helper.PathCombine(Settings.GetPath(localPath), localFilename);
         string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + onlineFilename;
         webClient.Headers.Add("user-agent", Settings.UserAgent);
-        //webClient.Headers.Add("referer", "http://thetvdb.com/");
+
+        // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+        ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
+
         try
         {
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullLocalPath));
@@ -280,6 +283,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public int StartFileDownload(string fullURL, Settings.Path localPath, string localFilename)
     {
       WebClient webClient = new WebClient();
+
+      // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+      ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
+
       int nDownloadGUID = nDownloadGUIDGenerator;
       nDownloadGUIDGenerator++;
 
@@ -483,32 +490,32 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         // turn off auto-redirection on the initial request. 
         // then we can pull out the header and do the redirection manually by making a new request.
-        request.AllowAutoRedirect = false;
+        //request.AllowAutoRedirect = false;
         response = (HttpWebResponse)request.GetResponse();
 
-        MPTVSeriesLog.Write( $"Status Code={ response.StatusCode }, Headers={ response.Headers.ToString().Trim() }", MPTVSeriesLog.LogLevel.Debug );
+        //MPTVSeriesLog.Write( $"Status Code={ response.StatusCode }, Headers={ response.Headers.ToString().Trim() }", MPTVSeriesLog.LogLevel.Debug );
 
-        // check for redirect
-        switch ( response.StatusCode )
-        {
-          case HttpStatusCode.Redirect:
-          case HttpStatusCode.MovedPermanently:
-          case HttpStatusCode.RedirectKeepVerb:
-          case HttpStatusCode.RedirectMethod:
-            newUrl = response.Headers["Location"];
-            if ( newUrl == null )
-              return null;
+        //// check for redirect
+        //switch ( response.StatusCode )
+        //{
+        //  case HttpStatusCode.Redirect:
+        //  case HttpStatusCode.MovedPermanently:
+        //  case HttpStatusCode.RedirectKeepVerb:
+        //  case HttpStatusCode.RedirectMethod:
+        //    newUrl = response.Headers["Location"];
+        //    if ( newUrl == null )
+        //      return null;
 
-            if ( newUrl.IndexOf( "://", System.StringComparison.Ordinal ) == -1 )
-            {
-              // doesn't have a URL Schema, meaning it's a relative or absolute URL
-              var u = new Uri( new Uri( sUrl ), newUrl );
-              newUrl = u.ToString();
-            }
+        //    if ( newUrl.IndexOf( "://", System.StringComparison.Ordinal ) == -1 )
+        //    {
+        //      // doesn't have a URL Schema, meaning it's a relative or absolute URL
+        //      var u = new Uri( new Uri( sUrl ), newUrl );
+        //      newUrl = u.ToString();
+        //    }
 
-            // now re-request using new url
-            return RetrieveData( newUrl );
-        }
+        //    // now re-request using new url
+        //    return RetrieveData( newUrl );
+        //}
        
         if (response != null) // Get the stream associated with the response.
           return response.GetResponseStream();
@@ -516,7 +523,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       catch (Exception e)
       {
         // can't connect, timeout, etc
-        MPTVSeriesLog.Write("Can't connect to " + newUrl ?? sUrl + " : " + e.Message);
+        MPTVSeriesLog.Write("Can't connect to " + sUrl + " : " + e.Message);
       }
       finally
       {
@@ -550,7 +557,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                     MPTVSeriesLog.Write("Decompression done, now loading as XML...", MPTVSeriesLog.LogLevel.Debug);
                     doc.Load(stream);
                     MPTVSeriesLog.Write("Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug);
-                    docsInZip.Add(currEntry.Name, doc);
+                    // check if .zip in filename and remove for backwards compatibility
+                    docsInZip.Add(currEntry.Name.Replace(".zip", string.Empty), doc);
                 }
                 catch (XmlException e)
                 {

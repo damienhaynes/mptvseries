@@ -1050,18 +1050,18 @@ namespace WindowPlugins.GUITVSeries
             return resultMsg;
         }
 
-    private static void DeleteFromMPTVDB(string f)
+    private static void DeleteFromMPTVDB(string filename)
     {
       TvBusinessLayer layer = new TvBusinessLayer();
       try
       {
-        layer.GetRecordingByFileName(f).Delete();
-        MPTVSeriesLog.Write(string.Format("Also Deleting line in MP table recording"));
+        layer.GetRecordingByFileName( filename ).Delete();
+        MPTVSeriesLog.Write(string.Format("Also Deleting record in MP table recording"));
       }
       catch (Exception ex)
       {
         // this should succeed only when there is a record in MP database..
-        MPTVSeriesLog.Write(string.Format("Seems no recording line to delete in MPtvDB"));
+        MPTVSeriesLog.Write($"Seems no recording line to delete in MPTvDB, Exception={ex.Message}");
       }
     }
 
