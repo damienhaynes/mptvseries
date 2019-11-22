@@ -4205,7 +4205,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkAccountID_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://thetvdb.com/?tab=userinfo");
+            System.Diagnostics.Process.Start( @"https://www.thetvdb.com/dashboard/account/editinfo" );
         }
 
         private void linkExpressionHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
