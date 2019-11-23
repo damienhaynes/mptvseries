@@ -118,7 +118,7 @@
 		<id>0</id>
 		<posX>510</posX>
 		<posY>1015</posY>
-		<label>#TVSeries.FanArt.SelectedFanartResolution</label>
+		<label>#TVSeries.FanArt.SelectedFanartResolution | #TVSeries.Translation.LabelChosen.Label #TVSeries.FanArt.SelectedFanartIsChosen</label>
 		<animation effect="fade" time="250">WindowOpen</animation>
 		<animation effect="fade" time="250">WindowClose</animation>
     </control>
