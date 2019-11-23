@@ -1621,6 +1621,9 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cThumbHeight:
                                 case DBOnlineEpisode.cThumbWidth:
                                 case DBOnlineEpisode.cIsMovie:
+                                case DBOnlineEpisode.cAirsAfterSeason:
+                                case DBOnlineEpisode.cAirsBeforeEpisode:
+                                case DBOnlineEpisode.cAirsBeforeSeason:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -1629,14 +1632,7 @@ namespace WindowPlugins.GUITVSeries
                                     if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
-
-                                case DBOnlineEpisode.cAirsAfterSeason:
-                                case DBOnlineEpisode.cAirsBeforeEpisode:
-                                case DBOnlineEpisode.cAirsBeforeSeason:
-                                    if (!String.IsNullOrEmpty(episode[key]))
-                                        AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key]);
-                                    break;
-                                                               
+                                             
                                 case DBEpisode.cAvailableSubtitles:
                                 case DBEpisode.cVideoWidth:
                                 case DBEpisode.cVideoHeight:
@@ -1925,6 +1921,7 @@ namespace WindowPlugins.GUITVSeries
                                     }
                                     break;
 
+                                case DBOnlineSeries.cLastEpisodeAirDate:
                                 case DBOnlineSeries.cChosenEpisodeOrder:
                                     if (!String.IsNullOrEmpty(series[key]))
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);

@@ -39,42 +39,49 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             XmlNode updates = OnlineAPI.Updates(type);
             if ( updates == null )
             {
-              // manually define what series need updating basis whether the series is continuing and has local episodes
-              SQLCondition condition = new SQLCondition();
-              condition.Add( new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan );
-              condition.Add( new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal );
-              condition.Add( new DBOnlineSeries(), DBOnlineSeries.cStatus, "Ended", SQLConditionType.NotEqual );
-              condition.Add( new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal );
-              condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
-              condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
-        
-              var lContinuingSeries = DBSeries.Get( condition, false, false );
-        
-              series = new Dictionary<DBValue, long>();
-              episodes = new Dictionary<DBValue, long>();
-              banners = new Dictionary<DBValue, long>();
-              fanart = new Dictionary<DBValue, long>();
+                // manually define what series need updating basis whether the series is continuing and has local episodes
+                SQLCondition condition = new SQLCondition();
+                condition.Add( new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan );
+                condition.Add( new DBOnlineSeries(), DBOnlineSeries.cHasLocalFiles, 1, SQLConditionType.Equal );
+                condition.Add( new DBOnlineSeries(), DBOnlineSeries.cStatus, "Ended", SQLConditionType.NotEqual );
+                condition.Add( new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal );
+                condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
+                condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
 
-              MPTVSeriesLog.Write( $"Failed to get updates file from online, manually defining series and images for updates. Continuing Series with Local Files={lContinuingSeries.Count}" );
+                var lContinuingSeries = DBSeries.Get( condition, false, false );
 
-              // force our local download cache to expire after a day
-              timestamp = DateTime.UtcNow.Subtract(new TimeSpan(1,0,0,0)).ToFileTime();
-              foreach ( var lSeries in lContinuingSeries)
-              {
-                string lSeriesId = lSeries[DBOnlineSeries.cID];
-          
-                series.Add( lSeriesId, timestamp );
-                banners.Add( lSeriesId, timestamp );
-                fanart.Add( lSeriesId, timestamp );
+                series = new Dictionary<DBValue, long>();
+                episodes = new Dictionary<DBValue, long>();
+                banners = new Dictionary<DBValue, long>();
+                fanart = new Dictionary<DBValue, long>();
 
-                var lEpisodes = DBEpisode.Get( int.Parse( lSeriesId ) );
-                foreach (var episode in lEpisodes)
+                MPTVSeriesLog.Write( $"Failed to get updates file from online, manually defining series and images for updates. Continuing Series with Local Files={lContinuingSeries.Count}" );
+
+                // force our local download cache to expire after a day
+                timestamp = DateTime.UtcNow.Subtract( new TimeSpan( 1, 0, 0, 0 ) ).ToFileTime();
+                foreach ( var lSeries in lContinuingSeries )
                 {
-                  episodes.Add( episode[DBOnlineEpisode.cID], timestamp );
+                    string lSeriesId = lSeries[DBOnlineSeries.cID];
+
+                    series.Add( lSeriesId, timestamp );
+                    banners.Add( lSeriesId, timestamp );
+                    fanart.Add( lSeriesId, timestamp );
+
+                    // get the most recent season as that is the one that is most likely recently updated
+                    // NB: specials could also be recently updated
+                    var lSeasons = DBSeason.Get( int.Parse( lSeriesId ) );
+                    int lSeasonIndex = lSeasons.Max( s => (int)s[DBSeason.cIndex] );
+
+                    var lEpisodes = DBEpisode.Get( int.Parse( lSeriesId ), lSeasonIndex );
+                    lEpisodes.AddRange( DBEpisode.Get( int.Parse( lSeriesId ), 0 ) );
+
+                    foreach ( var episode in lEpisodes )
+                    {
+                        episodes.Add( episode[DBOnlineEpisode.cID], timestamp );
+                    }
                 }
-              }
-              
-              return;
+
+                return;
             }
 
             long.TryParse(updates.Attributes["time"].Value, out this.timestamp);
