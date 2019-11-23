@@ -1003,9 +1003,19 @@ namespace WindowPlugins.GUITVSeries
                     {
                         try
                         {
-                            // banner path looks like _cache\fanart\original\5b64ef95b86b2.jpg
+                            // banner path looks like:
+                            // _cache\fanart\original\5b64ef95b86b2.jpg or
+                            // fanart\original\5cb447e4c6a66_t.jpg
                             string[] filePaths = filename.Split('\\');
-                            localFilename = filename.Replace(filePaths[3], $"{fanart[DBFanart.cSeriesID]}-{filePaths[3]}");
+                            if ( filePaths.Length == 4 )
+                            {
+                                localFilename = filename.Replace( filePaths[3], $"{fanart[DBFanart.cSeriesID]}-{filePaths[3]}" );
+                            }
+                            else
+                            {
+                                localFilename = filename.Replace( "fanart\\original", "_cache\\fanart\\original" );
+                                localFilename = localFilename.Replace( filePaths[2], $"{fanart[DBFanart.cSeriesID]}-{filePaths[2]}" );
+                            }
 
                             // update path
                             fanart[DBFanart.cThumbnailPath] = localFilename;
