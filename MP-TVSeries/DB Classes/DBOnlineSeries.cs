@@ -95,8 +95,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cAddedBy = "addedBy";
         public const String cFanart = "fanart";
         public const String cLastUpdated = "lastupdated";
+        public const String cLastUpdatedDetail = "lastupdated_detail";
         public const String cPoster = "poster";
         public const String cTMSWantedOld = "tms_wanted_old"; //wtf is this?
+        public const String cTopSeries = "top_series";
         public const String cAliasNames = "AliasNames";
         public const String cLastEpisodeAirDate = "finale_aired";
         public const String cSlug = "slug";

@@ -21,6 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using WindowPlugins.GUITVSeries.Configuration;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -1946,7 +1947,8 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_PosterSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_PosterSelection_SelectedIndexChanged);
             // 
             // dataGridView1
-            // 
+            //
+            this.dataGridView1.DoubleBuffered( true );
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;

@@ -163,6 +163,7 @@
     <Compile Include="Configuration\ProgressDialog.Designer.cs">
       <DependentUpon>ProgressDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\UIExtensions.cs" />
     <Compile Include="Configuration\ViewTemplates.cs">
       <SubType>Form</SubType>
     </Compile>

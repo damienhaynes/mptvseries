@@ -21,32 +21,21 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
+using MediaPortal.Configuration;
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.IO;
-using System.Threading;
-using System.Linq;
-using System.Text.RegularExpressions;
-using MediaPortal.Dialogs;
-using MediaPortal.Util;
-using MediaPortal.Configuration;
-using System.Windows.Forms;
-using SQLite.NET;
-using WindowPlugins.GUITVSeries;
-using WindowPlugins.GUITVSeries.Feedback;
-using WindowPlugins.GUITVSeries.Configuration;
-using System.Xml;
-using MediaPortal.GUI.Library;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using System.Xml;
+using WindowPlugins.GUITVSeries.Configuration;
+using WindowPlugins.GUITVSeries.Feedback;
 
 #if DEBUG
-using System.Diagnostics;
 #endif
 
 // TODO: replace all checkboxes that are used to save options with a dboptioncheckbox!!!
@@ -1887,6 +1876,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cAddedBy:
                                 case DBOnlineSeries.cFanart:
                                 case DBOnlineSeries.cLastUpdated:
+                                case DBOnlineSeries.cLastUpdatedDetail:
                                 case DBOnlineSeries.cPoster:
                                 case DBOnlineSeries.cViewTags:
                                 case DBOnlineSeries.cBanner:
@@ -1899,6 +1889,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cScanIgnore:
                                 case DBOnlineSeries.cRatingCount:
                                 case DBOnlineSeries.cTMSWantedOld:
+                                case DBOnlineSeries.cTopSeries:
                                 case DBOnlineSeries.cAliasNames:
                                 case DBOnlineSeries.cTraktID:
                                 case DBOnlineSeries.cSlug:

@@ -473,7 +473,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         return null;
       }
 
-      string newUrl = null;
+      //string newUrl = null;
       HttpWebRequest request = null;
       HttpWebResponse response = null;
 
