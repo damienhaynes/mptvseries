@@ -1948,7 +1948,6 @@ namespace WindowPlugins.GUITVSeries
             // 
             // dataGridView1
             //
-            this.dataGridView1.DoubleBuffered( true );
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;

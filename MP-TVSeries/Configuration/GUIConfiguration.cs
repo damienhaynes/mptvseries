@@ -76,6 +76,10 @@ namespace WindowPlugins.GUITVSeries
             //    Debugger.Launch();
 #endif
             InitializeComponent();
+
+            // fix flickering in details view
+            dataGridView1.DoubleBuffered( true );
+
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
@@ -1484,9 +1488,10 @@ namespace WindowPlugins.GUITVSeries
             }
 
             EnableImportButtonState(true);
-        }        
+        }
 
         #region Series Details Tab Handling
+        private DBSeries mSelectedSeries;
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
         {
             this.dataGridView1.SuspendLayout();
@@ -1774,7 +1779,8 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBSeries.cTableName:
                     {                       
-                        DBSeries series = (DBSeries)node.Tag;                        
+                        DBSeries series = (DBSeries)node.Tag;
+                        mSelectedSeries = series;
 
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
@@ -4714,6 +4720,20 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+        //private void lnkOpenAPICacheDir_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        //{
+        //    string lCacheFolder = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ) + "\\Team MediaPortal\\MediaPortal\\MP-TVSeries\\Cache\\";
+        //    lCacheFolder += mSelectedSeries[DBOnlineSeries.cID];
+
+        //    // Open Directory
+        //    System.Diagnostics.Process.Start( "explorer.exe", lCacheFolder );
+
+        //}
+
+        //private void lnkImageCache_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        //{
+
+        //}
     }
 
     public class BannerComboItem

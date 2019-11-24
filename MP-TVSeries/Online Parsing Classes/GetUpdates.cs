@@ -46,7 +46,6 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 condition.Add( new DBOnlineSeries(), DBOnlineSeries.cStatus, "Ended", SQLConditionType.NotEqual );
                 condition.Add( new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal );
                 condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
-                condition.Add( new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal );
 
                 var lContinuingSeries = DBSeries.Get( condition, false, false );
 
@@ -55,7 +54,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 banners = new Dictionary<DBValue, long>();
                 fanart = new Dictionary<DBValue, long>();
 
-                MPTVSeriesLog.Write( $"Failed to get updates file from online, manually defining series and images for updates. Continuing Series with Local Files={lContinuingSeries.Count}" );
+                MPTVSeriesLog.Write( $"Failed to get updates file from online, manually defining series and images for updates. Database contains '{lContinuingSeries.Count}' continuing series with local files" );
 
                 // force our local download cache to expire after a day
                 timestamp = DateTime.UtcNow.Subtract( new TimeSpan( 1, 0, 0, 0 ) ).ToFileTime();
