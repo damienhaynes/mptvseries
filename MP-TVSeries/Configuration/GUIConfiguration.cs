@@ -4204,7 +4204,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkExpressionHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/expressions-rules-requests-21978/");
+            System.Diagnostics.Process.Start( @"https://forum.team-mediaportal.com/threads/expressions-rules-requests.21978/" );
         }
         
         private void chkAutoDownloadFanart_CheckedChanged(object sender, EventArgs e)
