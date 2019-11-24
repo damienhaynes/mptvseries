@@ -94,7 +94,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(238, 26);
             this.label1.TabIndex = 0;
-            this.label1.Text = "MP-TVSeries is a plugin for Mediaportal aimed at \r\norganizing TV-Series.";
+            this.label1.Text = "MP-TVSeries is a plugin for MediaPortal aimed at organising TV-Series.";
             // 
             // groupBox2
             // 

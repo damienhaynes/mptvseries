@@ -196,11 +196,6 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView_Expressions = new System.Windows.Forms.DataGridView();
             this.button_MoveExpUp = new System.Windows.Forms.Button();
             this.button_MoveExpDown = new System.Windows.Forms.Button();
-            this.panel_StringReplacements = new System.Windows.Forms.Panel();
-            this.linkLabelResetStringReplacements = new System.Windows.Forms.LinkLabel();
-            this.linkLabelImportStringReplacements = new System.Windows.Forms.LinkLabel();
-            this.linkLabelExportStringReplacements = new System.Windows.Forms.LinkLabel();
-            this.label69 = new System.Windows.Forms.Label();
             this.panel_ImportPathes = new System.Windows.Forms.Panel();
             this.label68 = new System.Windows.Forms.Label();
             this.dataGridView_ImportPathes = new System.Windows.Forms.DataGridView();
@@ -210,6 +205,11 @@ namespace WindowPlugins.GUITVSeries
             this.SeasonID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EpisodeID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EpisodeTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.panel_StringReplacements = new System.Windows.Forms.Panel();
+            this.linkLabelResetStringReplacements = new System.Windows.Forms.LinkLabel();
+            this.linkLabelImportStringReplacements = new System.Windows.Forms.LinkLabel();
+            this.linkLabelExportStringReplacements = new System.Windows.Forms.LinkLabel();
+            this.label69 = new System.Windows.Forms.Label();
             this.tabOnlineData = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
@@ -295,6 +295,7 @@ namespace WindowPlugins.GUITVSeries
             this.label4 = new System.Windows.Forms.Label();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.listBox_Log = new System.Windows.Forms.ListBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.dbCheckBoxTraktCommunityRatings = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptCheckBoxRemoveEpZero = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptCheckBoxCleanOnlineEpisodes = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
@@ -347,9 +348,9 @@ namespace WindowPlugins.GUITVSeries
             this.splitContainerImportSettings.SuspendLayout();
             this.panel_Expressions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).BeginInit();
-            this.panel_StringReplacements.SuspendLayout();
             this.panel_ImportPathes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).BeginInit();
+            this.panel_StringReplacements.SuspendLayout();
             this.tabOnlineData.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.panel_OnlineData.SuspendLayout();
@@ -1168,10 +1169,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnLogoDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLogoDown.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_down;
-            this.btnLogoDown.Location = new System.Drawing.Point(1107, 163);
+            this.btnLogoDown.Location = new System.Drawing.Point(1126, 97);
             this.btnLogoDown.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnLogoDown.Name = "btnLogoDown";
-            this.btnLogoDown.Size = new System.Drawing.Size(48, 45);
+            this.btnLogoDown.Size = new System.Drawing.Size(35, 31);
             this.btnLogoDown.TabIndex = 2;
             this.toolTip_Help.SetToolTip(this.btnLogoDown, "Moves the logo position to the right when displayed in Media Portal");
             this.btnLogoDown.UseVisualStyleBackColor = true;
@@ -1181,10 +1182,10 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.btnlogoUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnlogoUp.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up;
-            this.btnlogoUp.Location = new System.Drawing.Point(1105, 109);
+            this.btnlogoUp.Location = new System.Drawing.Point(1126, 56);
             this.btnlogoUp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnlogoUp.Name = "btnlogoUp";
-            this.btnlogoUp.Size = new System.Drawing.Size(48, 45);
+            this.btnlogoUp.Size = new System.Drawing.Size(35, 31);
             this.btnlogoUp.TabIndex = 1;
             this.toolTip_Help.SetToolTip(this.btnlogoUp, "Moves the logo position to the left when displayed in Media Portal");
             this.btnlogoUp.UseVisualStyleBackColor = true;
@@ -1193,7 +1194,7 @@ namespace WindowPlugins.GUITVSeries
             // lnkLogoImp
             // 
             this.lnkLogoImp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lnkLogoImp.Location = new System.Drawing.Point(138, 809);
+            this.lnkLogoImp.Location = new System.Drawing.Point(123, 839);
             this.lnkLogoImp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lnkLogoImp.Name = "lnkLogoImp";
             this.lnkLogoImp.Size = new System.Drawing.Size(76, 20);
@@ -1215,17 +1216,17 @@ namespace WindowPlugins.GUITVSeries
             this.lstLogos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lstLogos.Name = "lstLogos";
             this.lstLogos.ScrollAlwaysVisible = true;
-            this.lstLogos.Size = new System.Drawing.Size(1079, 706);
+            this.lstLogos.Size = new System.Drawing.Size(1108, 797);
             this.lstLogos.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.lstLogos, "Contains the list of Logo rules defined to display in Media Portal");
             // 
             // btnLogoTemplate
             // 
             this.btnLogoTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLogoTemplate.Location = new System.Drawing.Point(10, 803);
+            this.btnLogoTemplate.Location = new System.Drawing.Point(10, 836);
             this.btnLogoTemplate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnLogoTemplate.Name = "btnLogoTemplate";
-            this.btnLogoTemplate.Size = new System.Drawing.Size(112, 35);
+            this.btnLogoTemplate.Size = new System.Drawing.Size(105, 26);
             this.btnLogoTemplate.TabIndex = 3;
             this.btnLogoTemplate.Text = "&Templates...";
             this.toolTip_Help.SetToolTip(this.btnLogoTemplate, "Click button to select from a pre-defined list of logo templates.\r\nA Logo package" +
@@ -1236,10 +1237,10 @@ namespace WindowPlugins.GUITVSeries
             // btnrmvLogo
             // 
             this.btnrmvLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnrmvLogo.Location = new System.Drawing.Point(607, 802);
+            this.btnrmvLogo.Location = new System.Drawing.Point(674, 833);
             this.btnrmvLogo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnrmvLogo.Name = "btnrmvLogo";
-            this.btnrmvLogo.Size = new System.Drawing.Size(112, 35);
+            this.btnrmvLogo.Size = new System.Drawing.Size(105, 26);
             this.btnrmvLogo.TabIndex = 7;
             this.btnrmvLogo.Text = "&Delete";
             this.toolTip_Help.SetToolTip(this.btnrmvLogo, "Click to remove the selected logo rule in list");
@@ -1249,7 +1250,7 @@ namespace WindowPlugins.GUITVSeries
             // lnkLogoExport
             // 
             this.lnkLogoExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lnkLogoExport.Location = new System.Drawing.Point(218, 809);
+            this.lnkLogoExport.Location = new System.Drawing.Point(197, 839);
             this.lnkLogoExport.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lnkLogoExport.Name = "lnkLogoExport";
             this.lnkLogoExport.Size = new System.Drawing.Size(76, 20);
@@ -1263,10 +1264,10 @@ namespace WindowPlugins.GUITVSeries
             // btnLogoEdit
             // 
             this.btnLogoEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogoEdit.Location = new System.Drawing.Point(857, 802);
+            this.btnLogoEdit.Location = new System.Drawing.Point(900, 833);
             this.btnLogoEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnLogoEdit.Name = "btnLogoEdit";
-            this.btnLogoEdit.Size = new System.Drawing.Size(112, 35);
+            this.btnLogoEdit.Size = new System.Drawing.Size(105, 26);
             this.btnLogoEdit.TabIndex = 8;
             this.btnLogoEdit.Text = "&Edit...";
             this.toolTip_Help.SetToolTip(this.btnLogoEdit, "Click to edit the selected logo rule in list");
@@ -1276,10 +1277,10 @@ namespace WindowPlugins.GUITVSeries
             // addLogo
             // 
             this.addLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addLogo.Location = new System.Drawing.Point(979, 802);
+            this.addLogo.Location = new System.Drawing.Point(1013, 833);
             this.addLogo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.addLogo.Name = "addLogo";
-            this.addLogo.Size = new System.Drawing.Size(112, 35);
+            this.addLogo.Size = new System.Drawing.Size(105, 26);
             this.addLogo.TabIndex = 9;
             this.addLogo.Text = "&Add...";
             this.toolTip_Help.SetToolTip(this.addLogo, resources.GetString("addLogo.ToolTip"));
@@ -1735,6 +1736,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.label23);
             this.splitContainer2.Panel2.Controls.Add(this.lnkImageCache);
             this.splitContainer2.Panel2.Controls.Add(this.lnkOpenAPICacheDir);
             this.splitContainer2.Panel2.Controls.Add(this.pictureBox_SeriesPoster);
@@ -1773,37 +1775,36 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkImageCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkImageCache.AutoSize = true;
-            this.lnkImageCache.Location = new System.Drawing.Point(173, 910);
+            this.lnkImageCache.Location = new System.Drawing.Point(356, 911);
             this.lnkImageCache.Name = "lnkImageCache";
-            this.lnkImageCache.Size = new System.Drawing.Size(104, 13);
+            this.lnkImageCache.Size = new System.Drawing.Size(75, 13);
             this.lnkImageCache.TabIndex = 151;
             this.lnkImageCache.TabStop = true;
-            this.lnkImageCache.Text = "Open Artwork Folder";
+            this.lnkImageCache.Text = "Artwork Folder";
             this.lnkImageCache.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkImageCache_LinkClicked);
             // 
             // lnkOpenAPICacheDir
             // 
             this.lnkOpenAPICacheDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkOpenAPICacheDir.AutoSize = true;
-            this.lnkOpenAPICacheDir.Location = new System.Drawing.Point(9, 911);
+            this.lnkOpenAPICacheDir.Location = new System.Drawing.Point(251, 911);
             this.lnkOpenAPICacheDir.Name = "lnkOpenAPICacheDir";
-            this.lnkOpenAPICacheDir.Size = new System.Drawing.Size(119, 13);
+            this.lnkOpenAPICacheDir.Size = new System.Drawing.Size(90, 13);
             this.lnkOpenAPICacheDir.TabIndex = 150;
             this.lnkOpenAPICacheDir.TabStop = true;
-            this.lnkOpenAPICacheDir.Text = "Open API Cache Folder";
+            this.lnkOpenAPICacheDir.Text = "API Cache Folder";
             this.lnkOpenAPICacheDir.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkOpenAPICacheDir_LinkClicked);
             // 
             // pictureBox_SeriesPoster
             // 
             this.pictureBox_SeriesPoster.BackColor = System.Drawing.Color.White;
-            this.pictureBox_SeriesPoster.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox_SeriesPoster.ErrorImage = null;
             this.pictureBox_SeriesPoster.InitialImage = null;
             this.pictureBox_SeriesPoster.Location = new System.Drawing.Point(0, 72);
             this.pictureBox_SeriesPoster.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox_SeriesPoster.Name = "pictureBox_SeriesPoster";
             this.pictureBox_SeriesPoster.Size = new System.Drawing.Size(130, 197);
-            this.pictureBox_SeriesPoster.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox_SeriesPoster.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_SeriesPoster.TabIndex = 149;
             this.pictureBox_SeriesPoster.TabStop = false;
             // 
@@ -1811,7 +1812,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.comboBox_PosterSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_PosterSelection.FormattingEnabled = true;
-            this.comboBox_PosterSelection.Location = new System.Drawing.Point(0, 38);
+            this.comboBox_PosterSelection.Location = new System.Drawing.Point(0, 45);
             this.comboBox_PosterSelection.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox_PosterSelection.Name = "comboBox_PosterSelection";
             this.comboBox_PosterSelection.Size = new System.Drawing.Size(128, 21);
@@ -1864,7 +1865,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(939, 629);
+            this.dataGridView1.Size = new System.Drawing.Size(945, 629);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -1891,14 +1892,13 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox_Series.BackColor = System.Drawing.Color.White;
-            this.pictureBox_Series.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox_Series.ErrorImage = null;
             this.pictureBox_Series.InitialImage = null;
             this.pictureBox_Series.Location = new System.Drawing.Point(132, 72);
             this.pictureBox_Series.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox_Series.Name = "pictureBox_Series";
-            this.pictureBox_Series.Size = new System.Drawing.Size(807, 197);
-            this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox_Series.Size = new System.Drawing.Size(813, 197);
+            this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox_Series.TabIndex = 147;
             this.pictureBox_Series.TabStop = false;
             // 
@@ -1908,10 +1908,10 @@ namespace WindowPlugins.GUITVSeries
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox_BannerSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_BannerSelection.FormattingEnabled = true;
-            this.comboBox_BannerSelection.Location = new System.Drawing.Point(132, 38);
+            this.comboBox_BannerSelection.Location = new System.Drawing.Point(132, 45);
             this.comboBox_BannerSelection.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
-            this.comboBox_BannerSelection.Size = new System.Drawing.Size(808, 21);
+            this.comboBox_BannerSelection.Size = new System.Drawing.Size(813, 21);
             this.comboBox_BannerSelection.TabIndex = 1;
             this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
             // 
@@ -1925,7 +1925,7 @@ namespace WindowPlugins.GUITVSeries
             this.panDBLocation.Location = new System.Drawing.Point(0, 0);
             this.panDBLocation.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panDBLocation.Name = "panDBLocation";
-            this.panDBLocation.Size = new System.Drawing.Size(962, 38);
+            this.panDBLocation.Size = new System.Drawing.Size(962, 35);
             this.panDBLocation.TabIndex = 0;
             // 
             // button_dbbrowse
@@ -2137,69 +2137,6 @@ namespace WindowPlugins.GUITVSeries
             this.button_MoveExpDown.UseVisualStyleBackColor = true;
             this.button_MoveExpDown.Click += new System.EventHandler(this.button_MoveExpDown_Click);
             // 
-            // panel_StringReplacements
-            // 
-            this.panel_StringReplacements.Controls.Add(this.linkLabelResetStringReplacements);
-            this.panel_StringReplacements.Controls.Add(this.linkLabelImportStringReplacements);
-            this.panel_StringReplacements.Controls.Add(this.linkLabelExportStringReplacements);
-            this.panel_StringReplacements.Controls.Add(this.label69);
-            this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
-            this.panel_StringReplacements.Location = new System.Drawing.Point(9, 602);
-            this.panel_StringReplacements.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.panel_StringReplacements.Name = "panel_StringReplacements";
-            this.panel_StringReplacements.Size = new System.Drawing.Size(1007, 234);
-            this.panel_StringReplacements.TabIndex = 155;
-            this.panel_StringReplacements.Tag = "String Replacements";
-            // 
-            // linkLabelResetStringReplacements
-            // 
-            this.linkLabelResetStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelResetStringReplacements.AutoSize = true;
-            this.linkLabelResetStringReplacements.Location = new System.Drawing.Point(954, 114);
-            this.linkLabelResetStringReplacements.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.linkLabelResetStringReplacements.Name = "linkLabelResetStringReplacements";
-            this.linkLabelResetStringReplacements.Size = new System.Drawing.Size(35, 13);
-            this.linkLabelResetStringReplacements.TabIndex = 4;
-            this.linkLabelResetStringReplacements.TabStop = true;
-            this.linkLabelResetStringReplacements.Text = "Reset";
-            this.linkLabelResetStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelResetStringReplacements_LinkClicked);
-            // 
-            // linkLabelImportStringReplacements
-            // 
-            this.linkLabelImportStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelImportStringReplacements.AutoSize = true;
-            this.linkLabelImportStringReplacements.Location = new System.Drawing.Point(954, 76);
-            this.linkLabelImportStringReplacements.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.linkLabelImportStringReplacements.Name = "linkLabelImportStringReplacements";
-            this.linkLabelImportStringReplacements.Size = new System.Drawing.Size(36, 13);
-            this.linkLabelImportStringReplacements.TabIndex = 3;
-            this.linkLabelImportStringReplacements.TabStop = true;
-            this.linkLabelImportStringReplacements.Text = "Import";
-            this.linkLabelImportStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelImportStringReplacements_LinkClicked);
-            // 
-            // linkLabelExportStringReplacements
-            // 
-            this.linkLabelExportStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelExportStringReplacements.AutoSize = true;
-            this.linkLabelExportStringReplacements.Location = new System.Drawing.Point(954, 95);
-            this.linkLabelExportStringReplacements.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.linkLabelExportStringReplacements.Name = "linkLabelExportStringReplacements";
-            this.linkLabelExportStringReplacements.Size = new System.Drawing.Size(37, 13);
-            this.linkLabelExportStringReplacements.TabIndex = 2;
-            this.linkLabelExportStringReplacements.TabStop = true;
-            this.linkLabelExportStringReplacements.Text = "Export";
-            this.linkLabelExportStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelExportStringReplacements_LinkClicked);
-            // 
-            // label69
-            // 
-            this.label69.AutoSize = true;
-            this.label69.Location = new System.Drawing.Point(6, 8);
-            this.label69.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(961, 52);
-            this.label69.TabIndex = 1;
-            this.label69.Text = resources.GetString("label69.Text");
-            // 
             // panel_ImportPathes
             // 
             this.panel_ImportPathes.Controls.Add(this.label68);
@@ -2328,6 +2265,69 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.EpisodeTitle.Text = "Episode Title";
             this.EpisodeTitle.Width = 74;
+            // 
+            // panel_StringReplacements
+            // 
+            this.panel_StringReplacements.Controls.Add(this.linkLabelResetStringReplacements);
+            this.panel_StringReplacements.Controls.Add(this.linkLabelImportStringReplacements);
+            this.panel_StringReplacements.Controls.Add(this.linkLabelExportStringReplacements);
+            this.panel_StringReplacements.Controls.Add(this.label69);
+            this.panel_StringReplacements.Controls.Add(this.dataGridView_Replace);
+            this.panel_StringReplacements.Location = new System.Drawing.Point(9, 602);
+            this.panel_StringReplacements.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.panel_StringReplacements.Name = "panel_StringReplacements";
+            this.panel_StringReplacements.Size = new System.Drawing.Size(1007, 234);
+            this.panel_StringReplacements.TabIndex = 155;
+            this.panel_StringReplacements.Tag = "String Replacements";
+            // 
+            // linkLabelResetStringReplacements
+            // 
+            this.linkLabelResetStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelResetStringReplacements.AutoSize = true;
+            this.linkLabelResetStringReplacements.Location = new System.Drawing.Point(954, 114);
+            this.linkLabelResetStringReplacements.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabelResetStringReplacements.Name = "linkLabelResetStringReplacements";
+            this.linkLabelResetStringReplacements.Size = new System.Drawing.Size(35, 13);
+            this.linkLabelResetStringReplacements.TabIndex = 4;
+            this.linkLabelResetStringReplacements.TabStop = true;
+            this.linkLabelResetStringReplacements.Text = "Reset";
+            this.linkLabelResetStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelResetStringReplacements_LinkClicked);
+            // 
+            // linkLabelImportStringReplacements
+            // 
+            this.linkLabelImportStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelImportStringReplacements.AutoSize = true;
+            this.linkLabelImportStringReplacements.Location = new System.Drawing.Point(954, 76);
+            this.linkLabelImportStringReplacements.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabelImportStringReplacements.Name = "linkLabelImportStringReplacements";
+            this.linkLabelImportStringReplacements.Size = new System.Drawing.Size(36, 13);
+            this.linkLabelImportStringReplacements.TabIndex = 3;
+            this.linkLabelImportStringReplacements.TabStop = true;
+            this.linkLabelImportStringReplacements.Text = "Import";
+            this.linkLabelImportStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelImportStringReplacements_LinkClicked);
+            // 
+            // linkLabelExportStringReplacements
+            // 
+            this.linkLabelExportStringReplacements.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelExportStringReplacements.AutoSize = true;
+            this.linkLabelExportStringReplacements.Location = new System.Drawing.Point(954, 95);
+            this.linkLabelExportStringReplacements.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabelExportStringReplacements.Name = "linkLabelExportStringReplacements";
+            this.linkLabelExportStringReplacements.Size = new System.Drawing.Size(37, 13);
+            this.linkLabelExportStringReplacements.TabIndex = 2;
+            this.linkLabelExportStringReplacements.TabStop = true;
+            this.linkLabelExportStringReplacements.Text = "Export";
+            this.linkLabelExportStringReplacements.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelExportStringReplacements_LinkClicked);
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(6, 8);
+            this.label69.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(961, 52);
+            this.label69.TabIndex = 1;
+            this.label69.Text = resources.GetString("label69.Text");
             // 
             // tabOnlineData
             // 
@@ -3204,11 +3204,11 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox7.Controls.Add(this.lnkLogoExport);
             this.groupBox7.Controls.Add(this.btnLogoEdit);
             this.groupBox7.Controls.Add(this.addLogo);
-            this.groupBox7.Location = new System.Drawing.Point(12, 66);
+            this.groupBox7.Location = new System.Drawing.Point(17, 42);
             this.groupBox7.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox7.Size = new System.Drawing.Size(1169, 848);
+            this.groupBox7.Size = new System.Drawing.Size(1169, 890);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Logo Configuration";
@@ -3216,10 +3216,10 @@ namespace WindowPlugins.GUITVSeries
             // btnLogoDeleteAll
             // 
             this.btnLogoDeleteAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogoDeleteAll.Location = new System.Drawing.Point(729, 802);
+            this.btnLogoDeleteAll.Location = new System.Drawing.Point(787, 833);
             this.btnLogoDeleteAll.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnLogoDeleteAll.Name = "btnLogoDeleteAll";
-            this.btnLogoDeleteAll.Size = new System.Drawing.Size(112, 35);
+            this.btnLogoDeleteAll.Size = new System.Drawing.Size(105, 26);
             this.btnLogoDeleteAll.TabIndex = 6;
             this.btnLogoDeleteAll.Text = "Delete All";
             this.btnLogoDeleteAll.UseVisualStyleBackColor = true;
@@ -3496,6 +3496,16 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(120, 16);
             this.listBox_Log.TabIndex = 5;
             // 
+            // label23
+            // 
+            this.label23.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(7, 910);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(197, 13);
+            this.label23.TabIndex = 152;
+            this.label23.Text = "Open resource folder for selected series:";
+            // 
             // dbCheckBoxTraktCommunityRatings
             // 
             this.dbCheckBoxTraktCommunityRatings.AutoSize = true;
@@ -3767,10 +3777,10 @@ namespace WindowPlugins.GUITVSeries
             this.formattingConfiguration1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.formattingConfiguration1.Location = new System.Drawing.Point(12, 68);
+            this.formattingConfiguration1.Location = new System.Drawing.Point(16, 45);
             this.formattingConfiguration1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.formattingConfiguration1.Name = "formattingConfiguration1";
-            this.formattingConfiguration1.Size = new System.Drawing.Size(1051, 846);
+            this.formattingConfiguration1.Size = new System.Drawing.Size(1168, 586);
             this.formattingConfiguration1.TabIndex = 6;
             // 
             // aboutScreen
@@ -3835,10 +3845,10 @@ namespace WindowPlugins.GUITVSeries
             this.panel_Expressions.ResumeLayout(false);
             this.panel_Expressions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Expressions)).EndInit();
-            this.panel_StringReplacements.ResumeLayout(false);
-            this.panel_StringReplacements.PerformLayout();
             this.panel_ImportPathes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ImportPathes)).EndInit();
+            this.panel_StringReplacements.ResumeLayout(false);
+            this.panel_StringReplacements.PerformLayout();
             this.tabOnlineData.ResumeLayout(false);
             this.groupBox12.ResumeLayout(false);
             this.panel_OnlineData.ResumeLayout(false);
@@ -4117,5 +4127,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.LinkLabel lnkImageCache;
         private System.Windows.Forms.LinkLabel lnkOpenAPICacheDir;
+        private System.Windows.Forms.Label label23;
     }
 }

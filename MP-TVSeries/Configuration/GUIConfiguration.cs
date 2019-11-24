@@ -76,10 +76,7 @@ namespace WindowPlugins.GUITVSeries
             //    Debugger.Launch();
 #endif
             InitializeComponent();
-
-            // fix flickering in details view
-            dataGridView1.DoubleBuffered( true );
-
+            
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
             MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
@@ -1537,6 +1534,8 @@ namespace WindowPlugins.GUITVSeries
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
 
+                        pictureBox_Series.SizeMode = PictureBoxSizeMode.Zoom;
+
                         // if we have logos add them to the list
                         string logos = localLogos.getLogos(ref episode, 200, 500, true);
                         if (logos != null && logos.Length > 0)
@@ -1544,6 +1543,7 @@ namespace WindowPlugins.GUITVSeries
                             BannerComboItem newItem = new BannerComboItem("EpisodeImage/Logos", logos);
                             comboBox_BannerSelection.Items.Add(newItem);
                             comboBox_BannerSelection.SelectedIndex = 0; // force the display
+                            comboBox_BannerSelection.Enabled = true;
                         }
                         else
                             comboBox_BannerSelection.Enabled = false;
@@ -1555,9 +1555,12 @@ namespace WindowPlugins.GUITVSeries
                         {
                             switch (key)
                             {                                                                
-                                case DBEpisode.cFilename:                                
+                                case DBEpisode.cFilename:
                                     // Read Only Fields
-                                    AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
+                                    if ( !string.IsNullOrEmpty( episode[key] ) )
+                                    {
+                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, episode[key], false );
+                                    }
                                     break;
 
                                 case DBOnlineEpisode.cRating:
@@ -1700,34 +1703,40 @@ namespace WindowPlugins.GUITVSeries
                         foreach (String filename in season.BannerList)
                         {
                             BannerComboItem newItem = new BannerComboItem(Path.GetFileName(filename), filename);
-                            comboBox_BannerSelection.Items.Add(newItem);
-                        }
-                        // if we have logos add them to the list
-                        string logos = localLogos.getLogos(ref season, 200, 500);
-                        if (logos.Length > 0)
-                        {
-                            BannerComboItem newItem = new BannerComboItem("Logos", logos);
-                            comboBox_BannerSelection.Items.Add(newItem);
+                            comboBox_PosterSelection.Items.Add(newItem);
                         }
 
-                        comboBox_BannerSelection.Enabled = true;
-                        comboBox_PosterSelection.Enabled = false;
+                        // if we have logos add them to the list
+                        string logos = localLogos.getLogos( ref season, 200, 500 );
+                        if ( logos.Length > 0 )
+                        {
+                            BannerComboItem newItem = new BannerComboItem( "Logos", logos );
+                            comboBox_PosterSelection.Items.Add( newItem );
+                        }
+
+                        if ( comboBox_PosterSelection.Items.Count > 0 )
+                            comboBox_PosterSelection.Enabled = true;
+                        else
+                            comboBox_PosterSelection.Enabled = false;
+
+                        comboBox_BannerSelection.Enabled = false;
 
                         if (season.Banner.Length > 0)
                         {
                             try
                             {
-                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(season.Banner); //Image.FromFile(season.Banner);
+                                this.pictureBox_SeriesPoster.Image = ImageAllocator.LoadImageFastFromFile( season.Banner ); //Image.FromFile(season.Banner);
                             }
-                            catch (Exception)
+                            catch ( Exception ) { }
+
+                            foreach ( BannerComboItem comboItem in comboBox_PosterSelection.Items )
                             {
-                            }
-                            foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
-                                if (comboItem.sFullPath == season.Banner)
+                                if ( comboItem.sFullPath == season.Banner )
                                 {
-                                    comboBox_BannerSelection.SelectedItem = comboItem;
+                                    comboBox_PosterSelection.SelectedItem = comboItem;
                                     break;
                                 }
+                            }
                         }
 
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
@@ -1785,6 +1794,8 @@ namespace WindowPlugins.GUITVSeries
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
 
+                        pictureBox_Series.SizeMode = PictureBoxSizeMode.Zoom;
+
                         // populate banner dropdown with available banners
                         foreach (String filename in series.BannerList)
                         {
@@ -1805,12 +1816,10 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
-                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile(series.Banner);                                
+                                this.pictureBox_Series.Image = ImageAllocator.LoadImageFastFromFile( series.Banner );
                             }
-                            catch (System.Exception)
-                            {
+                            catch ( System.Exception ) { }
 
-                            }
                             foreach (BannerComboItem comboItem in comboBox_BannerSelection.Items)
                             {
                                 if (comboItem.sFullPath == series.Banner)
@@ -4174,17 +4183,32 @@ namespace WindowPlugins.GUITVSeries
 
         private void comboBox_PosterSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DBSeries series = (DBSeries)treeView_Library.SelectedNode.Tag;
-     
-            series.Poster = ((BannerComboItem)comboBox_PosterSelection.SelectedItem).sFullPath;
-            try
+            if ( treeView_Library.SelectedNode.Tag is DBSeries )
             {
-                this.pictureBox_SeriesPoster.Image = ImageAllocator.LoadImageFastFromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_PosterSelection.SelectedItem).sFullPath)); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+                DBSeries series = ( DBSeries )treeView_Library.SelectedNode.Tag;
+
+                series.Poster = ( ( BannerComboItem )comboBox_PosterSelection.SelectedItem ).sFullPath;
+                try
+                {
+                    this.pictureBox_SeriesPoster.Image = ImageAllocator.LoadImageFastFromFile( ImageAllocator.ExtractFullName( ( ( BannerComboItem )comboBox_PosterSelection.SelectedItem ).sFullPath ) ); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+                }
+                catch ( Exception ) { }
+
+                series.Commit();
             }
-            catch (Exception)
+            else //DBSeason
             {
+                DBSeason season = ( DBSeason )treeView_Library.SelectedNode.Tag;
+
+                season.Banner = ( ( BannerComboItem )comboBox_PosterSelection.SelectedItem ).sFullPath;
+                try
+                {
+                    this.pictureBox_SeriesPoster.Image = ImageAllocator.LoadImageFastFromFile( ImageAllocator.ExtractFullName( ( ( BannerComboItem )comboBox_PosterSelection.SelectedItem ).sFullPath ) ); // Image.FromFile(ImageAllocator.ExtractFullName(((BannerComboItem)comboBox_BannerSelection.SelectedItem).sFullPath));
+                }
+                catch ( Exception ) { }
+
+                season.Commit();
             }
-            series.Commit();
         }
     
         private void checkBox_Episode_OnlyShowLocalFiles_CheckedChanged(object sender, EventArgs e)
