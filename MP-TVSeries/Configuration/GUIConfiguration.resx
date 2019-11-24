@@ -134,7 +134,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
-        eQAAAk1TRnQBSQFMAgEBDAEAAXwBBQF8AQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
+        eQAAAk1TRnQBSQFMAgEBDAEAAaQBBQGkAQUBGAEAARgBAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFg
         AwABYAMAAQEBAAEgBgABkP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
         /wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AFUAAQEDBAEGAwsBDwMSBBkBIwMdASkDHgErAx0BKQMY
         ASEDEQEXAwoBDgMEAQUDAAEBLwAEAQECAwMEBAEFAwQBBQMDAQQDAgEDAwIBAwMBAQIDAQECAwABAQMA
@@ -706,37 +706,6 @@ A Logo package must be installed to display logos succesfully in Media Portal</v
   <metadata name="toolTip_InfoHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>16, 6</value>
   </metadata>
-  <data name="dbCheckBoxTraktCommunityRatings.ToolTip" xml:space="preserve">
-    <value>Ratings from trakt.tv are much better for tv shows and episodes than thetvdb.com.
-
-This option will only work if you have a trakt account and also have enabled MP-TVSeries plugin in the Trakt plugin.
-
-Note: if you want to sync your trakt user ratings to tvseries, you must do this from the Trakt plugin as it's a sync operation.</value>
-  </data>
-  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
-    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
-A prompt will be shown if trying to playback out of order.
-
-Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
-so that a proper check can be performed.
-
-The check is ignored in the following conditions:
-* Playback of Specials (and next unwatched Specials).
-* Playback of Watched/Seen episodes.
-* Playback using Playlist player.</value>
-  </data>
-  <data name="checkBox_CountSpecialEpisodesAsWatched.ToolTip" xml:space="preserve">
-    <value>Check this option if you want to calculate episode counts where Special (Season 0) episodes to be counted as watched episodes in the Series view.
-This will only count episodes that you can see when browsing GUI.</value>
-  </data>
-  <data name="dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip" xml:space="preserve">
-    <value>If enabled and episode has been rated, mark the episode as watched.
-
-This setting is only applicable to episode ratings from theTVDB.com (if enabled). It's recommended
-that syncing to trakt.tv via Trakt plugin is enabled if syncing of watched episodes is wanted.
-
-If Trakt plugin is installed and TVSeries plugin is enabled for sync, it's recommended this option is disabled.</value>
-  </data>
   <data name="checkBox_Episode_HideUnwatchedSummary.ToolTip" xml:space="preserve">
     <value>Enable this option to disable the overview for episodes that haven't been watched yet.
 This option is recommended if you want to prevent spoilers before watching an episodes.
@@ -754,12 +723,6 @@ This setting can also be changed from within Media Portal in the plugins context
 Disable to only show episodes that have a local file reference.
 
 This setting can also be changed from within Media Portal</value>
-  </data>
-  <data name="optionAsk2Rate.ToolTip" xml:space="preserve">
-    <value>Tick this to have the plugin automatically pop-up a rating's windows after you have watched an episodes which hasn't been rated yet.
-
-Note: if you are using the Trakt plugin, it's recommended you enable rate dialog after watched from there. This setting can be used to send
-ratings to both thetvdb.com and trakt or just thetvdb.com.</value>
   </data>
   <data name="richTextBox_seasonFormat_Main.ToolTip" xml:space="preserve">
     <value>Enter in the field(s) to be displayed in the main information pane of the season view.
@@ -850,6 +813,43 @@ Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
 You can right click on this textbox to bring up a menu of available fields from the database.
 
 Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
+  </data>
+  <data name="dbCheckBoxTraktCommunityRatings.ToolTip" xml:space="preserve">
+    <value>Ratings from trakt.tv are much better for tv shows and episodes than thetvdb.com.
+
+This option will only work if you have a trakt account and also have enabled MP-TVSeries plugin in the Trakt plugin.
+
+Note: if you want to sync your trakt user ratings to tvseries, you must do this from the Trakt plugin as it's a sync operation.</value>
+  </data>
+  <data name="dbOptChkBoxPlayOutOfOrderCheck.ToolTip" xml:space="preserve">
+    <value>Enable this option to ensure that when you playback an episode that it is the next unwatched episode. 
+A prompt will be shown if trying to playback out of order.
+
+Note: It's also recommended that you also enable 'Download Episode information for the whole series' 
+so that a proper check can be performed.
+
+The check is ignored in the following conditions:
+* Playback of Specials (and next unwatched Specials).
+* Playback of Watched/Seen episodes.
+* Playback using Playlist player.</value>
+  </data>
+  <data name="checkBox_CountSpecialEpisodesAsWatched.ToolTip" xml:space="preserve">
+    <value>Check this option if you want to calculate episode counts where Special (Season 0) episodes to be counted as watched episodes in the Series view.
+This will only count episodes that you can see when browsing GUI.</value>
+  </data>
+  <data name="dbOptionCheckBoxMarkRatedEpsAsWatched.ToolTip" xml:space="preserve">
+    <value>If enabled and episode has been rated, mark the episode as watched.
+
+This setting is only applicable to episode ratings from theTVDB.com (if enabled). It's recommended
+that syncing to trakt.tv via Trakt plugin is enabled if syncing of watched episodes is wanted.
+
+If Trakt plugin is installed and TVSeries plugin is enabled for sync, it's recommended this option is disabled.</value>
+  </data>
+  <data name="optionAsk2Rate.ToolTip" xml:space="preserve">
+    <value>Tick this to have the plugin automatically pop-up a rating's windows after you have watched an episodes which hasn't been rated yet.
+
+Note: if you are using the Trakt plugin, it's recommended you enable rate dialog after watched from there. This setting can be used to send
+ratings to both thetvdb.com and trakt or just thetvdb.com.</value>
   </data>
   <data name="label70.Text" xml:space="preserve">
     <value>Parsing Expressions are used by the plugins parsing engine to retrieve a Series Name, Season Number and 

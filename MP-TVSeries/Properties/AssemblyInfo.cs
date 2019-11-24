@@ -46,5 +46,5 @@ using System.Runtime.InteropServices;
 // 4th Digit represents the SVN revision
 // AssemblyVersion is updated by Pre-Build step
 // Assume TortoiseSVN is in enviroment to run: subwcrev.exe
-[assembly: AssemblyVersion("4.3.3.2")]
-[assembly: AssemblyFileVersion("4.3.3.2")]
+[assembly: AssemblyVersion("4.3.3.3")]
+[assembly: AssemblyFileVersion("4.3.3.3")]

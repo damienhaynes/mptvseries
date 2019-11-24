@@ -4718,22 +4718,25 @@ namespace WindowPlugins.GUITVSeries
 
             return CultureDisplayName;
         }
+
+        private void lnkOpenAPICacheDir_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            string lCacheFolder = Settings.GetPath( Settings.Path.config ) + "\\Cache\\";
+            lCacheFolder += mSelectedSeries[DBOnlineSeries.cID];
+
+            // Open Directory
+            System.Diagnostics.Process.Start( "explorer.exe", lCacheFolder );
+        }
+
+        private void lnkImageCache_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            string lArtworkFolder = Settings.GetPath( Settings.Path.banners ) + "\\";
+            lArtworkFolder += Helper.cleanLocalPath( mSelectedSeries.ToString() );
+
+            // Open Directory
+            System.Diagnostics.Process.Start( "explorer.exe", lArtworkFolder );
+        }
         #endregion
-
-        //private void lnkOpenAPICacheDir_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
-        //{
-        //    string lCacheFolder = Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ) + "\\Team MediaPortal\\MediaPortal\\MP-TVSeries\\Cache\\";
-        //    lCacheFolder += mSelectedSeries[DBOnlineSeries.cID];
-
-        //    // Open Directory
-        //    System.Diagnostics.Process.Start( "explorer.exe", lCacheFolder );
-
-        //}
-
-        //private void lnkImageCache_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
-        //{
-
-        //}
     }
 
     public class BannerComboItem
