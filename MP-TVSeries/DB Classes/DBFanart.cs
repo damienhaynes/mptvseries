@@ -22,11 +22,9 @@
 #endregion
 
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -39,9 +37,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cChosen = "Chosen";
         public const String cLocalPath = "LocalPath";
         public const String cBannerPath = "BannerPath"; // online
+        public const String cVignettePath = "VignettePath"; // online
         public const String cThumbnailPath = "ThumbnailPath"; // online
         public const String cColors = "Colors"; // online
         public const String cResolution = "BannerType2"; // online
+        public const String cBannerType = "BannerType"; // online
+        public const String cLanguage = "Language"; // online
         public const String cDisabled = "Disabled";
         public const String cSeriesName = "SeriesName"; // online
         public const String cRating = "Rating"; // online
@@ -71,7 +72,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
             AddColumn(cChosen, new DBField(DBField.cTypeString));

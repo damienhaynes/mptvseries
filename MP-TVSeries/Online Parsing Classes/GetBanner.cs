@@ -23,13 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using System.Globalization;
-using System.Xml;
-using System.Net;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 
 namespace WindowPlugins.GUITVSeries
@@ -472,8 +469,8 @@ namespace WindowPlugins.GUITVSeries
 
     class GetFanart
     {
-        List<DBFanart> _fanart = new List<DBFanart>();
-        public List<DBFanart> Fanart { get { return _fanart; } }
+        List<DBFanart> mFanart = new List<DBFanart>();
+        public List<DBFanart> Fanart { get { return mFanart; } }
         
         public GetFanart(int SeriesID)
         {
@@ -505,8 +502,33 @@ namespace WindowPlugins.GUITVSeries
                     dbf[DBFanart.cLocalPath] = string.Empty;
 
                 dbf[DBFanart.cSeriesID] = SeriesID;
-                _fanart.Add(dbf);                
+                mFanart.Add(dbf);                
             }
+            
+            // if fanart count is zero, try to create a dummy fanart basis the series record
+            if ( mFanart.Count == 0 )
+            {
+                DBSeries lSeries = Helper.getCorrespondingSeries( SeriesID );
+                if ( lSeries == null ) return;
+
+                if ( !string.IsNullOrEmpty( lSeries[DBOnlineSeries.cFanart] ) )
+                {
+                    var lFanart = new DBFanart();
+                    lFanart[DBFanart.cIndex] = UInt32.MaxValue + lSeries[DBSeries.cID]; // Something unique
+                    lFanart[DBFanart.cBannerPath] = lSeries[DBOnlineSeries.cFanart];
+                    lFanart[DBFanart.cVignettePath] = lSeries[DBOnlineSeries.cFanart];
+                    lFanart[DBFanart.cThumbnailPath] = lSeries[DBOnlineSeries.cFanart].ToString().Replace(".jpg", "_t.jpg" ); // guess
+                    lFanart[DBFanart.cSeriesID] = SeriesID;
+                    lFanart[DBFanart.cResolution] = "1920x1080"; // guess
+                    lFanart[DBFanart.cSeriesName] = false; //guess
+                    lFanart[DBFanart.cBannerType] = "fanart";
+                    lFanart[DBFanart.cLanguage] = "en"; // guess
+                    lFanart[DBFanart.cRating] = 0;
+                    lFanart[DBFanart.cRatingCount] = 0;
+
+                    mFanart.Add( lFanart );
+                }
+            }          
         }
     }    
 }
