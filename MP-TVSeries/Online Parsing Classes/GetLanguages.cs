@@ -21,9 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
@@ -33,6 +31,7 @@ namespace WindowPlugins.GUITVSeries
         public string language = string.Empty;
         public int id = default(int);
         public string abbreviation = string.Empty;
+        public string englishName = string.Empty;
     }
 
     public class GetLanguages
@@ -53,9 +52,13 @@ namespace WindowPlugins.GUITVSeries
                         if (node.Name == "id") int.TryParse(node.InnerText, out lang.id);
                         if (node.Name == "language") lang.language = node.InnerText; //TODO: disable for new api
                         if (node.Name == "name") lang.language = node.InnerText;
-                        if (node.Name == "abbreviation") lang.abbreviation = node.InnerText;
+                        if ( node.Name == "abbreviation" )
+                        {
+                            lang.abbreviation = node.InnerText;
+                            lang.englishName = new System.Globalization.CultureInfo( lang.abbreviation ).EnglishName;
+                        }
                     }
-                    if (lang.id != default(int) && lang.language.Length > 0)
+                    if (lang.id != default(int) && lang.language.Length > 0 && !lang.englishName.StartsWith("Unknown"))
                         languages.Add(lang);
                 }
             }

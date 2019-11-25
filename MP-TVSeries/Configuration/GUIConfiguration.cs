@@ -419,9 +419,9 @@ namespace WindowPlugins.GUITVSeries
                 string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
                 foreach (Language lang in onlineLanguages)
                 {
-                    comboOnlineLang.Items.Add(lang.language);
-                    if (lang.id.ToString() == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
-                    if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang.language;
+                    string name = $"{lang.englishName} ({lang.abbreviation}) - {lang.language}";
+                    comboOnlineLang.Items.Add( name );
+                    if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = name;
                 }
             }
         }
@@ -3799,7 +3799,7 @@ namespace WindowPlugins.GUITVSeries
             string sel = "en";
             foreach (Language lang in onlineLanguages)
             {
-                if (lang.language == (string)comboOnlineLang.SelectedItem)
+                if ( ((string)comboOnlineLang.SelectedItem).EndsWith( lang.language ) )
                 {
                     sel = lang.abbreviation;
                     break;
@@ -3811,7 +3811,7 @@ namespace WindowPlugins.GUITVSeries
                 DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
-                MessageBox.Show("You need to do a manual import everytime the language is changed or your old items will not be updated!\nNew Language: " + (string)comboOnlineLang.SelectedItem, "Language changed", MessageBoxButtons.OK);
+                MPTVSeriesLog.Write("You need to do a manual import everytime the language is changed or your old items will not be updated. New language: " + (string)comboOnlineLang.SelectedItem);
             }
         }
 
