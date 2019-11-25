@@ -141,9 +141,10 @@ namespace WindowPlugins.GUITVSeries
             XmlNode banners = OnlineAPI.getBannerList(Int32.Parse(seriesID));
             if (banners == null) return;
 
-            if (Helper.getCorrespondingSeries(Int32.Parse(seriesID)) == null) return;
+            DBSeries lSeries = Helper.getCorrespondingSeries( Int32.Parse( seriesID ) );
+            if (lSeries == null) return;
 
-            string SeriesName = Helper.getCorrespondingSeries(Int32.Parse(seriesID)).ToString();
+            string SeriesName = lSeries.ToString();
             List<WideBannerSeries> widebannerSeriesList = new List<WideBannerSeries>();
             List<PosterSeries> posterSeriesList = new List<PosterSeries>();
             List<PosterSeason> posterSeasonList = new List<PosterSeason>();
@@ -183,6 +184,18 @@ namespace WindowPlugins.GUITVSeries
             }
             // sort by highest rated
             widebannerSeriesList.Sort();
+
+            // if the banner count is zero, try to get from the series record
+            if ( widebannerSeriesList.Count == 0 && !string.IsNullOrEmpty(lSeries[DBOnlineSeries.cBanner]))
+            {
+                var seriesWideBanner = new WideBannerSeries();
+
+                seriesWideBanner.Language = "en";
+                seriesWideBanner.OnlinePath = lSeries[DBOnlineSeries.cBanner];
+                seriesWideBanner.SeriesName = SeriesName;
+                seriesWideBanner.Style = ArtworkStyles.graphical;
+                widebannerSeriesList.Add( seriesWideBanner );
+            }
 
             // remove banners of no interest
             if (!DBOption.GetOptions(DBOption.cGetTextBanners))
@@ -224,7 +237,18 @@ namespace WindowPlugins.GUITVSeries
                 posterSeriesList.Add(seriesPoster);
             }
 
-            posterSeasonList.Sort();
+            posterSeriesList.Sort();
+
+            // if the poster count is zero, try to get from the series record
+            if ( posterSeasonList.Count == 0 && !string.IsNullOrEmpty( lSeries[DBOnlineSeries.cPoster] ) )
+            {
+                var seriesPoster = new PosterSeries();
+
+                seriesPoster.Language = "en";
+                seriesPoster.OnlinePath = lSeries[DBOnlineSeries.cPoster];
+                seriesPoster.SeriesName = SeriesName;
+                posterSeriesList.Add( seriesPoster );
+            }
 
             limit = DBOption.GetOptions(DBOption.cArtworkLimitSeriesPosters);
             if (limit < posterSeriesList.Count)
@@ -271,7 +295,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             posterSeasonList.Sort();
-
+            
             // we dont support season widebanners
             posterSeasonList.RemoveAll(p => p.Style == ArtworkStyles.seasonwide);            
 
