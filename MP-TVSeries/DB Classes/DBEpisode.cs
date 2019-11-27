@@ -156,7 +156,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cEpisodeName, "Episode Name");
             s_FieldToDisplayNameMap.Add(cFileDateAdded, "Date Added");
             s_FieldToDisplayNameMap.Add(cFileDateCreated, "Date Created");
-            s_FieldToDisplayNameMap.Add(cAvailableSubtitles, "Subtitles Available");
+            s_FieldToDisplayNameMap.Add(cAvailableSubtitles, "Subtitles");
             s_FieldToDisplayNameMap.Add(cVideoWidth, "Video Width");
             s_FieldToDisplayNameMap.Add(cVideoHeight, "Video Height");
             s_FieldToDisplayNameMap.Add(cVideoAspectRatio, "Video Aspect Ratio");

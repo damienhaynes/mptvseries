@@ -94,6 +94,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cIndex, "Season Index");
             s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
             s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
+            s_FieldToDisplayNameMap.Add(cMyRating, "My Rating" );
             #endregion
             ////////////////////////////////////////////////////////////////////////////////
 

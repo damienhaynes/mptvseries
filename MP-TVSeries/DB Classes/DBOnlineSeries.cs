@@ -127,7 +127,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cAirsTime, "Aired Time");
             s_FieldToDisplayNameMap.Add(cSortName, "Sort By");
             s_FieldToDisplayNameMap.Add(cLanguage, "Language");
-            s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
+            s_FieldToDisplayNameMap.Add(cIMDBID, "IMDb ID");
             s_FieldToDisplayNameMap.Add(cTraktID, "Trakt ID");
             s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
             s_FieldToDisplayNameMap.Add(cChosenEpisodeOrder, "Episode Order");
@@ -136,7 +136,8 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
             s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
             s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
-            s_FieldToDisplayNameMap.Add(cLastEpisodeAirDate, "Last Episode Air Date");
+            s_FieldToDisplayNameMap.Add(cLastEpisodeAirDate, "Last Aired");
+            s_FieldToDisplayNameMap.Add(cLastUpdated, "Last Updated (UTC)");
             #endregion
             ///////////////////////////////////////////////////
 

@@ -1584,8 +1584,9 @@ namespace WindowPlugins.GUITVSeries
 
                                 case DBOnlineEpisode.cEpisodeName:
                                 case DBOnlineEpisode.cOnlineDataImported:
-                                case DBEpisode.cImportProcessed:                                
-                                case DBEpisode.cCompositeUpdated:                                
+                                case DBEpisode.cImportProcessed: 
+                                case DBEpisode.cCompositeUpdated:
+                                case DBEpisode.cVideoHeight:
                                     // hide these fields, they are handled internally
                                     break;
                                 
@@ -1602,8 +1603,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cExtension:
                                 case DBEpisode.cIsOnRemovable:
                                 case DBOnlineEpisode.cHidden:
-                                case DBOnlineEpisode.cID:
-                                case DBOnlineEpisode.cLastUpdated:                                
                                 case DBOnlineEpisode.cWatched:
                                 case DBOnlineEpisode.cFirstWatchedDate:
                                 case DBOnlineEpisode.cLastWatchedDate:
@@ -1635,15 +1634,27 @@ namespace WindowPlugins.GUITVSeries
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
-                                
+
+                                case DBOnlineEpisode.cLastUpdated:
+                                    UInt64 lResult;
+                                    if ( UInt64.TryParse( episode[key], out lResult ) )
+                                    {
+                                        DateTime lDateTime = new DateTime( 1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc );
+                                        lDateTime = lDateTime.AddSeconds( lResult );
+
+                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, lDateTime.ToString(), false );
+                                    }
+                                    else if ( !string.IsNullOrEmpty( episode[key] ) )
+                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, episode[key], false );
+                                    break;
+
                                 case DBEpisode.cVolumeLabel:
                                     if (!String.IsNullOrEmpty(episode[key]))
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
-                                             
-                                case DBEpisode.cAvailableSubtitles:
-                                case DBEpisode.cVideoWidth:
-                                case DBEpisode.cVideoHeight:
+
+                                // read-only fields
+                                case DBOnlineEpisode.cID:
                                 case DBEpisode.cVideoFrameRate:
                                 case DBEpisode.cVideoCodec:
                                 case DBEpisode.cVideoFormat:
@@ -1652,8 +1663,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cVideoAspectRatio:
                                 case DBEpisode.cVideoColourPrimaries:
                                 case DBEpisode.cVideoFormatCommercial:
-                                case DBEpisode.cAudioTracks:
-                                case DBEpisode.cAudioLanguage:
                                 case DBEpisode.cAudioCodec:
                                 case DBEpisode.cAudioFormat:
                                 case DBEpisode.cAudioFormatProfile:
@@ -1661,11 +1670,31 @@ namespace WindowPlugins.GUITVSeries
                                 case DBEpisode.cAudioBitrate:
                                 case DBEpisode.cFileDateAdded:
                                 case DBEpisode.cFileDateCreated:
-                                case DBEpisode.cTextCount:
                                     if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, episode[key], false);
                                     break;
+
+                                case DBEpisode.cAudioLanguage:
+                                    if ( !String.IsNullOrEmpty( episode[key] ) && episode[key] != "-1" )
+                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, GetAudioLanguageDisplayName( episode[key] ), false );
+                                    break;
                                 
+                                case DBEpisode.cVideoWidth:
+                                    if ( !String.IsNullOrEmpty( episode[key] ) && episode[key] != "-1" )
+                                        AddPropertyBindingSource( "Resolution", key, $"{episode[DBEpisode.cVideoWidth]}x{episode[DBEpisode.cVideoHeight]}", false );
+                                    break;
+
+                                case DBEpisode.cAudioTracks:
+                                case DBEpisode.cTextCount:
+                                    if ( !String.IsNullOrEmpty( episode[key] ) && episode[key] != "-1" && episode[key] != "1" )
+                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, episode[key], false );
+                                    break;
+
+                                case DBEpisode.cAvailableSubtitles:
+                                    if ( !String.IsNullOrEmpty( episode[key] ) && episode[key] != "-1" )
+                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, episode[key] ? "True" : "False", false );
+                                    break;
+
                                 case DBEpisode.cLocalPlaytime:
                                     if (!String.IsNullOrEmpty(episode[key]) && episode[key] != "-1")
                                         AddPropertyBindingSource(DBEpisode.PrettyFieldName(key), key, Helper.MSToMMSS(episode[key]), false);
@@ -1755,9 +1784,27 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeason.cUnwatchedItems:
                                 case DBSeason.cHasEpisodes:
                                 case DBSeason.cHasEpisodesTemp:
+                                case DBSeason.cHidden:
                                 case DBSeason.cMyRatingAt:
+                                case DBSeason.cRatingCount:
+                                case DBSeason.cID:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
+                                    break;
+
+                                case DBSeason.cRating:
+                                    if ( !String.IsNullOrEmpty( season[key] ) )
+                                    {
+                                        decimal val = 0;
+                                        decimal.TryParse( season[key].ToString(), out val );
+                                        string score = val.ToString( "#.#" );
+                                        string votes = season[DBSeason.cRatingCount];
+                                        if ( !String.IsNullOrEmpty( votes ) )
+                                        {
+                                            score = string.Format( "{0} ({1} votes)", score, votes );
+                                        }
+                                        AddPropertyBindingSource( DBSeason.PrettyFieldName( key ), key, score, false );
+                                    }
                                     break;
 
                                 case DBSeason.cMyRating:
@@ -1886,7 +1933,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cAdded:
                                 case DBOnlineSeries.cAddedBy:
                                 case DBOnlineSeries.cFanart:
-                                case DBOnlineSeries.cLastUpdated:
                                 case DBOnlineSeries.cLastUpdatedDetail:
                                 case DBOnlineSeries.cPoster:
                                 case DBOnlineSeries.cViewTags:
@@ -1912,8 +1958,22 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cID:
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
+                                case DBOnlineSeries.cChosenEpisodeOrder:
                                     // fields that can not be modified - read only
                                     AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    break;
+                                
+                                case DBOnlineSeries.cLastUpdated:
+                                    UInt64 lResult;
+                                    if ( UInt64.TryParse( series[key], out lResult ) )
+                                    {
+                                        DateTime lDateTime = new DateTime( 1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc );
+                                        lDateTime = lDateTime.AddSeconds( lResult );
+
+                                        AddPropertyBindingSource( DBSeries.PrettyFieldName( key ), key, lDateTime.ToString(), false );
+                                    }
+                                    else if (!string.IsNullOrEmpty( series[key] ))
+                                        AddPropertyBindingSource( DBSeries.PrettyFieldName( key ), key, series[key], false );
                                     break;
 
                                 case DBOnlineSeries.cLanguage:
@@ -1937,7 +1997,6 @@ namespace WindowPlugins.GUITVSeries
                                     break;
 
                                 case DBOnlineSeries.cLastEpisodeAirDate:
-                                case DBOnlineSeries.cChosenEpisodeOrder:
                                     if (!String.IsNullOrEmpty(series[key]))
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key]);
                                     break;
@@ -1959,7 +2018,6 @@ namespace WindowPlugins.GUITVSeries
 
                 #endregion
                 //////////////////////////////////////////////////////////////////////////////
-
             }
             #endregion
             //////////////////////////////////////////////////////////////////////////////
@@ -2082,7 +2140,8 @@ namespace WindowPlugins.GUITVSeries
 
                     // First Column (Name)
                     cFieldName.Value = FieldName;
-                    cFieldName.Style.BackColor = System.Drawing.SystemColors.Control;
+                    cFieldName.Style.Alignment = TextAlign;
+                    cFieldName.Style.BackColor = SystemColors.Control;
                     dataGridDetailRow.Cells.Add(cFieldName);
                     cFieldName.ReadOnly = true;
 
@@ -2120,12 +2179,10 @@ namespace WindowPlugins.GUITVSeries
                     cFieldName = new DataGridViewTextBoxCell();
                     DataGridViewTextBoxCell cFieldValue = new DataGridViewTextBoxCell();
 
-                    if (FieldName == DBEpisode.cAudioLanguage)
-                        FieldValue = GetAudioLanguageDisplayName(FieldValue);
-
                     // First Column (Name)
                     cFieldName.Value = FieldPrettyName;
-                    cFieldName.Style.BackColor = System.Drawing.SystemColors.Control;
+                    cFieldName.Style.Alignment = TextAlign;
+                    cFieldName.Style.BackColor = SystemColors.Control;
                     dataGridDetailRow.Cells.Add(cFieldName);
                     cFieldName.ReadOnly = true;
 
@@ -2137,7 +2194,7 @@ namespace WindowPlugins.GUITVSeries
                     if (!CanModify)
                     {
                         cFieldValue.ReadOnly = true;
-                        cFieldValue.Style.BackColor = System.Drawing.SystemColors.Control;
+                        cFieldValue.Style.BackColor = SystemColors.Control;
                     }
 
                     cFieldValue.Style.Alignment = TextAlign;
@@ -2150,7 +2207,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 // user edit, replace the existing value
                 dataGridView1.Rows[id].Cells[1].Value = FieldValue;
-                dataGridView1.Rows[id].Cells[1].Style.ForeColor = System.Drawing.SystemColors.HotTrack;
+                dataGridView1.Rows[id].Cells[1].Style.ForeColor = SystemColors.HotTrack;
             }
         }
 
