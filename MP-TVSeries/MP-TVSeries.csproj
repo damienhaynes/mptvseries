@@ -179,6 +179,7 @@
     <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
     <Compile Include="DB Classes\DBActor.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GUI\GUIActors.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />

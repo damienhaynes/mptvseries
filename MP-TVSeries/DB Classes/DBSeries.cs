@@ -21,17 +21,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SQLite.NET;
+using WindowPlugins.GUITVSeries.Extensions;
 
 namespace WindowPlugins.GUITVSeries
 {
-    //moved to DBOnineSeries.cs
-    //public class DBOnlineSeries : DBTable
-
     public class DBSeries : DBTable
     {
         public delegate void dbSeriesUpdateOccuredDelegate(DBSeries updated);
@@ -1003,7 +1001,21 @@ namespace WindowPlugins.GUITVSeries
             }
             this.Commit();
         }
-
+        
+        public string Slug
+        {
+            get
+            {
+                string lSlug = this[DBOnlineSeries.cSlug];
+                if ( string.IsNullOrEmpty( lSlug ) )
+                {
+                    // use the original name (English name) when generating a slug
+                    lSlug = this[DBOnlineSeries.cOriginalName].ToString().ToSlug();
+                }
+                
+                return lSlug;
+            }
+        }
     }
 
     public class EpisodeCounter

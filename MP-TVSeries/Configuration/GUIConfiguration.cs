@@ -26,6 +26,7 @@ using SQLite.NET;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -34,9 +35,6 @@ using System.Windows.Forms;
 using System.Xml;
 using WindowPlugins.GUITVSeries.Configuration;
 using WindowPlugins.GUITVSeries.Feedback;
-
-#if DEBUG
-#endif
 
 // TODO: replace all checkboxes that are used to save options with a dboptioncheckbox!!!
 
@@ -1489,6 +1487,10 @@ namespace WindowPlugins.GUITVSeries
 
         #region Series Details Tab Handling
         private DBSeries mSelectedSeries;
+        private DBSeason mSelectedSeason;
+        private DBEpisode mSelectedEpisode;
+        private SelectedStep mSelectedStep = SelectedStep.Series;
+
         private void treeView_Library_AfterSelect(object sender, TreeViewEventArgs e)
         {
             this.dataGridView1.SuspendLayout();
@@ -1529,7 +1531,10 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBEpisode.cTableName:
                     {
+                        mSelectedStep = SelectedStep.Episode;
+
                         DBEpisode episode = (DBEpisode)node.Tag;
+                        mSelectedEpisode = episode;
                        
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
@@ -1723,7 +1728,10 @@ namespace WindowPlugins.GUITVSeries
 
                 case DBSeason.cTableName:
                     {
+                        mSelectedStep = SelectedStep.Season;
+
                         DBSeason season = (DBSeason)node.Tag;
+                        mSelectedSeason = season;
 
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
@@ -1834,7 +1842,9 @@ namespace WindowPlugins.GUITVSeries
                 #region When Series Nodes is Clicked
 
                 case DBSeries.cTableName:
-                    {                       
+                    {
+                        mSelectedStep = SelectedStep.Series;
+                                 
                         DBSeries series = (DBSeries)node.Tag;
                         mSelectedSeries = series;
 
@@ -4806,7 +4816,7 @@ namespace WindowPlugins.GUITVSeries
             lCacheFolder += mSelectedSeries[DBOnlineSeries.cID];
 
             // Open Directory
-            System.Diagnostics.Process.Start( "explorer.exe", lCacheFolder );
+            Process.Start( "explorer.exe", lCacheFolder );
         }
 
         private void lnkImageCache_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
@@ -4815,7 +4825,73 @@ namespace WindowPlugins.GUITVSeries
             lArtworkFolder += Helper.cleanLocalPath( mSelectedSeries.ToString() );
 
             // Open Directory
-            System.Diagnostics.Process.Start( "explorer.exe", lArtworkFolder );
+            Process.Start( "explorer.exe", lArtworkFolder );
+        }
+        
+        private void lnkTVDbSeries_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            // base series url
+            string lUrl = "http://thetvdb.com/series/" + mSelectedSeries.Slug;
+
+            switch ( mSelectedStep )
+            {
+                case SelectedStep.Season:
+                    Process.Start( lUrl + "/seasons/official/" + mSelectedSeason[DBSeason.cIndex]);
+                    break;
+
+                case SelectedStep.Episode:
+                    Process.Start( lUrl + "/episodes/" + mSelectedEpisode[DBOnlineEpisode.cID] );
+                    break;                
+                    
+                default: // series
+                    Process.Start(lUrl);
+                    break;
+            }
+        }
+
+        private void lnkIMDbSeries_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            // series url
+            string lUrl = "http://imdb.com/title/" + mSelectedSeries[DBOnlineSeries.cIMDBID];
+
+            switch ( mSelectedStep )
+            {
+                case SelectedStep.Season:
+                    Process.Start( lUrl + "/episodes?season=" + mSelectedSeason[DBSeason.cIndex] );
+                    break;
+
+                case SelectedStep.Episode:
+                    Process.Start( "http://imdb.com/title/" + mSelectedEpisode[DBOnlineEpisode.cIMDBID] );
+                    break;
+
+                default: // series
+                    Process.Start( lUrl );
+                    break;
+            }
+        }
+
+        private void lnkTraktSeries_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            // base series url
+            string lUrl = "http://trakt.tv/shows/" + mSelectedSeries.Slug;
+
+            switch ( mSelectedStep )
+            {
+                case SelectedStep.Season:
+                    Process.Start( lUrl + "/seasons/" + mSelectedSeason[DBSeason.cIndex] );
+                    break;
+
+                case SelectedStep.Episode:
+                    string lSeasonIdx = mSelectedEpisode[DBOnlineEpisode.cSeasonIndex];
+                    string lEpisodeIdx = mSelectedEpisode[DBOnlineEpisode.cEpisodeIndex];
+
+                    Process.Start( lUrl + $"/seasons/{lSeasonIdx}/episodes/{lEpisodeIdx}" );
+                    break;
+
+                default: // series
+                    Process.Start( lUrl );
+                    break;
+            }
         }
         #endregion
     }
@@ -4835,7 +4911,6 @@ namespace WindowPlugins.GUITVSeries
         {
             return sName;
         }
-
     };
 
     public class FieldTag
@@ -4858,4 +4933,10 @@ namespace WindowPlugins.GUITVSeries
         }
     };
 
+    public enum SelectedStep
+    {
+        Series,
+        Season,
+        Episode
+    }
 }
