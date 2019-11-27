@@ -1535,7 +1535,12 @@ namespace WindowPlugins.GUITVSeries
 
                         DBEpisode episode = (DBEpisode)node.Tag;
                         mSelectedEpisode = episode;
-                       
+                        // Updated selected series if bypassed in tree view
+                        if ( mSelectedEpisode[DBOnlineEpisode.cSeriesID] != mSelectedSeries[DBOnlineSeries.cID] )
+                        {
+                            mSelectedSeries = Helper.getCorrespondingSeries( mSelectedEpisode[DBOnlineEpisode.cSeriesID] );
+                        }
+
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
 
@@ -1732,6 +1737,11 @@ namespace WindowPlugins.GUITVSeries
 
                         DBSeason season = (DBSeason)node.Tag;
                         mSelectedSeason = season;
+                        // Updated selected series if bypassed in tree view
+                        if (mSelectedSeason[DBSeason.cSeriesID] != mSelectedSeries[DBOnlineSeries.cID])
+                        {
+                            mSelectedSeries = Helper.getCorrespondingSeries( mSelectedSeason[DBSeason.cSeriesID] );
+                        }
 
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
