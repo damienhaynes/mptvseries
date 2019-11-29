@@ -75,9 +75,9 @@ namespace WindowPlugins.GUITVSeries
             get { return listIncorrectIDs; }
         }
 
-        public UpdateSeries(String sSeriesIDs)
+        public UpdateSeries(String sSeriesID)
         {
-            listSeries = Work(sSeriesIDs).ToList();
+            listSeries = Work(sSeriesID).ToList();
         }
 
         public UpdateSeries(List<String> sSeriesIDs)
@@ -85,9 +85,9 @@ namespace WindowPlugins.GUITVSeries
             this.sSeriesIDs = sSeriesIDs;            
         }
 
-        public UpdateSeries(String sSeriesIDs, String languageID)
+        public UpdateSeries(String sSeriesID, String languageID, bool aOverride = false )
         {
-            listSeries = Work(sSeriesIDs, languageID).ToList();
+            listSeries = Work(sSeriesID, languageID, aOverride).ToList();
         }
 
         private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
@@ -95,7 +95,7 @@ namespace WindowPlugins.GUITVSeries
             return Work(sSeriesID, "");
         }
 
-        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID)
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID, bool aOverride = false)
         {
             if (sSeriesID.Length > 0)
             {
@@ -110,7 +110,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID);
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID, aOverride );
                 }
 
                 if (node != null)

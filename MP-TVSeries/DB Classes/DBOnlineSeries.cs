@@ -137,6 +137,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add( cEpisodesUnWatched, "Episodes UnWatched" );
             s_FieldToDisplayNameMap.Add( cLastEpisodeAirDate, "Last Aired" );
             s_FieldToDisplayNameMap.Add( cLastUpdated, "Last Updated (UTC)" );
+            s_FieldToDisplayNameMap.Add( cOriginalName, "English Name" );
             #endregion
             ///////////////////////////////////////////////////
 
@@ -265,8 +266,10 @@ namespace WindowPlugins.GUITVSeries
                         string origLanguage = "en"; // English (original)
                         DBValue currentTitle = base[DBOnlineSeries.cPrettyName];
 
-                        if ( DBOption.GetOptions( DBOption.cOnlineLanguage ) == origLanguage )
+                        if ( DBOption.GetOptions( DBOption.cOnlineLanguage ) == "en" && !DBOption.GetOptions( DBOption.cOverrideLanguage ) )
+                        {
                             return base[DBOnlineSeries.cPrettyName];
+                        }
                         else
                         {
                             if ( base[DBOnlineSeries.cOriginalName].ToString().Length > 0 )
@@ -275,7 +278,7 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 // we need to get it
                                 MPTVSeriesLog.Write( "Retrieving Original Series Name for '{0}'", currentTitle );
-                                UpdateSeries origParser = new UpdateSeries( base[DBOnlineSeries.cID], origLanguage );
+                                UpdateSeries origParser = new UpdateSeries( base[DBOnlineSeries.cID], origLanguage, true );
                                 if ( origParser != null && origParser.Results.Count == 1 )
                                 {
                                     DBValue origTitle = origParser.Results[0][DBOnlineSeries.cPrettyName];

@@ -1958,7 +1958,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cBanner:
                                 case DBOnlineSeries.cEpisodeOrders:
                                 case DBOnlineSeries.cSeriesID:
-                                case DBOnlineSeries.cOriginalName:
                                 case DBOnlineSeries.cHasNewEpisodes:
                                 case DBOnlineSeries.cEpisodeSortOrder:
                                 case DBSeries.cHidden:
@@ -1978,8 +1977,10 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                 case DBOnlineSeries.cChosenEpisodeOrder:
+                                case DBOnlineSeries.cOriginalName:
                                     // fields that can not be modified - read only
-                                    AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
+                                    if ( !string.IsNullOrEmpty( series[key] ) )
+                                        AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
                                     break;
                                 
                                 case DBOnlineSeries.cLastUpdated:
@@ -4852,20 +4853,33 @@ namespace WindowPlugins.GUITVSeries
         private void lnkIMDbSeries_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             // series url
-            string lUrl = "http://imdb.com/title/" + mSelectedSeries[DBOnlineSeries.cIMDBID];
+            string lSeriedId = mSelectedSeries[DBOnlineSeries.cIMDBID];
+            string lUrl = "http://imdb.com/title/" + lSeriedId;
 
             switch ( mSelectedStep )
             {
                 case SelectedStep.Season:
-                    Process.Start( lUrl + "/episodes?season=" + mSelectedSeason[DBSeason.cIndex] );
+                    if ( !string.IsNullOrEmpty( lSeriedId ) )
+                        Process.Start( lUrl + "/episodes?season=" + mSelectedSeason[DBSeason.cIndex] );
+                    else
+                        Process.Start( "http://imdb.com" );
                     break;
 
                 case SelectedStep.Episode:
-                    Process.Start( "http://imdb.com/title/" + mSelectedEpisode[DBOnlineEpisode.cIMDBID] );
+                    string lImdbId = mSelectedEpisode[DBOnlineEpisode.cIMDBID];
+
+                    // if the episode IMDb is empty, take user to series level
+                    if ( string.IsNullOrEmpty( lImdbId ) )
+                        lImdbId = lSeriedId;
+
+                    Process.Start( "http://imdb.com/title/" + lImdbId );
                     break;
 
                 default: // series
-                    Process.Start( lUrl );
+                    if ( !string.IsNullOrEmpty( lSeriedId ) )
+                        Process.Start( lUrl );
+                    else
+                        Process.Start( "http://imdb.com" );
                     break;
             }
         }

@@ -1010,7 +1010,12 @@ namespace WindowPlugins.GUITVSeries
                 if ( string.IsNullOrEmpty( lSlug ) )
                 {
                     // use the original name (English name) when generating a slug
-                    lSlug = this[DBOnlineSeries.cOriginalName].ToString().ToSlug();
+                    var lOriginalName = this[DBOnlineSeries.cOriginalName];
+                    lSlug = lOriginalName.ToString().ToSlug();
+
+                    // now save the slug for next time
+                    this[DBOnlineSeries.cSlug] = lSlug;
+                    this.Commit();
                 }
                 
                 return lSlug;
