@@ -964,6 +964,19 @@ namespace WindowPlugins.GUITVSeries
                     {
                         DBSeries s = Helper.getCorrespondingSeries(series.Key);
                         MPTVSeriesLog.Write("Cache cleared for series: {0}", s == null ? series.Key.ToString() : s.ToString());
+
+                        // try delete the directory...we probably no longer have a reference to it in the database
+                        if ( s == null )
+                        {
+                            try
+                            {
+                                Directory.Delete( Path.Combine( cacheDir, series.Key ) );
+                            }
+                            catch(Exception ex)
+                            {
+                                MPTVSeriesLog.Write( $"Failed to delete '{series.Key}' cache directory, Exception: {ex.Message}" );
+                            }
+                        }
                     }
                 }
             }

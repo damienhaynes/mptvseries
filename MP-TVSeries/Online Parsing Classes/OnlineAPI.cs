@@ -27,7 +27,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         public const string GetAllFavourites = @"User_Favorites.php?accountid={0}";
     }
 
-    private enum Format
+    public enum Format
     {
       Xml,
       Zip,
@@ -140,8 +140,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static public XmlNode UpdateSeries(String sSeriesID)
     { return UpdateSeries(sSeriesID, true); }
 
-    static public XmlNode UpdateSeries(String sSeriesID, String languageID)
-    { return UpdateSeries(sSeriesID, languageID, true); }
+    static public XmlNode UpdateSeries(String sSeriesID, String languageID, bool aOverride = false)
+    { return UpdateSeries(sSeriesID, languageID, true, aOverride); }
 
     static private XmlNode UpdateSeries(String sSeriesID, bool first)
     {
@@ -158,9 +158,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         }
     }
 
-    static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first)
+    static private XmlNode UpdateSeries(String sSeriesID, String languageID, bool first, bool aOverride = false )
     {
-        if(DBOption.GetOptions(DBOption.cOverrideLanguage))
+        // we may need to get english original name even when series language is overridden
+        if(DBOption.GetOptions(DBOption.cOverrideLanguage) && !aOverride)
         {
             languageID = GetLanguageOverride(sSeriesID);
             int series = Int32.Parse(sSeriesID);
@@ -168,6 +169,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         }
         else
         {
+            // if we have an overridden language then we do not care
             int series = Int32.Parse(sSeriesID);
             return getFromCache(series, languageID + ".xml", languageID);
         }
@@ -219,10 +221,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         return true;
     }
 
-    static public XmlNode Updates(UpdateType type)
-    {            
+    static public XmlNode Updates(UpdateType type, Format format = Format.Zip)
+    {
       string typeName = Enum.GetName(typeof(UpdateType), type);
-      return Generic(string.Format(apiURIs.Updates, typeName), true, true, Format.Zip, "updates_" + typeName, -1);
+      return Generic(string.Format(apiURIs.Updates, typeName), true, true, format, "updates_" + typeName, -1);
     }
 
     static public XmlNode UpdateEpisodes(int seriesID)
