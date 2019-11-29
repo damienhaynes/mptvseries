@@ -56,8 +56,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
                 MPTVSeriesLog.Write( $"Failed to get updates file from online, manually defining series and images for updates. Database contains '{lContinuingSeries.Count}' continuing series with local files" );
 
-                // force our local download cache to expire after a day
-                timestamp = DateTime.UtcNow.Subtract( new TimeSpan( 1, 0, 0, 0 ) ).ToFileTime();
+                // force our local download cache to expire after a 12hrs
+                timestamp = DateTime.UtcNow.Subtract( new TimeSpan( 0, 12, 0, 0 ) ).ToEpoch();
                 foreach ( var lSeries in lContinuingSeries )
                 {
                     string lSeriesId = lSeries[DBOnlineSeries.cID];
