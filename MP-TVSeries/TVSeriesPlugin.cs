@@ -1856,13 +1856,13 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (Language lang in onlineLanguages)
                 {
-                    items.Add(new GUIListItem(Helper.UppercaseFirst(lang.language)));
+                    items.Add(new GUIListItem(Helper.UppercaseFirst(lang.Name)));
                     if (lang.abbreviation == selectedLanguage)
                     {
-                        selectedLang = lang.language;
+                        selectedLang = lang.Name;
 
-                        iSelected = items.FindIndex(item => item.Label.Equals(lang.language));
-                        items[iSelected].Label = lang.language + " (Selected)";
+                        iSelected = items.FindIndex(item => item.Label.Equals(lang.Name));
+                        items[iSelected].Label = lang.Name + " (Selected)";
                     }
                 }
 
@@ -1870,7 +1870,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (!newLang.Equals(selectedLang))
                 {
-                    Language newSelectedLanguage = onlineLanguages.Find(lang => lang.language.Equals(newLang));
+                    Language newSelectedLanguage = onlineLanguages.Find(lang => lang.Name.Equals(newLang));
                     if (newSelectedLanguage != null)
                     {
                         selectedSeries[DBOnlineSeries.cLanguage] = newSelectedLanguage.abbreviation;

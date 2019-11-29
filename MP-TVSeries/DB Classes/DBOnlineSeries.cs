@@ -125,7 +125,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add( cAirsDay, "Aired Day" );
             s_FieldToDisplayNameMap.Add( cAirsTime, "Aired Time" );
             s_FieldToDisplayNameMap.Add( cSortName, "Sort By" );
-            s_FieldToDisplayNameMap.Add( cLanguage, "Language" );
+            s_FieldToDisplayNameMap.Add( cLanguage, "Language (Override)" );
             s_FieldToDisplayNameMap.Add( cIMDBID, "IMDb ID" );
             s_FieldToDisplayNameMap.Add( cTraktID, "Trakt ID" );
             s_FieldToDisplayNameMap.Add( cEpisodeOrders, "Episode Orders" );

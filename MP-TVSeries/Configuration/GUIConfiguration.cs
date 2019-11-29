@@ -417,9 +417,8 @@ namespace WindowPlugins.GUITVSeries
                 string selectedLanguage = DBOption.GetOptions(DBOption.cOnlineLanguage);
                 foreach (Language lang in onlineLanguages)
                 {
-                    string name = $"{lang.englishName} ({lang.abbreviation}) - {lang.language}";
-                    comboOnlineLang.Items.Add( name );
-                    if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = name;
+                    comboOnlineLang.Items.Add( lang );
+                    if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang;
                 }
             }
         }
@@ -2159,7 +2158,7 @@ namespace WindowPlugins.GUITVSeries
                     DataGridViewComboBoxCell cbCell = new DataGridViewComboBoxCell();
 
                     // First Column (Name)
-                    cFieldName.Value = FieldName;
+                    cFieldName.Value = DBOnlineSeries.s_FieldToDisplayNameMap[FieldName];
                     cFieldName.Style.Alignment = TextAlign;
                     cFieldName.Style.BackColor = SystemColors.Control;
                     dataGridDetailRow.Cells.Add(cFieldName);
@@ -2171,22 +2170,17 @@ namespace WindowPlugins.GUITVSeries
                         onlineLanguages.AddRange(new GetLanguages().languages);
                     }
 
-                    foreach (Language lang in onlineLanguages)
-                    {
-                        cbCell.Items.Add(lang.language);
-                    }
+                    // populate languages drop-down and select overridden language for series
+                    string selectedLanguage = onlineLanguages.Find( x => x.abbreviation.Contains( FieldValue ) )?.abbreviation;
 
-                    Language selectedLang = onlineLanguages.Find(x => x.abbreviation.Contains(FieldValue));
-                    for (int i = 0; i < cbCell.Items.Count; i++)
+                    foreach (var language in onlineLanguages)
                     {
-                        string s = cbCell.Items[i].ToString();
-                        if (cbCell.Items[i].ToString() == selectedLang.language)
-                        {
-                            cbCell.Value = cbCell.Items[i];
-                        }
+                        cbCell.Items.Add( language.ToString() );
+                        if ( language.abbreviation == FieldValue ) cbCell.Value = language.ToString();
                     }
 
                     cbCell.Tag = FieldName;
+                    cbCell.Style.Alignment = TextAlign;
 
                     dataGridDetailRow.Cells.Add(cbCell);
                     cbCell.ReadOnly = false;
@@ -2272,9 +2266,9 @@ namespace WindowPlugins.GUITVSeries
                 {
                     case DBSeries.cTableName:
                         DBSeries series = (DBSeries)nodeEdited.Tag;
-                        if (editFieldName == "language")
+                        if ( editFieldName == DBOnlineSeries.cLanguage )
                         {
-                            Language selectedLang = onlineLanguages.Find(x => x.language.Contains(newValue));
+                            Language selectedLang = onlineLanguages.Find(x => x.ToString() == newValue);
                             if (selectedLang != null)
                             {
                                 series[editFieldName] = selectedLang.abbreviation;
@@ -3873,22 +3867,18 @@ namespace WindowPlugins.GUITVSeries
 
         private void comboOnlineLang_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string sel = "en";
-            foreach (Language lang in onlineLanguages)
-            {
-                if ( ((string)comboOnlineLang.SelectedItem).EndsWith( lang.language ) )
-                {
-                    sel = lang.abbreviation;
-                    break;
-                }
-            }
+            if ( comboOnlineLang.SelectedIndex < 0 )
+                return;
 
-            if (sel != string.Empty && sel != DBOption.GetOptions(DBOption.cOnlineLanguage))
+            var selectedLanguage = comboOnlineLang.SelectedItem as Language;
+            if ( selectedLanguage == null ) return;
+
+            if ( selectedLanguage.abbreviation != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
-                DBOption.SetOptions(DBOption.cOnlineLanguage, sel);
+                DBOption.SetOptions(DBOption.cOnlineLanguage, selectedLanguage.abbreviation );
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
-                MPTVSeriesLog.Write("You need to do a manual import everytime the language is changed or your old items will not be updated. New language: " + (string)comboOnlineLang.SelectedItem);
+                MPTVSeriesLog.Write("You need to do a manual import everytime the language is changed or your old items will not be updated. New language: " + comboOnlineLang.SelectedItem.ToString());
             }
         }
 
@@ -3910,7 +3900,7 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 LoadOnlineLanguages();
-                // Reload the tree for hideing the language property
+                // Reload the tree for hiding the language property
                 LoadTree();
             }
         }

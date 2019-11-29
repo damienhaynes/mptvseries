@@ -28,10 +28,15 @@ namespace WindowPlugins.GUITVSeries
 {
     public class Language
     {
-        public string language = string.Empty;
+        public string Name = string.Empty;
         public int id = default(int);
         public string abbreviation = string.Empty;
         public string englishName = string.Empty;
+
+        public override string ToString()
+        {
+            return $"{englishName} ({abbreviation}) - {Name}";
+        }
     }
 
     public class GetLanguages
@@ -50,15 +55,14 @@ namespace WindowPlugins.GUITVSeries
                     foreach (XmlNode node in itemNode)
                     {
                         if (node.Name == "id") int.TryParse(node.InnerText, out lang.id);
-                        if (node.Name == "language") lang.language = node.InnerText; //TODO: disable for new api
-                        if (node.Name == "name") lang.language = node.InnerText;
+                        if (node.Name == "name") lang.Name = node.InnerText;
                         if ( node.Name == "abbreviation" )
                         {
                             lang.abbreviation = node.InnerText;
                             lang.englishName = new System.Globalization.CultureInfo( lang.abbreviation ).EnglishName;
                         }
                     }
-                    if (lang.id != default(int) && lang.language.Length > 0 && !lang.englishName.StartsWith("Unknown"))
+                    if (lang.id != default(int) && lang.Name.Length > 0 && !lang.englishName.StartsWith("Unknown"))
                         languages.Add(lang);
                 }
             }
