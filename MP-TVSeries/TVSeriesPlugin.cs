@@ -1844,8 +1844,9 @@ namespace WindowPlugins.GUITVSeries
             if (DBOption.GetOptions(DBOption.cOverrideLanguage))
             {
                 int iSelected = -1;
+                String lLabel = string.Empty;
                 String selectedLang = String.Empty;
-                String newLang = String.Empty;
+                String newLanguage = String.Empty;
                 String selectedLanguage = selectedSeries[DBOnlineSeries.cLanguage];
                 List<GUIListItem> items = new List<GUIListItem>();
                 
@@ -1856,21 +1857,21 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (Language lang in onlineLanguages)
                 {
-                    items.Add(new GUIListItem(Helper.UppercaseFirst(lang.Name)));
+                    lLabel = lang.ToString();
                     if (lang.abbreviation == selectedLanguage)
                     {
                         selectedLang = lang.Name;
-
-                        iSelected = items.FindIndex(item => item.Label.Equals(lang.Name));
-                        items[iSelected].Label = lang.Name + " (Selected)";
+                        iSelected = items.Count;
+                        lLabel += " (Selected)";
                     }
+                    items.Add( new GUIListItem( lLabel ) );
                 }
 
-                ShowMenuDialog(Translation.ChangeSeriesLanguage, items, iSelected, out newLang);
+                ShowMenuDialog(Translation.ChangeSeriesLanguage, items, iSelected, out newLanguage);
 
-                if (!newLang.Equals(selectedLang))
+                if (!newLanguage.Equals(selectedLang))
                 {
-                    Language newSelectedLanguage = onlineLanguages.Find(lang => lang.Name.Equals(newLang));
+                    Language newSelectedLanguage = onlineLanguages.Find(lang => lang.ToString().Equals(newLanguage));
                     if (newSelectedLanguage != null)
                     {
                         selectedSeries[DBOnlineSeries.cLanguage] = newSelectedLanguage.abbreviation;
