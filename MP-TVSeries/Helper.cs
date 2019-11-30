@@ -79,11 +79,25 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // shrink the result
-            char[] newLenghtChars = new char[cInput.Length - removed];
-            for (int i = 0; i < newLenghtChars.Length; i++)
-                newLenghtChars[i] = cInput[i];
+            char[] newLengthChars = new char[cInput.Length - removed];
+            for (int i = 0; i < newLengthChars.Length; i++)
+                newLengthChars[i] = cInput[i];
 
-            return new string(newLenghtChars);
+            return new string( newLengthChars );
+        }
+        public static string RemoveSpecialCharacters( this string aString )
+        {
+            StringBuilder lStringBuilder = new StringBuilder( aString.Length);
+            foreach ( char c in aString )
+            {
+                // we want to consider all unicode characters including letters 
+                // in the Cyrillic alphabet
+                if ( Char.IsLetterOrDigit( c ) )
+                {
+                    lStringBuilder.Append( c );
+                }
+            }
+            return lStringBuilder.ToString();
         }
 
         public static string RemapHighOrderChars(this string input)

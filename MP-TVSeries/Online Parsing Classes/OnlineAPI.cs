@@ -18,7 +18,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     {
         public const string Mirrors = "mirrors";
         public const string Languages = "languages";
-        public const string GetSeries = @"GetSeries.php?seriesname={0}&language=all";
+        public const string GetSeries = @"GetSeries.php?seriesname={0}&language={1}";
         public const string FullSeriesUpdate = @"series/{0}/all/{1}";
         public const string Updates = "updates/updates_{0}";
         public const string SubmitRating = "User_Rating.php?accountid={0}&itemtype={1}&itemid={2}&rating={3}";
@@ -51,7 +51,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
     static Dictionary<int, WebClient> webClientList = new Dictionary<int, WebClient>();
     static int nDownloadGUIDGenerator = 1;
 
-    # region Language
+    #region Language
     static string selLang = string.Empty;
 
     public static string SelLanguageAsString
@@ -102,9 +102,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       return Generic(apiURIs.Languages, Format.Xml);
     }
 
-    static public XmlNode GetSeries(String sSeriesName)
+    static public XmlNode GetSeries(String sSeriesName, string aLanguageCode = "en")
     {
-        return Generic(string.Format(apiURIs.GetSeries, HttpUtility.UrlEncode(sSeriesName)), true, false, Format.NoExtension);
+        return Generic(string.Format(apiURIs.GetSeries, HttpUtility.UrlEncode(sSeriesName), aLanguageCode), true, false, Format.NoExtension);
     }
 
     static public XmlNode GetUserRatings(String sSeriesID, String sAccountID)

@@ -32,53 +32,49 @@ namespace WindowPlugins.GUITVSeries
     {
         /// <summary>
         /// The maximum string Levenshtein Distance for an auto-match.
-        /// This could be tweaked.
         /// </summary>
         public static int FuzzyMatching_MaxLSDistance = 2;
-
-        private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
-        private string nameToMatch = null;
 
         public List<DBOnlineSeries> Results
         {
             get 
             {
-                return listSeries; 
+                return mListSeries; 
             }
         }
+        private List<DBOnlineSeries> mListSeries = new List<DBOnlineSeries>();
 
         public DBOnlineSeries PerfectMatch { get; protected set; }
 
         DBOnlineSeries RankSearchResults(string name, IList<DBOnlineSeries> candidates, out List<DBOnlineSeries> orderedCandidates)
         {
-            string cleanedName = name.ToLowerInvariant().Trim().CleanStringOfSpecialChars();
+            // remove any non alphabet characters
+            string cleanedName = name.ToLowerInvariant().Trim().RemoveSpecialCharacters();
             
-            // calculate distances - series without alias
-            var bestMatch = (from candidate in candidates.Where(c => string.IsNullOrEmpty(c[DBOnlineSeries.cAliasNames]))
+            // calculate distances basis the series names
+            var bestMatch = (from candidate in candidates
                              select new
                              {
-                                 LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, candidate[DBOnlineSeries.cPrettyName].ToString().ToLowerInvariant().CleanStringOfSpecialChars()),
+                                 LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, candidate[DBOnlineSeries.cPrettyName].ToString().ToLowerInvariant().RemoveSpecialCharacters()),
                                  Series = candidate
                              });
 
-            // calculate distances - series with alias
+            // calculate distances basis series alias names
             bestMatch = bestMatch.Union(from candidate in candidates.Where(c => !string.IsNullOrEmpty(c[DBOnlineSeries.cAliasNames]))
-                                          from alias in candidate[DBOnlineSeries.cAliasNames].ToString().Split('|')
-                                          select new
-                                          {
-                                              LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, alias.ToLowerInvariant().CleanStringOfSpecialChars()),
-                                              Series = candidate
-                                          });
+                                        from alias in candidate[DBOnlineSeries.cAliasNames].ToString().Split('|')
+                                        select new
+                                        {
+                                            LSDistance = MediaPortal.Util.Levenshtein.Match(cleanedName, alias.ToLowerInvariant().RemoveSpecialCharacters()),
+                                            Series = candidate
+                                        });
 
-            // make them unique
-            // note: this is different from onlineparse, should probably pick one implementation (read: this one!)           
-            // old implementation disabled as its done here now
+            // make results unique
             var uniqueResults = from candidate in bestMatch
                                 group candidate by (int)candidate.Series[DBOnlineSeries.cID];
 
             // now order the series by their minLSDistance (each ID can have several series and thus names)
             // we dont care which one won, we just want the minimum it scored
-            // we also pick out the series in the users lang, and the englis lang
+            // we also pick out the series in the users language, and the English language
             var weightedUniqueResults = from ur in uniqueResults
                                         select new
                                         {
@@ -89,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
                                         };
 
             // now decide which one to display
-            // 1) userlang 2) english 3) whichever scored our best result, this has to exist
+            // 1) users language 2) English 3) whichever scored our best result, this has to exist
             var weightedDisplayResults = from dr in weightedUniqueResults
                                          orderby dr.MinLSDistance
                                          select new
@@ -103,7 +99,7 @@ namespace WindowPlugins.GUITVSeries
             // give the ordered results back (for displaying)
             orderedCandidates = weightedDisplayResults.Select(r => r.Series).ToList();
 
-            // get the best one thats under a certain distance, which is a bit more fuzzy than the perfect requirement before            
+            // get the best one that's under a certain distance, which is a bit more fuzzy than the perfect requirement before
             if (Settings.isConfig || DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1)
             {
                 var best = weightedDisplayResults.FirstOrDefault(m => m.LSDistance <= FuzzyMatching_MaxLSDistance);
@@ -113,38 +109,46 @@ namespace WindowPlugins.GUITVSeries
             return null;
         }
 
-        public GetSeries(String sSeriesName)
+        public GetSeries(String aSeriesName)
         {
-            XmlNode node = Online_Parsing_Classes.OnlineAPI.GetSeries(sSeriesName);
+            string lUserLanguage = DBOption.GetOptions( DBOption.cOnlineLanguage );
 
-            nameToMatch = sSeriesName;
-            if (node != null)
+            // search for series basis the user's language
+            XmlNode lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, lUserLanguage );
+            if ( lNode == null ) return;
+
+            // if we have no results from the user's language try English
+            if ( lNode.ChildNodes.Count == 0 && lUserLanguage != "en" )
             {
-                foreach (XmlNode itemNode in node.ChildNodes)
-                {
-                    DBOnlineSeries series = new DBOnlineSeries();
-                    
-                    foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                    {
-                        if (propertyNode.Name == "seriesid") // work around SeriesID inconsistancy
-                        {
-                            series[DBOnlineSeries.cID] = propertyNode.InnerText;
-                        }
-                        else if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                            series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                        else
-                        {
-                            // we don't know that field, add it to the series table
-                            series.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                            series[propertyNode.Name] = propertyNode.InnerText;
-                        }
-                    }
-                    listSeries.Add(series);                    
-                }
-
-                PerfectMatch = RankSearchResults(nameToMatch, listSeries, out listSeries);
+                lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, "en" );
+                if ( lNode == null ) return;
             }
-        }
 
+            foreach ( XmlNode itemNode in lNode.ChildNodes)
+            {
+                var lSeries = new DBOnlineSeries();
+                    
+                foreach (XmlNode propertyNode in itemNode.ChildNodes)
+                {
+                    if ( propertyNode.Name == "seriesid" ) // work around SeriesID inconsistancy
+                    {
+                        lSeries[DBOnlineSeries.cID] = propertyNode.InnerText;
+                    }
+                    else if ( DBOnlineSeries.s_OnlineToFieldMap.ContainsKey( propertyNode.Name ) )
+                    {
+                        lSeries[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                    }
+                    else
+                    {
+                        // we don't know that field, add it to the series table
+                        lSeries.AddColumn( propertyNode.Name, new DBField( DBField.cTypeString ) );
+                        lSeries[propertyNode.Name] = propertyNode.InnerText;
+                    }
+                }
+                mListSeries.Add(lSeries);
+            }
+
+            PerfectMatch = RankSearchResults( aSeriesName, mListSeries, out mListSeries );            
+        }
     }
 }

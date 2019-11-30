@@ -1968,11 +1968,11 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cAliasNames:
                                 case DBOnlineSeries.cTraktID:
                                 case DBOnlineSeries.cSlug:
-                                     // hide these fields as we are not so interested in,   
-                                     // possibly add a toggle option to display all fields later
-                                     break;
-
                                 case DBSeries.cParsedName:
+                                    // hide these fields as we are not so interested in,   
+                                    // possibly add a toggle option to display all fields later
+                                    break;
+                                
                                 case DBSeries.cID:
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
