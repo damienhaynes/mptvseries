@@ -105,6 +105,17 @@ namespace WindowPlugins.GUITVSeries
             initLoading = false;
             LoadTree();
 
+            // Push Translated Strings to skin
+            MPTVSeriesLog.Write( "Setting translated strings: ", MPTVSeriesLog.LogLevel.Debug );
+            string propertyName = string.Empty;
+            string propertyValue = string.Empty;
+            foreach ( string name in Translation.Strings.Keys )
+            {
+                propertyName = "#TVSeries.Translation." + name + ".Label";
+                propertyValue = Translation.Strings[name];
+                MPTVSeriesLog.Write( propertyName + " = " + propertyValue, MPTVSeriesLog.LogLevel.Debug );
+            }
+
             // Only Advanced Users / Skin Designers need to see these.
             // Tabs are visible if import="false" TVSeries.SkinSettings.xml
             if (SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);

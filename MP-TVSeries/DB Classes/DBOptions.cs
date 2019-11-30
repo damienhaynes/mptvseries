@@ -180,6 +180,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cCountSpecialEpisodesAsWatched = "CountSpecialEpisodesAsWatched";
         public const string cTraktCommunityRatings = "TraktCommunityRatings";
         public const string cTraktLastDateUpdated = "TraktLastDateUpdated";
+        public const string cParsedNameFromFolder = "ParsedNameFromFolder";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -569,6 +570,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cTraktCommunityRatings) == null)
                 SetOptions(cTraktCommunityRatings, false);
+
+            if ( GetOptions(cParsedNameFromFolder) == null)
+                SetOptions(cParsedNameFromFolder, false);
 
             #endregion
         }

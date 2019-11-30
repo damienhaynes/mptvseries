@@ -21,9 +21,9 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace WindowPlugins.GUITVSeries
@@ -196,14 +196,14 @@ namespace WindowPlugins.GUITVSeries
           return runAgainst;
         }
 
-        public FilenameParser(string filename)
+        public FilenameParser(PathPair aPathPair)
         {
             try
             {
                 ////////////////////////////////////////////////////////////////////////////////////////////
                 // Parsing filename for all recognized naming formats to extract episode information
                 ////////////////////////////////////////////////////////////////////////////////////////////
-                m_Filename = filename;
+                m_Filename = aPathPair.m_sMatch_FileName;
                 if (sExpressions.Count == 0) reLoadExpressions();
 
                 int index = 0;
@@ -223,9 +223,31 @@ namespace WindowPlugins.GUITVSeries
                             string GroupName = regularExpression.GroupNameFromNumber(i);
                             string GroupValue = matchResults.Groups[i].Value;
 
-                            if (GroupValue.Length > 0 && GroupName != "unknown")
+                            // try get the series name from the folder
+                            if (GroupName == DBSeries.cParsedName && DBOption.GetOptions(DBOption.cParsedNameFromFolder))
                             {
-                                // ´run after replacements on captures
+                                // get directory of file
+                                string lDirectory = Path.GetDirectoryName( aPathPair.m_sFull_FileName );
+                                
+                                // now get the name basis the last part of the directory
+                                string lLastFolderName = Path.GetFileName( lDirectory );
+
+                                // check if the directory structure has seasons
+                                if ( lLastFolderName.ToLowerInvariant().StartsWith( "season" ) ||
+                                     lLastFolderName.ToLowerInvariant().StartsWith( Translation.Season ) ||
+                                     lLastFolderName.ToLowerInvariant().Equals( "specials" ) ||
+                                     lLastFolderName.ToLowerInvariant().Equals( Translation.specials ) )
+                                {
+                                    lDirectory = Directory.GetParent( lDirectory ).ToString();
+                                    lLastFolderName = Path.GetFileName( lDirectory );
+                                }
+
+                                GroupValue = lLastFolderName;
+                                m_Matches.Add( GroupName, GroupValue );
+                            }
+                            else if ( GroupValue.Length > 0 && GroupName != "unknown")
+                            {
+                                // run after replacements on captures
                                 GroupValue = RunReplacements(replacementRegexAfter, GroupValue);
 
                                 GroupValue = GroupValue.Trim();
