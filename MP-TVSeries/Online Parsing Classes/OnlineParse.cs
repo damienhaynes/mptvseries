@@ -374,11 +374,15 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ParsingAction.MediaInfo:
-                        //Threaded MediaInfo.dll parsing of new files - goes straight to next task
-                        if (!DBOption.GetOptions(DBOption.cDisableMediaInfo))
+                        // Multi-threaded MediaInfo parsing of new files - goes straight to next task
+                        if ( !DBOption.GetOptions( DBOption.cDisableMediaInfo ) )
                         {
-                            tMediaInfo = new BackgroundWorker();
-                            MediaInfoParse(tMediaInfo);
+                            // disable only in configuration
+                            if ( !Settings.isConfig || ( Settings.isConfig && !DBOption.GetOptions( DBOption.cDisableMediaInfoInConfigImports ) ) )
+                            {
+                                tMediaInfo = new BackgroundWorker();
+                                MediaInfoParse( tMediaInfo );
+                            }
                         }
                         break;
 

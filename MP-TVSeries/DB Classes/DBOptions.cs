@@ -157,6 +157,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cConfigSizeHeight = "configSizeHeight";
         public const string cConfigSizeWidth = "configSizeWidth";
         public const string cDisableMediaInfo = "DisableMediaInfo";
+        public const string cDisableMediaInfoInConfigImports = "DisableMediaInfoInConfigImports";
         public const string cMediaInfoParseSpeed = "MediaInfoParseSpeed";
         public const string cImportDelay = "ImportDelay";        
         public const string cDelayImportPathMonitoringValue = "DelayImportPathMonitoringValue";
@@ -571,9 +572,11 @@ namespace WindowPlugins.GUITVSeries
             if (GetOptions(cTraktCommunityRatings) == null)
                 SetOptions(cTraktCommunityRatings, false);
 
-            if ( GetOptions(cParsedNameFromFolder) == null)
+            if (GetOptions(cParsedNameFromFolder) == null)
                 SetOptions(cParsedNameFromFolder, false);
 
+            if (GetOptions(cDisableMediaInfoInConfigImports) == null)
+                SetOptions(cDisableMediaInfoInConfigImports, false );
             #endregion
         }
 
