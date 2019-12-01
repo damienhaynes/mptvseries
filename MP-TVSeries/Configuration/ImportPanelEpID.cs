@@ -27,6 +27,13 @@ namespace WindowPlugins.GUITVSeries.Configuration
         public ImportPanelEpID()
         {
             InitializeComponent();
+
+            // only show episodes requiring manual selection by default
+            if (DBOption.GetOptions(DBOption.cCheckShowOnlyEpisodesRequiringManualSelection))
+            {
+                checkBoxFilter.Checked = true;
+            }
+            checkBoxFilter.CheckedChanged += new EventHandler( checkBoxFilter_CheckedChanged );
         }
 
         public void MatchEpisodesForSeries(DBSeries series, List<DBEpisode> localEpisodes, List<DBOnlineEpisode> onlineCandidates)

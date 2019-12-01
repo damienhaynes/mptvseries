@@ -182,6 +182,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cTraktCommunityRatings = "TraktCommunityRatings";
         public const string cTraktLastDateUpdated = "TraktLastDateUpdated";
         public const string cParsedNameFromFolder = "ParsedNameFromFolder";
+        public const string cCheckShowOnlyEpisodesRequiringManualSelection = "CheckShowOnlyEpisodesRequiringManualSelection";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -577,6 +578,10 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cDisableMediaInfoInConfigImports) == null)
                 SetOptions(cDisableMediaInfoInConfigImports, false );
+
+            if (GetOptions(cCheckShowOnlyEpisodesRequiringManualSelection) == null)
+                SetOptions(cCheckShowOnlyEpisodesRequiringManualSelection, false);
+
             #endregion
         }
 
