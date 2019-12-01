@@ -116,6 +116,8 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write( propertyName + " = " + propertyValue, MPTVSeriesLog.LogLevel.Debug );
             }
 
+            DBOption.LogOptions();
+
             // Only Advanced Users / Skin Designers need to see these.
             // Tabs are visible if import="false" TVSeries.SkinSettings.xml
             if (SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);
@@ -1988,12 +1990,16 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                 case DBOnlineSeries.cChosenEpisodeOrder:
-                                case DBOnlineSeries.cOriginalName:
                                     // fields that can not be modified - read only
                                     if ( !string.IsNullOrEmpty( series[key] ) )
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
                                     break;
-                                
+
+                                case DBOnlineSeries.cOriginalName:
+                                    if ( !string.IsNullOrEmpty( series[key] ) && ( series[key] != series[DBOnlineSeries.cPrettyName] ) )
+                                        AddPropertyBindingSource( DBSeries.PrettyFieldName( key ), key, series[key], false );
+                                    break;
+
                                 case DBOnlineSeries.cLastUpdated:
                                     UInt64 lResult;
                                     if ( UInt64.TryParse( series[key], out lResult ) )
