@@ -3866,7 +3866,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionDisableMediaInfoInConfig.Option = "DisableMediaInfoInConfigImports";
             this.dbOptionDisableMediaInfoInConfig.Size = new System.Drawing.Size(292, 17);
             this.dbOptionDisableMediaInfoInConfig.TabIndex = 43;
-            this.dbOptionDisableMediaInfoInConfig.Text = "Disable MediaInfo scan when importing via configuration";
+            this.dbOptionDisableMediaInfoInConfig.Text = "Postpone MediaInfo scan when importing via configuration";
             this.dbOptionDisableMediaInfoInConfig.ToolTip = "";
             this.dbOptionDisableMediaInfoInConfig.UseVisualStyleBackColor = true;
             // 

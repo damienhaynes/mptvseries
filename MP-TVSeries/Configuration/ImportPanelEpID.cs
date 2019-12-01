@@ -74,6 +74,11 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 comboMatchOptions.Enabled = true;
                 buttonMatchAgain.Enabled = true;
             }
+
+            if ( DBOption.GetOptions( DBOption.cCheckShowOnlyEpisodesRequiringManualSelection ) && listBoxSeries.Items.Count == 0 )
+            {
+                ImportWizard_OnWizardNavigate( UserFinishedRequestedAction.Next );
+            }
         }
 
         private bool seriesHasAllEpsMatched(DBSeries series)
