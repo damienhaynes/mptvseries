@@ -243,9 +243,9 @@ namespace WindowPlugins.GUITVSeries
                                 }
 
                                 GroupValue = lLastFolderName;
-                                m_Matches.Add( GroupName, GroupValue );
                             }
-                            else if ( GroupValue.Length > 0 && GroupName != "unknown")
+
+                            if ( GroupValue.Length > 0 && GroupName != "unknown")
                             {
                                 // run after replacements on captures
                                 GroupValue = RunReplacements(replacementRegexAfter, GroupValue);
