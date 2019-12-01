@@ -603,17 +603,17 @@ namespace WindowPlugins.GUITVSeries
             // Get File Date Added/Created
             GetFileTimeStamps();
 
-            MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
+            MediaInfoLib.MediaInfo MI = MediaInfoLib.MediaInfo.GetInstance();
             
             // MediaInfo Object could not be created
             if (null == MI) return false;
             
             // Check if File Exists and is not an Image type e.g. ISO (we can't extract mediainfo from that)
-            if (System.IO.File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
+            if (File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
             {
                 try
                 {
-                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
+                    MPTVSeriesLog.Write("Attempting to read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
                     
                     // open file in MediaInfo
                     MI.Open(this[DBEpisode.cFilename]);

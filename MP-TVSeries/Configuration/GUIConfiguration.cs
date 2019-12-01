@@ -1702,7 +1702,7 @@ namespace WindowPlugins.GUITVSeries
                                     break;
                                 
                                 case DBEpisode.cVideoWidth:
-                                    if ( !String.IsNullOrEmpty( episode[key] ) && episode[key] != "-1" )
+                                    if ( !String.IsNullOrEmpty( episode[key] ) && episode[key] != "-1" && episode[key] != "0" )
                                         AddPropertyBindingSource( "Resolution", key, $"{episode[DBEpisode.cVideoWidth]}x{episode[DBEpisode.cVideoHeight]}", false );
                                     break;
 
@@ -3690,7 +3690,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (episodes.Count > 0)
             {
-                MPTVSeriesLog.Write("Updating MediaInfo....(Please be patient!)");
+                MPTVSeriesLog.Write("Updating MediaInfo...(please be patient!)");
                 BackgroundWorker resReader = new BackgroundWorker();
                 resReader.DoWork += new DoWorkEventHandler(asyncReadResolutions);
                 resReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
