@@ -439,7 +439,7 @@ namespace WindowPlugins.GUITVSeries
 				SetOptions(cMarkRatedEpisodeAsWatched, 0);
 
             if (GetOptions(cSubstituteMissingArtwork) == null)
-                SetOptions(cSubstituteMissingArtwork, 0);
+                SetOptions(cSubstituteMissingArtwork, 1);
 
             if (GetOptions(cAskToRate)==null)
                 SetOptions(cAskToRate, 0);
@@ -496,7 +496,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cDisableMediaInfo, false);
 
             if (GetOptions(cMediaInfoParseSpeed) == null)
-                SetOptions(cMediaInfoParseSpeed, "0.3"); // Default is 0.5 (scan 50% of file) but we dont need that for TVSeries.
+                SetOptions(cMediaInfoParseSpeed, "0.1"); // Default is 0.5 (scan 50% of file) but we dont need that for TVSeries.
 
             if (GetOptions(cImportDelay) == null)
                 SetOptions(cImportDelay, 30);
@@ -556,7 +556,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cFilterUnwatched, false);
 
             if (GetOptions(cAutoDownloadActors) == null)
-                SetOptions(cAutoDownloadActors, true);
+                SetOptions(cAutoDownloadActors, false);
 
             if (GetOptions(cCleanOnlineEpisodes) == null)
                 SetOptions(cCleanOnlineEpisodes, true);
