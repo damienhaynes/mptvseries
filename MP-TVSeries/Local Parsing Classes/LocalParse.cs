@@ -158,7 +158,6 @@ namespace WindowPlugins.GUITVSeries
 
                         nFailed++;
                     }
-
                 }
                 else
                 {
@@ -185,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.full_filename = file.m_sFull_FileName;
                 progressReporter.parser = parser;
                 progressReporter.PathPair = file;
-                if(includeFailed ||progressReporter.success)
+                if(includeFailed || progressReporter.success)
                     results.Add(progressReporter);
             }
             MPTVSeriesLog.Write("Finished Local Filename Parsing");
