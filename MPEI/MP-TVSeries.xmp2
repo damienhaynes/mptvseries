@@ -1797,7 +1797,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>6.0.1.3</Value>
+                    <Value>6.0.2.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -1819,7 +1819,7 @@ Click Next to continue or Cancel to exit Setup.
                     <Description>Global Id of the extension package - it will be downloaded when no file is set.</Description>
                   </SectionParam>
                   <SectionParam Name="Extension Version">
-                    <Value>1.2.1.0</Value>
+                    <Value>1.2.2.0</Value>
                     <ValueType>String</ValueType>
                     <Description>Minimum Version of the extension package - older versions will be updated (only used when downloading via Id).</Description>
                   </SectionParam>
@@ -2270,21 +2270,29 @@ public class Script
     <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
     <Author>ltfearme</Author>
     <HomePage>https://github.com/damienhaynes/mptvseries</HomePage>
-    <ForumPage>http://forum.team-mediaportal.com/my-tvseries-162</ForumPage>
+    <ForumPage>https://forum.team-mediaportal.com/forums/my-tvseries.162/</ForumPage>
     <UpdateUrl>https://raw.githubusercontent.com/damienhaynes/mptvseries/master/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>4</Major>
       <Minor>3</Minor>
-      <Build>1</Build>
-      <Revision>0</Revision>
+      <Build>3</Build>
+      <Revision>6</Revision>
     </Version>
-    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
-
+    <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Updated support for Trakt plugin v6.0.1. This is required for trakt community ratings during import.</VersionDescription>
-    <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2017-11-04T15:25:06</ReleaseDate>
+    <VersionDescription>* Updated video player to use new event for updating GUI properties (thanks Sebastiii);
+* Added delete file logic to MPTV recording database when file is physically deleted in mptvseries (thanks framug);
+* Added support to get whether or not a video file is HDR. New MediaInfo properties Colour Primaries and Format Commercial;
+* Added option to postpone MediaInfo scan in configuration, scan will pick up missing MI in GUI import;
+* Added option to skip episode matching screen in the configuration import wizard if there are no episodes that require manual matching;
+* Added option to use the filename's last folder as the Series name for online matching. This should only be enabled if the path folder has a clean series name;
+* Fixed duration detection during MediaInfo scan not working on all media;
+* Handle bad API responses from TVDb API v1. Added workarounds to various issues recently introduced to get missing data and images;
+* Various fixes and improvements to the Configuration UI;</VersionDescription>
+    <DevelopmentStatus>Beta</DevelopmentStatus>
+    <OnlineLocation>https://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
+    <ReleaseDate>2019-12-03T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
