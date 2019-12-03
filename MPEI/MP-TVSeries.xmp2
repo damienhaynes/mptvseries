@@ -2276,7 +2276,7 @@ public class Script
       <Major>4</Major>
       <Minor>3</Minor>
       <Build>3</Build>
-      <Revision>6</Revision>
+      <Revision>7</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
@@ -2288,6 +2288,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Added option to skip episode matching screen in the configuration import wizard if there are no episodes that require manual matching;
 * Added option to use the filename's last folder as the Series name for online matching. This should only be enabled if the path folder has a clean series name;
 * Fixed duration detection during MediaInfo scan not working on all media;
+* Improved series name matching online;
 * Handle bad API responses from TVDb API v1. Added workarounds to various issues recently introduced to get missing data and images;
 * Various fixes and improvements to the Configuration UI;</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>

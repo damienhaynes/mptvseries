@@ -431,7 +431,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (Language lang in onlineLanguages)
                 {
                     comboOnlineLang.Items.Add( lang );
-                    if (lang.abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang;
+                    if (lang.Abbreviation == selectedLanguage) comboOnlineLang.SelectedItem = lang;
                 }
             }
         }
@@ -2191,12 +2191,12 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // populate languages drop-down and select overridden language for series
-                    string selectedLanguage = onlineLanguages.Find( x => x.abbreviation.Contains( FieldValue ) )?.abbreviation;
+                    string selectedLanguage = onlineLanguages.Find( x => x.Abbreviation.Contains( FieldValue ) )?.Abbreviation;
 
                     foreach (var language in onlineLanguages)
                     {
                         cbCell.Items.Add( language.ToString() );
-                        if ( language.abbreviation == FieldValue ) cbCell.Value = language.ToString();
+                        if ( language.Abbreviation == FieldValue ) cbCell.Value = language.ToString();
                     }
 
                     cbCell.Tag = FieldName;
@@ -2291,7 +2291,7 @@ namespace WindowPlugins.GUITVSeries
                             Language selectedLang = onlineLanguages.Find(x => x.ToString() == newValue);
                             if (selectedLang != null)
                             {
-                                series[editFieldName] = selectedLang.abbreviation;
+                                series[editFieldName] = selectedLang.Abbreviation;
                             }
                         }
                         else
@@ -3893,9 +3893,9 @@ namespace WindowPlugins.GUITVSeries
             var selectedLanguage = comboOnlineLang.SelectedItem as Language;
             if ( selectedLanguage == null ) return;
 
-            if ( selectedLanguage.abbreviation != DBOption.GetOptions(DBOption.cOnlineLanguage))
+            if ( selectedLanguage.Abbreviation != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
-                DBOption.SetOptions(DBOption.cOnlineLanguage, selectedLanguage.abbreviation );
+                DBOption.SetOptions(DBOption.cOnlineLanguage, selectedLanguage.Abbreviation );
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
                 Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
                 MPTVSeriesLog.Write("You need to do a manual import everytime the language is changed or your old items will not be updated. New language: " + comboOnlineLang.SelectedItem.ToString());

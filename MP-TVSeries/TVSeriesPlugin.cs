@@ -1858,7 +1858,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (Language lang in onlineLanguages)
                 {
                     lLabel = lang.ToString();
-                    if (lang.abbreviation == selectedLanguage)
+                    if (lang.Abbreviation == selectedLanguage)
                     {
                         selectedLang = lang.Name;
                         iSelected = items.Count;
@@ -1874,7 +1874,7 @@ namespace WindowPlugins.GUITVSeries
                     Language newSelectedLanguage = onlineLanguages.Find(lang => lang.ToString().Equals(newLanguage));
                     if (newSelectedLanguage != null)
                     {
-                        selectedSeries[DBOnlineSeries.cLanguage] = newSelectedLanguage.abbreviation;
+                        selectedSeries[DBOnlineSeries.cLanguage] = newSelectedLanguage.Abbreviation;
                         selectedSeries.Commit();
                     }
                 }

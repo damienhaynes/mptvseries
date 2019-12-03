@@ -29,13 +29,13 @@ namespace WindowPlugins.GUITVSeries
     public class Language
     {
         public string Name = string.Empty;
-        public int id = default(int);
-        public string abbreviation = string.Empty;
-        public string englishName = string.Empty;
+        public int Id = default(int);
+        public string Abbreviation = string.Empty;
+        public string EnglishName = string.Empty;
 
         public override string ToString()
         {
-            return $"{englishName} ({abbreviation}) - {Name}";
+            return $"{EnglishName} ({Abbreviation}) - {Name}";
         }
     }
 
@@ -54,15 +54,22 @@ namespace WindowPlugins.GUITVSeries
                     lang = new Language();
                     foreach (XmlNode node in itemNode)
                     {
-                        if (node.Name == "id") int.TryParse(node.InnerText, out lang.id);
+                        if (node.Name == "id") int.TryParse(node.InnerText, out lang.Id);
                         if (node.Name == "name") lang.Name = node.InnerText;
-                        if ( node.Name == "abbreviation" )
+                        if (node.Name == "abbreviation")
                         {
-                            lang.abbreviation = node.InnerText;
-                            lang.englishName = new System.Globalization.CultureInfo( lang.abbreviation ).EnglishName;
+                            lang.Abbreviation = node.InnerText;
+                            try
+                            {
+                                lang.EnglishName = new System.Globalization.CultureInfo( lang.Abbreviation ).EnglishName;
+                            }
+                            catch
+                            {
+                                MPTVSeriesLog.Write( $"Unable to get English name for language code '{lang.Abbreviation}'", MPTVSeriesLog.LogLevel.Debug );
+                            }
                         }
                     }
-                    if (lang.id != default(int) && lang.Name.Length > 0 && !lang.englishName.StartsWith("Unknown"))
+                    if (lang.Id != default(int) && lang.EnglishName.Length > 0 && !lang.EnglishName.StartsWith("Unknown"))
                         languages.Add(lang);
                 }
             }
