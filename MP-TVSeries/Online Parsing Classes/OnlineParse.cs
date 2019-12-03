@@ -1042,7 +1042,7 @@ namespace WindowPlugins.GUITVSeries
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in updatedSeries.FieldNames) {
                             switch (key) {
-                                // do not overwrite current series local settings with the one from the online series (baaaad design??)
+                                // do not overwrite current series local settings with the one from the online series
                                 case DBSeries.cParsedName: // this field shouldn't be required here since updatedSeries is an Onlineseries and not a localseries??
                                 case DBOnlineSeries.cHasLocalFiles:
                                 case DBOnlineSeries.cHasLocalFilesTemp:

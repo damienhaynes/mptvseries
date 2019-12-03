@@ -1010,8 +1010,13 @@ namespace WindowPlugins.GUITVSeries
                 if ( string.IsNullOrEmpty( lSlug ) )
                 {
                     // use the original name (English name) when generating a slug
-                    var lOriginalName = this[DBOnlineSeries.cOriginalName];
-                    lSlug = lOriginalName.ToString().ToSlug();
+                    var lOriginalName = this[DBOnlineSeries.cOriginalName].ToString();
+
+                    // theTVDb.com uses 'and' as a replacement for ampersand
+                    lOriginalName = lOriginalName.ToString().Replace( "&", "and" );
+
+                    // convert the rest to a slug
+                    lSlug = lOriginalName.ToSlug();
 
                     // now save the slug for next time
                     this[DBOnlineSeries.cSlug] = lSlug;

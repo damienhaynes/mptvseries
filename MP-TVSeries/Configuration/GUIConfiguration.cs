@@ -1870,6 +1870,7 @@ namespace WindowPlugins.GUITVSeries
                         DBSeries series = (DBSeries)node.Tag;
                         mSelectedSeries = series;
 
+                        #region Images
                         comboBox_BannerSelection.Items.Clear();
                         comboBox_PosterSelection.Items.Clear();
 
@@ -1935,6 +1936,7 @@ namespace WindowPlugins.GUITVSeries
                             BannerComboItem newItem = new BannerComboItem("Logos", logos);
                             comboBox_BannerSelection.Items.Add(newItem);
                         }
+                        #endregion
 
                         // go over all the database fields and add to Grid View
                         foreach (String key in series.FieldNames)
@@ -1978,7 +1980,6 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cRatingCount:
                                 case DBOnlineSeries.cTMSWantedOld:
                                 case DBOnlineSeries.cTopSeries:
-                                case DBOnlineSeries.cAliasNames:
                                 case DBOnlineSeries.cTraktID:
                                 case DBOnlineSeries.cSlug:
                                 case DBSeries.cParsedName:
@@ -1990,6 +1991,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cEpisodeCount:
                                 case DBOnlineSeries.cEpisodesUnWatched:
                                 case DBOnlineSeries.cChosenEpisodeOrder:
+                                case DBOnlineSeries.cAliasNames:
                                     // fields that can not be modified - read only
                                     if ( !string.IsNullOrEmpty( series[key] ) )
                                         AddPropertyBindingSource(DBSeries.PrettyFieldName(key), key, series[key], false);
@@ -4810,24 +4812,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        #region Get the Culture DisplayName from Two Letter ISO
-        public string GetAudioLanguageDisplayName(String TwoLetterISOLanguage)
-        {
-            String CultureDisplayName = TwoLetterISOLanguage;
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-
-            foreach (var culture in cultures)
-            {
-                if (culture.TwoLetterISOLanguageName == TwoLetterISOLanguage)
-                {
-                    CultureDisplayName = culture.DisplayName;
-                    break;
-                }
-            }
-
-            return CultureDisplayName;
-        }
-
         private void lnkOpenAPICacheDir_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             string lCacheFolder = Settings.GetPath( Settings.Path.config ) + "\\Cache\\";
@@ -4845,7 +4829,7 @@ namespace WindowPlugins.GUITVSeries
             // Open Directory
             Process.Start( "explorer.exe", lArtworkFolder );
         }
-        
+
         private void lnkTVDbSeries_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             // base series url
@@ -4854,15 +4838,15 @@ namespace WindowPlugins.GUITVSeries
             switch ( mSelectedStep )
             {
                 case SelectedStep.Season:
-                    Process.Start( lUrl + "/seasons/official/" + mSelectedSeason[DBSeason.cIndex]);
+                    Process.Start( lUrl + "/seasons/official/" + mSelectedSeason[DBSeason.cIndex] );
                     break;
 
                 case SelectedStep.Episode:
                     Process.Start( lUrl + "/episodes/" + mSelectedEpisode[DBOnlineEpisode.cID] );
-                    break;                
-                    
+                    break;
+
                 default: // series
-                    Process.Start(lUrl);
+                    Process.Start( lUrl );
                     break;
             }
         }
@@ -4924,7 +4908,26 @@ namespace WindowPlugins.GUITVSeries
                     break;
             }
         }
-        #endregion
+
+        /// <summary>
+        ///  Get the Culture DisplayName from Two Letter ISO
+        /// </summary>
+        public string GetAudioLanguageDisplayName(String TwoLetterISOLanguage)
+        {
+            String CultureDisplayName = TwoLetterISOLanguage;
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+            foreach (var culture in cultures)
+            {
+                if (culture.TwoLetterISOLanguageName == TwoLetterISOLanguage)
+                {
+                    CultureDisplayName = culture.DisplayName;
+                    break;
+                }
+            }
+
+            return CultureDisplayName;
+        }
     }
 
     public class BannerComboItem

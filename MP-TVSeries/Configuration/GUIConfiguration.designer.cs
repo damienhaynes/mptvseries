@@ -254,6 +254,7 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dbOptionDisableMediaInfoInConfig = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBox3 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.lblRecentAddedDays = new System.Windows.Forms.Label();
             this.cbNewEpisodeThumbIndicator = new System.Windows.Forms.ComboBox();
@@ -320,7 +321,7 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.dbOptionDisableMediaInfoInConfig = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.dbOptionSkipEpisodeMatchWizardStep = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecentlyAddedDays)).BeginInit();
@@ -1951,7 +1952,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkIMDbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkIMDbSeries.AutoSize = true;
-            this.lnkIMDbSeries.Location = new System.Drawing.Point(753, 914);
+            this.lnkIMDbSeries.Location = new System.Drawing.Point(751, 914);
             this.lnkIMDbSeries.Name = "lnkIMDbSeries";
             this.lnkIMDbSeries.Size = new System.Drawing.Size(56, 13);
             this.lnkIMDbSeries.TabIndex = 155;
@@ -1964,7 +1965,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkTraktSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkTraktSeries.AutoSize = true;
-            this.lnkTraktSeries.Location = new System.Drawing.Point(814, 914);
+            this.lnkTraktSeries.Location = new System.Drawing.Point(812, 914);
             this.lnkTraktSeries.Name = "lnkTraktSeries";
             this.lnkTraktSeries.Size = new System.Drawing.Size(40, 13);
             this.lnkTraktSeries.TabIndex = 154;
@@ -1977,7 +1978,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkTVDbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkTVDbSeries.AutoSize = true;
-            this.lnkTVDbSeries.Location = new System.Drawing.Point(859, 914);
+            this.lnkTVDbSeries.Location = new System.Drawing.Point(857, 914);
             this.lnkTVDbSeries.Name = "lnkTVDbSeries";
             this.lnkTVDbSeries.Size = new System.Drawing.Size(73, 13);
             this.lnkTVDbSeries.TabIndex = 153;
@@ -2090,7 +2091,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(933, 629);
+            this.dataGridView1.Size = new System.Drawing.Size(931, 629);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -2122,7 +2123,7 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series.Location = new System.Drawing.Point(132, 72);
             this.pictureBox_Series.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox_Series.Name = "pictureBox_Series";
-            this.pictureBox_Series.Size = new System.Drawing.Size(801, 197);
+            this.pictureBox_Series.Size = new System.Drawing.Size(799, 197);
             this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox_Series.TabIndex = 147;
             this.pictureBox_Series.TabStop = false;
@@ -2136,7 +2137,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_BannerSelection.Location = new System.Drawing.Point(132, 45);
             this.comboBox_BannerSelection.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
-            this.comboBox_BannerSelection.Size = new System.Drawing.Size(801, 21);
+            this.comboBox_BannerSelection.Size = new System.Drawing.Size(799, 21);
             this.comboBox_BannerSelection.TabIndex = 1;
             this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
             // 
@@ -2656,8 +2657,6 @@ namespace WindowPlugins.GUITVSeries
             // dbOptCheckBoxDownloadActors
             // 
             this.dbOptCheckBoxDownloadActors.AutoSize = true;
-            this.dbOptCheckBoxDownloadActors.Checked = true;
-            this.dbOptCheckBoxDownloadActors.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dbOptCheckBoxDownloadActors.Location = new System.Drawing.Point(448, 528);
             this.dbOptCheckBoxDownloadActors.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dbOptCheckBoxDownloadActors.Name = "dbOptCheckBoxDownloadActors";
@@ -2968,6 +2967,7 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.dbOptionSkipEpisodeMatchWizardStep);
             this.groupBox1.Controls.Add(this.dbOptionDisableMediaInfoInConfig);
             this.groupBox1.Controls.Add(this.dbOptChkBoxPlayOutOfOrderCheck);
             this.groupBox1.Controls.Add(this.dbOptionSQLLogging);
@@ -3020,6 +3020,18 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // dbOptionDisableMediaInfoInConfig
+            // 
+            this.dbOptionDisableMediaInfoInConfig.AutoSize = true;
+            this.dbOptionDisableMediaInfoInConfig.Location = new System.Drawing.Point(467, 413);
+            this.dbOptionDisableMediaInfoInConfig.Name = "dbOptionDisableMediaInfoInConfig";
+            this.dbOptionDisableMediaInfoInConfig.Option = "DisableMediaInfoInConfigImports";
+            this.dbOptionDisableMediaInfoInConfig.Size = new System.Drawing.Size(302, 17);
+            this.dbOptionDisableMediaInfoInConfig.TabIndex = 43;
+            this.dbOptionDisableMediaInfoInConfig.Text = "Postpone MediaInfo scan when importing via configuration";
+            this.dbOptionDisableMediaInfoInConfig.ToolTip = "";
+            this.dbOptionDisableMediaInfoInConfig.UseVisualStyleBackColor = true;
             // 
             // dbOptionCheckBox3
             // 
@@ -3134,6 +3146,8 @@ namespace WindowPlugins.GUITVSeries
             // dbOptionCheckBoxSubstituteMissingArtwork
             // 
             this.dbOptionCheckBoxSubstituteMissingArtwork.AutoSize = true;
+            this.dbOptionCheckBoxSubstituteMissingArtwork.Checked = true;
+            this.dbOptionCheckBoxSubstituteMissingArtwork.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dbOptionCheckBoxSubstituteMissingArtwork.Location = new System.Drawing.Point(467, 279);
             this.dbOptionCheckBoxSubstituteMissingArtwork.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dbOptionCheckBoxSubstituteMissingArtwork.Name = "dbOptionCheckBoxSubstituteMissingArtwork";
@@ -3858,17 +3872,18 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(120, 16);
             this.listBox_Log.TabIndex = 5;
             // 
-            // dbOptionDisableMediaInfoInConfig
+            // dbOptionSkipEpisodeMatchWizardStep
             // 
-            this.dbOptionDisableMediaInfoInConfig.AutoSize = true;
-            this.dbOptionDisableMediaInfoInConfig.Location = new System.Drawing.Point(467, 413);
-            this.dbOptionDisableMediaInfoInConfig.Name = "dbOptionDisableMediaInfoInConfig";
-            this.dbOptionDisableMediaInfoInConfig.Option = "DisableMediaInfoInConfigImports";
-            this.dbOptionDisableMediaInfoInConfig.Size = new System.Drawing.Size(292, 17);
-            this.dbOptionDisableMediaInfoInConfig.TabIndex = 43;
-            this.dbOptionDisableMediaInfoInConfig.Text = "Postpone MediaInfo scan when importing via configuration";
-            this.dbOptionDisableMediaInfoInConfig.ToolTip = "";
-            this.dbOptionDisableMediaInfoInConfig.UseVisualStyleBackColor = true;
+            this.dbOptionSkipEpisodeMatchWizardStep.AutoSize = true;
+            this.dbOptionSkipEpisodeMatchWizardStep.Location = new System.Drawing.Point(467, 437);
+            this.dbOptionSkipEpisodeMatchWizardStep.Name = "dbOptionSkipEpisodeMatchWizardStep";
+            this.dbOptionSkipEpisodeMatchWizardStep.Option = "CheckShowOnlyEpisodesRequiringManualSelection";
+            this.dbOptionSkipEpisodeMatchWizardStep.Size = new System.Drawing.Size(411, 17);
+            this.dbOptionSkipEpisodeMatchWizardStep.TabIndex = 44;
+            this.dbOptionSkipEpisodeMatchWizardStep.Text = "Skip episode matching step in config Import Wizard when no files require attentio" +
+    "n";
+            this.dbOptionSkipEpisodeMatchWizardStep.ToolTip = "";
+            this.dbOptionSkipEpisodeMatchWizardStep.UseVisualStyleBackColor = true;
             // 
             // ConfigurationForm
             // 
@@ -4208,5 +4223,6 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.LinkLabel lnkTraktSeries;
         private DBOptionCheckBox dbOptionParsedNameFromFolder;
         private DBOptionCheckBox dbOptionDisableMediaInfoInConfig;
+        private DBOptionCheckBox dbOptionSkipEpisodeMatchWizardStep;
     }
 }
