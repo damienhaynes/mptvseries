@@ -48,3 +48,8 @@
 /MPEI/Release/MP-TVSeries-4.3.2.0.mpe1
 /Transifex/.tx/config
 /Transifex/pull.log
+/ConfigLauncher/bin/Release/Gentle.Framework.dll
+/ConfigLauncher/bin/Release/Newtonsoft.Json.dll
+/ConfigLauncher/bin/Release/TVDatabase.dll
+/ConfigLauncher/bin/Release/TvBusinessLayer.dll
+/MPEI/Release/*.mpe1
