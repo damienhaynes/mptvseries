@@ -777,22 +777,13 @@ namespace WindowPlugins.GUITVSeries
 
             if (textCount > 0)
                 return true;
-
-            // Read MediaInfo for embedded subtitles
-            /*
-            if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
-            {
-                if ((int)this["TextCount"] > 0) 
-                    return true;
-            }
-            */
             
-            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            string filenameNoExt = Path.GetFileNameWithoutExtension(this[cFilename]);
             try
             {
-                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
+                foreach (string file in Directory.GetFiles(Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
                 {
-                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    FileInfo fi = new FileInfo(file);
                     if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
                 }
             }
@@ -805,12 +796,21 @@ namespace WindowPlugins.GUITVSeries
 
         private bool checkHasSubtitlesFromSubCentral(bool useMediaInfo, int textCount)
         {
+            bool lResult = false;
             MPTVSeriesLog.Write(string.Format("Using SubCentral for checkHasSubtitles(), useMediaInfo = {0}, textCount = {1}", useMediaInfo.ToString(), textCount.ToString()), MPTVSeriesLog.LogLevel.Debug);
             List<FileInfo> fiFiles = new List<FileInfo>();
             fiFiles.Add(new FileInfo(this[DBEpisode.cFilename]));
-            bool result = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles(fiFiles, false, textCount, !useMediaInfo);
-            MPTVSeriesLog.Write(string.Format("SubCentral returned {0}", result.ToString()), MPTVSeriesLog.LogLevel.Debug);
-            return result;
+            try
+            {
+                lResult = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles( fiFiles, false, textCount, !useMediaInfo );
+                MPTVSeriesLog.Write( $"SubCentral returned '{lResult}'", MPTVSeriesLog.LogLevel.Debug );
+            }
+            catch(Exception e)
+            {
+                MPTVSeriesLog.Write( $"Failed to get subtitle information from SubCentral. Exception={e.Message}" );
+            }
+            
+            return lResult;
         }
 
         bool isWritable(FileInfo fileInfo)
