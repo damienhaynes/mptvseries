@@ -23,16 +23,15 @@
 
 
 using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using MediaPortal.GUI.Library;
-using System.Globalization;
 
 namespace WindowPlugins.GUITVSeries
 {
-    class localLogos
+  class localLogos
     {
         const string optionName = "logoConfig";
         const string entriesSplit = "<next>";
@@ -232,7 +231,7 @@ namespace WindowPlugins.GUITVSeries
                 logosForBuilding = new List<string>(); // null means hasn't been tested yet
                 if (epImgAppended) logosForBuilding.Add(tmpEp.Image);
                 if (entries.Count == 0 && logosForBuilding.Count == 0) return string.Empty; // no rules exist
-                MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Testing logos for item of type ", level.ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
 
                 for (int i = 0; i < entries.Count; i++)
                 {
@@ -255,7 +254,6 @@ namespace WindowPlugins.GUITVSeries
                                 }
                                 else
                                 {
-                                    //logosForBuilding.AddRange(filenames);
                                     // Strange things happen when in playlist view and using the mouse, so dont add duplicates that get generated
                                     // Need to get to the bottom of the issue!
                                     foreach (string filename in filenames)
@@ -266,7 +264,7 @@ namespace WindowPlugins.GUITVSeries
                                 }
                             }
                         }
-                        //else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.Debug);
+                        else MPTVSeriesLog.Write("Logo-Rule is not relevant for current item, aborting!", MPTVSeriesLog.LogLevel.DebugSQL);
                     }
                     catch (Exception ex)
                     {

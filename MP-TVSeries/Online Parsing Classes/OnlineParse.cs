@@ -1857,7 +1857,7 @@ namespace WindowPlugins.GUITVSeries
 
         void UpdateTraktCommunityRatings(BackgroundWorker tTraktCommunityRatings, List<DBValue> seriesIds, List<DBValue> episodeIds)
         {
-            // check if trakt is installed and MP-TVseries is enabled
+            // check if trakt is installed and enabled
             // although its not required for a user to be logged in and have tvseries enabled
             // we do this so it only gets pulled down for people that support trakt rather than leech
             // it also will reduce the load on trakt 

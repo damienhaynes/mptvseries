@@ -144,7 +144,7 @@ namespace WindowPlugins.GUITVSeries
             this.lnkLogoExport = new System.Windows.Forms.LinkLabel();
             this.btnLogoEdit = new System.Windows.Forms.Button();
             this.addLogo = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnShowLog = new System.Windows.Forms.Button();
             this.toolTip_InfoHelp = new System.Windows.Forms.ToolTip(this.components);
             this.numericUpDownImportDelay = new System.Windows.Forms.NumericUpDown();
             this.checkBox_Episode_HideUnwatchedSummary = new System.Windows.Forms.CheckBox();
@@ -1295,17 +1295,17 @@ namespace WindowPlugins.GUITVSeries
             // 
             // button1
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button1.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
-            this.button1.Location = new System.Drawing.Point(0, 977);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(1203, 22);
-            this.button1.TabIndex = 0;
-            this.toolTip_Help.SetToolTip(this.button1, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
+            this.btnShowLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnShowLog.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
+            this.btnShowLog.Location = new System.Drawing.Point(0, 977);
+            this.btnShowLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnShowLog.Name = "button1";
+            this.btnShowLog.Size = new System.Drawing.Size(1203, 22);
+            this.btnShowLog.TabIndex = 0;
+            this.toolTip_Help.SetToolTip(this.btnShowLog, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
         "ing progress of Import");
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnShowLog.UseVisualStyleBackColor = true;
+            this.btnShowLog.Click += new System.EventHandler(this.btnShowLog_Click);
             // 
             // toolTip_InfoHelp
             // 
@@ -1850,7 +1850,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.splitMain_Log.Panel1.BackColor = System.Drawing.Color.White;
             this.splitMain_Log.Panel1.Controls.Add(this.tabControl_Details);
-            this.splitMain_Log.Panel1.Controls.Add(this.button1);
+            this.splitMain_Log.Panel1.Controls.Add(this.btnShowLog);
             // 
             // splitMain_Log.Panel2
             // 
@@ -3981,7 +3981,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Windows.Forms.ToolTip toolTip_Help;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_InsertFields;
         private System.Windows.Forms.SplitContainer splitMain_Log;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnShowLog;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_DetailsTree;
         private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;

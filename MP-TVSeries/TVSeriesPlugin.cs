@@ -42,7 +42,6 @@ using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
 {
-    
     public class TVSeriesPlugin : GUIWindow, IFeedback
     {
         #region Constructor
@@ -2682,7 +2681,7 @@ namespace WindowPlugins.GUITVSeries
                 aclib.Performance.PerfWatcher.GetNamedWatch("FacadeLoading").Stop();
                 foreach (aclib.Performance.Watch w in aclib.Performance.PerfWatcher.InstantiatedWatches)
                 {
-                    MPTVSeriesLog.Write(w.Info, MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(w.Info, MPTVSeriesLog.LogLevel.DebugSQL);
                     w.Reset();
                 }
             }
@@ -3615,6 +3614,7 @@ namespace WindowPlugins.GUITVSeries
 
             SQLCondition conditions = null;
             string searchPattern = string.Empty;
+            int lSeriesID = 0;
 
             // Get selected Series and/or list of Episode(s) to update
             switch (CurrentViewLevel)
@@ -3624,6 +3624,7 @@ namespace WindowPlugins.GUITVSeries
                     conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
                     epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
                     searchPattern = "*.jpg";
+                    lSeriesID = series[DBSeries.cID];
                     break;
 
                 case Listlevel.Season:
@@ -3631,12 +3632,14 @@ namespace WindowPlugins.GUITVSeries
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
                     epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
                     searchPattern = season[DBSeason.cIndex] + "x*.jpg";
+                    lSeriesID = season[DBSeason.cSeriesID];
                     break;
 
                 case Listlevel.Episode:
                     epIDsUpdates.Add(episode[DBOnlineEpisode.cID]);
                     conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
                     searchPattern = episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg";
+                    lSeriesID = episode[DBOnlineEpisode.cSeriesID];
                     break;
             }
 
@@ -3679,14 +3682,16 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                // Remove local thumbnail reference from db so that it thumbnails will be downloaded
+                // Remove local thumbnail reference from db so that thumbnails will be downloaded
                 DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", conditions);
             }
+
+            // Delete API Cache so we make sure we get the latest updates
+            Helper.DeleteXmlCache( lSeriesID );
 
             // Execute Online Parsing Actions
             if (epIDsUpdates.Count > 0)
             {
-
                 lock (m_parserUpdaterQueue)
                 {
                     List<ParsingAction> parsingActions = new List<ParsingAction>();
@@ -3699,7 +3704,6 @@ namespace WindowPlugins.GUITVSeries
 
                     m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));
                 }
-
             }
         }
 
@@ -4190,7 +4194,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-       #region View Tags Menu
+        #region View Tags Menu
         private void ShowViewTagsMenu(bool add, DBSeries series)
         {
             IDialogbox dlg = (IDialogbox)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
