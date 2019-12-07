@@ -4519,7 +4519,7 @@ namespace WindowPlugins.GUITVSeries
             }
             else if (CurrentViewLevel == Listlevel.Episode && episode != null)
             {
-                hasSubtitles = episode.checkHasLocalSubtitles();
+                hasSubtitles = episode.CheckHasLocalSubtitles();
                 hasDuplicateEpisode = episode.HasDuplicateEpisode;
                 hasLocalFiles = !string.IsNullOrEmpty(episode[DBEpisode.cFilename]);
             }

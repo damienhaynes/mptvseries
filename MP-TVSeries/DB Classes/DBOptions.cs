@@ -571,7 +571,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cCountSpecialEpisodesAsWatched, false);
 
             if (GetOptions(cTraktCommunityRatings) == null)
-                SetOptions(cTraktCommunityRatings, false);
+                SetOptions(cTraktCommunityRatings, true);
 
             if (GetOptions(cParsedNameFromFolder) == null)
                 SetOptions(cParsedNameFromFolder, false);

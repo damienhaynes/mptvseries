@@ -2681,7 +2681,7 @@ namespace WindowPlugins.GUITVSeries
                     seriesNode = nodeDeleted.Parent.Parent;
                     if (episode != null)
                     {
-                        hasSubtitles = episode.checkHasLocalSubtitles();
+                        hasSubtitles = episode.CheckHasLocalSubtitles();
                         hasDuplicateEpisode = episode.HasDuplicateEpisode;
                         hasLocalFiles = !string.IsNullOrEmpty(episode[DBEpisode.cFilename]);
                     }

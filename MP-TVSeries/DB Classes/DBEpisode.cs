@@ -21,6 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,13 +29,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using SQLite.NET;
 using TvDatabase;
 
 namespace WindowPlugins.GUITVSeries
 {
-    //moved to DBOnineEpisodes.cs
-    //public class DBOnlineEpisode : DBTable
     public enum MostRecentType
     {
         Watched,
@@ -613,7 +611,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 try
                 {
-                    MPTVSeriesLog.Write("Attempting to read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
+                    MPTVSeriesLog.Write("Attempting to read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
                     
                     // open file in MediaInfo
                     MI.Open(this[DBEpisode.cFilename]);
@@ -652,7 +650,7 @@ namespace WindowPlugins.GUITVSeries
                         this[cTextCount] = MI.SubtitleCount;
                         
                         // check for subtitles in mediainfo                        
-                        this[cAvailableSubtitles] = checkHasSubtitles();
+                        this[cAvailableSubtitles] = CheckHasSubtitles();
                     }
                     else 
                         failed = true;
@@ -747,17 +745,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool checkHasSubtitles()
+        public bool CheckHasSubtitles()
         {
-            return checkHasSubtitles(true);
+            return CheckHasSubtitles(true);
         }
 
-        public bool checkHasLocalSubtitles()
+        public bool CheckHasLocalSubtitles()
         {
-            return checkHasSubtitles(false);
+            return CheckHasSubtitles(false);
         }
 
-        public bool checkHasSubtitles(bool useMediaInfo)
+        public bool CheckHasSubtitles(bool useMediaInfo)
         {
             if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
 

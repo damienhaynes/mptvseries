@@ -1858,12 +1858,9 @@ namespace WindowPlugins.GUITVSeries
         void UpdateTraktCommunityRatings(BackgroundWorker tTraktCommunityRatings, List<DBValue> seriesIds, List<DBValue> episodeIds)
         {
             // check if trakt is installed and enabled
-            // although its not required for a user to be logged in and have tvseries enabled
-            // we do this so it only gets pulled down for people that support trakt rather than leech
-            // it also will reduce the load on trakt 
-            if (!Helper.IsTraktAvailableAndEnabled || !Helper.IsTVSeriesEnabledInTrakt)
+            if (!Helper.IsTraktAvailableAndEnabled)
             {
-                MPTVSeriesLog.Write("Aborting Trakt community ratings as requirements not met, be sure trakt is installed, logged in and TVSeries plugin handler enabled");
+                MPTVSeriesLog.Write("Aborting Trakt community ratings as requirements not met, be sure trakt is installed");
                 return;
             }
 
