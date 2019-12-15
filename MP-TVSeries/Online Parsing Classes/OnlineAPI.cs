@@ -245,7 +245,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             }
         }
 
-        static public XmlNode getBannerList( int seriesID )
+        static public XmlNode GetBannerList( int seriesID )
         {
             return getFromCache( seriesID, "banners.xml" );
         }
@@ -298,8 +298,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             webClient.Headers.Add( "user-agent", Settings.UserAgent );
             try
             {
-                Directory.CreateDirectory( System.IO.Path.GetDirectoryName( fullLocalPath ) );
-                if ( !System.IO.File.Exists( fullLocalPath ) // only if the file doesn't exist
+                Directory.CreateDirectory( Path.GetDirectoryName( fullLocalPath ) );
+                if ( !File.Exists( fullLocalPath ) // only if the file doesn't exist
                     || ImageAllocator.LoadImageFastFromFile( fullLocalPath ) == null ) // or the file is damaged
                 {
                     webClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler( webClient_DownloadFileCompleted );

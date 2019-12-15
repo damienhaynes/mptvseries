@@ -185,21 +185,21 @@ namespace WindowPlugins.GUITVSeries
 
     public class OnlineParsing
     {
-        public bool onlineUpdateNeeded = false;
-        public bool wasOnlineUpdate = false;
-        public BackgroundWorker m_worker = new BackgroundWorker();
-        IFeedback m_feedback = null;
+        public bool mOnlineUpdateNeeded = false;
+        public bool mWasOnlineUpdate = false;
+        public BackgroundWorker mWorker = new BackgroundWorker();
+        IFeedback mFeedback = null;
 
-        public static bool m_bDataUpdated = false;
-        bool m_bNewLocalFiles = false;        
-        bool m_bFullSeriesRetrieval = false;
-        bool m_bNoExactMatch = false;       //if set to true then the user will be always prompted to choose the series
-        CParsingParameters m_params = null;
-        DateTime m_LastOnlineMirrorUpdate = DateTime.MinValue;
+        public static bool mDataUpdated = false;
+        bool mNewLocalFiles = false;        
+        bool mFullSeriesRetrieval = false;
+        bool mNoExactMatch = false;       //if set to true then the user will be always prompted to choose the series
+        CParsingParameters mParsingParameters = null;
+        DateTime mLastOnlineMirrorUpdate = DateTime.MinValue;
 
         public static bool IsMainOnlineParseComplete = true; // not including extra background threads
 
-        Dictionary<string, List<DBOnlineEpisode>> OnlineEpisodes = new Dictionary<string, List<DBOnlineEpisode>>();
+        Dictionary<string, List<DBOnlineEpisode>> mOnlineEpisodes = new Dictionary<string, List<DBOnlineEpisode>>();
 
         int RETRY_INTERVAL = 1000;
         int RETRY_MULTIPLIER = 2;
@@ -216,21 +216,21 @@ namespace WindowPlugins.GUITVSeries
 
         public OnlineParsing(IFeedback feedback)
         {
-            m_feedback = feedback;
-            m_worker.WorkerReportsProgress = true;
-            m_worker.WorkerSupportsCancellation = true;
-            m_worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            m_worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-            m_worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            mFeedback = feedback;
+            mWorker.WorkerReportsProgress = true;
+            mWorker.WorkerSupportsCancellation = true;
+            mWorker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            mWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            mWorker.DoWork += new DoWorkEventHandler(worker_DoWork);
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Run an Online update when needed
-            if (onlineUpdateNeeded && !wasOnlineUpdate)
+            if (mOnlineUpdateNeeded && !mWasOnlineUpdate)
             {
                 MPTVSeriesLog.Write("Import Worker completed, online update is required.", MPTVSeriesLog.LogLevel.Normal);
-                onlineUpdateNeeded = false;
+                mOnlineUpdateNeeded = false;
                 TVSeriesPlugin.m_LastUpdateScan = DateTime.Now;
                 Start(new CParsingParameters(false, true));
             }
@@ -238,9 +238,9 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (OnlineParsingCompleted != null) // only if any subscribers exist
                 {
-                    OnlineParsingCompleted.Invoke(m_bNewLocalFiles);
+                    OnlineParsingCompleted.Invoke(mNewLocalFiles);
                 }
-                m_bNewLocalFiles = false;
+                mNewLocalFiles = false;
             }
         }
 
@@ -254,23 +254,23 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return m_worker.IsBusy;
+                return mWorker.IsBusy;
             }
         }
 
         public bool Start(CParsingParameters param)
         {
-            wasOnlineUpdate=false;
+            mWasOnlineUpdate=false;
 
             // check if we are doing any online refresh actions
             // we dont want to double up actions later            
             if (param.m_actions.Contains(ParsingAction.GetOnlineUpdates)) {
-                wasOnlineUpdate = true;
+                mWasOnlineUpdate = true;
             }
 
-            if (!m_worker.IsBusy)
+            if (!mWorker.IsBusy)
             {
-                m_worker.RunWorkerAsync(param);
+                mWorker.RunWorkerAsync(param);
                 return true;
             }
             return false;
@@ -278,25 +278,25 @@ namespace WindowPlugins.GUITVSeries
 
         public bool LocalScan
         {
-            get { if (m_params != null) return m_params.m_bLocalScan; else return false; }
+            get { if (mParsingParameters != null) return mParsingParameters.m_bLocalScan; else return false; }
         }
 
         public bool UpdateScan
         {
-            get { if (m_params != null) return m_params.m_bUpdateScan; else return false; }
+            get { if (mParsingParameters != null) return mParsingParameters.m_bUpdateScan; else return false; }
         }
 
         public void Cancel()
         {
-            m_worker.CancelAsync();
+            mWorker.CancelAsync();
         }
 
         public void UpdateOnlineMirror()
         {
-            TimeSpan tsUpdate = DateTime.Now - m_LastOnlineMirrorUpdate;
+            TimeSpan tsUpdate = DateTime.Now - mLastOnlineMirrorUpdate;
             if ((int)tsUpdate.TotalMinutes > 15)
             {
-                m_LastOnlineMirrorUpdate = DateTime.Now;
+                mLastOnlineMirrorUpdate = DateTime.Now;
                 // Re-Initialize Mirrors in case they have changed or are down
                 DBOnlineMirror.Init();
 
@@ -321,10 +321,10 @@ namespace WindowPlugins.GUITVSeries
         {            
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             
-            m_params = e.Argument as CParsingParameters;
-            m_bFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
-            m_bNoExactMatch = false;
-            m_worker.ReportProgress(0);
+            mParsingParameters = e.Argument as CParsingParameters;
+            mFullSeriesRetrieval = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
+            mNoExactMatch = false;
+            mWorker.ReportProgress(0);
 
             IsMainOnlineParseComplete = false;
 
@@ -339,38 +339,38 @@ namespace WindowPlugins.GUITVSeries
 
             // remove first update episode count as this is added twice in some Import Actions
             // we could do distinct() but that removes last
-            if (m_params.m_actions.Count(pa => pa == ParsingAction.UpdateEpisodeCounts) == 2)
-                m_params.m_actions.Remove(ParsingAction.UpdateEpisodeCounts);
+            if (mParsingParameters.m_actions.Count(pa => pa == ParsingAction.UpdateEpisodeCounts) == 2)
+                mParsingParameters.m_actions.Remove(ParsingAction.UpdateEpisodeCounts);
 
             // we may need to clear the cache to identify new episodes
             // but update check and identify are done in two seperate import actions (online/local)
-            if (m_params.m_actions.Contains(ParsingAction.GetOnlineUpdates) && m_params.m_actions.Contains(ParsingAction.IdentifyNewEpisodes))
+            if (mParsingParameters.m_actions.Contains(ParsingAction.GetOnlineUpdates) && mParsingParameters.m_actions.Contains(ParsingAction.IdentifyNewEpisodes))
             {
-                m_params.m_actions.Remove(ParsingAction.GetOnlineUpdates);
-                m_params.m_actions.Insert(m_params.m_actions.IndexOf(ParsingAction.IdentifyNewEpisodes), ParsingAction.GetOnlineUpdates);
+                mParsingParameters.m_actions.Remove(ParsingAction.GetOnlineUpdates);
+                mParsingParameters.m_actions.Insert(mParsingParameters.m_actions.IndexOf(ParsingAction.IdentifyNewEpisodes), ParsingAction.GetOnlineUpdates);
             }
                 
             Online_Parsing_Classes.GetUpdates updates = null;
-            foreach (ParsingAction action in m_params.m_actions) {
+            foreach (ParsingAction action in mParsingParameters.m_actions) {
                 MPTVSeriesLog.Write("Begin Parsing action: ", action.ToString(), MPTVSeriesLog.LogLevel.Debug);
-                if (m_worker.CancellationPending)
+                if (mWorker.CancellationPending)
                     break;
 
                 switch (action) {
                     case ParsingAction.List_Remove:
-                        ParseActionRemove(m_params.m_files);
+                        ParseActionRemove(mParsingParameters.m_files);
                         break;
 
                     case ParsingAction.List_Add:
-                        ParseActionAdd(m_params.m_files);
+                        ParseActionAdd(mParsingParameters.m_files);
                         break;
 
                     case ParsingAction.NoExactMatch:
-                        this.m_bNoExactMatch = true;
+                        this.mNoExactMatch = true;
                         break;
 
                     case ParsingAction.LocalScan:
-                        ParseActionLocalScan(m_params.m_bLocalScan, m_params.m_bUpdateScan, m_params.m_userInputResult == null ? null : m_params.m_userInputResult.ParseResults);
+                        ParseActionLocalScan(mParsingParameters.m_bLocalScan, mParsingParameters.m_bUpdateScan, mParsingParameters.m_userInputResult == null ? null : mParsingParameters.m_userInputResult.ParseResults);
                         break;
 
                     case ParsingAction.MediaInfo:
@@ -391,7 +391,7 @@ namespace WindowPlugins.GUITVSeries
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
                         {
-                            GetSeries(m_worker, m_bNoExactMatch, m_params.m_userInputResult == null ? null : m_params.m_userInputResult.UserChosenSeries);
+                            GetSeries(mWorker, mNoExactMatch, mParsingParameters.m_userInputResult == null ? null : mParsingParameters.m_userInputResult.UserChosenSeries);
                             UpdateSeries(true, null); // todo: ask orderoption
                         }
                         break;
@@ -401,12 +401,12 @@ namespace WindowPlugins.GUITVSeries
                             UpdateOnlineMirror();
                         if (DBOnlineMirror.IsMirrorsAvailable)
                         {
-                            GetEpisodes(m_params.m_bUpdateScan, m_bFullSeriesRetrieval);                            
+                            GetEpisodes(mParsingParameters.m_bUpdateScan, mFullSeriesRetrieval);                            
                         }
                         // at this point we have identified any new episodes
                         // signal the facade to be reloaded.
                         // TODO: smart way to report progress and expose as property to skins
-                        m_worker.ReportProgress(30);
+                        mWorker.ReportProgress(30);
                         break;
                     
                     case ParsingAction.CheckArtwork:
@@ -435,8 +435,8 @@ namespace WindowPlugins.GUITVSeries
                         {
                             if (updates != null)
                                 UpdateSeries(false, updates.UpdatedSeries.Keys.ToList());
-                            if (m_params.m_series != null)
-                                UpdateSeries(false, m_params.m_series);
+                            if (mParsingParameters.m_series != null)
+                                UpdateSeries(false, mParsingParameters.m_series);
                         }
                         break;
 
@@ -447,9 +447,9 @@ namespace WindowPlugins.GUITVSeries
                         {
                             if (updates != null)
                                 UpdateEpisodes(updates.UpdatedEpisodes.Keys.ToList());
-                            if (m_params.m_episodes != null)
+                            if (mParsingParameters.m_episodes != null)
                             {
-                                UpdateEpisodes(m_params.m_episodes);                               
+                                UpdateEpisodes(mParsingParameters.m_episodes);                               
                             }
                         }
                         break;
@@ -500,7 +500,7 @@ namespace WindowPlugins.GUITVSeries
                         if (DBOption.GetOptions(DBOption.cTraktCommunityRatings) == 1)
                         {
                             tTraktCommunityRatings = new BackgroundWorker();
-                            UpdateTraktCommunityRatings(tTraktCommunityRatings, m_params.m_series, m_params.m_episodes);
+                            UpdateTraktCommunityRatings(tTraktCommunityRatings, mParsingParameters.m_series, mParsingParameters.m_episodes);
                         }
                         break;
 
@@ -639,13 +639,13 @@ namespace WindowPlugins.GUITVSeries
                 {
                     MPTVSeriesLog.Write("Episode is marked for removal from database, file: {0}", pair.m_sFull_FileName);
                     DBEpisode.Clear(condition);
-                    m_bDataUpdated = true;
+                    mDataUpdated = true;
                 }
                 else 
                 {
                     DBEpisode.GlobalSet(DBEpisode.cImportProcessed, 2, condition);
                     DBEpisode.GlobalSet(DBEpisode.cIsAvailable, 0, condition);
-                    m_bDataUpdated = true;
+                    mDataUpdated = true;
                 }               
             }
 
@@ -728,7 +728,7 @@ namespace WindowPlugins.GUITVSeries
             if (UserModifiedParsedResults == null) // only if we dont get the results from the user
             {
                 string initialMsg = String.Format("******************* Full Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", localScan, updateScan);
-                if (m_bNoExactMatch)
+                if (mNoExactMatch)
                 {
                     initialMsg = String.Format("******************* NoExactMatch Run Starting (LocalScan: {0} -  UpdateScan: {1})   ***************************", localScan, updateScan);
                 }
@@ -818,7 +818,7 @@ namespace WindowPlugins.GUITVSeries
             if (seriesList.Count > 0)            
             {
                 // Run Online update when needed
-                onlineUpdateNeeded = true;
+                mOnlineUpdateNeeded = true;
                 MPTVSeriesLog.Write(string.Format("Found {0} unknown Series, attempting to identify them now", seriesList.Count), MPTVSeriesLog.LogLevel.Debug);
             }
             else
@@ -837,7 +837,7 @@ namespace WindowPlugins.GUITVSeries
 
                 if (preChosenSeriesPairs == null)
                 {
-                    UserChosenSeries = SearchForSeries(sSeriesNameToSearch, bNoExactMatch, m_feedback);
+                    UserChosenSeries = SearchForSeries(sSeriesNameToSearch, bNoExactMatch, mFeedback);
                 }
                 else if (sap != null && sap.RequestedAction == UserInputResults.SeriesAction.Approve)
                 {
@@ -1027,18 +1027,18 @@ namespace WindowPlugins.GUITVSeries
             UpdateSeries UpdateSeriesParser = new UpdateSeries(generateIDListOfString(SeriesList, DBSeries.cID));
             
             int nIndex = 0;
-            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings) && Helper.IsTraktAvailableAndEnabled;
 
             foreach (DBOnlineSeries updatedSeries in UpdateSeriesParser.ResultsLazy) {
-                m_bDataUpdated = true;
-                if (m_worker.CancellationPending)
+                mDataUpdated = true;
+                if (mWorker.CancellationPending)
                     return;
                                
                 MPTVSeriesLog.Write(string.Format("Metadata {0} for \"{1}\"", (bUpdateNewSeries ? "retrieved" : "updated"), updatedSeries.ToString()), MPTVSeriesLog.LogLevel.Debug);
                 // find the corresponding series in our list
                 foreach (DBSeries localSeries in SeriesList) {
                     if (localSeries[DBSeries.cID] == updatedSeries[DBSeries.cID]) {
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries, updatedSeries[DBOnlineSeries.cPrettyName], ++nIndex, SeriesList.Count, updatedSeries, null));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries, updatedSeries[DBOnlineSeries.cPrettyName], ++nIndex, SeriesList.Count, updatedSeries, null));
                         // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
                         foreach (String key in updatedSeries.FieldNames) {
                             switch (key) {
@@ -1105,9 +1105,9 @@ namespace WindowPlugins.GUITVSeries
             if (nIndex == 0)
             {
                 MPTVSeriesLog.Write(string.Format("No {0} found", (bUpdateNewSeries ? "metadata" : "updates")));
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries, 0));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries, 0));
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries,  UpdateSeriesParser.Results.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateSeries,  UpdateSeriesParser.Results.Count));
         }
 
         private void GetEpisodes(bool bUpdateScan, bool bFullSeriesRetrieval)
@@ -1135,10 +1135,10 @@ namespace WindowPlugins.GUITVSeries
 
             int epCount = 0;
             int nIndex = 0;
-            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings) && Helper.IsTraktAvailableAndEnabled;
             
             // clear reference to existing online episodes
-            OnlineEpisodes.Clear();
+            mOnlineEpisodes.Clear();
 
             foreach (DBSeries series in seriesList) 
             {
@@ -1166,18 +1166,18 @@ namespace WindowPlugins.GUITVSeries
                 if (bFullSeriesRetrieval || episodesList.Count > 0) 
                 {
                     GetEpisodes episodesParser = new GetEpisodes((string)series[DBSeries.cID]);
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+                    mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
                     if (episodesParser.Results.Count > 0) 
                     {
                         MPTVSeriesLog.Write(string.Format("Found {0} episodes online for \"{1}\"", episodesParser.Results.Count.ToString().PadLeft(3, '0'), series.ToString()), MPTVSeriesLog.LogLevel.Debug);
                         // look for the episodes for that series, and compare / update the values
-                        if (m_params.UserEpisodeMatcher == null) // auto mode
+                        if (mParsingParameters.UserEpisodeMatcher == null) // auto mode
                             matchOnlineToLocalEpisodes(series, episodesList, episodesParser);
                         else // user mode
-                            m_params.UserEpisodeMatcher.MatchEpisodesForSeries(series, episodesList, episodesParser.Results);
+                            mParsingParameters.UserEpisodeMatcher.MatchEpisodesForSeries(series, episodesList, episodesParser.Results);
 
                         // add online episode for cleanup task
-                        OnlineEpisodes.Add(series[DBOnlineSeries.cID], episodesParser.Results);
+                        mOnlineEpisodes.Add(series[DBOnlineSeries.cID], episodesParser.Results);
                     } 
                     else
                         MPTVSeriesLog.Write(string.Format("No episodes could be identified online for {0}, check that the online database has these episodes", series.ToString()));
@@ -1216,10 +1216,10 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cMyRating:
                                     case DBOnlineEpisode.cMyRatingAt:
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
-                                        // do nothing here, those information are local only
+                                        // do nothing here, this information is local only
                                         break;
 
-                                    // dont update community ratings if we get from trakt
+                                    // don't update community ratings if we get from trakt
                                     case DBOnlineEpisode.cRating:
                                     case DBOnlineEpisode.cRatingCount:
                                         if (traktCommunityRatings)
@@ -1254,7 +1254,7 @@ namespace WindowPlugins.GUITVSeries
                 // get the result from user matching if needed and commit them
                 List<KeyValuePair<DBSeries, List<KeyValuePair<DBEpisode, DBOnlineEpisode>>>> result;
                 // this will block here
-                if (m_params.UserEpisodeMatcher != null && m_params.UserEpisodeMatcher.GetResult(out result) == ReturnCode.OK)
+                if (mParsingParameters.UserEpisodeMatcher != null && mParsingParameters.UserEpisodeMatcher.GetResult(out result) == ReturnCode.OK)
                 {
                     foreach (var match in result)
                         foreach (var episodePair in match.Value)
@@ -1266,9 +1266,9 @@ namespace WindowPlugins.GUITVSeries
 
                 // Online update when needed
                 if (!bUpdateScan)
-                    onlineUpdateNeeded = true;
+                    mOnlineUpdateNeeded = true;
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, epCount));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, epCount));
         }
 
         private void UpdateEpisodes(List<DBValue> episodesUpdated)
@@ -1288,7 +1288,7 @@ namespace WindowPlugins.GUITVSeries
             episodesInDB.RemoveAll(e => !episodesUpdated.Contains(e[DBOnlineEpisode.cID]));
 
             if (episodesInDB.Count == 0) {
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, 0));            
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, 0));            
                 MPTVSeriesLog.Write("Nothing to do");
                 return;
             }
@@ -1305,12 +1305,12 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesid));
                 if (series != null)
                 {
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, series.ToString() + " [" + episodes.Count.ToString() + " episodes]", ++i, distinctSeriesIds.Count, series, null));
+                    mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, series.ToString() + " [" + episodes.Count.ToString() + " episodes]", ++i, distinctSeriesIds.Count, series, null));
                     matchOnlineToLocalEpisodes(series, episodes, new GetEpisodes(seriesid));
                 }
             }
             
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, episodesInDB.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, episodesInDB.Count));
         }
 
         private void UpdateBanners(bool bUpdateNewSeries, List<DBValue> updatedSeries)
@@ -1363,20 +1363,20 @@ namespace WindowPlugins.GUITVSeries
                 else
                     MPTVSeriesLog.Write("Nothing to do");
 
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, 0));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, 0));
             }
             else
                 MPTVSeriesLog.Write("Looking for artwork on " + seriesList.Count + " series", MPTVSeriesLog.LogLevel.Debug);
 
             foreach (DBSeries series in seriesList)
             {
-                if (m_worker.CancellationPending)
+                if (mWorker.CancellationPending)
                     return;
 
                 MPTVSeriesLog.Write((bUpdateNewSeries ? "Downloading" : "Refreshing") + " artwork for \"" + series.ToString() + "\"", MPTVSeriesLog.LogLevel.Debug);
 
                 nIndex++;                
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, series[DBOnlineSeries.cPrettyName], nIndex, seriesList.Count, series, null));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, series[DBOnlineSeries.cPrettyName], nIndex, seriesList.Count, series, null));
 
                 // get list of available banners online
                 GetBanner bannerParser = new GetBanner((string)series[DBSeries.cID]);
@@ -1386,7 +1386,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (!string.IsNullOrEmpty(name))
                     {
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], name), nIndex, seriesList.Count, series, name));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, string.Format("{0} - {1}", series[DBOnlineSeries.cPrettyName], name), nIndex, seriesList.Count, series, name));
                     }
                 });
                 
@@ -1411,7 +1411,7 @@ namespace WindowPlugins.GUITVSeries
                     // if we have a new banner then add it the list of available ones, possibly a higher rated artwork became available
                     if (!series[DBOnlineSeries.cBannerFileNames].ToString().Contains(bannerSeries.FileName))
                     {
-                        m_bDataUpdated = true;                            
+                        mDataUpdated = true;                            
                         MPTVSeriesLog.Write("New series widebanner found for \"" + series.ToString() + "\" : " + bannerSeries.OnlinePath, MPTVSeriesLog.LogLevel.Debug);
                         if (series[DBOnlineSeries.cBannerFileNames].ToString().Trim().Length == 0)
                         {
@@ -1450,7 +1450,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     if (!series[DBOnlineSeries.cPosterFileNames].ToString().Contains(posterSeries.FileName))
                     {
-                        m_bDataUpdated = true;
+                        mDataUpdated = true;
                         MPTVSeriesLog.Write("New series poster found for \"" + series.ToString() + "\" : " + posterSeries.OnlinePath, MPTVSeriesLog.LogLevel.Debug);
                         if (series[DBOnlineSeries.cPosterFileNames].ToString().Trim().Length == 0)
                         {
@@ -1501,7 +1501,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         if (!season[DBSeason.cBannerFileNames].ToString().Contains(bannerSeason.FileName))
                         {
-                            m_bDataUpdated = true;
+                            mDataUpdated = true;
                             MPTVSeriesLog.Write("New season poster found for \"" + series.ToString() + "\" Season " + season[DBSeason.cIndex] + ": " + bannerSeason.OnlinePath, MPTVSeriesLog.LogLevel.Debug);
                             if (season[DBSeason.cBannerFileNames].ToString().Length == 0)
                             {
@@ -1538,7 +1538,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 #endregion
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, seriesList.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateBanners, seriesList.Count));
         }
 
         /// <summary>
@@ -1549,12 +1549,12 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write(bigLogMessage("Cleaning Online Episode References"));
 
             int i = 0;
-            foreach (var series in OnlineEpisodes.Keys)
+            foreach (var series in mOnlineEpisodes.Keys)
             {
                 var seriesObj = Helper.getCorrespondingSeries(int.Parse(series));
                 string seriesName = seriesObj == null ? series : seriesObj.ToString();
 
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, seriesName, ++i, OnlineEpisodes.Keys.Count));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, seriesName, ++i, mOnlineEpisodes.Keys.Count));
 
                 // get the current online episodes in database
                 var episodes = DBEpisode.Get(int.Parse(series), false);
@@ -1565,7 +1565,7 @@ namespace WindowPlugins.GUITVSeries
                 var epsRemovedInSeason = new Dictionary<int, int>();
                 foreach (var episode in episodes)
                 {
-                    var expectedEpisodes = OnlineEpisodes[series];
+                    var expectedEpisodes = mOnlineEpisodes[series];
                     
                     int episodeIdx = episode[DBOnlineEpisode.cEpisodeIndex];
                     int seasonIdx = episode[DBOnlineEpisode.cSeasonIndex];
@@ -1577,7 +1577,7 @@ namespace WindowPlugins.GUITVSeries
                                                    (cleanEpisodeZero && episodeIdx == 0))
                     {
                         string message = string.Format("{0} - Removing episode {1}x{2}, episode no longer exists online or is invalid", seriesName, seasonIdx, episodeIdx);
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, mOnlineEpisodes.Keys.Count));
 
                         // delete local and online references in database
                         episode.DeleteLocalEpisode();
@@ -1600,7 +1600,7 @@ namespace WindowPlugins.GUITVSeries
                         if (episodesInSeason == epsRemovedInSeason[season])
                         {
                             message = string.Format("{0} - Removing season {1}, season no longer has any associated episodes", seriesName, seasonIdx);
-                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, OnlineEpisodes.Keys.Count));
+                            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, message, i, mOnlineEpisodes.Keys.Count));
 
                             var conditions = new SQLCondition();
                             conditions.Add(new DBSeason(), DBSeason.cSeriesID, series, SQLConditionType.Equal);
@@ -1610,7 +1610,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
             }
-            m_worker.ReportProgress(100, new ParsingProgress(ParsingAction.CleanupEpisodes, OnlineEpisodes.Keys.Count));
+            mWorker.ReportProgress(100, new ParsingProgress(ParsingAction.CleanupEpisodes, mOnlineEpisodes.Keys.Count));
         }
 
         /// <summary>
@@ -1714,7 +1714,7 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             foreach (DBSeries series in seriesList)
             {
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, series.ToString(), ++nIndex, seriesList.Count, series, null));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, series.ToString(), ++nIndex, seriesList.Count, series, null));
 
                 try
                 {
@@ -1743,7 +1743,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Failed to update Actor: " + ex.Message);
                 }
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, seriesList.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, seriesList.Count));
         }
 
         /// <summary>
@@ -1795,7 +1795,7 @@ namespace WindowPlugins.GUITVSeries
 
             foreach (DBSeries series in seriesList)
             {
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series.ToString(), ++nIndex, seriesList.Count, series, null));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, series.ToString(), ++nIndex, seriesList.Count, series, null));
 
                 try
                 {
@@ -1807,52 +1807,40 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // get list of fanarts to auto download
-                    DBFanart fanart = new DBFanart();
-                    List<DBFanart> fanarts = fanart.FanartsToDownload(series[DBSeries.cID]);
+                    DBFanart lDbFanart = new DBFanart();
+                    List<DBFanart> lFanarts = lDbFanart.FanartsToDownload(series[DBSeries.cID]);
 
                     // download fanart
-                    foreach (DBFanart download in fanarts)
+                    foreach (DBFanart lFanart in lFanarts)
                     {
                         if (consecutiveDownloadErrors >= maxConsecutiveDownloadErrors)
                         {
                             MPTVSeriesLog.Write("Too many consecutive download errors. Aborting.");
                             return;
                         }
+                        
+                        // lets put fanart in expected location fanart\original\<seriesID>*.jpg
+                        string lLocalFilename = Fanart.GetLocalPath( lFanart );
 
-                        string onlineFilename = download[DBFanart.cBannerPath];
-                        string localFilename = onlineFilename.Replace("/", @"\");
-
-                        // we depend on fanart names containing the series ID
-                        // if it does not exist, prefix the existing one with it
-                        if (!localFilename.Contains(series[DBSeries.cID]))
-                        {
-                            string path = Path.GetDirectoryName(localFilename);
-                            string file = Path.GetFileName(localFilename);
-                            
-                            string newfile = $"{series[DBSeries.cID]}-{file}";
-                            localFilename = Path.Combine(path, newfile);
-                        }
-
-                        string result = Online_Parsing_Classes.OnlineAPI.DownloadBanner(onlineFilename, Settings.Path.fanart, localFilename);
-
+                        string result = Online_Parsing_Classes.OnlineAPI.DownloadBanner( lFanart[DBFanart.cBannerPath], Settings.Path.fanart, lLocalFilename );
                         if (result != null)
                         {
                             // commit to database
-                            download[DBFanart.cLocalPath] = localFilename;
-                            download.Commit();
+                            lFanart[DBFanart.cLocalPath] = lLocalFilename;
+                            lFanart.Commit();
 
-                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, string.Format("{0} - {1}", series.ToString(), Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename)), nIndex, seriesList.Count, series, result));
+                            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, string.Format("{0} - {1}", series.ToString(), Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), lLocalFilename) ), nIndex, seriesList.Count, series, result));
                             consecutiveDownloadErrors = 0;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MPTVSeriesLog.Write("Failed to update Fanart: " + ex.Message);
+                    MPTVSeriesLog.Write("Failed to update Fanart. " + ex.Message);
                     consecutiveDownloadErrors++;
                 }
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, seriesList.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateFanart, seriesList.Count));
         }
 
         void UpdateTraktCommunityRatings(BackgroundWorker tTraktCommunityRatings, List<DBValue> seriesIds, List<DBValue> episodeIds)
@@ -1976,7 +1964,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (var series in seriesList)
             {
                 // Update Progress
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
 
                 // get the trakt id for the series
                 // if not found do a lookup and store it for next time
@@ -2013,7 +2001,7 @@ namespace WindowPlugins.GUITVSeries
 
                     // store the id for later
                     traktid = traktSeries.Show.Ids.Trakt.ToString();
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Trakt Lookup Complete, ID = {1}", seriesName, traktid), nIndex, seriesList.Count, series, null));
+                    mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Trakt Lookup Complete, ID = {1}", seriesName, traktid), nIndex, seriesList.Count, series, null));
 
                     series[DBOnlineSeries.cTraktID] = traktid;
                     series.Commit();
@@ -2067,7 +2055,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     string rating = Math.Round(seriesRatings.Rating ?? 0.0, 2).ToString();
 
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Rating = {1}, Votes = {2}", seriesName, rating, seriesRatings.Votes), nIndex, seriesList.Count, series, null));
+                    mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Rating = {1}, Votes = {2}", seriesName, rating, seriesRatings.Votes), nIndex, seriesList.Count, series, null));
 
                     series[DBOnlineSeries.cRating] = rating;
                     series[DBOnlineSeries.cRatingCount] = seriesRatings.Votes;
@@ -2102,7 +2090,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         string rating = Math.Round(traktSeason.Rating ?? 0.0, 2).ToString();
 
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Season = {1}, Rating = {2}, Votes = {3}", seriesName, traktSeason.Number, rating, traktSeason.Votes), nIndex, seriesList.Count, series, null));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Season = {1}, Rating = {2}, Votes = {3}", seriesName, traktSeason.Number, rating, traktSeason.Votes), nIndex, seriesList.Count, series, null));
 
                         season[DBOnlineEpisode.cRating] = rating;
                         season[DBOnlineEpisode.cRatingCount] = traktSeason.Votes;
@@ -2140,7 +2128,7 @@ namespace WindowPlugins.GUITVSeries
                     {
                         string rating = Math.Round(traktEpisode.Rating ?? 0.0, 2).ToString();
 
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Episode = {1}x{2}, Rating = {3}, Votes = {4}", seriesName, traktSeason.Number, traktEpisode.Number, rating, traktEpisode.Votes), nIndex, seriesList.Count, series, null));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, string.Format("{0} - Episode = {1}x{2}, Rating = {3}, Votes = {4}", seriesName, traktSeason.Number, traktEpisode.Number, rating, traktEpisode.Votes), nIndex, seriesList.Count, series, null));
                         
                         episode[DBOnlineEpisode.cRating] = rating;
                         episode[DBOnlineEpisode.cRatingCount] = traktEpisode.Votes;
@@ -2157,7 +2145,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 DBOption.SetOptions(DBOption.cTraktLastDateUpdated, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"));
             }
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, seriesList.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateCommunityRatings, seriesList.Count));
         }
 
         void UpdateUserRatings(BackgroundWorker tUserRatings)
@@ -2185,7 +2173,7 @@ namespace WindowPlugins.GUITVSeries
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
             string sAccountID = DBOption.GetOptions(DBOption.cOnlineUserID);
-            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings) && Helper.IsTraktAvailableAndEnabled;
 
             if (!String.IsNullOrEmpty(sAccountID))
             {
@@ -2205,7 +2193,7 @@ namespace WindowPlugins.GUITVSeries
                         GetUserRatings userRatings = new GetUserRatings(series[DBOnlineSeries.cID], sAccountID);
                         
                         // Update Progress
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
 
                         // Set Series Ratings
                         // We should also update Community Rating as theTVDB Updates API doesnt take into consideration
@@ -2260,7 +2248,7 @@ namespace WindowPlugins.GUITVSeries
                     foreach (DBSeries series in seriesList)
                     {
                         // Update Progress
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
 
                         if (userRatings.SeriesUserRatings.ContainsKey(series[DBSeries.cID]))
                         {
@@ -2283,7 +2271,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                     }
                 }
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, seriesList.Count));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserRatings, seriesList.Count));
             }            
         }
 
@@ -2305,7 +2293,7 @@ namespace WindowPlugins.GUITVSeries
 
                 foreach (DBSeries series in seriesList) {
                     // Update Progress
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
+                    mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
 
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
                         MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]), MPTVSeriesLog.LogLevel.Debug);
@@ -2316,7 +2304,7 @@ namespace WindowPlugins.GUITVSeries
                         series.Commit();
                     }
                 }
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, seriesList.Count));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, seriesList.Count));
             }            
         }
 
@@ -2404,7 +2392,7 @@ namespace WindowPlugins.GUITVSeries
                             MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
                             webClient.DownloadFile(url, completePath);
 
-                            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), ++nIndex, episodesToDownload.Count, episode, completePath));
+                            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), ++nIndex, episodesToDownload.Count, episode, completePath));
                         }
                     }
                     catch (WebException)
@@ -2420,7 +2408,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 #endregion
 
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episodesToDownload.Count));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episodesToDownload.Count));
             }
         }
 
@@ -2441,10 +2429,10 @@ namespace WindowPlugins.GUITVSeries
                 tEpisodeCounts.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncEpisodeCountsCompleted);
                 tEpisodeCounts.ProgressChanged += new ProgressChangedEventHandler((s, e) =>
                 {
-                    if (m_worker.IsBusy)
+                    if (mWorker.IsBusy)
                     {
                         object[] userState = e.UserState as object[];
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeCounts, (userState[0] as DBSeries).ToString(), (int)userState[1], series.Count));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeCounts, (userState[0] as DBSeries).ToString(), (int)userState[1], series.Count));
                     }
                 });
                 tEpisodeCounts.RunWorkerAsync(series);
@@ -2453,8 +2441,8 @@ namespace WindowPlugins.GUITVSeries
 
         void asyncEpisodeCountsCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (m_worker.IsBusy)
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeCounts, (int)e.Result));
+            if (mWorker.IsBusy)
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeCounts, (int)e.Result));
             
             MPTVSeriesLog.Write("Update of Episode Counts complete", MPTVSeriesLog.LogLevel.Debug);
         }
@@ -2499,9 +2487,9 @@ namespace WindowPlugins.GUITVSeries
                 tMediaInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(asyncReadResolutionsCompleted);
                 tMediaInfo.ProgressChanged += new ProgressChangedEventHandler((s, e) =>
                 {
-                    if (m_worker.IsBusy) { // cannot report progress of finished worker - mepo dies
+                    if (mWorker.IsBusy) { // cannot report progress of finished worker - mepo dies
                         object[] userState = e.UserState as object[];
-                        m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (userState[0] as DBEpisode)[DBEpisode.cFilenameWOPath], (int)userState[1], episodes.Count));
+                        mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (userState[0] as DBEpisode)[DBEpisode.cFilenameWOPath], (int)userState[1], episodes.Count));
                     }
                 });
                 tMediaInfo.RunWorkerAsync(episodes);
@@ -2513,8 +2501,8 @@ namespace WindowPlugins.GUITVSeries
 
         void asyncReadResolutionsCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (m_worker.IsBusy) { // cannot report progress of finished worker - mepo dies
-                m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (int)e.Result));
+            if (mWorker.IsBusy) { // cannot report progress of finished worker - mepo dies
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.MediaInfo, (int)e.Result));
             }
             MPTVSeriesLog.Write("Update of MediaInfo complete (processed " + e.Result.ToString() + " files)", MPTVSeriesLog.LogLevel.Debug);
         }
@@ -2693,7 +2681,7 @@ namespace WindowPlugins.GUITVSeries
                         descriptor.m_sbtnIgnoreLabel = String.Empty;
 
                         CItem selectedOrdering = null;
-                        ReturnCode result = m_feedback.ChooseFromSelection(descriptor, out selectedOrdering);
+                        ReturnCode result = mFeedback.ChooseFromSelection(descriptor, out selectedOrdering);
                         if (result == ReturnCode.OK)
                         {
                             series[DBOnlineSeries.cChosenEpisodeOrder] = (string)selectedOrdering.m_Tag;
@@ -2789,7 +2777,7 @@ namespace WindowPlugins.GUITVSeries
             if (localEpisode[DBOnlineEpisode.cEpisodeName].ToString().Length == 0)
                 localEpisode[DBOnlineEpisode.cEpisodeName] = onlineEpisode[DBOnlineEpisode.cEpisodeName];
 
-            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings);
+            bool traktCommunityRatings = DBOption.GetOptions(DBOption.cTraktCommunityRatings) && Helper.IsTraktAvailableAndEnabled;
             
             // go over all the fields, (and update only those which haven't been modified by the user - will do that later)
             foreach (String key in onlineEpisode.FieldNames)
@@ -3108,7 +3096,7 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Adding " + parsedFiles.Count.ToString() + " new file(s) to Database");
 
             // Signal external event listeners that new local files have been added
-            m_bNewLocalFiles = parsedFiles.Count > 0;
+            mNewLocalFiles = parsedFiles.Count > 0;
 
             int nSeason = 0;
             List<DBSeries> relatedSeries = new List<DBSeries>();
@@ -3117,7 +3105,7 @@ namespace WindowPlugins.GUITVSeries
             int nIndex = 0;
             foreach (parseResult progress in parsedFiles)
             {
-                if (m_worker.CancellationPending)
+                if (mWorker.CancellationPending)
                     return;
                 if (progress.success)
                 {
@@ -3175,7 +3163,7 @@ namespace WindowPlugins.GUITVSeries
                     DBEpisode episode = new DBEpisode(progress.full_filename, true);
                     bool bNewFile = false;
                     if (episode[DBEpisode.cImportProcessed] != 2) {
-                        m_bDataUpdated = true;
+                        mDataUpdated = true;
                         bNewFile = true;
                     }
                     
@@ -3224,7 +3212,7 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 if(++nIndex % 25 == 0)
-                    m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.LocalScan, progress.match_filename, nIndex, parsedFiles.Count));
+                    mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.LocalScan, progress.match_filename, nIndex, parsedFiles.Count));
             }
 
             //now make DBOnlineEpisodes for each unmatched double episode
@@ -3263,7 +3251,7 @@ namespace WindowPlugins.GUITVSeries
                 } // else nothing changed, so dont bother
             }
             
-            m_worker.ReportProgress(0, new ParsingProgress(ParsingAction.LocalScan, parsedFiles.Count));
+            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.LocalScan, parsedFiles.Count));
         }
         #endregion
 

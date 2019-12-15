@@ -105,7 +105,7 @@ namespace WindowPlugins.GUITVSeries
         public void Delete()
         {
             // first let's delete the physical file
-            if (this.isAvailableLocally)
+            if (this.IsAvailableLocally)
             {
                 try
                 {                    
@@ -184,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
                             if (cache == null) cache = new Dictionary<int, List<DBFanart>>();
                             cache.Add(SeriesID, ourFanart);
                         }
-                        MPTVSeriesLog.Write("Found " + results.Rows.Count + " Fanart from Database", MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("Found " + results.Rows.Count + " fanart from database", MPTVSeriesLog.LogLevel.Debug);
 
                     }
                     catch (Exception ex)
@@ -294,7 +294,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool isAvailableLocally
+        public bool IsAvailableLocally
         {
             get
             {

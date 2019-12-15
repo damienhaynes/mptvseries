@@ -48,6 +48,7 @@ namespace WindowPlugins.GUITVSeries
         public string SeriesID = string.Empty;
         public string SeriesName = string.Empty;
         public string OnlinePath = string.Empty;
+        public string OnlineThumbPath = string.Empty;
         public string FileName = string.Empty;
         public string Language = string.Empty;
         public double Rating = 0.0;
@@ -99,7 +100,7 @@ namespace WindowPlugins.GUITVSeries
         public ArtworkStyles Style = ArtworkStyles.season;
     };
 
-    class SeriesBannersMap : System.IEquatable<SeriesBannersMap>
+    class SeriesBannersMap : IEquatable<SeriesBannersMap>
     {
         public string SeriesID = string.Empty;
         public List<WideBannerSeries> SeriesWideBanners = new List<WideBannerSeries>();
@@ -112,7 +113,7 @@ namespace WindowPlugins.GUITVSeries
         {
             this.SeriesID = seriesID;
         }
-
+        
         #region IEquatable<seriesBannersMap> Members
 
         bool IEquatable<SeriesBannersMap>.Equals(SeriesBannersMap other)
@@ -127,7 +128,12 @@ namespace WindowPlugins.GUITVSeries
     {
         public event NewArtWorkDownloadDoneHandler BannerDownloadDone;
         public List<SeriesBannersMap> SeriesBannersMap = new List<SeriesBannersMap>();
-    
+
+        public GetBanner( int seriesID )
+        {
+            doWork( seriesID.ToString() );
+        }
+
         public GetBanner(string seriesID)
         {
             doWork(seriesID);
@@ -135,7 +141,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void doWork(string seriesID)
         {
-            XmlNode banners = OnlineAPI.getBannerList(Int32.Parse(seriesID));
+            XmlNode banners = OnlineAPI.GetBannerList(Int32.Parse(seriesID));
             if (banners == null) return;
 
             DBSeries lSeries = Helper.getCorrespondingSeries( Int32.Parse( seriesID ) );
@@ -155,6 +161,7 @@ namespace WindowPlugins.GUITVSeries
                 
                 seriesWideBanners.Language = banner.SelectSingleNode("Language").InnerText;
                 seriesWideBanners.OnlinePath = banner.SelectSingleNode("BannerPath").InnerText;
+                seriesWideBanners.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
                 seriesWideBanners.SeriesName = SeriesName;
 
                 try
@@ -219,6 +226,7 @@ namespace WindowPlugins.GUITVSeries
 
                 seriesPoster.Language = banner.SelectSingleNode("Language").InnerText;
                 seriesPoster.OnlinePath = banner.SelectSingleNode("BannerPath").InnerText;
+                seriesPoster.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
                 seriesPoster.SeriesName = SeriesName;
 
                 if (!string.IsNullOrEmpty(banner.SelectSingleNode("Rating").InnerText))
@@ -262,6 +270,7 @@ namespace WindowPlugins.GUITVSeries
 
                 seasonPoster.Language = banner.SelectSingleNode("Language").InnerText;
                 seasonPoster.OnlinePath = banner.SelectSingleNode("BannerPath").InnerText;
+                seasonPoster.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
                 seasonPoster.SeasonIndex = banner.SelectSingleNode("Season").InnerText;
                 seasonPoster.SeriesName = SeriesName;
 
@@ -402,7 +411,7 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // mark the filename with the language
-                    seriesPoster.FileName = Helper.cleanLocalPath(seriesPoster.SeriesName) + @"\-lang" + seriesPoster.Language + "-" + seriesPoster.OnlinePath;                        
+                    seriesPoster.FileName = Helper.cleanLocalPath(seriesPoster.SeriesName) + @"\-lang" + seriesPoster.Language + "-" + seriesPoster.OnlinePath;
                     string file = OnlineAPI.DownloadBanner(seriesPoster.OnlinePath, Settings.Path.banners, seriesPoster.FileName);
                     if (BannerDownloadDone != null)
                     {
@@ -474,7 +483,7 @@ namespace WindowPlugins.GUITVSeries
         
         public GetFanart(int SeriesID)
         {
-            XmlNode node = OnlineAPI.getBannerList(SeriesID);
+            XmlNode node = OnlineAPI.GetBannerList(SeriesID);
             if (node == null) return;
 
             foreach (XmlNode fanartNode in node.SelectNodes("/Banners/Banner[BannerType='fanart']"))

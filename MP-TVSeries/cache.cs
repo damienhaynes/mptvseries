@@ -120,7 +120,7 @@ namespace WindowPlugins.GUITVSeries
             if (_cache == null)
                 return;
 
-            MPTVSeriesLog.Write("Cache: DB Write operation: ", table, MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write("Cache: DB Write operation: ", table, MPTVSeriesLog.LogLevel.DebugSQL);
             switch (table)
             {
                 case DBSeries.cTableName:

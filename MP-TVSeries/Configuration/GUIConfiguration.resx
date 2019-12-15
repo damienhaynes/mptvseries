@@ -817,7 +817,7 @@ Default: &lt;Series.Pretty_Name&gt; e.g. The 4400</value>
   <data name="dbCheckBoxTraktCommunityRatings.ToolTip" xml:space="preserve">
     <value>Ratings from trakt.tv are much better for tv shows and episodes than thetvdb.com.
 
-This option will only work if you have a trakt account and also have enabled MP-TVSeries plugin in the Trakt plugin.
+This option will only work if you have the Trakt plugin installed and enabled.
 
 Note: if you want to sync your trakt user ratings to tvseries, you must do this from the Trakt plugin as it's a sync operation.</value>
   </data>

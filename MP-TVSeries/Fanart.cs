@@ -31,7 +31,7 @@ namespace WindowPlugins.GUITVSeries
 {
     public class Fanart : IDisposable
     {
-        #region config Constants
+        #region Config Constants
         
         const string seriesFanArtFilenameFormat = "*{0}*.*";
         const string seasonFanArtFilenameFormat = "*{0}S{1}*.*";
@@ -49,17 +49,17 @@ namespace WindowPlugins.GUITVSeries
 
         #region Vars
 
-        int _seriesID = -1;
-        int _seasonIndex = -1;
+        int mSeriesId = -1;
+        int mSeasonIndex = -1;
 
-        bool? _isLight = null;
-        bool _seasonMode = false;
+        bool? mIsLight = null;
+        bool mSeasonMode = false;
 
-        List<string> _fanArts = null;
+        List<string> mFanarts = null;
 
-        string _randomPick = null;        
+        string mRandomPick = null;        
 
-        DBFanart _dbchosenfanart = null;
+        DBFanart mDbChosenFanart = null;
 
         #endregion
 
@@ -67,32 +67,32 @@ namespace WindowPlugins.GUITVSeries
         
         public int SeriesID 
         { 
-            get { return _seriesID; } 
+            get { return mSeriesId; } 
         }
 
         public int SeasonIndex 
         { 
-            get { return _seasonIndex; }
+            get { return mSeasonIndex; }
         }
 
         public bool Found 
         { 
             get
             { 
-                return _fanArts != null && _fanArts.Count > 0; 
+                return mFanarts != null && mFanarts.Count > 0; 
             } 
         }
         
         public bool SeasonMode 
         { 
-            get { return _seasonMode; } 
+            get { return mSeasonMode; } 
         }
 
         public bool HasColorInfo
         {
             get 
             {
-                return _dbchosenfanart != null && _dbchosenfanart.HasColorInfo;
+                return mDbChosenFanart != null && mDbChosenFanart.HasColorInfo;
             }
         }
 
@@ -104,7 +104,7 @@ namespace WindowPlugins.GUITVSeries
                 {
                     System.Drawing.Color[] colors = new System.Drawing.Color[3];
                     for (int i = 0; i < 3;)
-                        colors[i] = _dbchosenfanart.GetColor(++i);
+                        colors[i] = mDbChosenFanart.GetColor(++i);
                     return colors;
                 }
                 else return null;
@@ -125,16 +125,16 @@ namespace WindowPlugins.GUITVSeries
 
         Fanart(int seriesID)
         {
-            _seriesID = seriesID;
-            _seasonMode = false;
+            mSeriesId = seriesID;
+            mSeasonMode = false;
             getFanart();
         }
 
         Fanart(int seriesID, int seasonIndex)
         {
-            _seriesID = seriesID;
-            _seasonIndex = seasonIndex;
-            _seasonMode = true;
+            mSeriesId = seriesID;
+            mSeasonIndex = seasonIndex;
+            mSeasonMode = true;
             getFanart();
         }
 
@@ -209,6 +209,42 @@ namespace WindowPlugins.GUITVSeries
             DBFanart.ClearDB(seriesID);
         }
 
+        public static string GetLocalThumbPath( DBFanart aFanart )
+        {
+            return GetLocalThumbPath( aFanart[DBFanart.cThumbnailPath], aFanart[DBFanart.cSeriesID] );
+        }
+        public static string GetLocalThumbPath(string aOnlineThumbPath, string aSeriesID)
+        {
+            // fanart thumbs are stored in: _cache\fanart\original\<seriesId>-*.jpg
+            string lThumbPath = "_cache/fanart/original/" + Path.GetFileName( aOnlineThumbPath );
+            if ( !lThumbPath.Contains( aSeriesID ) )
+            {
+                // add the series id to the filename
+                string lOldValue = Path.GetFileName( aOnlineThumbPath );
+                string lNewValue = aSeriesID + "-" + Path.GetFileName( aOnlineThumbPath );
+                lThumbPath = lThumbPath.Replace( lOldValue, lNewValue );
+            }
+            return lThumbPath.Replace( "/", @"\" );
+        }
+
+        public static string GetLocalPath( DBFanart aFanart )
+        {
+            return GetLocalPath( aFanart[DBFanart.cBannerPath], aFanart[DBFanart.cSeriesID] );
+        }
+        public static string GetLocalPath( string aThumbPath, string aSeriesID )
+        {
+            // fanart thumbs are stored in: fanart\original\<seriesId>-*.jpg
+            string lPath = "fanart/original/" + Path.GetFileName( aThumbPath );
+            if ( !lPath.Contains( aSeriesID ) )
+            {
+                // add the series id to the filename
+                string lOldValue = Path.GetFileName( aThumbPath );
+                string lNewValue = aSeriesID + "-" + Path.GetFileName( aThumbPath );
+                lPath = lPath.Replace( lOldValue, lNewValue );
+            }
+            return lPath.Replace( "/", @"\" );
+        }
+
         #endregion
 
         #region Instance Methods
@@ -219,47 +255,49 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (!string.IsNullOrEmpty(_ThumbFileName)) return _ThumbFileName;
 
-                List<DBFanart> fanarts = DBFanart.GetAll(SeriesID, true);
+                List<DBFanart> lFanarts = DBFanart.GetAll(SeriesID, true);
 
                 // check if we have populated the db with fanarts
-                if (fanarts == null || fanarts.Count == 0) 
+                if (lFanarts == null || lFanarts.Count == 0) 
                     return string.Empty;
 
                 // get a fallback fanart if preferred one does not exist
-                _ThumbFileName = Path.Combine(Settings.GetPath(Settings.Path.fanart), fanarts[0][DBFanart.cThumbnailPath]);
+                _ThumbFileName = Path.Combine( Settings.GetPath( Settings.Path.fanart ), GetLocalThumbPath(lFanarts[0]) );
                 
                 // favour chosen fanart if it exists
-                fanarts.RemoveAll(f => f.Chosen != true);
+                lFanarts.RemoveAll(f => f.Chosen != true);
 
                 // should only be left with one if there is one chosen
-                if (fanarts.Count > 0)
-                    _ThumbFileName = Path.Combine(Settings.GetPath(Settings.Path.fanart), fanarts[0][DBFanart.cThumbnailPath]);
+                if (lFanarts.Count > 0)
+                    _ThumbFileName = Path.Combine( Settings.GetPath( Settings.Path.fanart ), GetLocalThumbPath( lFanarts[0] ) );
 
                 // cached thumbs may not be downloaded
                 // currently only get retrieved on fanart chooser window open
-                if (File.Exists(_ThumbFileName))
+                if ( File.Exists( _ThumbFileName ) )
+                {
                     return _ThumbFileName;
+                }
                 else
                 {
                     // lets create one from the fullsize fanart on disk
-                    string fullSizeFanart = Fanart.getFanart(SeriesID).FanartFilename;
-                    if (!string.IsNullOrEmpty(fullSizeFanart) && File.Exists(fullSizeFanart) &&
-                        _ThumbFileName.Length > Settings.GetPath(Settings.Path.fanart).Length) // only if we have filename
+                    string lFullSizeFanart = Fanart.getFanart( SeriesID ).FanartFilename;
+                    if ( !string.IsNullOrEmpty( lFullSizeFanart ) && File.Exists( lFullSizeFanart ) &&
+                        _ThumbFileName.Length > Settings.GetPath( Settings.Path.fanart ).Length ) // only if we have filename
                     {
                         try
                         {
                             //create directory first, to get rid of GDI+ errors
-                            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(_ThumbFileName));
+                            Directory.CreateDirectory( Path.GetDirectoryName( _ThumbFileName ) );
 
-                            Image img = Image.FromFile(fullSizeFanart);
-                            Bitmap bmp = ImageAllocator.Resize(img, new Size(400, 225));
+                            Image lImage = Image.FromFile( lFullSizeFanart );
+                            Bitmap lBitmap = ImageAllocator.Resize( lImage, new Size( 400, 225 ) );
 
-                            bmp.Save(_ThumbFileName, ImageFormat.Jpeg);
+                            lBitmap.Save( _ThumbFileName, ImageFormat.Jpeg );
                             return _ThumbFileName;
                         }
-                        catch (Exception ex)
+                        catch ( Exception ex )
                         {
-                            MPTVSeriesLog.Write("Failed to create fanart thumbnail {0} from full fanart {1}: {2}",  _ThumbFileName, fullSizeFanart, ex.ToString());
+                            MPTVSeriesLog.Write( "Failed to create fanart thumbnail '{0}' from full fanart '{1}'. {2}", _ThumbFileName, lFullSizeFanart, ex.ToString() );
                         }
                     }
                 }
@@ -274,99 +312,99 @@ namespace WindowPlugins.GUITVSeries
             get 
             {
                 // Maybe there has been some new additions we dont know about yet
-                if (_fanArts != null && _fanArts.Count == 0)
+                if (mFanarts != null && mFanarts.Count == 0)
                 {
                     getFanart();
-                    if (_fanArts.Count == 0)
+                    if (mFanarts.Count == 0)
                         return string.Empty;
                 }
                 
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
                 {                                        
-                    if (_randomPick != null && _randomPick != String.Empty)
-                        return _randomPick;
+                    if (mRandomPick != null && mRandomPick != String.Empty)
+                        return mRandomPick;
 
-                    List<DBFanart> _faInDB = null;
+                    List<DBFanart> lFanartInDb = null;
 
-                    if (DBFanart.GetAll(SeriesID, true) != null && (_faInDB = DBFanart.GetAll(SeriesID, true)) != null && _faInDB.Count > 0)
+                    if (DBFanart.GetAll(SeriesID, true) != null && (lFanartInDb = DBFanart.GetAll(SeriesID, true)) != null && lFanartInDb.Count > 0)
                     {
                         // Choose from db takes precedence (not ideal)                        
-                        List<DBFanart> _tempFanarts = _faInDB;
-                        for (int i = (_tempFanarts.Count - 1); i >= 0; i--)                        
+                        List<DBFanart> lTempFanart = lFanartInDb;
+                        for (int i = (lTempFanart.Count - 1); i >= 0; i--)
                         {
                             // Remove any fanarts in database that are not local or have been disabled
-                            if (!_tempFanarts[i].isAvailableLocally || _tempFanarts[i].Disabled)
-                                _faInDB.Remove(_faInDB[i]);
+                            if (!lTempFanart[i].IsAvailableLocally || lTempFanart[i].Disabled)
+                                lFanartInDb.Remove(lFanartInDb[i]);
                         }
                         // we may no longer have any fanarts in db to choose from as they could be disabled/deleted from disk
-                        if (_faInDB.Count > 0)
-                            _randomPick = _faInDB[fanartRandom.Next(0, _faInDB.Count)].FullLocalPath;
+                        if (lFanartInDb.Count > 0)
+                            mRandomPick = lFanartInDb[fanartRandom.Next(0, lFanartInDb.Count)].FullLocalPath;
 
-                        if (String.IsNullOrEmpty(_randomPick))
+                        if (String.IsNullOrEmpty(mRandomPick))
                         {
-                            if (_fanArts != null && _fanArts.Count > 0)
-                                _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
+                            if (mFanarts != null && mFanarts.Count > 0)
+                                mRandomPick = mFanarts[fanartRandom.Next(0, mFanarts.Count)];
                             else
-                                _randomPick = string.Empty;
+                                mRandomPick = string.Empty;
                         }
                     }
                     else
                     {
-                        if (_fanArts != null && _fanArts.Count > 0)
-                            _randomPick = _fanArts[fanartRandom.Next(0, _fanArts.Count)];
+                        if (mFanarts != null && mFanarts.Count > 0)
+                            mRandomPick = mFanarts[fanartRandom.Next(0, mFanarts.Count)];
                         else
-                            _randomPick = string.Empty;
+                            mRandomPick = string.Empty;
                     }
-                    return _randomPick;
+                    return mRandomPick;
                 }
                 else
                 {                    
                     // see if we have a chosen one in the db
-                    List<DBFanart> _faInDB = DBFanart.GetAll(SeriesID, true);
-                    if (_faInDB != null && _faInDB.Count > 0)
+                    List<DBFanart> lFanartInDb = DBFanart.GetAll(SeriesID, true);
+                    if (lFanartInDb != null && lFanartInDb.Count > 0)
                     {
-                        foreach (DBFanart f in _faInDB)
+                        foreach (DBFanart f in lFanartInDb)
                         {
-                            if (f.Chosen && f.isAvailableLocally && !f.Disabled)
+                            if (f.Chosen && f.IsAvailableLocally && !f.Disabled)
                             {
-                                _dbchosenfanart = f;
+                                mDbChosenFanart = f;
                                 break;
                             }
                         }
 
                         // we couldnt find any fanart set as chosen in db, we try to choose the first available
-                        if (_dbchosenfanart == null || String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        if (mDbChosenFanart == null || String.IsNullOrEmpty(mDbChosenFanart.FullLocalPath))
                         {
-                            foreach (DBFanart f in _faInDB)
+                            foreach (DBFanart f in lFanartInDb)
                             {
                                 // Checking if available will also remove from database if not
-                                if (f.isAvailableLocally && !f.Disabled)
+                                if (f.IsAvailableLocally && !f.Disabled)
                                 {
-                                    _dbchosenfanart = f;
+                                    mDbChosenFanart = f;
                                     break;
                                 }
                             }
                         }
 
-                        if (_dbchosenfanart != null)
-                            return _dbchosenfanart.FullLocalPath;
+                        if (mDbChosenFanart != null)
+                            return mDbChosenFanart.FullLocalPath;
 
                         // If still no fanart found in db, choose from available on harddrive
-                        if (_dbchosenfanart == null || String.IsNullOrEmpty(_dbchosenfanart.FullLocalPath))
+                        if (mDbChosenFanart == null || String.IsNullOrEmpty(mDbChosenFanart.FullLocalPath))
                         {
-                            if (_fanArts != null && _fanArts.Count > 0)
-                                return _randomPick = _fanArts[0];
+                            if (mFanarts != null && mFanarts.Count > 0)
+                                return mRandomPick = mFanarts[0];
                             else
                                 return string.Empty;
                         }
                         else
-                            return _dbchosenfanart.FullLocalPath;
+                            return mDbChosenFanart.FullLocalPath;
                     }
                     else
                     {
                         // No fanart found in db but user doesn't want random, we always return the first
-                        if (_fanArts != null && _fanArts.Count > 0)
-                            return _randomPick = _fanArts[0];
+                        if (mFanarts != null && mFanarts.Count > 0)
+                            return mRandomPick = mFanarts[0];
                         else 
                             return string.Empty;
                     }
@@ -378,16 +416,16 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (_isLight != null) return _isLight.Value;
-                _isLight = fanArtIsLight(FanartFilename);
-                return _isLight.Value;
+                if (mIsLight != null) return mIsLight.Value;
+                mIsLight = fanArtIsLight(FanartFilename);
+                return mIsLight.Value;
             }
         }
 
         public void ForceNewPick()
         {
-            _isLight = null;
-            _randomPick = null;
+            mIsLight = null;
+            mRandomPick = null;
         }
 
         #endregion
@@ -407,38 +445,38 @@ namespace WindowPlugins.GUITVSeries
             string fanartFolder = Settings.GetPath(Settings.Path.fanart);
 
             // Check if Fanart folder exists in MediaPortal's Thumbs directory
-            if (System.IO.Directory.Exists(fanartFolder))
+            if (Directory.Exists(fanartFolder))
             {
-                MPTVSeriesLog.Write("Checking for Fanart on series: ", Helper.getCorrespondingSeries(_seriesID).ToString(), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write("Checking for Fanart on series: ", Helper.getCorrespondingSeries(mSeriesId).ToString(), MPTVSeriesLog.LogLevel.Debug);
                 try
                 {
                     // Create a Filename filter for Season / Series Fanart
-                    string seasonFilter = string.Format(seasonFanArtFilenameFormat, _seriesID, _seasonIndex);
-                    string seriesFilter = string.Format(seriesFanArtFilenameFormat, _seriesID);
+                    string seasonFilter = string.Format(seasonFanArtFilenameFormat, mSeriesId, mSeasonIndex);
+                    string seriesFilter = string.Format(seriesFanArtFilenameFormat, mSeriesId);
                     
-                    string filter = _seasonMode ? seasonFilter : seriesFilter;                                  
+                    string filter = mSeasonMode ? seasonFilter : seriesFilter;                                  
 
-                    _fanArts = new List<string>();
+                    mFanarts = new List<string>();
                     // Store list of all fanart files found in all sub-directories of fanart thumbs folder
-                    _fanArts.AddRange(System.IO.Directory.GetFiles(fanartFolder, filter, System.IO.SearchOption.AllDirectories));
+                    mFanarts.AddRange(Directory.GetFiles(fanartFolder, filter, SearchOption.AllDirectories));
 
                     // If no Season Fanart was found, see if any Series fanart exists
-                    if (_fanArts.Count == 0 && _seasonMode)
+                    if (mFanarts.Count == 0 && mSeasonMode)
                     {
                         MPTVSeriesLog.Write("No Season Fanart found on disk, searching for series fanart", MPTVSeriesLog.LogLevel.Debug);
-                        _fanArts.AddRange(System.IO.Directory.GetFiles(fanartFolder, seriesFilter, System.IO.SearchOption.AllDirectories));
+                        mFanarts.AddRange(System.IO.Directory.GetFiles(fanartFolder, seriesFilter, SearchOption.AllDirectories));
                     }
 
                     // Remove any files that we dont want e.g. thumbnails in the _cache folder
                     // and Season fanart if we are not in Season Mode
-                    if (!_seasonMode) removeSeasonFromSeries();
+                    if (!mSeasonMode) removeSeasonFromSeries();
                     removeFromFanart("_cache");
 
-                    MPTVSeriesLog.Write("Number of fanart found on disk: ", _fanArts.Count.ToString(), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write("Found " + mFanarts.Count.ToString() + " fanart files on disk", MPTVSeriesLog.LogLevel.Debug);
                 }
                 catch (Exception ex)
                 {
-                    MPTVSeriesLog.Write("An error occured looking for fanart: " + ex.Message);
+                    MPTVSeriesLog.Write("An error occured looking for fanart. Exception=" + ex.Message);
                 }
             }
         }
@@ -451,12 +489,12 @@ namespace WindowPlugins.GUITVSeries
 
         void removeFromFanart(string needle)
         {
-            if (_fanArts == null) return;
-            for (int i = 0; i < _fanArts.Count; i++)
+            if (mFanarts == null) return;
+            for (int i = 0; i < mFanarts.Count; i++)
             {
-                if (_fanArts[i].Contains(needle))
+                if (mFanarts[i].Contains(needle))
                 {
-                    _fanArts.Remove(_fanArts[i]);
+                    mFanarts.Remove(mFanarts[i]);
                     i--;
                 }
             }
