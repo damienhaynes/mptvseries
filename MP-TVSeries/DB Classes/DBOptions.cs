@@ -40,6 +40,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBOption
     {
         #region Database Fields
+        public const string cArtworkChooserLayout = "ArtworkChooserLayout";
         public const string cConfigLogCollapsed = "Config_LogShown";
         public const string cDBSeriesVersion = "DBSeriesVersion";
         public const string cDBOnlineSeriesVersion = "DBOnlineSeriesVersion";
@@ -530,6 +531,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (GetOptions(cActorLayout) == null)
                 SetOptions(cActorLayout, 0);
+
+            if ( GetOptions( cArtworkChooserLayout  ) == null )
+                SetOptions( cArtworkChooserLayout, 0 );
 
             if (GetOptions(cAutoGenerateEpisodeTitles) == null)
                 SetOptions(cAutoGenerateEpisodeTitles, true);

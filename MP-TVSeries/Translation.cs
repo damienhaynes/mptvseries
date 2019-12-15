@@ -35,13 +35,23 @@ using MediaPortal.GUI.Library;
 namespace WindowPlugins.GUITVSeries
 {
     static class Translation
-    {        
+    {
         /// <summary>
         /// These will be loaded with the language files content
         /// if the selected lang file is not found, it will first try to load en-US.xml as a backup
         /// if that also fails it will use the hardcoded strings as a last resort.
         /// </summary>
         #region Translatable Fields
+        public static string Artwork = "Artwork";
+        public static string ArtworkChooser = "Artwork Chooser";
+        public static string ChooseArtwork = "Choose Artwork";
+        public static string ArtworkTypes = "Artwork Types";
+        public static string ArtworkSelected = "Selected";
+        public static string SeriesWideBanner = "Series WideBanner";
+        public static string SeriesPoster = "Series Poster";
+        public static string SeriesFanart = "Series Fanart";
+        public static string SeasonPoster = "Season Poster";
+        public static string EpisodeThumb = "Episode Thumbnail";
         public static string Series = "Series";
         public static string Series_Plural = "Series";
         public static string Season = "Season";
@@ -331,7 +341,9 @@ namespace WindowPlugins.GUITVSeries
 
         public static string Timeout = "Timeout";
         public static string NoActors = "There are no Actors for this series.";
+        public static string NoArtwork = "There are no {0} thumbnails for this series.";
         public static string GettingActors = "Getting Actors from Online";
+        public static string GettingArtwork = "Getting Artwork from Online";
 
         public static string DownloadAllEpisodeInfo = "Download All Episode Info";
         

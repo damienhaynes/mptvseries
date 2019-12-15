@@ -179,8 +179,10 @@
     <Compile Include="Cornerstone.MP\AsyncImageResource.cs" />
     <Compile Include="Cornerstone.MP\ImageSwapper.cs" />
     <Compile Include="DB Classes\DBActor.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GUI\GUIActors.cs" />
+    <Compile Include="GUI\GUIArtworkChooser.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
     <Compile Include="SkinSettings.cs" />
@@ -469,7 +471,9 @@
     <Content Include="Resources\Languages\da.xml" />
     <Content Include="Resources\Languages\de.xml" />
     <Content Include="Resources\Languages\el.xml" />
-    <Content Include="Resources\Languages\en-US.xml" />
+    <Content Include="Resources\Languages\en-US.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\Languages\es.xml" />
     <Content Include="Resources\Languages\et.xml" />
     <Content Include="Resources\Languages\fi.xml" />
