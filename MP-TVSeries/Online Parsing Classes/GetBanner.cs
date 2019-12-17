@@ -371,7 +371,8 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // mark the filename with the language
-                    seriesWideBanner.FileName = Helper.cleanLocalPath(seriesWideBanner.SeriesName) + @"\-lang" + seriesWideBanner.Language + "-" + seriesWideBanner.OnlinePath;
+                    string lPath = "graphical/" + Path.GetFileName( seriesWideBanner.OnlinePath );
+                    seriesWideBanner.FileName = Helper.cleanLocalPath(seriesWideBanner.SeriesName) + @"\-lang" + seriesWideBanner.Language + "-" + lPath;
                         
                     string file = OnlineAPI.DownloadBanner(seriesWideBanner.OnlinePath, Settings.Path.banners, seriesWideBanner.FileName);
                     if (BannerDownloadDone != null)
@@ -411,7 +412,8 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // mark the filename with the language
-                    seriesPoster.FileName = Helper.cleanLocalPath(seriesPoster.SeriesName) + @"\-lang" + seriesPoster.Language + "-" + seriesPoster.OnlinePath;
+                    string lPath = "posters/" + Path.GetFileName( seriesPoster.OnlinePath );
+                    seriesPoster.FileName = Helper.cleanLocalPath(seriesPoster.SeriesName) + @"\-lang" + seriesPoster.Language + "-" + lPath;
                     string file = OnlineAPI.DownloadBanner(seriesPoster.OnlinePath, Settings.Path.banners, seriesPoster.FileName);
                     if (BannerDownloadDone != null)
                     {
@@ -454,7 +456,8 @@ namespace WindowPlugins.GUITVSeries
                     // only download season banners if we have online season in database
                     if (!localSeasons.Any(s => s[DBSeason.cIndex] == seasonPoster.SeasonIndex)) continue;
 
-                    seasonPoster.FileName = Helper.cleanLocalPath(seasonPoster.SeriesName) + @"\-lang" + seasonPoster.Language + "-" + seasonPoster.OnlinePath;
+                    string lPath = "seasons/" + Path.GetFileName( seasonPoster.OnlinePath );
+                    seasonPoster.FileName = Helper.cleanLocalPath(seasonPoster.SeriesName) + @"\-lang" + seasonPoster.Language + "-" + lPath;
                         
                     string file = OnlineAPI.DownloadBanner(seasonPoster.OnlinePath, Settings.Path.banners, seasonPoster.FileName);
                     if (BannerDownloadDone != null)
@@ -502,16 +505,19 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // Sync local files with database
-                string localPath = dbf[DBFanart.cBannerPath];
-                localPath = localPath.Replace("/", @"\");
+                string localPath = GUITVSeries.Fanart.GetLocalPath( dbf );
                 string fanart = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localPath);
-                if (File.Exists(fanart))
+                if ( File.Exists( fanart ) )
+                {
                     dbf[DBFanart.cLocalPath] = localPath;
+                }
                 else
+                {
                     dbf[DBFanart.cLocalPath] = string.Empty;
+                }
 
                 dbf[DBFanart.cSeriesID] = SeriesID;
-                mFanart.Add(dbf);                
+                mFanart.Add(dbf);
             }
             
             // if fanart count is zero, try to create a dummy fanart basis the series record

@@ -62,7 +62,13 @@ namespace WindowPlugins.GUITVSeries.GUI
         #region Skin Controls
 
         [SkinControlAttribute( 50 )]
-        protected GUIFacadeControl mFacade = null;
+        protected GUIFacadeControl mFacadePosters = null;
+
+        [SkinControlAttribute( 51 )]
+        protected GUIFacadeControl mFacadeWidebanners = null;
+
+        [SkinControlAttribute( 52 )]
+        protected GUIFacadeControl mFacadeThumbnails = null;
 
         [SkinControlAttribute( 2 )]
         protected GUIButtonControl ButtonLayouts = null;
@@ -113,6 +119,32 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         private ArtworkLoadingParameters ArtworkParams { get; set; }
 
+        private GUIFacadeControl Facade
+        {
+            get
+            {
+                GUIFacadeControl lFacade = null;
+
+                switch ( ArtworkParams.Type )
+                {
+                    case ArtworkType.SeriesPoster:
+                    case ArtworkType.SeasonPoster:
+                        lFacade = mFacadePosters;
+                        break;
+
+                    case ArtworkType.SeriesFanart:
+                    case ArtworkType.EpisodeThumb:
+                        lFacade = mFacadeThumbnails;
+                        break;
+
+                    case ArtworkType.SeriesBanner:
+                        lFacade = mFacadeWidebanners;
+                        break;
+                }
+                return lFacade;
+            }
+        }
+
         #endregion
 
         #region Public Properties
@@ -149,6 +181,9 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             // Deserialise loading parameter from JSON (ArtworkParameters)
             LoadParameters();
+
+            // set facade visibility
+            SetFacadeVisibility();
 
             // get the thumbnails to load for user selection
             DownloadArtworkThumbs();
@@ -189,10 +224,10 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         protected override void OnShowContextMenu()
         {
-            GUIListItem selectedItem = this.mFacade.SelectedListItem;
+            GUIListItem selectedItem = Facade.SelectedListItem;
             if ( selectedItem == null ) return;
 
-            IDialogbox dlg = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
+            var dlg = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
             dlg.Reset();
             dlg.SetHeading( Translation.Actors );
 
@@ -218,6 +253,29 @@ namespace WindowPlugins.GUITVSeries.GUI
         #endregion
 
         #region Private Methods
+
+        private void SetFacadeVisibility()
+        {
+            switch ( ArtworkParams.Type )
+            {
+                case ArtworkType.SeriesPoster:
+                case ArtworkType.SeasonPoster:
+                    mFacadeThumbnails.Visible = false;
+                    mFacadeWidebanners.Visible = false;
+                    break;
+
+                case ArtworkType.SeriesFanart:
+                case ArtworkType.EpisodeThumb:
+                    mFacadePosters.Visible = false;
+                    mFacadeWidebanners.Visible = false;
+                    break;
+
+                case ArtworkType.SeriesBanner:
+                    mFacadePosters.Visible = false;
+                    mFacadeThumbnails.Visible = false;
+                    break;
+            }
+        }
 
         private bool LoadParameters()
         {
@@ -499,7 +557,7 @@ namespace WindowPlugins.GUITVSeries.GUI
         private void LoadFacade( List<TvdbArt> aArtwork )
         {
             // clear facade
-            GUIControl.ClearControl( GetID, mFacade.GetID );
+            GUIControl.ClearControl( GetID, Facade.GetID );
 
             // notify user if no thumbs to display and backout of window
             if ( aArtwork == null || aArtwork.Count == 0 )
@@ -521,45 +579,43 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lArtworkItem.Item = lItem;
                 lArtworkItem.Label2 = GetLabelTwo( lItem );
                 lArtworkItem.IsPlayed = lItem.IsDefault;
-                lArtworkItem.IconImage = "defaultVideoBig.png";
-                lArtworkItem.IconImageBig = "defaultVideoBig.png";
-                lArtworkItem.ThumbnailImage = "defaultVideoBig.png";
+                lArtworkItem.IconImage = GetDefaultImage();
+                lArtworkItem.IconImageBig = GetDefaultImage();
+                lArtworkItem.ThumbnailImage = GetDefaultImage();
                 lArtworkItem.OnItemSelected += OnSelected;
                 Utils.SetDefaultIcons( lArtworkItem );
 
-                mFacade.Add( lArtworkItem );
+                Facade.Add( lArtworkItem );
 
                 // if default, get index
                 if ( lItem.IsDefault )
-                    lSelectedIndex = mFacade.Count - 1;
+                    lSelectedIndex = Facade.Count - 1;
             }
 
-            switch ( ArtworkParams.Type )
-            {
-                case ArtworkType.SeriesFanart:
-                    break;
+            // Set the selected item based on current
+            Facade.SelectedListItemIndex = lSelectedIndex;
 
-                case ArtworkType.SeriesPoster:
-                    break;
+            // Set Facade Layout
+            Facade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
 
-                case ArtworkType.SeriesBanner:
-                    break;
-
-                case ArtworkType.SeasonPoster:
-                    break;
-
-                case ArtworkType.EpisodeThumb:
-                    break;
-            }
-
-            mFacade.SelectedListItemIndex = lSelectedIndex;
+            GUIControl.FocusControl( GetID, Facade.GetID );
 
             // Download artwork thumbs async and set to facade
             GetImages( aArtwork );
+        }
 
-            // Set Facade Layout
-            mFacade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
-            GUIControl.FocusControl( GetID, mFacade.GetID );
+        private string GetDefaultImage()
+        {
+            switch (ArtworkParams.Type)
+            {
+                case ArtworkType.SeriesFanart:
+                case ArtworkType.EpisodeThumb:
+                    return "defaultPictureBig.png";
+                case ArtworkType.SeriesBanner:
+                    return "defaultPictureWideBig.png";
+                default:
+                    return "defaultVideoBig.png";
+            }
         }
 
         private string GetLabelTwo(TvdbArt aArtwork)
@@ -652,7 +708,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 } )
                 {
                     IsBackground = true,
-                    Name = "Artwork Image Downloader" + i.ToString()
+                    Name = "TVSArtwork" + i.ToString()
                 }.Start( groupList );
             }
         }
@@ -697,7 +753,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( lDialog.SelectedLabel >= 0 )
             {
                 CurrentLayout = ( Layout )lDialog.SelectedLabel;
-                mFacade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
+                Facade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
                 GUIControl.SetControlLabel( GetID, ButtonLayouts.GetID, GetLayoutTranslation( CurrentLayout ) );
             }
         }

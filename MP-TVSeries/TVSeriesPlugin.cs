@@ -784,7 +784,17 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         #region Top Level Menu Items - Context Sensitive
-                        if (CurrentViewLevel == Listlevel.Episode)
+
+                        bool lArtworkChooserAvailable = File.Exists( GUIGraphicsContext.Skin + @"\TVSeries.ArtworkChooser.xml" );
+
+                        if ( lArtworkChooserAvailable && CurrentViewLevel != Listlevel.Group )
+                        {
+                            pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
+                            dlg.Add( pItem );
+                            pItem.ItemId = ( int )eContextItems.artworkChooser;
+                        }
+
+                        if ( CurrentViewLevel == Listlevel.Episode)
                         {
                             pItem = new GUIListItem(Translation.Toggle_watched_flag);
                             dlg.Add(pItem);
@@ -821,14 +831,14 @@ namespace WindowPlugins.GUITVSeries
                         // Series:  Add all episodes for selected series
                         // Season:  Add all episodes for selected season
                         // Episode: Add selected episode
-                        if (CurrentViewLevel != Listlevel.Group)
+                        if ( CurrentViewLevel != Listlevel.Group)
                         {
                             pItem = new GUIListItem(Translation.AddToPlaylist);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.addToPlaylist;
                         }
 
-                        if (CurrentViewLevel != Listlevel.Group)
+                        if ( CurrentViewLevel != Listlevel.Group)
                         {
                             if (m_SelectedSeries != null && FanartBackground != null && // only if skins supports it
                                 m_SelectedSeries[DBOnlineSeries.cID] > 0)
@@ -844,16 +854,6 @@ namespace WindowPlugins.GUITVSeries
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.showActorsGUI;
                             }
-
-                        }
-
-                        bool lArtworkChooserAvailable = File.Exists( GUIGraphicsContext.Skin + @"\TVSeries.ArtworkChooser.xml" );
-
-                        if ( lArtworkChooserAvailable && CurrentViewLevel != Listlevel.Group )
-                        {
-                            pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
-                            dlg.Add( pItem );
-                            pItem.ItemId = ( int )eContextItems.artworkChooser;
                         }
 
                         if ( CurrentViewLevel == Listlevel.Series)
