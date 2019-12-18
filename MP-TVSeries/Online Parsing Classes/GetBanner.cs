@@ -245,7 +245,7 @@ namespace WindowPlugins.GUITVSeries
             posterSeriesList.Sort();
 
             // if the poster count is zero, try to get from the series record
-            if ( posterSeasonList.Count == 0 && !string.IsNullOrEmpty( lSeries[DBOnlineSeries.cPoster] ) )
+            if ( posterSeriesList.Count == 0 && !string.IsNullOrEmpty( lSeries[DBOnlineSeries.cPoster] ) )
             {
                 var seriesPoster = new PosterSeries();
 
