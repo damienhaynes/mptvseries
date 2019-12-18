@@ -1,16 +1,15 @@
-﻿using System;
+﻿using MediaPortal.GUI.Library;
+using MediaPortal.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using MediaPortal.GUI.Library;
-using Action = MediaPortal.GUI.Library.Action;
-using MediaPortal.Util;
-using System.Xml;
-using System.IO;
 using System.Globalization;
-using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using WindowPlugins.GUITVSeries.Extensions;
+using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
+using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries.GUI
 {
@@ -313,6 +312,206 @@ namespace WindowPlugins.GUITVSeries.GUI
             }, Translation.GettingArtwork, true );
         }
 
+        private void GetFanart(XmlNode aNode, DBFanart aDefaultFanart, ref List<TvdbArt> aArtwork)
+        {
+            foreach ( XmlNode banner in aNode.SelectNodes( "/Banners/Banner[BannerType='fanart']" ) )
+            {
+                var lFanart = new TvdbArt();
+
+                lFanart.Id = uint.Parse( banner.SelectSingleNode( "id" ).InnerText );
+                lFanart.Language = banner.SelectSingleNode( "Language" ).InnerText;
+                lFanart.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
+                lFanart.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
+                lFanart.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
+                lFanart.HasLogo = Convert.ToBoolean( banner.SelectSingleNode( "SeriesName" ).InnerText );
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
+                {
+                    double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
+                    lFanart.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
+                }
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
+                    lFanart.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
+
+                // create the local filename path for the online thumbnail image e.g. _cache\fanart\original\<seriesId>-*.jpg
+                string lLocalThumbPath = Fanart.GetLocalThumbPath( lFanart.OnlineThumbPath, ArtworkParams.SeriesId.ToString() );
+                lFanart.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lLocalThumbPath.Replace( "/", @"\" ) );
+
+                // create the local filename path for the online image e.g. fanart\original\<seriesId>-*.jpg
+                string lLocalPath = Fanart.GetLocalPath( lFanart.OnlinePath, ArtworkParams.SeriesId.ToString() );
+                lFanart.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lLocalPath.Replace( "/", @"\" ) );
+
+                // if the fullsize artwork is already downloaded, then set it
+                if ( File.Exists( lFanart.LocalPath ) ) lFanart.IsLocal = true;
+
+                // if the artwork is default/selected, then set it
+                if ( aDefaultFanart != null )
+                {
+                    if ( aDefaultFanart[DBFanart.cLocalPath] == lLocalPath.Replace( "/", @"\" ) )
+                    {
+                        lFanart.IsDefault = true;
+                    }
+                }
+
+                // create full dowload url's
+                string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
+                lFanart.ThumbnailUrl = lBaseUrl + lFanart.OnlineThumbPath;
+                lFanart.Url = lBaseUrl + lFanart.OnlinePath;
+
+                if (!aArtwork.Contains(lFanart))
+                    aArtwork.Add( lFanart );
+            }
+        }
+
+        private void GetSeriesPosters(XmlNode aNode, ref List<TvdbArt> aArtwork)
+        {
+            foreach ( XmlNode banner in aNode.SelectNodes( "/Banners/Banner[BannerType='poster']" ) )
+            {
+                var lPoster = new TvdbArt();
+
+                lPoster.Language = banner.SelectSingleNode( "Language" ).InnerText;
+                lPoster.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
+                lPoster.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
+                lPoster.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
+                {
+                    double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
+                    lPoster.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
+                }
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
+                    lPoster.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
+
+                // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-posters\5aecac0f66076_t.jpg
+                string lThumbPath = "posters/" + Path.GetFileName( lPoster.OnlineThumbPath );
+                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lPoster.Language + "-" + lThumbPath;
+                lPoster.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+
+                // create the local filename path for the online image
+                string lPath = "posters/" + Path.GetFileName( lPoster.OnlinePath );
+                lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lPoster.Language + "-" + lPath;
+                lPoster.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+
+                // if the fullsize artwork is already downloaded, then set it
+                if ( File.Exists( lPoster.LocalPath ) ) lPoster.IsLocal = true;
+
+                // if the artwork is default/selected, then set it
+                // remove any inconsistency with slashes, it should still be unique
+                if ( lRelativePath.Replace( "\\", "" ).Replace( "/", "" ) == ArtworkParams.Series[DBOnlineSeries.cCurrentPosterFileName].ToString().Replace( "\\", "" ).Replace( "/", "" ) )
+                    lPoster.IsDefault = true;
+
+                // create full dowload url's
+                string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
+                lPoster.ThumbnailUrl = lBaseUrl + lPoster.OnlineThumbPath;
+                lPoster.Url = lBaseUrl + lPoster.OnlinePath;
+
+                if (!aArtwork.Contains(lPoster))
+                    aArtwork.Add( lPoster );
+            }
+        }
+
+        private void GetSeriesWideBanners(XmlNode aNode, ref List<TvdbArt> aArtwork)
+        {
+            foreach ( XmlNode banner in aNode.SelectNodes( "/Banners/Banner[BannerType='series']" ) )
+            {
+                var lWideBanner = new TvdbArt();
+
+                lWideBanner.Language = banner.SelectSingleNode( "Language" ).InnerText;
+                lWideBanner.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
+                lWideBanner.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
+                lWideBanner.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
+                {
+                    double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
+                    lWideBanner.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
+                }
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
+                    lWideBanner.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
+
+                // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-graphical\5aecac0f66076_t.jpg
+                string lThumbPath = "graphical/" + Path.GetFileName( lWideBanner.OnlineThumbPath );
+                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lWideBanner.Language + "-" + lThumbPath;
+                lWideBanner.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+
+                // create the local filename path for the online image
+                string lPath = "graphical/" + Path.GetFileName( lWideBanner.OnlinePath );
+                lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lWideBanner.Language + "-" + lPath;
+                lWideBanner.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+
+                // if the fullsize artwork is already downloaded, then set it
+                if ( File.Exists( lWideBanner.LocalPath ) ) lWideBanner.IsLocal = true;
+
+                // if the artwork is default/selected, then set it
+                // remove any inconsistency with slashes, it should still be unique
+                if ( lRelativePath.Replace( "\\", "" ).Replace( "/", "" ) == ArtworkParams.Series[DBOnlineSeries.cCurrentBannerFileName].ToString().Replace( "\\", "" ).Replace( "/", "" ) )
+                    lWideBanner.IsDefault = true;
+
+                // create full dowload url's
+                string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
+                lWideBanner.ThumbnailUrl = lBaseUrl + lWideBanner.OnlineThumbPath;
+                lWideBanner.Url = lBaseUrl + lWideBanner.OnlinePath;
+
+                if ( !aArtwork.Contains( lWideBanner ) )
+                    aArtwork.Add( lWideBanner );
+            }
+        }
+
+        private void GetSeasonPosters(XmlNode aNode, ref List<TvdbArt> aArtwork)
+        {
+            foreach ( XmlNode banner in aNode.SelectNodes( "/Banners/Banner[BannerType='season']" ) )
+            {
+                // only interested in artwork for the selected season
+                if ( banner.SelectSingleNode( "Season" ).InnerText != ArtworkParams.SeasonIndex.ToString() )
+                    continue;
+
+                var lSeasonPoster = new TvdbArt();
+
+                lSeasonPoster.Language = banner.SelectSingleNode( "Language" ).InnerText;
+                lSeasonPoster.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
+                lSeasonPoster.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
+                lSeasonPoster.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
+                {
+                    double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
+                    lSeasonPoster.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
+                }
+
+                if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
+                    lSeasonPoster.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
+
+                // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-seasons\5aecac0f66076_t.jpg
+                string lThumbPath = "seasons/" + Path.GetFileName( lSeasonPoster.OnlineThumbPath );
+                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lSeasonPoster.Language + "-" + lThumbPath;
+                lSeasonPoster.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+
+                // create the local filename path for the online image
+                string lPath = "seasons/" + Path.GetFileName( lSeasonPoster.OnlinePath );
+                lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lSeasonPoster.Language + "-" + lPath;
+                lSeasonPoster.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+
+                // if the fullsize artwork is already downloaded, then set it
+                if ( File.Exists( lSeasonPoster.LocalPath ) ) lSeasonPoster.IsLocal = true;
+
+                // if the artwork is default/selected, then set it
+                // remove any inconsistency with slashes, it should still be unique
+                if ( lRelativePath.Replace( "\\", "" ).Replace( "/", "" ) == ArtworkParams.Season[DBSeason.cCurrentBannerFileName].ToString().Replace( "\\", "" ).Replace( "/", "" ) )
+                    lSeasonPoster.IsDefault = true;
+
+                // create full dowload url's
+                string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
+                lSeasonPoster.ThumbnailUrl = lBaseUrl + lSeasonPoster.OnlineThumbPath;
+                lSeasonPoster.Url = lBaseUrl + lSeasonPoster.OnlinePath;
+
+                if ( !aArtwork.Contains( lSeasonPoster ) )
+                    aArtwork.Add( lSeasonPoster );
+            }
+        }
+
         private List<TvdbArt> GetArtworkThumbs()
         {
             var lArtwork = new List<TvdbArt>();
@@ -321,8 +520,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 #region Series Fanart
                 case ArtworkType.SeriesFanart:
-                    XmlNode banners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
-                    if ( banners == null ) return null;
+                    XmlNode lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
+                    if ( lBanners == null ) return null;
                     
                     // get fanart from database table
                     var lDBFanart = DBFanart.GetAll( ArtworkParams.SeriesId, false );
@@ -330,52 +529,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                     // get the default fanart
                     var lDefaultFanart = lDBFanart.FirstOrDefault( f => f[DBFanart.cChosen] == 1 );
 
-                    foreach ( XmlNode banner in banners.SelectNodes( "/Banners/Banner[BannerType='fanart']" ) )
+                    GetFanart( lBanners, lDefaultFanart, ref lArtwork );
+
+                    // get english fanart too
+                    if ( OnlineAPI.GetSeriesLanguage( ArtworkParams.SeriesId ) != "en" )
                     {
-                        var lFanart = new TvdbArt();
+                        lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId, "en" );
+                        if ( lBanners == null ) return null;
 
-                        lFanart.Id = uint.Parse( banner.SelectSingleNode( "id" ).InnerText );
-                        lFanart.Language = banner.SelectSingleNode( "Language" ).InnerText;
-                        lFanart.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
-                        lFanart.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
-                        lFanart.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
-                        lFanart.HasLogo = Convert.ToBoolean(banner.SelectSingleNode( "SeriesName" ).InnerText);
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
-                        {
-                            double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
-                            lFanart.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
-                        }
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
-                            lFanart.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
-
-                        // create the local filename path for the online thumbnail image e.g. _cache\fanart\original\<seriesId>-*.jpg
-                        string lLocalThumbPath = Fanart.GetLocalThumbPath( lFanart.OnlineThumbPath, ArtworkParams.SeriesId.ToString() );
-                        lFanart.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lLocalThumbPath.Replace( "/", @"\" ) );
-
-                        // create the local filename path for the online image e.g. fanart\original\<seriesId>-*.jpg
-                        string lLocalPath = Fanart.GetLocalPath( lFanart.OnlinePath, ArtworkParams.SeriesId.ToString() );
-                        lFanart.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lLocalPath.Replace( "/", @"\" ) );
-
-                        // if the fullsize artwork is already downloaded, then set it
-                        if ( File.Exists( lFanart.LocalPath ) ) lFanart.IsLocal = true;
-
-                        // if the artwork is default/selected, then set it
-                        if ( lDefaultFanart != null )
-                        {
-                            if ( lDefaultFanart[DBFanart.cLocalPath] == lLocalPath.Replace( "/", @"\" ) )
-                            {
-                                lFanart.IsDefault = true;
-                            }
-                        }
-
-                        // create full dowload url's
-                        string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
-                        lFanart.ThumbnailUrl = lBaseUrl + lFanart.OnlineThumbPath;
-                        lFanart.Url = lBaseUrl + lFanart.OnlinePath;
-
-                        lArtwork.Add( lFanart );
+                        GetFanart( lBanners, lDefaultFanart, ref lArtwork );
                     }
 
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
@@ -384,51 +546,18 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 #region Series Posters
                 case ArtworkType.SeriesPoster:
-                    banners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
-                    if ( banners == null ) return null;
+                    lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
+                    if ( lBanners == null ) return null;
 
-                    foreach ( XmlNode banner in banners.SelectNodes( "/Banners/Banner[BannerType='poster']" ) )
+                    GetSeriesPosters( lBanners, ref lArtwork );
+
+                    // get english artwork too
+                    if ( OnlineAPI.GetSeriesLanguage( ArtworkParams.SeriesId ) != "en" )
                     {
-                        var lPoster = new TvdbArt();
+                        lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId, "en" );
+                        if ( lBanners == null ) return null;
 
-                        lPoster.Language = banner.SelectSingleNode( "Language" ).InnerText;
-                        lPoster.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
-                        lPoster.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
-                        lPoster.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
-                        {
-                            double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
-                            lPoster.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
-                        }
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
-                            lPoster.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
-
-                        // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-posters\5aecac0f66076_t.jpg
-                        string lThumbPath = "posters/" + Path.GetFileName( lPoster.OnlineThumbPath );
-                        string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lPoster.Language + "-" + lThumbPath;
-                        lPoster.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
-
-                        // create the local filename path for the online image
-                        string lPath = "posters/" + Path.GetFileName( lPoster.OnlinePath );
-                        lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lPoster.Language + "-" + lPath;
-                        lPoster.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
-
-                        // if the fullsize artwork is already downloaded, then set it
-                        if ( File.Exists(lPoster.LocalPath)) lPoster.IsLocal = true;
-
-                        // if the artwork is default/selected, then set it
-                        // remove any inconsistency with slashes, it should still be unique
-                        if ( lRelativePath.Replace("\\", "").Replace("/","") == ArtworkParams.Series[DBOnlineSeries.cCurrentPosterFileName].ToString().Replace( "\\", "" ).Replace( "/", "" ) )
-                            lPoster.IsDefault = true;
-
-                        // create full dowload url's
-                        string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
-                        lPoster.ThumbnailUrl = lBaseUrl + lPoster.OnlineThumbPath;
-                        lPoster.Url = lBaseUrl + lPoster.OnlinePath;
-
-                        lArtwork.Add( lPoster );
+                        GetSeriesPosters( lBanners, ref lArtwork );
                     }
 
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
@@ -437,51 +566,18 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 #region Series Widebanner
                 case ArtworkType.SeriesBanner:
-                    banners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
-                    if ( banners == null ) return null;
+                    lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
+                    if ( lBanners == null ) return null;
 
-                    foreach ( XmlNode banner in banners.SelectNodes( "/Banners/Banner[BannerType='series']" ) )
+                    GetSeriesWideBanners( lBanners, ref lArtwork );
+
+                    // get english artwork too
+                    if ( OnlineAPI.GetSeriesLanguage( ArtworkParams.SeriesId ) != "en" )
                     {
-                        var lWideBanner = new TvdbArt();
+                        lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId, "en" );
+                        if ( lBanners == null ) return null;
 
-                        lWideBanner.Language = banner.SelectSingleNode( "Language" ).InnerText;
-                        lWideBanner.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
-                        lWideBanner.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
-                        lWideBanner.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
-                        {
-                            double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
-                            lWideBanner.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
-                        }
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
-                            lWideBanner.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
-
-                        // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-graphical\5aecac0f66076_t.jpg
-                        string lThumbPath = "graphical/" + Path.GetFileName( lWideBanner.OnlineThumbPath );
-                        string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lWideBanner.Language + "-" + lThumbPath;
-                        lWideBanner.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
-
-                        // create the local filename path for the online image
-                        string lPath = "graphical/" + Path.GetFileName( lWideBanner.OnlinePath );
-                        lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lWideBanner.Language + "-" + lPath;
-                        lWideBanner.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
-
-                        // if the fullsize artwork is already downloaded, then set it
-                        if ( File.Exists( lWideBanner.LocalPath ) ) lWideBanner.IsLocal = true;
-
-                        // if the artwork is default/selected, then set it
-                        // remove any inconsistency with slashes, it should still be unique
-                        if ( lRelativePath.Replace( "\\", "" ).Replace( "/", "" ) == ArtworkParams.Series[DBOnlineSeries.cCurrentBannerFileName].ToString().Replace( "\\", "" ).Replace( "/", "" ) )
-                            lWideBanner.IsDefault = true;
-
-                        // create full dowload url's
-                        string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
-                        lWideBanner.ThumbnailUrl = lBaseUrl + lWideBanner.OnlineThumbPath;
-                        lWideBanner.Url = lBaseUrl + lWideBanner.OnlinePath;
-
-                        lArtwork.Add( lWideBanner );
+                        GetSeriesWideBanners( lBanners, ref lArtwork );
                     }
 
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
@@ -490,56 +586,18 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 #region Season Posters
                 case ArtworkType.SeasonPoster:
-                    banners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
-                    if ( banners == null ) return null;
+                    lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
+                    if ( lBanners == null ) return null;
 
-                    foreach ( XmlNode banner in banners.SelectNodes( "/Banners/Banner[BannerType='season']" ) )
+                    GetSeasonPosters( lBanners, ref lArtwork );
+
+                    // get english artwork too
+                    if ( OnlineAPI.GetSeriesLanguage( ArtworkParams.SeriesId ) != "en" )
                     {
-                        // only interested in artwork for the selected season
-                        if ( banner.SelectSingleNode( "Season" ).InnerText != ArtworkParams.SeasonIndex.ToString() )
-                            continue;
+                        lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId, "en" );
+                        if ( lBanners == null ) return null;
 
-                        var lSeasonPoster = new TvdbArt();
-
-                        lSeasonPoster.Language = banner.SelectSingleNode( "Language" ).InnerText;
-                        lSeasonPoster.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
-                        lSeasonPoster.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
-                        lSeasonPoster.Resolution = banner.SelectSingleNode( "BannerType2" ).InnerText;
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
-                        {
-                            double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
-                            lSeasonPoster.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
-                        }
-
-                        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
-                            lSeasonPoster.Votes = uint.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
-
-                        // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-seasons\5aecac0f66076_t.jpg
-                        string lThumbPath = "seasons/" + Path.GetFileName( lSeasonPoster.OnlineThumbPath );
-                        string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lSeasonPoster.Language + "-" + lThumbPath;
-                        lSeasonPoster.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
-
-                        // create the local filename path for the online image
-                        string lPath = "seasons/" + Path.GetFileName( lSeasonPoster.OnlinePath );
-                        lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lSeasonPoster.Language + "-" + lPath;
-                        lSeasonPoster.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
-
-                        // if the fullsize artwork is already downloaded, then set it
-                        if ( File.Exists( lSeasonPoster.LocalPath ) ) lSeasonPoster.IsLocal = true;
-
-                        // if the artwork is default/selected, then set it
-                        // remove any inconsistency with slashes, it should still be unique
-                        if ( lRelativePath.Replace( "\\", "" ).Replace( "/", "" ) == ArtworkParams.Season[DBSeason.cCurrentBannerFileName].ToString().Replace( "\\", "" ).Replace( "/", "" ) )
-                            lSeasonPoster.IsDefault = true;
-
-                        // create full dowload url's
-                        string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
-                        lSeasonPoster.ThumbnailUrl = lBaseUrl + lSeasonPoster.OnlineThumbPath;
-                        lSeasonPoster.Url = lBaseUrl + lSeasonPoster.OnlinePath;
-
-                        if (!lArtwork.Contains(lSeasonPoster))
-                            lArtwork.Add( lSeasonPoster );
+                        GetSeasonPosters( lBanners, ref lArtwork );
                     }
 
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
@@ -652,6 +710,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "RatingCount", " " );            
             SetProperty( "IsDefault", " " );
             SetProperty( "IsLocal", " " );
+            SetProperty( "SelectedItem", " " );
         }
 
         private void OnSelected( GUIListItem item, GUIControl parent )
@@ -666,6 +725,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "RatingCount", lArtwork.Votes.ToString() );
             SetProperty( "IsDefault", lArtwork.IsDefault.ToString() );
             SetProperty( "IsLocal", lArtwork.IsLocal.ToString() );
+
+            SetProperty( "SelectedItem", $"{lArtwork.Rating} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}");
         }
 
         private void GetImages( List<TvdbArt> aArtwork )

@@ -122,7 +122,7 @@
   		<id>1</id>
   		<posX>510</posX>
   		<posY>1015</posY>
-  		<label>#TVSeries.Artwork.Rating (#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label) | #selecteditem2</label>
+  		<label>#TVSeries.Artwork.SelectedItem</label>
   		<visible>[Control.IsVisible(50)|Control.IsVisible(51)|Control.IsVisible(52)]</visible>
   		<animation effect="fade" time="250">WindowOpen</animation>
   		<animation effect="fade" time="250">WindowClose</animation>
@@ -603,37 +603,37 @@
 					<type>thumbnailpanel</type>
 					<id>51</id>
 					<posX>127</posX>
-					<posY>342</posY>
+					<posY>332</posY>
 					<width>1700</width>
-					<height>700</height>
+					<height>650</height>
 					<folderPrefix></folderPrefix>
 					<folderSuffix></folderSuffix>
 					<onleft>2</onleft>
 					<onright>2</onright>
-					<itemWidth>138</itemWidth>
-					<itemHeight>196</itemHeight>
-					<textureWidth>138</textureWidth>
-					<textureHeight>196</textureHeight>
-					<thumbWidth>138</thumbWidth>
-					<thumbHeight>196</thumbHeight>
+					<itemWidth>417</itemWidth>
+					<itemHeight>77</itemHeight>
+					<textureWidth>417</textureWidth>
+					<textureHeight>77</textureHeight>
+					<thumbWidth>417</thumbWidth>
+					<thumbHeight>77</thumbHeight>
 					<thumbPosX>0</thumbPosX>
 					<thumbPosY>0</thumbPosY>
-					<itemWidthBig>208</itemWidthBig>
-					<itemHeightBig>296</itemHeightBig>
-					<thumbWidthBig>208</thumbWidthBig>
-					<thumbHeightBig>296</thumbHeightBig>
-					<textureWidthBig>208</textureWidthBig>
-					<textureHeightBig>296</textureHeightBig>
+					<itemWidthBig>834</itemWidthBig>
+					<itemHeightBig>154</itemHeightBig>
+					<thumbWidthBig>834</thumbWidthBig>
+					<thumbHeightBig>154</thumbHeightBig>
+					<textureWidthBig>834</textureWidthBig>
+					<textureHeightBig>154</textureHeightBig>
 					<thumbPosXBig>0</thumbPosXBig>
 					<thumbPosYBig>0</thumbPosYBig>
-					<zoomXPixels>20</zoomXPixels>
-					<zoomYPixels>30</zoomYPixels>
+					<zoomXPixels>30</zoomXPixels>
+					<zoomYPixels>20</zoomYPixels>
 					<hideUnfocusTexture>no</hideUnfocusTexture>
-					<keepaspectratio>no</keepaspectratio>
+					<keepaspectratio>yes</keepaspectratio>
 					<renderFocusText>no</renderFocusText>
 					<renderUnfocusText>no</renderUnfocusText>
 					<frameNoFocus>-</frameNoFocus>
-					<frameFocus>video_thumb_focus.png</frameFocus>
+					<frameFocus>tvseries_widebanner_large_focus.png</frameFocus>
 					<textureMask>video_thumb_mask.png</textureMask>
 					<shadowAngle>90</shadowAngle>
 					<shadowDistance>50</shadowDistance>
