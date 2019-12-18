@@ -89,6 +89,19 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 return SelLanguageAsString;
             }
         }
+
+        public static string GetSeriesLanguage( int aSeriesID )
+        {
+            if ( DBOption.GetOptions( DBOption.cOverrideLanguage ) )
+            {
+                return GetLanguageOverride( aSeriesID.ToString() );
+            }
+            else
+            {
+                return SelLanguageAsString;
+            }
+        }
+
         #endregion
 
         static public XmlNode GetMirrors( String sServer )
@@ -244,10 +257,29 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 return getFromCache( seriesID, SelLanguageAsString + ".xml" );
             }
         }
-
-        static public XmlNode GetBannerList( int seriesID )
+        
+        static public XmlNode GetBannerList( int aSeriesID, string aLanguageId = null )
         {
-            return getFromCache( seriesID, "banners.xml" );
+            if ( aLanguageId == null )
+            {
+                // get current language or series overridden language
+                return getFromCache( aSeriesID, "banners.xml" );
+            }
+            else
+            {
+                string lFilename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}\{2}", aSeriesID, aLanguageId, "banners.xml" ) );
+                XmlNode lNode = Helper.LoadXmlCache( lFilename );
+                if ( lNode != null ) return lNode;
+
+                // download and save to cache
+                lNode = Generic( string.Format( apiURIs.FullSeriesUpdate, aSeriesID, aLanguageId ),
+                                 true, true, Format.Zip, aLanguageId, aSeriesID );
+
+                if ( lNode == null ) return null;
+
+                // our cache is not set, get from cache
+                return GetBannerList(aSeriesID, aLanguageId);
+            }
         }
 
         static public XmlNode GetActorsList( int seriesID )
@@ -267,8 +299,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
             try
             {
-                Directory.CreateDirectory( System.IO.Path.GetDirectoryName( fullLocalPath ) );
-                if ( !System.IO.File.Exists( fullLocalPath ) // only if the file doesn't exist
+                Directory.CreateDirectory( Path.GetDirectoryName( fullLocalPath ) );
+                if ( !File.Exists( fullLocalPath ) // only if the file doesn't exist
                     || ImageAllocator.LoadImageFastFromFile( fullLocalPath ) == null ) // or the file is damaged
                 {
                     MPTVSeriesLog.Write( "Downloading new Image from: " + fullURL, MPTVSeriesLog.LogLevel.Debug );
@@ -337,41 +369,33 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             return false;
         }
 
-        static XmlNode getFromCache( int seriesID, string elemName )
+        static XmlNode getFromCache( int aSeriesID, string aXMLFilename )
         {
-            if ( DBOption.GetOptions( DBOption.cOverrideLanguage ) )
-            {
-                string SelLang = GetLanguageOverride( seriesID.ToString() );
-                return getFromCache( seriesID, true, elemName, SelLang );
-            }
-            else
-            {
-                return getFromCache( seriesID, true, elemName, SelLanguageAsString );
-            }
+            return getFromCache( aSeriesID, true, aXMLFilename, GetSeriesLanguage(aSeriesID) );
         }
 
-        static XmlNode getFromCache( int seriesID, string elemName, string languageID )
+        static XmlNode getFromCache( int aSeriesID, string aXMLFilename, string aLanguageId )
         {
-            return getFromCache( seriesID, true, elemName, languageID );
+            return getFromCache( aSeriesID, true, aXMLFilename, aLanguageId );
         }
 
-        static XmlNode getFromCache( int seriesID, bool first, string elemName, string languageID )
+        static XmlNode getFromCache( int aSeriesID, bool aRefresh, string aXMLFilename, string aLanguageId )
         {
             // cache filename
-            string filename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}", seriesID, elemName ) );
+            string filename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}\{2}", aSeriesID, aLanguageId, aXMLFilename ) );
 
             // check if in cache
             XmlNode node = Helper.LoadXmlCache( filename );
             if ( node != null ) return node;
 
             // xml is not cached, retrieve online
-            if ( first )
+            if ( aRefresh )
             {
-                Generic( string.Format( apiURIs.FullSeriesUpdate, seriesID, languageID ),
-                        true, true, Format.Zip, languageID, seriesID );
+                Generic( string.Format( apiURIs.FullSeriesUpdate, aSeriesID, aLanguageId ),
+                        true, true, Format.Zip, aLanguageId, aSeriesID );
 
                 // its now cached, so load it
-                return getFromCache( seriesID, false, elemName, languageID );
+                return getFromCache( aSeriesID, false, aXMLFilename, aLanguageId );
             }
             return null;
         }
@@ -386,7 +410,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         static XmlNode Generic( String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format )
         { return Generic( sUrl, appendBaseUrl, appendAPIKey, format, null, 0 ); }
 
-        static XmlNode Generic( String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format, string entryNameToGetIfZip, int seriesIDIfZip )
+        static XmlNode Generic( String sUrl, bool appendBaseUrl, bool appendAPIKey, Format format, string aLanguageId, int seriesIDIfZip )
         {
             if ( format == Format.Zip )
             {
@@ -412,21 +436,21 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             {
                 if ( format == Format.Zip )
                 {
-                    if ( !String.IsNullOrEmpty( entryNameToGetIfZip ) && seriesIDIfZip != 0 )
+                    if ( !String.IsNullOrEmpty( aLanguageId ) && seriesIDIfZip != 0 )
                     {
                         Dictionary<string, XmlDocument> x = DecompressZipToXmls( data );
-                        entryNameToGetIfZip += ".xml";
+                        string lFilenameInZip = aLanguageId + ".xml";
                         XmlNode root = null;
                         // save all xmls in zip to cache
                         foreach ( var key in x.Keys )
                         {
-                            string filename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}", seriesIDIfZip, key ) );
+                            string filename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}\{2}", seriesIDIfZip, aLanguageId, key ) );
                             Helper.SaveXmlCache( filename, x[key].FirstChild.NextSibling ?? x[key].FirstChild );
                         }
                         // get what we are looking for            
-                        if ( x.ContainsKey( entryNameToGetIfZip ) )
+                        if ( x.ContainsKey( lFilenameInZip ) )
                         {
-                            root = x[entryNameToGetIfZip].FirstChild.NextSibling;
+                            root = x[lFilenameInZip].FirstChild.NextSibling;
                             return root;
                         }
                         else MPTVSeriesLog.Write( "Decompression returned null or not the requested entry" );

@@ -950,20 +950,26 @@ namespace WindowPlugins.GUITVSeries
                 foreach (var series in GU.UpdatedSeries.Where(s => dirs.Contains(s.Key)))
                 {
                     bool cacheCleared = false;
-                    FileInfo[] files = new DirectoryInfo(Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}", series.Key))).GetFiles();
-                    foreach (FileInfo file in files)
+
+                    var lDirectories = new DirectoryInfo( Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}", series.Key ) ) ).GetDirectories();
+                    foreach (var lDirectory in lDirectories)
                     {
-                        if (file.LastWriteTime.ToUniversalTime().ToEpoch() <= series.Value)
+                        FileInfo[] files = lDirectory.GetFiles();
+                        foreach ( FileInfo file in files )
                         {
-                            cacheCleared = true;
-                            try { file.Delete(); }
-                            catch
-                            { 
-                                cacheCleared = false;
-                                MPTVSeriesLog.Write("Error removing cache: {0}", file.FullName); 
+                            if ( file.LastWriteTime.ToUniversalTime().ToEpoch() <= series.Value )
+                            {
+                                cacheCleared = true;
+                                try { file.Delete(); }
+                                catch
+                                {
+                                    cacheCleared = false;
+                                    MPTVSeriesLog.Write( "Error removing cache: {0}", file.FullName );
+                                }
                             }
                         }
                     }
+                    
                     if (cacheCleared)
                     {
                         DBSeries s = Helper.getCorrespondingSeries(series.Key);
@@ -974,7 +980,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
-                                Directory.Delete( Path.Combine( cacheDir, series.Key ) );
+                                Directory.Delete( Path.Combine( cacheDir, series.Key ), true );
                             }
                             catch(Exception ex)
                             {
