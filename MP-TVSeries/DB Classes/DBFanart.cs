@@ -341,6 +341,25 @@ namespace WindowPlugins.GUITVSeries
             return this[cSeriesID] + " -> " + this[cIndex];
         }
 
+        #region Comparison
+        public override bool Equals( Object obj )
+        {
+            if ( obj == null )
+                return false;
+
+            DBFanart f = obj as DBFanart;
+            if ( ( Object )f == null )
+                return false;
+
+            return ( this[DBFanart.cThumbnailPath] == f[DBFanart.cThumbnailPath] );
+        }
+        
+        public override int GetHashCode()
+        {
+            return this[DBFanart.cThumbnailPath];
+        }
+        #endregion
+
         #region IComparable
         public int CompareTo(DBFanart other)
         {

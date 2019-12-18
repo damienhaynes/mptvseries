@@ -568,13 +568,20 @@ namespace WindowPlugins.GUITVSeries
 
             mFanart = getFanart( node, SeriesID );
             
-            // if fanart count is zero, try to get from english banners.xml
-            if ( mFanart.Count == 0 && OnlineAPI.GetSeriesLanguage( SeriesID ) != "en" )
+            // also try to get from english banners.xml
+            if ( OnlineAPI.GetSeriesLanguage( SeriesID ) != "en" )
             {
                 node = OnlineAPI.GetBannerList( SeriesID, "en" );
                 if ( node == null ) return;
 
-                mFanart = getFanart( node, SeriesID );
+                List<DBFanart> lEnglishFanarts = getFanart( node, SeriesID );
+
+                foreach ( var fanart in lEnglishFanarts)
+                {
+                    // ensure no duplicates
+                    if ( !mFanart.Contains(fanart))
+                        mFanart.Add( fanart );
+                }
             }          
         }
     }    

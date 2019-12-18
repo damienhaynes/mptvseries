@@ -841,7 +841,7 @@ namespace WindowPlugins.GUITVSeries
                         if ( CurrentViewLevel != Listlevel.Group)
                         {
                             if (m_SelectedSeries != null && FanartBackground != null && // only if skins supports it
-                                m_SelectedSeries[DBOnlineSeries.cID] > 0)
+                                m_SelectedSeries[DBOnlineSeries.cID] > 0 /*&& !lArtworkChooserAvailable*/ )
                             {
                                 pItem = new GUIListItem(Translation.FanArt + " ...");
                                 dlg.Add(pItem);
@@ -858,14 +858,14 @@ namespace WindowPlugins.GUITVSeries
 
                         if ( CurrentViewLevel == Listlevel.Series)
                         {
-                            if ( selectedSeries.PosterList.Count > 1 && !lArtworkChooserAvailable )
+                            if ( selectedSeries.PosterList.Count > 1 /*&& !lArtworkChooserAvailable*/ )
                             {
                                 pItem = new GUIListItem(Translation.CycleSeriesPoster);
                                 dlg.Add(pItem);
                                 pItem.ItemId = (int)eContextItems.cycleSeriesPoster;
                             }
 
-                            if ( selectedSeries.BannerList.Count > 1 && !lArtworkChooserAvailable )
+                            if ( selectedSeries.BannerList.Count > 1 /*&& !lArtworkChooserAvailable*/ )
                             {
                                 pItem = new GUIListItem(Translation.CycleSeriesBanner);
                                 dlg.Add(pItem);
@@ -880,7 +880,7 @@ namespace WindowPlugins.GUITVSeries
                         // Season View may not be available so show cycle season banner at episode level as well
                         if (CurrentViewLevel == Listlevel.Season || CurrentViewLevel == Listlevel.Episode)
                         {
-                            if ( selectedSeason.BannerList.Count > 1 && !lArtworkChooserAvailable )
+                            if ( selectedSeason.BannerList.Count > 1 /*&& !lArtworkChooserAvailable*/ )
                             {
                                 pItem = new GUIListItem(Translation.CycleSeasonBanner);
                                 dlg.Add(pItem);
