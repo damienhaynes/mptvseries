@@ -940,37 +940,37 @@ namespace WindowPlugins.GUITVSeries
 
             #region remove cache files that need updating
 
-            string cacheDir = Path.Combine(Settings.GetPath(Settings.Path.config), @"Cache");
+            string lCacheDir = Path.Combine(Settings.GetPath(Settings.Path.config), @"Cache");
 
-            if (Directory.Exists(cacheDir))
+            if (Directory.Exists(lCacheDir))
             {
                 // get series cache directories
-                var dirs = new DirectoryInfo(cacheDir).GetDirectories().Select(d => d.Name).ToList();
+                var lSeriesDirs = new DirectoryInfo(lCacheDir).GetDirectories().Select(d => d.Name).ToList();
 
-                foreach (var series in GU.UpdatedSeries.Where(s => dirs.Contains(s.Key)))
+                foreach (var series in GU.UpdatedSeries.Where(s => lSeriesDirs.Contains(s.Key)))
                 {
-                    bool cacheCleared = false;
+                    bool lCacheCleared = false;
 
-                    var lDirectories = new DirectoryInfo( Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}", series.Key ) ) ).GetDirectories();
-                    foreach (var lDirectory in lDirectories)
+                    var lLanguageDirs = new DirectoryInfo( Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}", series.Key ) ) ).GetDirectories();
+                    foreach (var lDirectory in lLanguageDirs)
                     {
                         FileInfo[] files = lDirectory.GetFiles();
                         foreach ( FileInfo file in files )
                         {
                             if ( file.LastWriteTime.ToUniversalTime().ToEpoch() <= series.Value )
                             {
-                                cacheCleared = true;
+                                lCacheCleared = true;
                                 try { file.Delete(); }
                                 catch
                                 {
-                                    cacheCleared = false;
+                                    lCacheCleared = false;
                                     MPTVSeriesLog.Write( "Error removing cache: {0}", file.FullName );
                                 }
                             }
                         }
                     }
                     
-                    if (cacheCleared)
+                    if (lCacheCleared)
                     {
                         DBSeries s = Helper.getCorrespondingSeries(series.Key);
                         MPTVSeriesLog.Write("Cache cleared for series: {0}", s == null ? series.Key.ToString() : s.ToString());
@@ -980,7 +980,7 @@ namespace WindowPlugins.GUITVSeries
                         {
                             try
                             {
-                                Directory.Delete( Path.Combine( cacheDir, series.Key ), true );
+                                Directory.Delete( Path.Combine( lCacheDir, series.Key ), true );
                             }
                             catch(Exception ex)
                             {

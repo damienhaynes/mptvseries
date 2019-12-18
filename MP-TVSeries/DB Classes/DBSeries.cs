@@ -46,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         #endregion
 
-        public const int cDBVersion = 15;
+        public const int cDBVersion = 16;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
@@ -210,6 +210,17 @@ namespace WindowPlugins.GUITVSeries
                     case 14:
                         // original name not working in previous release
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTraktIgnore, 0, new SQLCondition());
+                        nUpgradeDBVersion++;
+                        break;
+                    case 15:
+                        // delete the API cache associated with each series
+                        try
+                        {
+                            string lCacheDir = Path.Combine( Settings.GetPath( Settings.Path.config ), @"Cache" );
+                            Directory.Delete( lCacheDir, true );
+                        }
+                        catch ( Exception ) { }
+
                         nUpgradeDBVersion++;
                         break;
                     default:
