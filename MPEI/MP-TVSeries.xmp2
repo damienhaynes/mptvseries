@@ -2431,6 +2431,20 @@ Trailers can be accessed from the F9 context menu (INFO button on remote).</Desc
               <ZipFileName>Installer{CopyFile}\{1f1105eb-2d28-4c87-a84b-f2fe48b91cb0}-xvid.png</ZipFileName>
               <DestinationFilename>%Skin%\Titan\Media\Logos\video\xvid.png</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{fd9a0141-4356-4140-8735-10f0679bef9e}-TVSeries.ArtworkChooser.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\Media\defaultPictureWideBig.png</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{08cbf4d3-b64b-4eb4-9f3e-80fe2cc0d09a}-defaultPictureWideBig.png</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\Media\defaultPictureWideBig.png</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -3044,6 +3058,7 @@ public class Script
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
     <VersionDescription>* Updated video player to use new event for updating GUI properties (thanks Sebastiii);
+* Added new Artwork Choser GUI (In progress);
 * Added delete file logic to MPTV recording database when file is physically deleted in mptvseries (thanks framug);
 * Added support to get whether or not a video file is HDR. New MediaInfo properties Colour Primaries and Format Commercial;
 * Added option to postpone MediaInfo scan in configuration, scan will pick up missing MI in GUI import;
@@ -3056,7 +3071,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Updated Titan skin files</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation>https://www.team-mediaportal.com/index.php?option=com_mtree&amp;task=att_download&amp;link_id=17&amp;cf_id=24</OnlineLocation>
-    <ReleaseDate>2019-12-03T15:25:06</ReleaseDate>
+    <ReleaseDate>2019-12-18T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
@@ -5444,6 +5459,20 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <LocalFileName>..\skin files\Titan\Media\Logos\video\xvid.png</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{1f1105eb-2d28-4c87-a84b-f2fe48b91cb0}-xvid.png</ZipFileName>
         <DestinationFilename>%Skin%\Titan\Media\Logos\video\xvid.png</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{fd9a0141-4356-4140-8735-10f0679bef9e}-TVSeries.ArtworkChooser.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\Media\defaultPictureWideBig.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{08cbf4d3-b64b-4eb4-9f3e-80fe2cc0d09a}-defaultPictureWideBig.png</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\Media\defaultPictureWideBig.png</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />

@@ -5083,6 +5083,11 @@ namespace WindowPlugins.GUITVSeries
         bool fanartSet = false;
         Fanart currSeriesFanart = null;
 
+        public static void LoadFanart( TVSeriesPlugin aPlugin )
+        {
+            aPlugin.loadFanart(m_SelectedSeries);
+        }
+
         private bool loadFanart(DBTable item)
         {
             if (FanartBackground == null)
@@ -5140,11 +5145,11 @@ namespace WindowPlugins.GUITVSeries
                     return false;
                 }
 
-                // Activate Backdrop in Image Swapper                
+                // Activate Backdrop in Image Swapper
                 if (!backdrop.Active) backdrop.Active = true;
 
                 // Assign Fanart filename to Image Loader
-                // Will display fanart in backdrop or reset to default background                
+                // Will display fanart in backdrop or reset to default background
                 backdrop.Filename = fanartFile;
                 
                 if (fanart.Found)

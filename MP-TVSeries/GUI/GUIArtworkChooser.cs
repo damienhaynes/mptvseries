@@ -144,6 +144,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
 
+        private int DefaultArtIndex { get; set; }
+
         #endregion
 
         #region Public Properties
@@ -203,9 +205,22 @@ namespace WindowPlugins.GUITVSeries.GUI
             // wait for any background action to finish
             if ( GUIConnector.Instance.IsBusy ) return;
 
-            if ( control == ButtonLayouts )
+            switch ( controlId )
             {
-                ShowLayoutsMenu();
+                // Layout Button
+                case 2:
+                    ShowLayoutsMenu();
+                    break;
+                // Poster Facade
+                case 50:
+                    break;
+                // Widebanner Facade
+                case 51:
+                    break;
+                // Thumbnail Facade
+                case 52:
+                    OnFanartClicked();
+                    break;                
             }
 
             base.OnClicked( controlId, control, actionType );
@@ -252,6 +267,65 @@ namespace WindowPlugins.GUITVSeries.GUI
         #endregion
 
         #region Private Methods
+
+        private void OnFanartClicked()
+        {
+            var lSelectedItem = mFacadeThumbnails.SelectedListItem as GUIArtworkListItem;
+            if ( lSelectedItem == null ) return;
+
+            var lArtwork = lSelectedItem.Item as TvdbArt;
+            if ( lArtwork == null ) return;
+
+            // if the item is default, then nothing to do
+            if ( lArtwork.IsDefault ) return;
+
+            // get our fanart in the database
+            var lFanarts = DBFanart.GetAll( ArtworkParams.SeriesId, false );
+
+            // check if we have a reference to the selected art
+            var lFanart = lFanarts.FirstOrDefault( f => f[DBFanart.cIndex] == lArtwork.Id );
+
+            // we should have it but just in case
+            if ( lFanart == null)
+            {   
+                lFanart = new DBFanart( lArtwork.Id );
+                lFanart[DBFanart.cBannerType] = "fanart";
+                lFanart[DBFanart.cSeriesID] = ArtworkParams.SeriesId;
+                lFanart[DBFanart.cBannerPath] = lArtwork.OnlinePath;
+                lFanart[DBFanart.cThumbnailPath] = lArtwork.OnlineThumbPath;
+                lFanart[DBFanart.cLanguage] = lArtwork.Language;
+                lFanart[DBFanart.cRating] = lArtwork.Rating;
+                lFanart[DBFanart.cRatingCount] = lArtwork.Votes;
+                lFanart[DBFanart.cResolution] = lArtwork.Resolution;
+
+                MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry." );
+            }
+
+            // if the item is local and not default, make it the default
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault)
+            {
+                // remove existing fanart as default
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeThumbnails.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                lOldDefault.Label2 = Translation.FanArtLocal;
+                lOldDefault.IsPlayed = false;
+                ( lOldDefault.Item as TvdbArt ).IsDefault = false;
+
+                // update new fanart to default and commit
+                lArtwork.IsDefault = true;
+                lFanart.Chosen = true;
+                DefaultArtIndex = mFacadeThumbnails.SelectedListItemIndex;
+
+                // update facade
+                lSelectedItem.Label2 = Translation.ArtworkSelected;
+                lSelectedItem.IsPlayed = true;
+
+                // update the current background
+                var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
+                TVSeriesPlugin.LoadFanart( lTvsWindow );
+            }
+            
+            OnSelected( lSelectedItem, mFacadeThumbnails );
+        }
 
         private void SetFacadeVisibility()
         {
@@ -652,6 +726,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             // Set the selected item based on current
             Facade.SelectedListItemIndex = lSelectedIndex;
+            DefaultArtIndex = lSelectedIndex;
 
             // Set Facade Layout
             Facade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
