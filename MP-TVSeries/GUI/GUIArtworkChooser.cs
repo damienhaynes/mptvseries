@@ -987,6 +987,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 var lArtwork = obj as TvdbArt;
 
+                MPTVSeriesLog.Write( $"Starting download of artwork from '{lArtwork.Url}'" );
+
                 var lWebClient = new WebClient();
                 lWebClient.DownloadProgressChanged += DownloadProgressChanged;
                 lWebClient.DownloadFileCompleted += DownloadFileCompleted;
@@ -1003,7 +1005,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             lArtwork.DownloadProgress = e.ProgressPercentage;
             lArtwork.NotifyPropertyChanged( "DownloadProgress" );
             
-            MPTVSeriesLog.Write( $"Downloading {lArtwork.OnlinePath}, {e.ProgressPercentage}% | {e.BytesReceived} bytes out of {e.TotalBytesToReceive} bytes downloaded", MPTVSeriesLog.LogLevel.Debug );
+            //MPTVSeriesLog.Write( $"Downloading {lArtwork.OnlinePath}, {e.ProgressPercentage}% | {e.BytesReceived} bytes out of {e.TotalBytesToReceive} bytes downloaded", MPTVSeriesLog.LogLevel.Debug );
         }
 
         private void DownloadFileCompleted( object sender, AsyncCompletedEventArgs e )
@@ -1013,7 +1015,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             // report we now have finished downloading the file
             lArtwork.NotifyPropertyChanged( "LocalPath" );
 
-            MPTVSeriesLog.Write( $"Download of file {lArtwork.LocalPath} complete" );
+            MPTVSeriesLog.Write( $"Completed download of artwork '{lArtwork.LocalPath}'" );
         }
         #endregion
 
@@ -1068,9 +1070,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             switch (aArtwork.Type)
             {
                 case ArtworkType.SeriesFanart:
-                    // we only save the relative path to the database
-                    string lLocalPath = aArtwork.LocalPath.Replace( Settings.GetPath( Settings.Path.fanart ), string.Empty );
-                    aArtwork.Fanart[DBFanart.cLocalPath] = lLocalPath;
+                    // update database with local file path
+                    aArtwork.Fanart[DBFanart.cLocalPath] = Fanart.GetLocalPath( aArtwork.Fanart );
                     aArtwork.Fanart.Commit();
                     break;
             }
