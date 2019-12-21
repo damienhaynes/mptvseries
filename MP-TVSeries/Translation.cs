@@ -47,6 +47,7 @@ namespace WindowPlugins.GUITVSeries
         public static string ChooseArtwork = "Choose Artwork";
         public static string ArtworkTypes = "Artwork Types";
         public static string ArtworkSelected = "Selected";
+        public static string ArtworkDownloading = "Download Progress {0}%";
         public static string SeriesWideBanner = "Series WideBanner";
         public static string SeriesPoster = "Series Poster";
         public static string SeriesFanart = "Series Fanart";

@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading;
 using System.Xml;
 using WindowPlugins.GUITVSeries.Extensions;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
@@ -280,19 +282,16 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtwork = lSelectedItem.Item as TvdbArt;
             if ( lArtwork == null ) return;
 
+            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            if ( lSelectedItem.IsDownloading ) return;
+
             // if the item is default, then nothing to do
             if ( lArtwork.IsDefault ) return;
 
-            // get our fanart in the database
-            var lFanarts = DBFanart.GetAll( ArtworkParams.SeriesId, false );
-
-            // check if we have a reference to the selected art
-            var lFanart = lFanarts.FirstOrDefault( f => f[DBFanart.cIndex] == lArtwork.Id );
-
             // we should have it but just in case
-            if ( lFanart == null)
-            {   
-                lFanart = new DBFanart( lArtwork.Id );
+            if ( lArtwork.Fanart == null)
+            {
+                var lFanart = new DBFanart( lArtwork.Id );
                 lFanart[DBFanart.cBannerType] = "fanart";
                 lFanart[DBFanart.cSeriesID] = ArtworkParams.SeriesId;
                 lFanart[DBFanart.cBannerPath] = lArtwork.OnlinePath;
@@ -304,6 +303,8 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lFanart.Commit();
 
                 MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry." );
+
+                lArtwork.Fanart = lFanart;
             }
 
             // if the item is local and not default, make it the default
@@ -317,7 +318,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // update new fanart to default and commit
                 lArtwork.IsDefault = true;
-                lFanart.Chosen = true;
+                lArtwork.Fanart.Chosen = true;
                 DefaultArtIndex = mFacadeThumbnails.SelectedListItemIndex;
 
                 // update facade
@@ -327,6 +328,12 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // update the current background
                 var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
                 TVSeriesPlugin.LoadFanart( lTvsWindow );
+            }
+            else if (!lArtwork.IsLocal)
+            {
+                // the art it not local and we want to download it
+                // start download in background and let user continue selecting art to download
+                StartDownload( lArtwork );
             }
             
             OnSelected( lSelectedItem, mFacadeThumbnails );
@@ -427,6 +434,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // get reference to fanart in the database if it exists
                 var lDBFanart = aFanarts?.FirstOrDefault( f => f[DBFanart.cIndex] == lFanart.Id );
 
+                // if we don't have a reference, we'll create it later when needed
                 if ( lDBFanart != null )
                 {
                     // if the database has a local path, check if it is in the correct form and file exists
@@ -499,6 +507,10 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lFanart.ThumbnailUrl = lBaseUrl + lFanart.OnlineThumbPath;
                 lFanart.Url = lBaseUrl + lFanart.OnlinePath;
 
+                lFanart.Type = ArtworkType.SeriesFanart;
+                lFanart.Fanart = lDBFanart;
+                lFanart.Series = ArtworkParams.Series;
+
                 if (!aArtwork.Contains(lFanart))
                     aArtwork.Add( lFanart );
             }
@@ -547,6 +559,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lPoster.ThumbnailUrl = lBaseUrl + lPoster.OnlineThumbPath;
                 lPoster.Url = lBaseUrl + lPoster.OnlinePath;
 
+                lPoster.Type = ArtworkType.SeriesPoster;
+                lPoster.Series = ArtworkParams.Series;
+
                 if (!aArtwork.Contains(lPoster))
                     aArtwork.Add( lPoster );
             }
@@ -594,6 +609,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
                 lWideBanner.ThumbnailUrl = lBaseUrl + lWideBanner.OnlineThumbPath;
                 lWideBanner.Url = lBaseUrl + lWideBanner.OnlinePath;
+
+                lWideBanner.Type = ArtworkType.SeriesBanner;
+                lWideBanner.Series = ArtworkParams.Series;
 
                 if ( !aArtwork.Contains( lWideBanner ) )
                     aArtwork.Add( lWideBanner );
@@ -646,6 +664,10 @@ namespace WindowPlugins.GUITVSeries.GUI
                 string lBaseUrl = DBOnlineMirror.Banners.EndsWith( "/" ) ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
                 lSeasonPoster.ThumbnailUrl = lBaseUrl + lSeasonPoster.OnlineThumbPath;
                 lSeasonPoster.Url = lBaseUrl + lSeasonPoster.OnlinePath;
+
+                lSeasonPoster.Type = ArtworkType.SeasonPoster;
+                lSeasonPoster.Series = ArtworkParams.Series;
+                lSeasonPoster.Season = ArtworkParams.Season;
 
                 if ( !aArtwork.Contains( lSeasonPoster ) )
                     aArtwork.Add( lSeasonPoster );
@@ -884,7 +906,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     groupList.Add( aArtwork[j] );
                 }
 
-                new System.Threading.Thread( delegate ( object aObject )
+                new Thread( delegate ( object aObject )
                 {
                     var lItems = ( List<TvdbArt> )aObject;
                     foreach ( var item in lItems )
@@ -958,6 +980,43 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
 
+        #region Online Art Download
+        private void StartDownload( TvdbArt aArtwork )
+        {
+            var lDownloadThread = new Thread( (obj) => 
+            {
+                var lArtwork = obj as TvdbArt;
+
+                var lWebClient = new WebClient();
+                lWebClient.DownloadProgressChanged += DownloadProgressChanged;
+                lWebClient.DownloadFileCompleted += DownloadFileCompleted;
+                lWebClient.DownloadFileAsync( new Uri( lArtwork.Url ), lArtwork.LocalPath, lArtwork );
+            } );
+            lDownloadThread.Start( aArtwork );
+        }
+
+        private void DownloadProgressChanged( object sender, DownloadProgressChangedEventArgs e )
+        {
+            var lArtwork = e.UserState as TvdbArt;
+
+            // report progress to the facade on selected item
+            lArtwork.DownloadProgress = e.ProgressPercentage;
+            lArtwork.NotifyPropertyChanged( "DownloadProgress" );
+            
+            MPTVSeriesLog.Write( $"Downloading {lArtwork.OnlinePath}, {e.ProgressPercentage}% | {e.BytesReceived} bytes out of {e.TotalBytesToReceive} bytes downloaded", MPTVSeriesLog.LogLevel.Debug );
+        }
+
+        private void DownloadFileCompleted( object sender, AsyncCompletedEventArgs e )
+        {
+            var lArtwork = e.UserState as TvdbArt;
+
+            // report we now have finished downloading the file
+            lArtwork.NotifyPropertyChanged( "LocalPath" );
+
+            MPTVSeriesLog.Write( $"Download of file {lArtwork.LocalPath} complete" );
+        }
+        #endregion
+
         #endregion
     }
 
@@ -973,18 +1032,53 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 _Item = value;
                 var notifier = value as INotifyPropertyChanged;
-                if ( notifier != null )
+                if ( notifier == null ) return;
+                
+                notifier.PropertyChanged += ( aSource, aEventArgs ) =>
                 {
-                    notifier.PropertyChanged += ( aSource, aEventArgs ) =>
+                    var lArtwork = aSource as TvdbArt;
+                    if ( lArtwork == null ) return;
+
+                    if ( aEventArgs.PropertyName == "LocalThumbPath" )
                     {
-                        if ( aSource is TvdbArt && aEventArgs.PropertyName == "LocalThumbPath" )
-                            SetImageToGui( ( aSource as TvdbArt ).LocalThumbPath );
-                    };
-                }
+                        SetImageToGui( lArtwork.LocalThumbPath );
+                    }
+                    else if ( aEventArgs.PropertyName == "DownloadProgress" )
+                    {
+                        this.IsDownloading = true;
+                        this.Label2 = string.Format(Translation.ArtworkDownloading, lArtwork.DownloadProgress);
+                    }
+                    else if ( aEventArgs.PropertyName == "LocalPath" )
+                    {
+                        this.Label2 = Translation.FanArtLocal;
+                        this.IsDownloading = false;
+                            
+                        // update database as downloaded
+                        SetArtworkAsLocal( lArtwork );
+                    }
+                };
             }
         }
         protected object _Item;
 
+        protected void SetArtworkAsLocal(TvdbArt aArtwork)
+        {
+            aArtwork.IsLocal = true;
+
+            switch (aArtwork.Type)
+            {
+                case ArtworkType.SeriesFanart:
+                    // we only save the relative path to the database
+                    string lLocalPath = aArtwork.LocalPath.Replace( Settings.GetPath( Settings.Path.fanart ), string.Empty );
+                    aArtwork.Fanart[DBFanart.cLocalPath] = lLocalPath;
+                    aArtwork.Fanart.Commit();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Update the facade when art thumbnail is downloaded/available
+        /// </summary>
         protected void SetImageToGui( string aImageFilePath )
         {
             if ( string.IsNullOrEmpty( aImageFilePath ) ) return;
@@ -1042,6 +1136,14 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         public uint Votes { get; set; }
 
+        public ArtworkType Type { get; set; }
+
+        public DBFanart Fanart { get; set; }
+
+        public DBSeries Series { get; set; }
+
+        public DBSeason Season { get; set; }
+
         /// <summary>
         /// True if the Fanart contains a series logo
         /// Most fanart are clean without series names and logo
@@ -1057,6 +1159,11 @@ namespace WindowPlugins.GUITVSeries.GUI
         /// True if the artwork is the default artwork i.e. selected
         /// </summary>
         public bool IsDefault { get; set; }
+
+        /// <summary>
+        /// For reporting download progress of a full size image
+        /// </summary>
+        public int DownloadProgress { get; set; }
 
         #region INotifyPropertyChanged
 
