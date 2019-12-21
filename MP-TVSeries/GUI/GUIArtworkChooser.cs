@@ -333,6 +333,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
+                lArtwork.DownloadItemIndex = mFacadeThumbnails.SelectedListItemIndex;
                 StartDownload( lArtwork );
             }
             
@@ -844,6 +845,9 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( aArtwork.IsDefault )
                 return Translation.ArtworkSelected;
 
+            if (aArtwork.DownloadProgress > 0 && aArtwork.DownloadProgress < 100)
+                return string.Format(Translation.ArtworkDownloading, aArtwork.DownloadProgress);
+
             // otherwise we have it already or it's online
             return aArtwork.IsLocal? Translation.FanArtLocal: Translation.FanArtOnline;
         }
@@ -1051,13 +1055,16 @@ namespace WindowPlugins.GUITVSeries.GUI
                         this.IsDownloading = true;
                         this.Label2 = string.Format(Translation.ArtworkDownloading, lArtwork.DownloadProgress);
                         this.ProgressBarPercentage = lArtwork.DownloadProgress;
+
+                        // if the current download item is selected, update skin properties
+                        UpdateSelectedItemSkinProperties( lArtwork );
                     }
                     else if ( aEventArgs.PropertyName == "LocalPath" )
                     {
                         this.Label2 = Translation.FanArtLocal;
                         this.IsDownloading = false;
                         this.ProgressBarPercentage = 0;
-
+                        
                         // update database as downloaded
                         SetArtworkAsLocal( lArtwork );
                     }
@@ -1065,6 +1072,32 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
         protected object _Item;
+
+        protected void UpdateSelectedItemSkinProperties( TvdbArt aArtwork )
+        {
+            int lFacadeId = 0;
+            switch ( aArtwork.Type )
+            {
+                case ArtworkType.SeriesFanart:
+                case ArtworkType.EpisodeThumb:
+                    lFacadeId = 52;
+                    break;
+                case ArtworkType.SeriesPoster:
+                case ArtworkType.SeasonPoster:
+                    lFacadeId = 50;
+                    break;
+                default:
+                    lFacadeId = 51;
+                    break;
+            }
+
+            var lSelectedItem = GUIControl.GetSelectedListItem( GUIWindowManager.ActiveWindow, lFacadeId ) as GUIArtworkListItem;
+            if ( lSelectedItem != null && lSelectedItem.Item == this.Item )
+            {
+                // this should trigger the onSelected event which updates the selected item skin properties
+                GUIWindowManager.SendThreadMessage( new GUIMessage( GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, GUIWindowManager.ActiveWindow, 0, lFacadeId, ( lSelectedItem.Item as TvdbArt ).DownloadItemIndex, 0, null ) );
+            }
+        }
 
         protected void SetArtworkAsLocal(TvdbArt aArtwork)
         {
@@ -1168,6 +1201,11 @@ namespace WindowPlugins.GUITVSeries.GUI
         /// For reporting download progress of a full size image
         /// </summary>
         public int DownloadProgress { get; set; }
+
+        /// <summary>
+        /// The index of the GUIListItem artwork being downloaded
+        /// </summary>
+        public int DownloadItemIndex { get; set; }
 
         #region INotifyPropertyChanged
 
