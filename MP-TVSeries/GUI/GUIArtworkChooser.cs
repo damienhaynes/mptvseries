@@ -801,6 +801,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lArtworkItem.IconImageBig = GetDefaultImage();
                 lArtworkItem.ThumbnailImage = GetDefaultImage();
                 lArtworkItem.OnItemSelected += OnSelected;
+                lArtworkItem.HasProgressBar = true;
                 Utils.SetDefaultIcons( lArtworkItem );
 
                 Facade.Add( lArtworkItem );
@@ -1049,12 +1050,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                     {
                         this.IsDownloading = true;
                         this.Label2 = string.Format(Translation.ArtworkDownloading, lArtwork.DownloadProgress);
+                        this.ProgressBarPercentage = lArtwork.DownloadProgress;
                     }
                     else if ( aEventArgs.PropertyName == "LocalPath" )
                     {
                         this.Label2 = Translation.FanArtLocal;
                         this.IsDownloading = false;
-                            
+                        this.ProgressBarPercentage = 0;
+
                         // update database as downloaded
                         SetArtworkAsLocal( lArtwork );
                     }
