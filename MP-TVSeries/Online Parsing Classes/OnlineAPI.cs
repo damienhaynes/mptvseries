@@ -311,7 +311,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             }
             catch ( WebException )
             {
-                MPTVSeriesLog.Write( "Banner download failed (" + fullURL + ") to " + fullLocalPath );
+                MPTVSeriesLog.Write( "Banner download failed (" + fullURL + ") to " + fullLocalPath.Replace("/", @"\") );
                 return string.Empty;
             }
         }
@@ -343,7 +343,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             }
             catch ( WebException )
             {
-                MPTVSeriesLog.Write( "File download failed (" + fullURL + ") to " + fullLocalPath );
+                MPTVSeriesLog.Write( "File download failed (" + fullURL + ") to " + fullLocalPath.Replace( "/", @"\" ) );
                 return -1;
             }
         }

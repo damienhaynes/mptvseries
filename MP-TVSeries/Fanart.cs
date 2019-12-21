@@ -372,7 +372,7 @@ namespace WindowPlugins.GUITVSeries
                             }
                         }
 
-                        // we couldnt find any fanart set as chosen in db, we try to choose the first available
+                        // we couldn't find any fanart set as chosen in db, we try to choose the first available
                         if (mDbChosenFanart == null || String.IsNullOrEmpty(mDbChosenFanart.FullLocalPath))
                         {
                             foreach (DBFanart f in lFanartInDb)
@@ -389,7 +389,7 @@ namespace WindowPlugins.GUITVSeries
                         if (mDbChosenFanart != null)
                             return mDbChosenFanart.FullLocalPath;
 
-                        // If still no fanart found in db, choose from available on harddrive
+                        // If still no fanart found in db, choose from available on hard drive
                         if (mDbChosenFanart == null || String.IsNullOrEmpty(mDbChosenFanart.FullLocalPath))
                         {
                             if (mFanarts != null && mFanarts.Count > 0)

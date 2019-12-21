@@ -181,7 +181,11 @@ namespace WindowPlugins.GUITVSeries.GUI
             GUIControl.SetControlLabel( GetID, ButtonLayouts.GetID, GetLayoutTranslation( CurrentLayout ) );
 
             // Deserialise loading parameter from JSON (ArtworkParameters)
-            LoadParameters();
+            if (!LoadParameters())
+            {
+                GUIWindowManager.ActivateWindow( 9811 );
+                return;
+            }
 
             // set facade visibility
             SetFacadeVisibility();
@@ -297,6 +301,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lFanart[DBFanart.cRating] = lArtwork.Rating;
                 lFanart[DBFanart.cRatingCount] = lArtwork.Votes;
                 lFanart[DBFanart.cResolution] = lArtwork.Resolution;
+                lFanart.Commit();
 
                 MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry." );
             }
@@ -386,7 +391,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             }, Translation.GettingArtwork, true );
         }
 
-        private void GetFanart(XmlNode aNode, DBFanart aDefaultFanart, ref List<TvdbArt> aArtwork)
+        private void GetFanart(XmlNode aNode, List<DBFanart> aFanarts, ref List<TvdbArt> aArtwork)
         {
             foreach ( XmlNode banner in aNode.SelectNodes( "/Banners/Banner[BannerType='fanart']" ) )
             {
@@ -419,12 +424,73 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // if the fullsize artwork is already downloaded, then set it
                 if ( File.Exists( lFanart.LocalPath ) ) lFanart.IsLocal = true;
 
-                // if the artwork is default/selected, then set it
-                if ( aDefaultFanart != null )
+                // get reference to fanart in the database if it exists
+                var lDBFanart = aFanarts?.FirstOrDefault( f => f[DBFanart.cIndex] == lFanart.Id );
+
+                if ( lDBFanart != null )
                 {
-                    if ( aDefaultFanart[DBFanart.cLocalPath] == lLocalPath.Replace( "/", @"\" ) )
+                    // if the database has a local path, check if it is in the correct form and file exists
+                    string lDBFanartLocalPath = lDBFanart[DBFanart.cLocalPath];
+                    if ( !string.IsNullOrEmpty( lDBFanartLocalPath ) )
                     {
-                        lFanart.IsDefault = true;
+                        if ( !lDBFanartLocalPath.StartsWith( @"fanart\original\" + ArtworkParams.SeriesId.ToString() ))
+                        {
+                            // if the file exists, fix it
+                            string lSourceFile = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lDBFanartLocalPath );
+                            if ( File.Exists( lSourceFile ) )
+                            {
+                                try
+                                {
+                                    // move badly named file to correct location
+                                    string lDestinationFile = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lLocalPath );
+                                    if ( File.Exists( lDestinationFile ) )
+                                        File.Delete( lDestinationFile );
+
+                                    File.Move( lSourceFile, lDestinationFile );
+
+                                    // fix path in database
+                                    lDBFanartLocalPath = lLocalPath;
+                                    lDBFanart[DBFanart.cLocalPath] = lLocalPath;
+                                    lDBFanart.Commit();
+                                }
+                                catch
+                                {
+                                    MPTVSeriesLog.Write( $"Failed to fix fanart '{lSourceFile}'" );
+                                }
+                            }
+                            else
+                            {
+                                // delete local path from database as it does not exist on disk
+                                lDBFanartLocalPath = string.Empty;
+                                lDBFanart[DBFanart.cLocalPath] = string.Empty;
+                                lDBFanart[DBFanart.cChosen] = false;
+                                lDBFanart.Commit();
+                            }
+                        }
+                        else
+                        {
+                            // we have a correct localpath reference, check that the file exists
+                            if ( !File.Exists( Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lDBFanartLocalPath ) ) )
+                            {
+                                lDBFanartLocalPath = string.Empty;
+                                lDBFanart[DBFanart.cLocalPath] = string.Empty;
+                                lDBFanart[DBFanart.cChosen] = false;
+                                lDBFanart.Commit();
+                            }
+                        }
+
+                        // check if the fanart is selected/defaulted
+                        if ( lDBFanartLocalPath == lLocalPath && lDBFanart.Chosen )
+                        {
+                            lFanart.IsDefault = true;
+                        }
+                    }
+
+                    // if the fanart is local, ensure local path is set correctly in database
+                    if ( lFanart.IsLocal && lLocalPath != lDBFanartLocalPath )
+                    {
+                        lDBFanart[DBFanart.cLocalPath] = lLocalPath;
+                        lDBFanart.Commit();
                     }
                 }
 
@@ -596,25 +662,23 @@ namespace WindowPlugins.GUITVSeries.GUI
                 case ArtworkType.SeriesFanart:
                     XmlNode lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId );
                     if ( lBanners == null ) return null;
-                    
+
                     // get fanart from database table
-                    var lDBFanart = DBFanart.GetAll( ArtworkParams.SeriesId, false );
+                    DBFanart.ClearSeriesFromCache( ArtworkParams.SeriesId );
+                    var lDBFanarts = DBFanart.GetAll( ArtworkParams.SeriesId, false );
 
-                    // get the default fanart
-                    var lDefaultFanart = lDBFanart.FirstOrDefault( f => f[DBFanart.cChosen] == 1 );
+                    GetFanart( lBanners, lDBFanarts, ref lArtwork );
 
-                    GetFanart( lBanners, lDefaultFanart, ref lArtwork );
-
-                    // get english fanart too
+                    // get English fanart too
                     if ( OnlineAPI.GetSeriesLanguage( ArtworkParams.SeriesId ) != "en" )
                     {
                         lBanners = OnlineAPI.GetBannerList( ArtworkParams.SeriesId, "en" );
                         if ( lBanners == null ) return null;
 
-                        GetFanart( lBanners, lDefaultFanart, ref lArtwork );
+                        GetFanart( lBanners, lDBFanarts, ref lArtwork );
                     }
 
-                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
+                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Votes, SortingDirections.Descending ) );
                     return lArtwork;
                 #endregion
 
@@ -634,7 +698,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                         GetSeriesPosters( lBanners, ref lArtwork );
                     }
 
-                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
+                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Votes, SortingDirections.Descending ) );
                     return lArtwork;
                 #endregion
 
@@ -654,7 +718,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                         GetSeriesWideBanners( lBanners, ref lArtwork );
                     }
 
-                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
+                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Votes, SortingDirections.Descending ) );
                     return lArtwork;
                 #endregion
 
@@ -674,7 +738,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                         GetSeasonPosters( lBanners, ref lArtwork );
                     }
 
-                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
+                    lArtwork.Sort( new GUIListItemSorter( SortingFields.Votes, SortingDirections.Descending ) );
                     return lArtwork;
                 #endregion
 
@@ -801,7 +865,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "IsDefault", lArtwork.IsDefault.ToString() );
             SetProperty( "IsLocal", lArtwork.IsLocal.ToString() );
 
-            SetProperty( "SelectedItem", $"{lArtwork.Rating} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}");
+            SetProperty( "SelectedItem", $"{lArtwork.Votes} {Translation.Votes} | {GetLabelTwo(lArtwork)}");
         }
 
         private void GetImages( List<TvdbArt> aArtwork )

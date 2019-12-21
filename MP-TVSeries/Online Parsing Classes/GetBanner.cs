@@ -57,9 +57,8 @@ namespace WindowPlugins.GUITVSeries
         public int CompareTo(T other)
         {
             // Sort by:
-            // 1. Local Language 
-            // 2. Highest Rated
-            // 3. Number of Votes
+            // 1. Local Language
+            // 2. Number of Votes (Ratings no longer exist, and is based on a favourate/like system)
 
             double thisArtwork;
             double otherArtwork; 
@@ -73,15 +72,9 @@ namespace WindowPlugins.GUITVSeries
                 thisArtwork = this.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
                 otherArtwork = other.Language == OnlineAPI.SelLanguageAsString ? 100.0 : 0.0;
             }
-
-            if (this.Rating == other.Rating)
-            {
-                thisArtwork += this.RatingCount;
-                otherArtwork += other.RatingCount;
-            }
-
-            thisArtwork += this.Rating;
-            otherArtwork += other.Rating;
+            
+            thisArtwork += this.RatingCount;
+            otherArtwork += other.RatingCount;
 
             return otherArtwork.CompareTo(thisArtwork);
         }

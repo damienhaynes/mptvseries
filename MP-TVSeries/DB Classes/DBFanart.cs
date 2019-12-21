@@ -85,8 +85,14 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static void ClearAll()
-        {      
-            cache.Clear();         
+        {
+            cache.Clear();
+        }
+
+        public static void ClearSeriesFromCache(int aSeriesId)
+        {
+            if (cache.ContainsKey(aSeriesId))
+                cache.Remove( aSeriesId );
         }
 
         public static void Clear(int Index)
@@ -152,7 +158,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static List<DBFanart> GetAll(int SeriesID, bool availableOnly)
-        {           
+        {
             lock (cache)
             {
                 if (SeriesID < 0) return new List<DBFanart>();
@@ -364,20 +370,13 @@ namespace WindowPlugins.GUITVSeries
         public int CompareTo(DBFanart other)
         {
             // Sort by:
-            // 1. Highest Rated
-            // 2. Number of Votes
+            // Number of Votes (AKA. how many times it's been favourited)
 
             double thisFanart = 0.0;
             double otherFanart = 0.0;
-
-            if (this[cRating] == other[cRating])
-            {
-                thisFanart += this[cRatingCount];
-                otherFanart += other[cRatingCount];
-            }
-
-            thisFanart += this[cRating];
-            otherFanart += other[cRating];
+            
+            thisFanart += this[cRatingCount];
+            otherFanart += other[cRatingCount];
 
             return otherFanart.CompareTo(thisFanart);
         }
