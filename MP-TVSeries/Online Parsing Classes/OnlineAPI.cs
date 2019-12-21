@@ -309,10 +309,10 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 }
                 return string.Empty;
             }
-            catch ( WebException )
+            catch ( WebException ex )
             {
-                MPTVSeriesLog.Write( "Banner download failed (" + fullURL + ") to " + fullLocalPath.Replace("/", @"\") );
-                return string.Empty;
+                MPTVSeriesLog.Write( $"Banner download failed from '{fullURL}' to '{fullLocalPath.Replace("/", @"\")}'. Reason='{ex.Message}'" );
+                return null;
             }
         }
 

@@ -407,7 +407,7 @@ namespace WindowPlugins.GUITVSeries
                     seriesWideBanner.FileName = Helper.cleanLocalPath(seriesWideBanner.SeriesName) + @"\-lang" + seriesWideBanner.Language + "-" + lPath;
                         
                     string file = OnlineAPI.DownloadBanner(seriesWideBanner.OnlinePath, Settings.Path.banners, seriesWideBanner.FileName);
-                    if (BannerDownloadDone != null)
+                    if (file != null && BannerDownloadDone != null)
                     {
                         BannerDownloadDone(file);
                         seriesWideBannersToKeep.Add(seriesWideBanner);
@@ -447,7 +447,7 @@ namespace WindowPlugins.GUITVSeries
                     string lPath = "posters/" + Path.GetFileName( seriesPoster.OnlinePath );
                     seriesPoster.FileName = Helper.cleanLocalPath(seriesPoster.SeriesName) + @"\-lang" + seriesPoster.Language + "-" + lPath;
                     string file = OnlineAPI.DownloadBanner(seriesPoster.OnlinePath, Settings.Path.banners, seriesPoster.FileName);
-                    if (BannerDownloadDone != null)
+                    if ( file != null && BannerDownloadDone != null)
                     {
                         BannerDownloadDone(file);
                         seriesPostersToKeep.Add(seriesPoster);
@@ -492,7 +492,7 @@ namespace WindowPlugins.GUITVSeries
                     seasonPoster.FileName = Helper.cleanLocalPath(seasonPoster.SeriesName) + @"\-lang" + seasonPoster.Language + "-" + lPath;
                         
                     string file = OnlineAPI.DownloadBanner(seasonPoster.OnlinePath, Settings.Path.banners, seasonPoster.FileName);
-                    if (BannerDownloadDone != null)
+                    if (file != null && BannerDownloadDone != null)
                     {
                         BannerDownloadDone(file);
                         seasonPostersToKeep.Add(seasonPoster);
