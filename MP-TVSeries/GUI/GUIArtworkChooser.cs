@@ -226,6 +226,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     break;
                 // Widebanner Facade
                 case 51:
+                    OnSeriesWideBannerClicked();
                     break;
                 // Thumbnail Facade
                 case 52:
@@ -327,6 +328,52 @@ namespace WindowPlugins.GUITVSeries.GUI
         private void OnSeasonPosterClicked()
         {
 
+        }
+        private void OnSeriesWideBannerClicked()
+        {
+            var lSelectedItem = mFacadeWidebanners.SelectedListItem as GUIArtworkListItem;
+            if ( lSelectedItem == null ) return;
+
+            var lArtwork = lSelectedItem.Item as TvdbArt;
+            if ( lArtwork == null ) return;
+
+            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            if ( lSelectedItem.IsDownloading ) return;
+
+            // if the item is default, then nothing to do
+            if ( lArtwork.IsDefault ) return;
+
+            // if the item is local and not default, make it the default
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
+            {
+                // remove existing art as default
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeWidebanners.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                lOldDefault.Label2 = Translation.FanArtLocal;
+                lOldDefault.IsPlayed = false;
+                ( lOldDefault.Item as TvdbArt ).IsDefault = false;
+
+                // update new art to default and commit
+                string lPath = "graphical/" + Path.GetFileName( lArtwork.OnlinePath );
+                string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                lArtwork.IsDefault = true;
+                lArtwork.Series[DBOnlineSeries.cCurrentBannerFileName] = lRelativePath;
+                lArtwork.Series.Commit();
+                DefaultArtIndex = mFacadeWidebanners.SelectedListItemIndex;
+
+                // update facade
+                lSelectedItem.Label2 = Translation.ArtworkSelected;
+                lSelectedItem.IsPlayed = true;
+            }
+            else if ( !lArtwork.IsLocal )
+            {
+                // the art it not local and we want to download it
+                // start download in background and let user continue selecting art to download
+                lArtwork.DownloadItemIndex = mFacadeWidebanners.SelectedListItemIndex;
+                StartDownload( lArtwork );
+            }
+
+            OnSelected( lSelectedItem, mFacadeWidebanners );
         }
 
         private void OnFanartClicked()
@@ -662,16 +709,28 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-graphical\5aecac0f66076_t.jpg
                 string lThumbPath = "graphical/" + Path.GetFileName( lWideBanner.OnlineThumbPath );
-                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lWideBanner.Language + "-" + lThumbPath;
-                lWideBanner.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+                string lRelativeThumbPath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lWideBanner.Language + "-" + lThumbPath;
+                lWideBanner.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativeThumbPath );
 
                 // create the local filename path for the online image
                 string lPath = "graphical/" + Path.GetFileName( lWideBanner.OnlinePath );
-                lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lWideBanner.Language + "-" + lPath;
+                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lWideBanner.Language + "-" + lPath;
                 lWideBanner.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
 
                 // if the fullsize artwork is already downloaded, then set it
                 if ( File.Exists( lWideBanner.LocalPath ) ) lWideBanner.IsLocal = true;
+
+                // check that local widebanners exist in available list, if not add it
+                if ( lWideBanner.IsLocal )
+                {
+                    var lAvailableBanners = ArtworkParams.Series[DBOnlineSeries.cBannerFileNames].ToString();
+                    if ( !lAvailableBanners.Contains( lRelativePath ) )
+                    {
+                        MPTVSeriesLog.Write( "Added missing local widebanner to available banners" );
+                        ArtworkParams.Series[DBOnlineSeries.cBannerFileNames] = lAvailableBanners += "|" + lRelativePath;
+                        ArtworkParams.Series.Commit();
+                    }
+                }
 
                 // if the artwork is default/selected, then set it
                 // remove any inconsistency with slashes, it should still be unique
@@ -1182,13 +1241,24 @@ namespace WindowPlugins.GUITVSeries.GUI
                     aArtwork.Fanart[DBFanart.cLocalPath] = Fanart.GetLocalPath( aArtwork.Fanart );
                     aArtwork.Fanart.Commit();
                     break;
+
                 case ArtworkType.SeriesPoster:
                     // update database with available posters
                     string lPath = "posters/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
                     string lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
 
-                    var lAvailablePosters = aArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString();
-                    aArtwork.Series[DBOnlineSeries.cPosterFileNames] = lAvailablePosters += "|" + lRelativePath;
+                    var lAvailableSeriesPosters = aArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString();
+                    aArtwork.Series[DBOnlineSeries.cPosterFileNames] = lAvailableSeriesPosters += "|" + lRelativePath;
+                    aArtwork.Series.Commit();
+                    break;
+
+                case ArtworkType.SeriesBanner:
+                    // update database with available posters
+                    lPath = "graphical/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
+                    lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
+
+                    var lAvailableSeriesBanners = aArtwork.Series[DBOnlineSeries.cBannerFileNames].ToString();
+                    aArtwork.Series[DBOnlineSeries.cBannerFileNames] = lAvailableSeriesBanners += "|" + lRelativePath;
                     aArtwork.Series.Commit();
                     break;
             }
