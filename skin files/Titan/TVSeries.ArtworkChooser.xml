@@ -138,7 +138,7 @@
       <align>left</align>
       <font>TitanLight12</font>
       <textcolor>000000</textcolor>
-      <visible>true</visible>
+      <visible>[Control.IsVisible(50)|Control.IsVisible(51)|Control.IsVisible(52)]</visible>
 		  <animation effect="fade" time="250">WindowOpen</animation>
 		  <animation effect="fade" time="250">WindowClose</animation>
     </control>
@@ -261,27 +261,6 @@
   		<animation effect="fade" time="250">WindowOpen</animation>
   		<animation effect="fade" time="250">WindowClose</animation>
   	</control>
-		<control>
-      <type>imagelist</type>
-      <id>1</id>
-      <posX>150</posX>
-      <posY>940</posY>
-      <width>315</width>
-      <height>29</height>
-      <textureWidth>32</textureWidth>
-      <textureHeight>27</textureHeight>
-      <subitems>
-        <subitem>starblack.png</subitem>
-        <subitem>starblue.png</subitem>
-      </subitems>
-      <orientation>horizontal</orientation>
-      <align>left</align>
-      <imagesToDraw>10</imagesToDraw>
-      <percentage>#TVSeries.Artwork.Rating</percentage>
-      <visible>facadeview.list+Control.IsVisible(50)</visible>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-    </control>
 		
 		<!-- Selected Widebanner Image -->
 		<control>
@@ -298,32 +277,11 @@
   		<animation effect="fade" time="250">WindowClose</animation>
   	</control>
 		<control>
-      <type>imagelist</type>
-      <id>1</id>
-      <posX>80</posX>
-      <posY>465</posY>
-      <width>315</width>
-      <height>29</height>
-      <textureWidth>32</textureWidth>
-      <textureHeight>27</textureHeight>
-      <subitems>
-        <subitem>starblack.png</subitem>
-        <subitem>starblue.png</subitem>
-      </subitems>
-      <orientation>horizontal</orientation>
-      <align>left</align>
-      <imagesToDraw>10</imagesToDraw>
-      <percentage>#TVSeries.Artwork.Rating</percentage>
-      <visible>facadeview.list+Control.IsVisible(51)</visible>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-    </control>
-		<control>
       <description>Rating</description>
       <type>label</type>
-      <label>#TVSeries.Artwork.Rating (#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label)	</label>
+      <label>#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label</label>
       <id>0</id>
-      <posX>400</posX>
+      <posX>80</posX>
       <posY>462</posY>
       <width>315</width>
       <font>fontB12</font>
@@ -348,32 +306,11 @@
   		<animation effect="fade" time="250">WindowClose</animation>
   	</control>
 		<control>
-      <type>imagelist</type>
-      <id>1</id>
-      <posX>80</posX>
-      <posY>715</posY>
-      <width>315</width>
-      <height>29</height>
-      <textureWidth>32</textureWidth>
-      <textureHeight>27</textureHeight>
-      <subitems>
-        <subitem>starblack.png</subitem>
-        <subitem>starblue.png</subitem>
-      </subitems>
-      <orientation>horizontal</orientation>
-      <align>left</align>
-      <imagesToDraw>10</imagesToDraw>
-      <percentage>#TVSeries.Artwork.Rating</percentage>
-      <visible>facadeview.list+Control.IsVisible(52)</visible>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-    </control>
-		<control>
       <description>Rating</description>
       <type>label</type>
-      <label>#TVSeries.Artwork.Rating (#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label)</label>
+      <label>#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label</label>
       <id>0</id>
-      <posX>400</posX>
+      <posX>80</posX>
       <posY>712</posY>
       <width>315</width>
       <font>fontB12</font>
@@ -430,6 +367,15 @@
 					<dimColor>ffffffff</dimColor>
 					<spinPosX>1828</spinPosX>
 					<spinPosY>1000</spinPosY>
+					<texturebg>osd_progress_bg_list.png</texturebg>
+					<lefttexture>osd_progress_mid_lists_cap.png</lefttexture>
+					<midtexture>osd_progress_mid_guide.png</midtexture>
+					<righttexture>osd_progress_mid_lists_cap.png</righttexture>
+					<ProgressBarWidth>1035</ProgressBarWidth>
+					<ProgressBarHeight>3</ProgressBarHeight>
+					<ProgressBarXOffset>75</ProgressBarXOffset>
+					<ProgressBarYOffset>48</ProgressBarYOffset>
+					<SelectedProgressOnly>No</SelectedProgressOnly>	
 				</control>
 				<control>
 					<description>Filmstrip view</description>
@@ -551,6 +497,15 @@
 					<dimColor>ffffffff</dimColor>
 					<spinPosX>1828</spinPosX>
 					<spinPosY>1000</spinPosY>
+					<texturebg>osd_progress_bg_list.png</texturebg>
+					<lefttexture>osd_progress_mid_lists_cap.png</lefttexture>
+					<midtexture>osd_progress_mid_guide.png</midtexture>
+					<righttexture>osd_progress_mid_lists_cap.png</righttexture>
+					<ProgressBarWidth>825</ProgressBarWidth>
+					<ProgressBarHeight>3</ProgressBarHeight>
+					<ProgressBarXOffset>270</ProgressBarXOffset>
+					<ProgressBarYOffset>48</ProgressBarYOffset>
+					<SelectedProgressOnly>No</SelectedProgressOnly>
 				</control>
 				<control>
 					<description>Filmstrip view</description>
@@ -601,43 +556,49 @@
 				<control>
 					<description>Thumbnail Panel</description>
 					<type>thumbnailpanel</type>
+					<dimColor>90ffffff</dimColor>
 					<id>51</id>
-					<posX>127</posX>
-					<posY>332</posY>
-					<width>1700</width>
-					<height>650</height>
-					<folderPrefix></folderPrefix>
-					<folderSuffix></folderSuffix>
+					<posX>146</posX>
+					<posY>340</posY>
+					<width>1850</width>
+					<height>625</height>
 					<onleft>2</onleft>
-					<onright>2</onright>
-					<itemWidth>417</itemWidth>
-					<itemHeight>77</itemHeight>
-					<textureWidth>417</textureWidth>
-					<textureHeight>77</textureHeight>
-					<thumbWidth>417</thumbWidth>
-					<thumbHeight>77</thumbHeight>
-					<thumbPosX>0</thumbPosX>
-					<thumbPosY>0</thumbPosY>
-					<itemWidthBig>834</itemWidthBig>
-					<itemHeightBig>154</itemHeightBig>
-					<thumbWidthBig>834</thumbWidthBig>
-					<thumbHeightBig>154</thumbHeightBig>
-					<textureWidthBig>834</textureWidthBig>
-					<textureHeightBig>154</textureHeightBig>
-					<thumbPosXBig>0</thumbPosXBig>
-					<thumbPosYBig>0</thumbPosYBig>
-					<zoomXPixels>30</zoomXPixels>
-					<zoomYPixels>20</zoomYPixels>
-					<hideUnfocusTexture>no</hideUnfocusTexture>
-					<keepaspectratio>yes</keepaspectratio>
-					<renderFocusText>no</renderFocusText>
-					<renderUnfocusText>no</renderUnfocusText>
-					<frameNoFocus>-</frameNoFocus>
-					<frameFocus>tvseries_widebanner_large_focus.png</frameFocus>
-					<textureMask>video_thumb_mask.png</textureMask>
-					<shadowAngle>90</shadowAngle>
-					<shadowDistance>50</shadowDistance>
+					<onright>2</onright>					
+					<imageFolder>-</imageFolder>
+					<selectedColor>00ffffff</selectedColor>
+					<textcolor>ffffffff</textcolor>
+					<colordiffuse>ffffffff</colordiffuse>          
+					<suffix>|</suffix>
+					
+					<itemWidthBig>778</itemWidthBig>
+					<itemHeightBig>150</itemHeightBig>
+					<textureWidthBig>758</textureWidthBig>
+					<textureHeightBig>140</textureHeightBig>
+					<thumbWidthBig>748</thumbWidthBig>
+					<thumbHeightBig>128</thumbHeightBig>
+					<thumbPosXBig>4</thumbPosXBig>
+					<thumbPosYBig>5</thumbPosYBig>
+					
+					<itemWidth>407</itemWidth>
+					<itemHeight>85</itemHeight>
+					<textureWidth>405</textureWidth>
+					<textureHeight>85</textureHeight>
+					<thumbWidth>400</thumbWidth>
+					<thumbHeight>78</thumbHeight>
+					<thumbPosX>2</thumbPosX>
+					<thumbPosY>4</thumbPosY>
+					
 					<thumbZoom>no</thumbZoom>
+					<unfocusedAlpha>200</unfocusedAlpha>
+					<textXOff>0</textXOff>
+					<textYOff>0</textYOff>
+					<frame>-</frame>
+					<frameFocus>tvseries_widebanner_large_focus.png</frameFocus>
+					<frameNoFocus>-</frameNoFocus>
+					<textureMask></textureMask>
+					<scrollOffset>1</scrollOffset>
+					<keepaspectratio>no</keepaspectratio>
+					<enableFocusZoom>no</enableFocusZoom>
 					<spinPosX>1828</spinPosX>
 					<spinPosY>1000</spinPosY>
 				</control>
@@ -675,6 +636,15 @@
 					<dimColor>ffffffff</dimColor>
 					<spinPosX>1828</spinPosX>
 					<spinPosY>1000</spinPosY>
+					<texturebg>osd_progress_bg_list.png</texturebg>
+					<lefttexture>osd_progress_mid_lists_cap.png</lefttexture>
+					<midtexture>osd_progress_mid_guide.png</midtexture>
+					<righttexture>osd_progress_mid_lists_cap.png</righttexture>
+					<ProgressBarWidth>1010</ProgressBarWidth>
+					<ProgressBarHeight>3</ProgressBarHeight>
+					<ProgressBarXOffset>100</ProgressBarXOffset>
+					<ProgressBarYOffset>48</ProgressBarYOffset>
+					<SelectedProgressOnly>No</SelectedProgressOnly>	
 				</control>
 				<control>
 					<description>Filmstrip view</description>
