@@ -219,6 +219,10 @@ namespace WindowPlugins.GUITVSeries.GUI
                     break;
                 // Poster Facade
                 case 50:
+                    if (ArtworkParams.Type == ArtworkType.SeriesPoster)
+                        OnSeriesPosterClicked();
+                    else
+                        OnSeasonPosterClicked();
                     break;
                 // Widebanner Facade
                 case 51:
@@ -273,6 +277,57 @@ namespace WindowPlugins.GUITVSeries.GUI
         #endregion
 
         #region Private Methods
+        private void OnSeriesPosterClicked()
+        {
+            var lSelectedItem = mFacadePosters.SelectedListItem as GUIArtworkListItem;
+            if ( lSelectedItem == null ) return;
+
+            var lArtwork = lSelectedItem.Item as TvdbArt;
+            if ( lArtwork == null ) return;
+
+            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            if ( lSelectedItem.IsDownloading ) return;
+
+            // if the item is default, then nothing to do
+            if ( lArtwork.IsDefault ) return;
+            
+            // if the item is local and not default, make it the default
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
+            {
+                // remove existing art as default
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadePosters.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                lOldDefault.Label2 = Translation.FanArtLocal;
+                lOldDefault.IsPlayed = false;
+                ( lOldDefault.Item as TvdbArt ).IsDefault = false;
+
+                // update new art to default and commit
+                string lPath = "posters/" + Path.GetFileName( lArtwork.OnlinePath );
+                string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                lArtwork.IsDefault = true;
+                lArtwork.Series[DBOnlineSeries.cCurrentPosterFileName] = @"\" + lRelativePath;
+                lArtwork.Series.Commit();
+                DefaultArtIndex = mFacadePosters.SelectedListItemIndex;
+
+                // update facade
+                lSelectedItem.Label2 = Translation.ArtworkSelected;
+                lSelectedItem.IsPlayed = true;
+            }
+            else if ( !lArtwork.IsLocal )
+            {
+                // the art it not local and we want to download it
+                // start download in background and let user continue selecting art to download
+                lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
+                StartDownload( lArtwork );
+            }
+
+            OnSelected( lSelectedItem, mFacadePosters );
+        }
+
+        private void OnSeasonPosterClicked()
+        {
+
+        }
 
         private void OnFanartClicked()
         {
@@ -310,13 +365,13 @@ namespace WindowPlugins.GUITVSeries.GUI
             // if the item is local and not default, make it the default
             if ( lArtwork.IsLocal && !lArtwork.IsDefault)
             {
-                // remove existing fanart as default
+                // remove existing art as default
                 var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeThumbnails.GetID, DefaultArtIndex ) as GUIArtworkListItem;
                 lOldDefault.Label2 = Translation.FanArtLocal;
                 lOldDefault.IsPlayed = false;
                 ( lOldDefault.Item as TvdbArt ).IsDefault = false;
 
-                // update new fanart to default and commit
+                // update new art to default and commit
                 lArtwork.IsDefault = true;
                 lArtwork.Fanart.Chosen = true;
                 DefaultArtIndex = mFacadeThumbnails.SelectedListItemIndex;
@@ -452,8 +507,10 @@ namespace WindowPlugins.GUITVSeries.GUI
                                 {
                                     // move badly named file to correct location
                                     string lDestinationFile = Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lLocalPath );
+                                    MPTVSeriesLog.Write( $"Fixing badly named file '{lSourceFile}' to '{lDestinationFile}'" );
+
                                     if ( File.Exists( lDestinationFile ) )
-                                        File.Delete( lDestinationFile );
+                                         File.Delete( lDestinationFile );
 
                                     File.Move( lSourceFile, lDestinationFile );
 
@@ -470,6 +527,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                             else
                             {
                                 // delete local path from database as it does not exist on disk
+                                MPTVSeriesLog.Write( $"Removing local reference '{lDBFanartLocalPath}' from database as it no longer exists" );
                                 lDBFanartLocalPath = string.Empty;
                                 lDBFanart[DBFanart.cLocalPath] = string.Empty;
                                 lDBFanart[DBFanart.cChosen] = false;
@@ -481,6 +539,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                             // we have a correct localpath reference, check that the file exists
                             if ( !File.Exists( Helper.PathCombine( Settings.GetPath( Settings.Path.fanart ), lDBFanartLocalPath ) ) )
                             {
+                                MPTVSeriesLog.Write( $"Removing local reference '{lDBFanartLocalPath}' from database as it no longer exists" );
                                 lDBFanartLocalPath = string.Empty;
                                 lDBFanart[DBFanart.cLocalPath] = string.Empty;
                                 lDBFanart[DBFanart.cChosen] = false;
@@ -498,6 +557,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     // if the fanart is local, ensure local path is set correctly in database
                     if ( lFanart.IsLocal && lLocalPath != lDBFanartLocalPath )
                     {
+                        MPTVSeriesLog.Write( $"Correcting local reference '{lDBFanartLocalPath}' to '{lLocalPath}' in database" );
                         lDBFanart[DBFanart.cLocalPath] = lLocalPath;
                         lDBFanart.Commit();
                     }
@@ -539,16 +599,28 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\-langen-posters\5aecac0f66076_t.jpg
                 string lThumbPath = "posters/" + Path.GetFileName( lPoster.OnlineThumbPath );
-                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lPoster.Language + "-" + lThumbPath;
-                lPoster.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
+                string lRelativeThumbPath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\Thumbnails\-lang" + lPoster.Language + "-" + lThumbPath;
+                lPoster.LocalThumbPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativeThumbPath );
 
                 // create the local filename path for the online image
                 string lPath = "posters/" + Path.GetFileName( lPoster.OnlinePath );
-                lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lPoster.Language + "-" + lPath;
+                string lRelativePath = Helper.cleanLocalPath( ArtworkParams.Series.ToString() ) + @"\-lang" + lPoster.Language + "-" + lPath;
                 lPoster.LocalPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), lRelativePath );
 
                 // if the fullsize artwork is already downloaded, then set it
                 if ( File.Exists( lPoster.LocalPath ) ) lPoster.IsLocal = true;
+
+                // check that local posters exist in available list, if not add it
+                if ( lPoster.IsLocal )
+                {
+                    var lAvailablePosters = ArtworkParams.Series[DBOnlineSeries.cPosterFileNames].ToString();
+                    if ( !lAvailablePosters.Contains( lRelativePath ) )
+                    {
+                        MPTVSeriesLog.Write( "Added missing local poster to available posters" );
+                        ArtworkParams.Series[DBOnlineSeries.cPosterFileNames] = lAvailablePosters += @"|\" + lRelativePath;
+                        ArtworkParams.Series.Commit();
+                    }
+                }
 
                 // if the artwork is default/selected, then set it
                 // remove any inconsistency with slashes, it should still be unique
