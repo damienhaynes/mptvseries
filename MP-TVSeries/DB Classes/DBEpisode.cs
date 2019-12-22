@@ -1986,17 +1986,24 @@ namespace WindowPlugins.GUITVSeries
             string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
             string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
-            if (ep[seasonIndex] == 0 && !Settings.isConfig)
+            if ( ep[seasonIndex] == 0 && !Settings.isConfig )
             {
-                if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
+                // Episode is a special
+                // Airs After Season overrides AirsBeforeEpisode and AirsBeforeSeason
+                if ( ep[DBOnlineEpisode.cAirsAfterSeason] > 0 )
                 {
                     return 9999 + ep[episodeIndex];
                 }
                 else
-                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
+                {
+                    return ( ( int )ep[DBOnlineEpisode.cAirsBeforeEpisode] ) - 0.9 + ( ( ( int )ep[episodeIndex] ) / 100f ) + ( ep[DBOnlineEpisode.cAirsBeforeSeason] * 100 );
+                }
             }
             else
-                return (double)ep[episodeIndex] + ep[seasonIndex] * 100;
+            {
+                // episode is not a special
+                return ( double )ep[episodeIndex] + ep[seasonIndex] * 100;
+            }
         }
 
         #endregion

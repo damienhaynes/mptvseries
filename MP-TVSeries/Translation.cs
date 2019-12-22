@@ -21,16 +21,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using MediaPortal.Configuration;
+using MediaPortal.GUI.Library;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
-using System.Text;
-using System.Xml;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
-using MediaPortal.Configuration;
-using MediaPortal.GUI.Library;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
