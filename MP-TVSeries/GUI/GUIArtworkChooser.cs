@@ -327,8 +327,51 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         private void OnSeasonPosterClicked()
         {
+            var lSelectedItem = mFacadePosters.SelectedListItem as GUIArtworkListItem;
+            if ( lSelectedItem == null ) return;
 
+            var lArtwork = lSelectedItem.Item as TvdbArt;
+            if ( lArtwork == null ) return;
+
+            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            if ( lSelectedItem.IsDownloading ) return;
+
+            // if the item is default, then nothing to do
+            if ( lArtwork.IsDefault ) return;
+
+            // if the item is local and not default, make it the default
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
+            {
+                // remove existing art as default
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadePosters.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                lOldDefault.Label2 = Translation.FanArtLocal;
+                lOldDefault.IsPlayed = false;
+                ( lOldDefault.Item as TvdbArt ).IsDefault = false;
+
+                // update new art to default and commit
+                string lPath = "seasons/" + Path.GetFileName( lArtwork.OnlinePath );
+                string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                lArtwork.IsDefault = true;
+                lArtwork.Season[DBSeason.cCurrentBannerFileName] = lRelativePath;
+                lArtwork.Season.Commit();
+                DefaultArtIndex = mFacadePosters.SelectedListItemIndex;
+
+                // update facade
+                lSelectedItem.Label2 = Translation.ArtworkSelected;
+                lSelectedItem.IsPlayed = true;
+            }
+            else if ( !lArtwork.IsLocal )
+            {
+                // the art it not local and we want to download it
+                // start download in background and let user continue selecting art to download
+                lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
+                StartDownload( lArtwork );
+            }
+
+            OnSelected( lSelectedItem, mFacadePosters );
         }
+
         private void OnSeriesWideBannerClicked()
         {
             var lSelectedItem = mFacadeWidebanners.SelectedListItem as GUIArtworkListItem;
@@ -786,6 +829,18 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // if the fullsize artwork is already downloaded, then set it
                 if ( File.Exists( lSeasonPoster.LocalPath ) ) lSeasonPoster.IsLocal = true;
+
+                // check that local posters exist in available list, if not add it
+                if ( lSeasonPoster.IsLocal )
+                {
+                    var lAvailablePosters = ArtworkParams.Season[DBSeason.cBannerFileNames].ToString();
+                    if ( !lAvailablePosters.Contains( lRelativePath ) )
+                    {
+                        MPTVSeriesLog.Write( "Added missing local season poster to available posters" );
+                        ArtworkParams.Season[DBSeason.cBannerFileNames] = lAvailablePosters += "|" + lRelativePath;
+                        ArtworkParams.Season.Commit();
+                    }
+                }
 
                 // if the artwork is default/selected, then set it
                 // remove any inconsistency with slashes, it should still be unique
@@ -1260,6 +1315,16 @@ namespace WindowPlugins.GUITVSeries.GUI
                     var lAvailableSeriesBanners = aArtwork.Series[DBOnlineSeries.cBannerFileNames].ToString();
                     aArtwork.Series[DBOnlineSeries.cBannerFileNames] = lAvailableSeriesBanners += "|" + lRelativePath;
                     aArtwork.Series.Commit();
+                    break;
+
+                case ArtworkType.SeasonPoster:
+                    // update database with available posters
+                    lPath = "seasons/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
+                    lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
+
+                    var lAvailableSeasonPosters = aArtwork.Season[DBSeason.cBannerFileNames].ToString();
+                    aArtwork.Season[DBSeason.cBannerFileNames] = lAvailableSeasonPosters += "|" + lRelativePath;
+                    aArtwork.Season.Commit();
                     break;
             }
         }
