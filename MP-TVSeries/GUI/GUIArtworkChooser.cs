@@ -305,7 +305,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
 
                 lArtwork.IsDefault = true;
-                lArtwork.Series[DBOnlineSeries.cCurrentPosterFileName] = @"\" + lRelativePath;
+                lArtwork.Series[DBOnlineSeries.cCurrentPosterFileName] = lRelativePath;
                 lArtwork.Series.Commit();
                 DefaultArtIndex = mFacadePosters.SelectedListItemIndex;
 
@@ -617,7 +617,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     if ( !lAvailablePosters.Contains( lRelativePath ) )
                     {
                         MPTVSeriesLog.Write( "Added missing local poster to available posters" );
-                        ArtworkParams.Series[DBOnlineSeries.cPosterFileNames] = lAvailablePosters += @"|\" + lRelativePath;
+                        ArtworkParams.Series[DBOnlineSeries.cPosterFileNames] = lAvailablePosters += "|" + lRelativePath;
                         ArtworkParams.Series.Commit();
                     }
                 }
@@ -1092,7 +1092,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             // report we now have finished downloading the file
             lArtwork.NotifyPropertyChanged( "LocalPath" );
 
-            MPTVSeriesLog.Write( $"Completed download of artwork '{lArtwork.LocalPath}'" );
+            MPTVSeriesLog.Write( $"Completed download of artwork '{lArtwork.LocalPath.Replace("/",@"\")}'" );
         }
         #endregion
 
@@ -1181,6 +1181,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                     // update database with local file path
                     aArtwork.Fanart[DBFanart.cLocalPath] = Fanart.GetLocalPath( aArtwork.Fanart );
                     aArtwork.Fanart.Commit();
+                    break;
+                case ArtworkType.SeriesPoster:
+                    // update database with available posters
+                    string lPath = "posters/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
+                    string lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
+
+                    var lAvailablePosters = aArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString();
+                    aArtwork.Series[DBOnlineSeries.cPosterFileNames] = lAvailablePosters += "|" + lRelativePath;
+                    aArtwork.Series.Commit();
                     break;
             }
         }
