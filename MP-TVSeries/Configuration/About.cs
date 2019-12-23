@@ -52,5 +52,14 @@ namespace WindowPlugins.GUITVSeries
             System.Diagnostics.Process.Start( @"https://github.com/damienhaynes/mptvseries" );
         }
 
+        private void lnkPayPal_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            System.Diagnostics.Process.Start( @"https://www.paypal.me/damienlhaynes" );
+        }
+
+        private void picPayPal_Click( object sender, EventArgs e )
+        {
+            System.Diagnostics.Process.Start( @"https://www.paypal.me/damienlhaynes" );
+        }
     }
 }

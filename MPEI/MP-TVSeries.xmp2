@@ -3074,13 +3074,13 @@ public class Script
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Updated video player to use new event for updating GUI properties (thanks Sebastiii);
-* Added new Artwork Choser GUI. User can download and select Series Fanart, Posters, Wide Banners and Season Posters;
+    <VersionDescription>* Added new Artwork Chooser GUI. User can download and select Series Fanart, Posters, Wide Banners and Season Posters;
 * Added delete file logic to MPTV recording database when file is physically deleted in mptvseries (thanks framug);
 * Added support to get whether or not a video file is HDR. New MediaInfo properties Colour Primaries and Format Commercial;
 * Added option to postpone MediaInfo scan in configuration, scan will pick up missing MI in GUI import;
 * Added option to skip episode matching screen in the configuration import wizard if there are no episodes that require manual matching;
 * Added option to use the filename's last folder as the Series name for online matching. This should only be enabled if the path folder has a clean series name;
+* Updated video player to use new event for updating GUI properties (thanks Sebastiii);
 * Fixed duration detection during MediaInfo scan not working on all media;
 * Improved series name matching online;
 * Handle bad API responses from TVDb API v1. Added workarounds to various issues recently introduced to get missing data and images;
