@@ -40,6 +40,7 @@ namespace WindowPlugins.GUITVSeries
     public class DBOption
     {
         #region Database Fields
+        public const string cArtworkChooserLayout = "ArtworkChooserLayout";
         public const string cConfigLogCollapsed = "Config_LogShown";
         public const string cDBSeriesVersion = "DBSeriesVersion";
         public const string cDBOnlineSeriesVersion = "DBOnlineSeriesVersion";
@@ -157,6 +158,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cConfigSizeHeight = "configSizeHeight";
         public const string cConfigSizeWidth = "configSizeWidth";
         public const string cDisableMediaInfo = "DisableMediaInfo";
+        public const string cDisableMediaInfoInConfigImports = "DisableMediaInfoInConfigImports";
         public const string cMediaInfoParseSpeed = "MediaInfoParseSpeed";
         public const string cImportDelay = "ImportDelay";        
         public const string cDelayImportPathMonitoringValue = "DelayImportPathMonitoringValue";
@@ -180,6 +182,8 @@ namespace WindowPlugins.GUITVSeries
         public const string cCountSpecialEpisodesAsWatched = "CountSpecialEpisodesAsWatched";
         public const string cTraktCommunityRatings = "TraktCommunityRatings";
         public const string cTraktLastDateUpdated = "TraktLastDateUpdated";
+        public const string cParsedNameFromFolder = "ParsedNameFromFolder";
+        public const string cCheckShowOnlyEpisodesRequiringManualSelection = "CheckShowOnlyEpisodesRequiringManualSelection";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -436,7 +440,7 @@ namespace WindowPlugins.GUITVSeries
 				SetOptions(cMarkRatedEpisodeAsWatched, 0);
 
             if (GetOptions(cSubstituteMissingArtwork) == null)
-                SetOptions(cSubstituteMissingArtwork, 0);
+                SetOptions(cSubstituteMissingArtwork, 1);
 
             if (GetOptions(cAskToRate)==null)
                 SetOptions(cAskToRate, 0);
@@ -493,7 +497,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cDisableMediaInfo, false);
 
             if (GetOptions(cMediaInfoParseSpeed) == null)
-                SetOptions(cMediaInfoParseSpeed, "0.3"); // Default is 0.5 but we dont need that for TVSeries.
+                SetOptions(cMediaInfoParseSpeed, "0.1"); // Default is 0.5 (scan 50% of file) but we dont need that for TVSeries.
 
             if (GetOptions(cImportDelay) == null)
                 SetOptions(cImportDelay, 30);
@@ -528,6 +532,9 @@ namespace WindowPlugins.GUITVSeries
             if (GetOptions(cActorLayout) == null)
                 SetOptions(cActorLayout, 0);
 
+            if ( GetOptions( cArtworkChooserLayout  ) == null )
+                SetOptions( cArtworkChooserLayout, 0 );
+
             if (GetOptions(cAutoGenerateEpisodeTitles) == null)
                 SetOptions(cAutoGenerateEpisodeTitles, true);
 
@@ -553,7 +560,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cFilterUnwatched, false);
 
             if (GetOptions(cAutoDownloadActors) == null)
-                SetOptions(cAutoDownloadActors, true);
+                SetOptions(cAutoDownloadActors, false);
 
             if (GetOptions(cCleanOnlineEpisodes) == null)
                 SetOptions(cCleanOnlineEpisodes, true);
@@ -568,7 +575,16 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cCountSpecialEpisodesAsWatched, false);
 
             if (GetOptions(cTraktCommunityRatings) == null)
-                SetOptions(cTraktCommunityRatings, false);
+                SetOptions(cTraktCommunityRatings, true);
+
+            if (GetOptions(cParsedNameFromFolder) == null)
+                SetOptions(cParsedNameFromFolder, false);
+
+            if (GetOptions(cDisableMediaInfoInConfigImports) == null)
+                SetOptions(cDisableMediaInfoInConfigImports, false );
+
+            if (GetOptions(cCheckShowOnlyEpisodesRequiringManualSelection) == null)
+                SetOptions(cCheckShowOnlyEpisodesRequiringManualSelection, false);
 
             #endregion
         }

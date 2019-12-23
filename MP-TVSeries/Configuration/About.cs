@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WindowPlugins.GUITVSeries
@@ -39,7 +34,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkForum_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://forum.team-mediaportal.com/my-tvseries-162/");
+            System.Diagnostics.Process.Start( @"https://forum.team-mediaportal.com/forums/my-tvseries.162/" );
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -49,13 +44,22 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://code.google.com/p/mptvseries/");
+            System.Diagnostics.Process.Start( @"https://github.com/damienhaynes/mptvseries" );
         }
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://code.google.com/p/mptvseries/w/list");
+            System.Diagnostics.Process.Start( @"https://github.com/damienhaynes/mptvseries" );
         }
 
+        private void lnkPayPal_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            System.Diagnostics.Process.Start( @"https://www.paypal.me/damienlhaynes" );
+        }
+
+        private void picPayPal_Click( object sender, EventArgs e )
+        {
+            System.Diagnostics.Process.Start( @"https://www.paypal.me/damienlhaynes" );
+        }
     }
 }

@@ -22,11 +22,9 @@
 #endregion
 
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -39,9 +37,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cChosen = "Chosen";
         public const String cLocalPath = "LocalPath";
         public const String cBannerPath = "BannerPath"; // online
+        public const String cVignettePath = "VignettePath"; // online
         public const String cThumbnailPath = "ThumbnailPath"; // online
         public const String cColors = "Colors"; // online
         public const String cResolution = "BannerType2"; // online
+        public const String cBannerType = "BannerType"; // online
+        public const String cLanguage = "Language"; // online
         public const String cDisabled = "Disabled";
         public const String cSeriesName = "SeriesName"; // online
         public const String cRating = "Rating"; // online
@@ -71,7 +72,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
+            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
             AddColumn(cChosen, new DBField(DBField.cTypeString));
@@ -84,8 +85,14 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static void ClearAll()
-        {      
-            cache.Clear();         
+        {
+            cache.Clear();
+        }
+
+        public static void ClearSeriesFromCache(int aSeriesId)
+        {
+            if (cache.ContainsKey(aSeriesId))
+                cache.Remove( aSeriesId );
         }
 
         public static void Clear(int Index)
@@ -104,7 +111,7 @@ namespace WindowPlugins.GUITVSeries
         public void Delete()
         {
             // first let's delete the physical file
-            if (this.isAvailableLocally)
+            if (this.IsAvailableLocally)
             {
                 try
                 {                    
@@ -151,7 +158,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         public static List<DBFanart> GetAll(int SeriesID, bool availableOnly)
-        {           
+        {
             lock (cache)
             {
                 if (SeriesID < 0) return new List<DBFanart>();
@@ -183,7 +190,7 @@ namespace WindowPlugins.GUITVSeries
                             if (cache == null) cache = new Dictionary<int, List<DBFanart>>();
                             cache.Add(SeriesID, ourFanart);
                         }
-                        MPTVSeriesLog.Write("Found " + results.Rows.Count + " Fanart from Database", MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("Found " + results.Rows.Count + " fanart from database", MPTVSeriesLog.LogLevel.Debug);
 
                     }
                     catch (Exception ex)
@@ -293,7 +300,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool isAvailableLocally
+        public bool IsAvailableLocally
         {
             get
             {
@@ -340,24 +347,36 @@ namespace WindowPlugins.GUITVSeries
             return this[cSeriesID] + " -> " + this[cIndex];
         }
 
+        #region Comparison
+        public override bool Equals( Object obj )
+        {
+            if ( obj == null )
+                return false;
+
+            DBFanart f = obj as DBFanart;
+            if ( ( Object )f == null )
+                return false;
+
+            return ( this[DBFanart.cThumbnailPath] == f[DBFanart.cThumbnailPath] );
+        }
+        
+        public override int GetHashCode()
+        {
+            return this[DBFanart.cThumbnailPath];
+        }
+        #endregion
+
         #region IComparable
         public int CompareTo(DBFanart other)
         {
             // Sort by:
-            // 1. Highest Rated
-            // 2. Number of Votes
+            // Number of Votes (AKA. how many times it's been favourited)
 
             double thisFanart = 0.0;
             double otherFanart = 0.0;
-
-            if (this[cRating] == other[cRating])
-            {
-                thisFanart += this[cRatingCount];
-                otherFanart += other[cRatingCount];
-            }
-
-            thisFanart += this[cRating];
-            otherFanart += other[cRating];
+            
+            thisFanart += this[cRatingCount];
+            otherFanart += other[cRatingCount];
 
             return otherFanart.CompareTo(thisFanart);
         }

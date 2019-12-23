@@ -21,18 +21,22 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
     public class Language
     {
-        public string language = string.Empty;
-        public int id = default(int);
-        public string abbreviation = string.Empty;
+        public string Name = string.Empty;
+        public int Id = default(int);
+        public string Abbreviation = string.Empty;
+        public string EnglishName = string.Empty;
+
+        public override string ToString()
+        {
+            return $"{EnglishName} ({Abbreviation}) - {Name}";
+        }
     }
 
     public class GetLanguages
@@ -50,12 +54,22 @@ namespace WindowPlugins.GUITVSeries
                     lang = new Language();
                     foreach (XmlNode node in itemNode)
                     {
-                        if (node.Name == "id") int.TryParse(node.InnerText, out lang.id);
-                        if (node.Name == "language") lang.language = node.InnerText; //TODO: disable for new api
-                        if (node.Name == "name") lang.language = node.InnerText;
-                        if (node.Name == "abbreviation") lang.abbreviation = node.InnerText;
+                        if (node.Name == "id") int.TryParse(node.InnerText, out lang.Id);
+                        if (node.Name == "name") lang.Name = node.InnerText;
+                        if (node.Name == "abbreviation")
+                        {
+                            lang.Abbreviation = node.InnerText;
+                            try
+                            {
+                                lang.EnglishName = new System.Globalization.CultureInfo( lang.Abbreviation ).EnglishName;
+                            }
+                            catch
+                            {
+                                MPTVSeriesLog.Write( $"Unable to get English name for language code '{lang.Abbreviation}'", MPTVSeriesLog.LogLevel.Debug );
+                            }
+                        }
                     }
-                    if (lang.id != default(int) && lang.language.Length > 0)
+                    if (lang.Id != default(int) && lang.EnglishName.Length > 0 && !lang.EnglishName.StartsWith("Unknown"))
                         languages.Add(lang);
                 }
             }

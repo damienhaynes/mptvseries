@@ -528,38 +528,13 @@
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
 
-
-    <control Style="InfoLabel">
-      <description>Director Label (Episode)</description>
-      <type>label</type>
-      <label>#TVSeries.Translation.Director.Label</label>
-      <id>0</id>
-      <posX>565</posX>
-      <posY>451</posY>
-      <visible>facadeview.list+control.isvisible(1239)+!string.equals(#TVSeries.Episode.Director,)</visible>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-    </control>
-
-    <control Style="InfoValueSmall">
-      <description>Director (Episode)</description>
-      <type>fadelabel</type>
-      <label>#TVSeries.Episode.Director</label>
-      <id>0</id>
-      <posX>798</posX>
-      <posY>451</posY>
-      <visible>facadeview.list+control.isvisible(1239)</visible>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-    </control>
-
     <control Style="InfoLabel">
       <description>Writer Label</description>
       <type>label</type>
       <label>#TVSeries.Translation.Writer.Label</label>
       <id>0</id>
       <posX>565</posX>
-      <posY>483</posY>
+      <posY>451</posY>
       <visible>facadeview.list+control.isvisible(1239)+!string.equals(#TVSeries.Episode.Writer,)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
@@ -569,6 +544,30 @@
       <description>Writer</description>
       <type>fadelabel</type>
       <label>#TVSeries.Episode.Writer</label>
+      <id>0</id>
+      <posX>798</posX>
+      <posY>451</posY>
+      <visible>facadeview.list+control.isvisible(1239)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+
+    <control Style="InfoLabel">
+      <description>Guests Label (Episode)</description>
+      <type>label</type>
+      <label>#TVSeries.Translation.GuestStars.Label</label>
+      <id>0</id>
+      <posX>565</posX>
+      <posY>483</posY>
+      <visible>facadeview.list+control.isvisible(1239)+!string.equals(#TVSeries.Episode.GuestStars,)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+
+    <control Style="InfoValueSmall">
+      <description>Guests (Episode)</description>
+      <type>fadelabel</type>
+      <label>#TVSeries.Episode.GuestStars</label>
       <id>0</id>
       <posX>798</posX>
       <posY>483</posY>

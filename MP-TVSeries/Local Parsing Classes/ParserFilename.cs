@@ -21,9 +21,10 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WindowPlugins.GUITVSeries
@@ -179,7 +180,7 @@ namespace WindowPlugins.GUITVSeries
 
         string RunReplacements(Dictionary<Regex, string> replacements, string runAgainst)
         {
-            string _beforeReplacement = runAgainst;
+            //string _beforeReplacement = runAgainst;
             foreach (var replacement in replacements)
             {
               if (replacement.Key.IsMatch(runAgainst)
@@ -192,18 +193,18 @@ namespace WindowPlugins.GUITVSeries
                          ? replacement.Key.Replace(runAgainst, m => " " + Parse1To19RomanNumberOrKeep(m.Value) + " ") 
                          : replacement.Key.Replace(runAgainst, replacement.Value);
             }
-          MPTVSeriesLog.Write("Replacement: " + _beforeReplacement + " -> "  + runAgainst, MPTVSeriesLog.LogLevel.Debug);
+          //MPTVSeriesLog.Write("Replacement: " + _beforeReplacement + " -> "  + runAgainst, MPTVSeriesLog.LogLevel.Debug);
           return runAgainst;
         }
 
-        public FilenameParser(string filename)
+        public FilenameParser(PathPair aPathPair)
         {
             try
             {
                 ////////////////////////////////////////////////////////////////////////////////////////////
                 // Parsing filename for all recognized naming formats to extract episode information
                 ////////////////////////////////////////////////////////////////////////////////////////////
-                m_Filename = filename;
+                m_Filename = aPathPair.m_sMatch_FileName;
                 if (sExpressions.Count == 0) reLoadExpressions();
 
                 int index = 0;
@@ -223,15 +224,52 @@ namespace WindowPlugins.GUITVSeries
                             string GroupName = regularExpression.GroupNameFromNumber(i);
                             string GroupValue = matchResults.Groups[i].Value;
 
-                            if (GroupValue.Length > 0 && GroupName != "unknown")
+                            if ( GroupValue.Length > 0 && GroupName != "unknown")
                             {
-                                // ´run after replacements on captures
+                                // run after replacements on captures
                                 GroupValue = RunReplacements(replacementRegexAfter, GroupValue);
 
                                 GroupValue = GroupValue.Trim();
                                 m_Matches.Add(GroupName, GroupValue);
                             }
                         }
+
+                        // try get the series name from the folder
+                        if ( DBOption.GetOptions( DBOption.cParsedNameFromFolder ) )
+                        {
+                            // get directory of file
+                            string lDirectory = Path.GetDirectoryName( aPathPair.m_sFull_FileName );
+
+                            // now get the name basis the last part of the directory
+                            string lLastFolderName = Path.GetFileName( lDirectory );
+
+                            // check if the directory structure has seasons
+                            if ( ( lLastFolderName.ToLowerInvariant().Contains( "season" ) && lLastFolderName.Any(Char.IsDigit) ) ||
+                                 ( lLastFolderName.ToLowerInvariant().Contains( Translation.Season ) && lLastFolderName.Any( Char.IsDigit ) ) ||
+                                 lLastFolderName.ToLowerInvariant().Equals( "specials" ) ||
+                                 lLastFolderName.ToLowerInvariant().Equals( Translation.specials ) )
+                            {
+                                lDirectory = Directory.GetParent( lDirectory ).ToString();
+                                lLastFolderName = Path.GetFileName( lDirectory );
+                            }
+
+                            // check if our parsing rule has already captured the series name
+                            // and if so, update the existing value
+                            string lValue = string.Empty;
+                            if ( m_Matches.ContainsKey( DBSeries.cParsedName ) )
+                            {
+                                lValue = RunReplacements( replacementRegexAfter, lLastFolderName ).Trim();
+                                m_Matches[DBSeries.cParsedName] = lValue;
+                            }
+                            else // if not add it
+                            {
+                                lValue = RunReplacements( replacementRegexAfter, lLastFolderName ).Trim();
+                                m_Matches.Add( DBSeries.cParsedName, lValue );
+                            }
+
+                            MPTVSeriesLog.Write( $"Setting series name as '{lValue}' basis the last folder in file '{aPathPair.m_sFull_FileName}'", MPTVSeriesLog.LogLevel.DebugSQL );
+                        }
+                        
                         // stop on the first successful match
                         m_RegexpMatched = sExpressions[index];
                         m_RegexpMatchedIdx = index;
@@ -242,7 +280,7 @@ namespace WindowPlugins.GUITVSeries
             }
             catch (Exception ex)
             {
-                MPTVSeriesLog.Write("And error occured in the 'FilenameParser' function (" + ex.ToString() + ")");
+                MPTVSeriesLog.Write("An error occured in the 'FilenameParser' function (" + ex.ToString() + ")");
             }
         }
 

@@ -24,32 +24,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using System.Xml;
 using System.Linq;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
     class UpdateSeries
     {
-        private List<String> sSeriesIDs = null;
-        private long m_nServerTimeStamp = 0;
-        private List<DBOnlineSeries> listSeries = new List<DBOnlineSeries>();
-        private List<int> listIncorrectIDs = new List<int>();
+        private List<String> mSeriesIDs = null;
+        private long mServerTimeStamp = 0;
+        private List<DBOnlineSeries> mSeriesList = new List<DBOnlineSeries>();
+        private List<int> mIncorrectIdsList = new List<int>();
 
         public long ServerTimeStamp
         {
-            get { return m_nServerTimeStamp; }
+            get { return mServerTimeStamp; }
         }
 
         public List<DBOnlineSeries> Results
         {
             get
             {
-                if (listSeries == null)
-                    listSeries = new List<DBOnlineSeries>(ResultsLazy);
-                return listSeries;
+                if (mSeriesList == null)
+                    mSeriesList = new List<DBOnlineSeries>(ResultsLazy);
+                return mSeriesList;
             }
         }
 
@@ -60,7 +58,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                foreach (string id in sSeriesIDs)
+                foreach (string id in mSeriesIDs)
                 {
                     var results = Work(id);
                     foreach (var r in results)
@@ -72,22 +70,22 @@ namespace WindowPlugins.GUITVSeries
 
         public List<int> BadIds
         {
-            get { return listIncorrectIDs; }
+            get { return mIncorrectIdsList; }
         }
 
-        public UpdateSeries(String sSeriesIDs)
+        public UpdateSeries(String sSeriesID)
         {
-            listSeries = Work(sSeriesIDs).ToList();
+            mSeriesList = Work(sSeriesID).ToList();
         }
 
         public UpdateSeries(List<String> sSeriesIDs)
         {
-            this.sSeriesIDs = sSeriesIDs;            
+            this.mSeriesIDs = sSeriesIDs;            
         }
 
-        public UpdateSeries(String sSeriesIDs, String languageID)
+        public UpdateSeries(String sSeriesID, String languageID, bool aOverride = false )
         {
-            listSeries = Work(sSeriesIDs, languageID).ToList();
+            mSeriesList = Work(sSeriesID, languageID, aOverride).ToList();
         }
 
         private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
@@ -95,7 +93,7 @@ namespace WindowPlugins.GUITVSeries
             return Work(sSeriesID, "");
         }
 
-        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID)
+        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID, bool aOverride = false)
         {
             if (sSeriesID.Length > 0)
             {
@@ -110,7 +108,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID);
+                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID, aOverride );
                 }
 
                 if (node != null)
@@ -140,7 +138,7 @@ namespace WindowPlugins.GUITVSeries
                                         series[propertyNode.Name] = propertyNode.InnerText;
                                     }
                                 }
-                                if (series != null) listSeries.Add(series);
+                                if (series != null) mSeriesList.Add(series);
                             }
                             else if(!hasDVDOrdering || !hasAbsoluteOrdering || seriesNode.Name.Equals("Episode", StringComparison.InvariantCultureIgnoreCase))
                             {

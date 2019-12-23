@@ -75,7 +75,7 @@
             this.checkBoxFilter.TabIndex = 15;
             this.checkBoxFilter.Text = "&Show only Episodes requiring manual selection";
             this.checkBoxFilter.UseVisualStyleBackColor = true;
-            this.checkBoxFilter.CheckedChanged += new System.EventHandler(this.checkBoxFilter_CheckedChanged);
+            
             // 
             // listBoxSeries
             // 

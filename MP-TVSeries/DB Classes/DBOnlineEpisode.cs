@@ -86,7 +86,7 @@ namespace WindowPlugins.GUITVSeries
         {
             //////////////////////////////////////////////////
             #region Pretty Names displayed in Configuration Details Tab
-            s_FieldToDisplayNameMap.Add(cID, "Episode ID");
+            s_FieldToDisplayNameMap.Add(cID, "Online Episode ID");
             s_FieldToDisplayNameMap.Add(cEpisodeSummary, "Overview");
             s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
             s_FieldToDisplayNameMap.Add(cFirstAired, "Air Date");
@@ -96,6 +96,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cAirsAfterSeason, "Airs After Season");
             s_FieldToDisplayNameMap.Add(cAirsBeforeSeason, "Airs Before Season");
             s_FieldToDisplayNameMap.Add(cAirsBeforeEpisode, "Airs Before Episode");
+            s_FieldToDisplayNameMap.Add(cLastUpdated, "Last Updated (UTC)" );
             #endregion
             //////////////////////////////////////////////////
 

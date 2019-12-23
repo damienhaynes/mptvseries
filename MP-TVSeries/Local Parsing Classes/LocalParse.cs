@@ -115,12 +115,12 @@ namespace WindowPlugins.GUITVSeries
             paths = null;
             foreach (PathPair file in files)
             {
-                parser = new FilenameParser(file.m_sMatch_FileName);
+                parser = new FilenameParser(file);
                 
                 // title case the seriesname
-                if (parser.Matches.ContainsKey(DBSeries.cParsedName))
+                if (parser.Matches.ContainsKey(DBSeries.cParsedName) && !DBOption.GetOptions(DBOption.cParsedNameFromFolder))
                     parser.Matches[DBSeries.cParsedName] = parser.Matches[DBSeries.cParsedName].ToString().ToTitleCase();
-               
+
                 // set volumelabel for drive so can be prompted to insert CD/DVD disk or removable harddrive
                 // populate with import path name if can not get volume label
                 string volumeLabel = DeviceManager.GetVolumeLabel(file.m_sFull_FileName);
@@ -158,7 +158,6 @@ namespace WindowPlugins.GUITVSeries
 
                         nFailed++;
                     }
-
                 }
                 else
                 {
@@ -185,7 +184,7 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.full_filename = file.m_sFull_FileName;
                 progressReporter.parser = parser;
                 progressReporter.PathPair = file;
-                if(includeFailed ||progressReporter.success)
+                if(includeFailed || progressReporter.success)
                     results.Add(progressReporter);
             }
             MPTVSeriesLog.Write("Finished Local Filename Parsing");

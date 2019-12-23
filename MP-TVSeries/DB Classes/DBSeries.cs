@@ -21,17 +21,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SQLite.NET;
+using WindowPlugins.GUITVSeries.Extensions;
 
 namespace WindowPlugins.GUITVSeries
 {
-    //moved to DBOnineSeries.cs
-    //public class DBOnlineSeries : DBTable
-
     public class DBSeries : DBTable
     {
         public delegate void dbSeriesUpdateOccuredDelegate(DBSeries updated);
@@ -48,7 +46,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         #endregion
 
-        public const int cDBVersion = 15;
+        public const int cDBVersion = 16;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
@@ -212,6 +210,17 @@ namespace WindowPlugins.GUITVSeries
                     case 14:
                         // original name not working in previous release
                         DBOnlineSeries.GlobalSet(new DBOnlineSeries(), DBOnlineSeries.cTraktIgnore, 0, new SQLCondition());
+                        nUpgradeDBVersion++;
+                        break;
+                    case 15:
+                        // delete the API cache associated with each series
+                        try
+                        {
+                            string lCacheDir = Path.Combine( Settings.GetPath( Settings.Path.config ), @"Cache" );
+                            Directory.Delete( lCacheDir, true );
+                        }
+                        catch ( Exception ) { }
+
                         nUpgradeDBVersion++;
                         break;
                     default:
@@ -1003,7 +1012,31 @@ namespace WindowPlugins.GUITVSeries
             }
             this.Commit();
         }
+        
+        public string Slug
+        {
+            get
+            {
+                string lSlug = this[DBOnlineSeries.cSlug];
+                if ( string.IsNullOrEmpty( lSlug ) )
+                {
+                    // use the original name (English name) when generating a slug
+                    var lOriginalName = this[DBOnlineSeries.cOriginalName].ToString();
 
+                    // theTVDb.com uses 'and' as a replacement for ampersand
+                    lOriginalName = lOriginalName.ToString().Replace( "&", "and" );
+
+                    // convert the rest to a slug
+                    lSlug = lOriginalName.ToSlug();
+
+                    // now save the slug for next time
+                    this[DBOnlineSeries.cSlug] = lSlug;
+                    this.Commit();
+                }
+                
+                return lSlug;
+            }
+        }
     }
 
     public class EpisodeCounter

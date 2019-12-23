@@ -79,11 +79,25 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // shrink the result
-            char[] newLenghtChars = new char[cInput.Length - removed];
-            for (int i = 0; i < newLenghtChars.Length; i++)
-                newLenghtChars[i] = cInput[i];
+            char[] newLengthChars = new char[cInput.Length - removed];
+            for (int i = 0; i < newLengthChars.Length; i++)
+                newLengthChars[i] = cInput[i];
 
-            return new string(newLenghtChars);
+            return new string( newLengthChars );
+        }
+        public static string RemoveSpecialCharacters( this string aString )
+        {
+            StringBuilder lStringBuilder = new StringBuilder( aString.Length);
+            foreach ( char c in aString )
+            {
+                // we want to consider all unicode characters including letters 
+                // in the Cyrillic alphabet
+                if ( Char.IsLetterOrDigit( c ) )
+                {
+                    lStringBuilder.Append( c );
+                }
+            }
+            return lStringBuilder.ToString();
         }
 
         public static string RemapHighOrderChars(this string input)
@@ -372,6 +386,21 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
+        public static void DeleteXmlCache(int aSeriesID)
+        {
+            string lPath = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format(@"Cache\{0}\", aSeriesID.ToString() ) );
+
+            MPTVSeriesLog.Write( $"Deleting series API cache. Path={lPath}" );
+            try
+            {   
+                Directory.Delete( lPath, true );
+            }
+            catch(Exception e)
+            {
+                MPTVSeriesLog.Write( $"Error deleting series API cache. Exception={e.Message}" );
+            }
+        }
+
         #endregion
 
         #region Other Public Methods
@@ -409,9 +438,9 @@ namespace WindowPlugins.GUITVSeries
         {
             for (int f = 0; f < filenames.Count; f++) {
                 bool wasCached = false;
-                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !System.IO.File.Exists(filenames[f])) {
+                if ((wasCached = nonExistingFiles.Contains(filenames[f])) || !File.Exists(filenames[f])) {
                     if (!wasCached) {
-                        MPTVSeriesLog.Write("File does not exist: " + filenames[f], MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("File does not exist: " + filenames[f], MPTVSeriesLog.LogLevel.DebugSQL);
                         nonExistingFiles.Add(filenames[f]);
                     }
                     filenames.RemoveAt(f);
@@ -426,7 +455,7 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <param name="milliseconds"></param>
         /// <returns></returns>
-        public static System.String MSToMMSS(double milliseconds)
+        public static String MSToMMSS(double milliseconds)
         {
             TimeSpan t = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
             //cs1 anomalies or no disc/data available -> -:- 
@@ -714,15 +743,14 @@ namespace WindowPlugins.GUITVSeries
                 }
 
             if (!result) {
-                MPTVSeriesLog.Write(string.Format("Assembly {0} is not loaded (not available?), trying to load it manually...", name), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(string.Format("Assembly {0} is not loaded (or unavailable), trying to load it manually...", name), MPTVSeriesLog.LogLevel.Debug);
                 try {
-                    //Assembly assembly = AppDomain.CurrentDomain.Reflection(new AssemblyName(name));
                     Assembly assembly = Assembly.ReflectionOnlyLoad(name);
                     MPTVSeriesLog.Write(string.Format("Assembly {0} is available and loaded successfully.", name), MPTVSeriesLog.LogLevel.Debug);
                     result = true;
                 }
                 catch (Exception e) {
-                    MPTVSeriesLog.Write(string.Format("Assembly {0} is unavailable, load unsuccessful: {1}:{2}", name, e.GetType(), e.Message), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("Assembly {0} is unavailable, load unsuccessful: {1}: {2}", name, e.GetType(), e.Message), MPTVSeriesLog.LogLevel.Debug);
                 }
             }
 
@@ -735,11 +763,18 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static bool IsSubCentralAvailableAndEnabled {
-            get {
-                return Helper.IsAssemblyAvailable("SubCentral", new Version(0, 9, 0, 0)) && IsPluginEnabled("SubCentral");
+        public static bool IsSubCentralAvailableAndEnabled
+        {
+            get
+            {
+                if ( mIsSubCentralAvailableAndEnabled == null )
+                {
+                    mIsSubCentralAvailableAndEnabled = Helper.IsAssemblyAvailable( "SubCentral", new Version( 0, 9, 0, 0 ) ) && IsPluginEnabled( "SubCentral" );
+                }
+                return (bool)mIsSubCentralAvailableAndEnabled;
             }
         }
+        private static bool? mIsSubCentralAvailableAndEnabled;
 
         public static bool IsTraktAvailableAndEnabled
         {
@@ -802,6 +837,9 @@ namespace WindowPlugins.GUITVSeries
         {
             WebClient webClient = new WebClient();
             webClient.Headers.Add("user-agent", Settings.UserAgent);
+
+            // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+            ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
 
             try
             {

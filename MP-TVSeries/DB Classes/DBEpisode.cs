@@ -21,6 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,13 +29,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using SQLite.NET;
 using TvDatabase;
 
 namespace WindowPlugins.GUITVSeries
 {
-    //moved to DBOnineEpisodes.cs
-    //public class DBOnlineEpisode : DBTable
     public enum MostRecentType
     {
         Watched,
@@ -156,7 +154,7 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cEpisodeName, "Episode Name");
             s_FieldToDisplayNameMap.Add(cFileDateAdded, "Date Added");
             s_FieldToDisplayNameMap.Add(cFileDateCreated, "Date Created");
-            s_FieldToDisplayNameMap.Add(cAvailableSubtitles, "Subtitles Available");
+            s_FieldToDisplayNameMap.Add(cAvailableSubtitles, "Subtitles");
             s_FieldToDisplayNameMap.Add(cVideoWidth, "Video Width");
             s_FieldToDisplayNameMap.Add(cVideoHeight, "Video Height");
             s_FieldToDisplayNameMap.Add(cVideoAspectRatio, "Video Aspect Ratio");
@@ -603,17 +601,17 @@ namespace WindowPlugins.GUITVSeries
             // Get File Date Added/Created
             GetFileTimeStamps();
 
-            MediaInfoLib.MediaInfo MI = WindowPlugins.GUITVSeries.MediaInfoLib.MediaInfo.GetInstance();
+            MediaInfoLib.MediaInfo MI = MediaInfoLib.MediaInfo.GetInstance();
             
             // MediaInfo Object could not be created
             if (null == MI) return false;
             
             // Check if File Exists and is not an Image type e.g. ISO (we can't extract mediainfo from that)
-            if (System.IO.File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
+            if (File.Exists(this[DBEpisode.cFilename]) && !Helper.IsImageFile(this[DBEpisode.cFilename]))
             {
                 try
                 {
-                    MPTVSeriesLog.Write("Attempting to read Mediainfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.DebugSQL);
+                    MPTVSeriesLog.Write("Attempting to read MediaInfo for ", this[DBEpisode.cFilename].ToString(), MPTVSeriesLog.LogLevel.Debug);
                     
                     // open file in MediaInfo
                     MI.Open(this[DBEpisode.cFilename]);
@@ -652,7 +650,7 @@ namespace WindowPlugins.GUITVSeries
                         this[cTextCount] = MI.SubtitleCount;
                         
                         // check for subtitles in mediainfo                        
-                        this[cAvailableSubtitles] = checkHasSubtitles();
+                        this[cAvailableSubtitles] = CheckHasSubtitles();
                     }
                     else 
                         failed = true;
@@ -747,17 +745,17 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public bool checkHasSubtitles()
+        public bool CheckHasSubtitles()
         {
-            return checkHasSubtitles(true);
+            return CheckHasSubtitles(true);
         }
 
-        public bool checkHasLocalSubtitles()
+        public bool CheckHasLocalSubtitles()
         {
-            return checkHasSubtitles(false);
+            return CheckHasSubtitles(false);
         }
 
-        public bool checkHasSubtitles(bool useMediaInfo)
+        public bool CheckHasSubtitles(bool useMediaInfo)
         {
             if (String.IsNullOrEmpty(this[DBEpisode.cFilename])) return false;
 
@@ -777,22 +775,13 @@ namespace WindowPlugins.GUITVSeries
 
             if (textCount > 0)
                 return true;
-
-            // Read MediaInfo for embedded subtitles
-            /*
-            if (useMediaInfo && !String.IsNullOrEmpty(this["TextCount"]))
-            {
-                if ((int)this["TextCount"] > 0) 
-                    return true;
-            }
-            */
             
-            string filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this[cFilename]);
+            string filenameNoExt = Path.GetFileNameWithoutExtension(this[cFilename]);
             try
             {
-                foreach (string file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
+                foreach (string file in Directory.GetFiles(Path.GetDirectoryName(this[cFilename]), filenameNoExt + "*"))
                 {
-                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    FileInfo fi = new FileInfo(file);
                     if (subTitleExtensions.Contains(fi.Extension.ToLower())) return true;
                 }
             }
@@ -805,12 +794,21 @@ namespace WindowPlugins.GUITVSeries
 
         private bool checkHasSubtitlesFromSubCentral(bool useMediaInfo, int textCount)
         {
+            bool lResult = false;
             MPTVSeriesLog.Write(string.Format("Using SubCentral for checkHasSubtitles(), useMediaInfo = {0}, textCount = {1}", useMediaInfo.ToString(), textCount.ToString()), MPTVSeriesLog.LogLevel.Debug);
             List<FileInfo> fiFiles = new List<FileInfo>();
             fiFiles.Add(new FileInfo(this[DBEpisode.cFilename]));
-            bool result = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles(fiFiles, false, textCount, !useMediaInfo);
-            MPTVSeriesLog.Write(string.Format("SubCentral returned {0}", result.ToString()), MPTVSeriesLog.LogLevel.Debug);
-            return result;
+            try
+            {
+                lResult = SubCentral.Utils.SubCentralUtils.MediaHasSubtitles( fiFiles, false, textCount, !useMediaInfo );
+                MPTVSeriesLog.Write( $"SubCentral returned '{lResult}'", MPTVSeriesLog.LogLevel.Debug );
+            }
+            catch(Exception e)
+            {
+                MPTVSeriesLog.Write( $"Failed to get subtitle information from SubCentral. Exception={e.Message}" );
+            }
+            
+            return lResult;
         }
 
         bool isWritable(FileInfo fileInfo)
@@ -1050,18 +1048,18 @@ namespace WindowPlugins.GUITVSeries
             return resultMsg;
         }
 
-    private static void DeleteFromMPTVDB(string f)
+    private static void DeleteFromMPTVDB(string filename)
     {
       TvBusinessLayer layer = new TvBusinessLayer();
       try
       {
-        layer.GetRecordingByFileName(f).Delete();
-        MPTVSeriesLog.Write(string.Format("Also Deleting line in MP table recording"));
+        layer.GetRecordingByFileName( filename ).Delete();
+        MPTVSeriesLog.Write(string.Format("Also Deleting record in MP table recording"));
       }
       catch (Exception ex)
       {
         // this should succeed only when there is a record in MP database..
-        MPTVSeriesLog.Write(string.Format("Seems no recording line to delete in MPtvDB"));
+        MPTVSeriesLog.Write($"Seems no recording line to delete in MPTvDB, Exception={ex.Message}");
       }
     }
 
@@ -1988,17 +1986,24 @@ namespace WindowPlugins.GUITVSeries
             string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
             string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
-            if (ep[seasonIndex] == 0 && !Settings.isConfig)
+            if ( ep[seasonIndex] == 0 && !Settings.isConfig )
             {
-                if (ep[DBOnlineEpisode.cAirsAfterSeason] != string.Empty && ep[DBOnlineEpisode.cAirsBeforeEpisode] == string.Empty)
+                // Episode is a special
+                // Airs After Season overrides AirsBeforeEpisode and AirsBeforeSeason
+                if ( ep[DBOnlineEpisode.cAirsAfterSeason] > 0 )
                 {
                     return 9999 + ep[episodeIndex];
                 }
                 else
-                    return ((int)ep[DBOnlineEpisode.cAirsBeforeEpisode]) - 0.9 + (((int)ep[episodeIndex]) / 100f) + (ep[DBOnlineEpisode.cAirsBeforeSeason] * 100);
+                {
+                    return ( ( int )ep[DBOnlineEpisode.cAirsBeforeEpisode] ) - 0.9 + ( ( ( int )ep[episodeIndex] ) / 100f ) + ( ep[DBOnlineEpisode.cAirsBeforeSeason] * 100 );
+                }
             }
             else
-                return (double)ep[episodeIndex] + ep[seasonIndex] * 100;
+            {
+                // episode is not a special
+                return ( double )ep[episodeIndex] + ep[seasonIndex] * 100;
+            }
         }
 
         #endregion

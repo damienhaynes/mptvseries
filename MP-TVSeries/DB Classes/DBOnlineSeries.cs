@@ -21,7 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 
@@ -70,7 +69,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const String cRating = "Rating";
         public const String cRatingCount = "RatingCount";
-        
+
         public const String cMyRating = "myRating";
         public const String cMyRatingAt = "myRatingAt";
 
@@ -82,7 +81,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cViewTags = "ViewTags";
 
         public const String cSeriesID = "SeriesID";
-        
+
         public const String cBanner = "banner";
         public const String cLanguage = "language";
         public const String cIMDBID = "IMDB_ID";
@@ -95,8 +94,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cAddedBy = "addedBy";
         public const String cFanart = "fanart";
         public const String cLastUpdated = "lastupdated";
+        public const String cLastUpdatedDetail = "lastupdated_detail";
         public const String cPoster = "poster";
         public const String cTMSWantedOld = "tms_wanted_old"; //wtf is this?
+        public const String cTopSeries = "top_series";
         public const String cAliasNames = "AliasNames";
         public const String cLastEpisodeAirDate = "finale_aired";
         public const String cSlug = "slug";
@@ -116,38 +117,40 @@ namespace WindowPlugins.GUITVSeries
         static DBOnlineSeries() {
             ///////////////////////////////////////////////////
             #region Pretty Names displayed in Configuration Details Tab
-            s_FieldToDisplayNameMap.Add(cID, "Online Series ID");
-            s_FieldToDisplayNameMap.Add(cPrettyName, "Title");
-            s_FieldToDisplayNameMap.Add(cStatus, "Show Status");
-            s_FieldToDisplayNameMap.Add(cGenre, "Genre");
-            s_FieldToDisplayNameMap.Add(cSummary, "Show Overview");            
-            s_FieldToDisplayNameMap.Add(cAirsDay, "Aired Day");
-            s_FieldToDisplayNameMap.Add(cAirsTime, "Aired Time");
-            s_FieldToDisplayNameMap.Add(cSortName, "Sort By");
-            s_FieldToDisplayNameMap.Add(cLanguage, "Language");
-            s_FieldToDisplayNameMap.Add(cIMDBID, "IMDB ID");
-            s_FieldToDisplayNameMap.Add(cTraktID, "Trakt ID");
-            s_FieldToDisplayNameMap.Add(cEpisodeOrders, "Episode Orders");
-            s_FieldToDisplayNameMap.Add(cChosenEpisodeOrder, "Episode Order");
-            s_FieldToDisplayNameMap.Add(cContentRating, "Content Rating");
-            s_FieldToDisplayNameMap.Add(cMyRating, "My Rating");
-            s_FieldToDisplayNameMap.Add(cFirstAired, "First Aired");
-            s_FieldToDisplayNameMap.Add(cEpisodeCount, "Episodes");
-            s_FieldToDisplayNameMap.Add(cEpisodesUnWatched, "Episodes UnWatched");
-            s_FieldToDisplayNameMap.Add(cLastEpisodeAirDate, "Last Episode Air Date");
+            s_FieldToDisplayNameMap.Add( cID, "Online Series ID" );
+            s_FieldToDisplayNameMap.Add( cPrettyName, "Title" );
+            s_FieldToDisplayNameMap.Add( cStatus, "Show Status" );
+            s_FieldToDisplayNameMap.Add( cGenre, "Genre" );
+            s_FieldToDisplayNameMap.Add( cSummary, "Show Overview" );
+            s_FieldToDisplayNameMap.Add( cAirsDay, "Aired Day" );
+            s_FieldToDisplayNameMap.Add( cAirsTime, "Aired Time" );
+            s_FieldToDisplayNameMap.Add( cSortName, "Sort By" );
+            s_FieldToDisplayNameMap.Add( cLanguage, "Language (Override)" );
+            s_FieldToDisplayNameMap.Add( cIMDBID, "IMDb ID" );
+            s_FieldToDisplayNameMap.Add( cTraktID, "Trakt ID" );
+            s_FieldToDisplayNameMap.Add( cEpisodeOrders, "Episode Orders" );
+            s_FieldToDisplayNameMap.Add( cChosenEpisodeOrder, "Episode Order" );
+            s_FieldToDisplayNameMap.Add( cContentRating, "Content Rating" );
+            s_FieldToDisplayNameMap.Add( cMyRating, "My Rating" );
+            s_FieldToDisplayNameMap.Add( cFirstAired, "First Aired" );
+            s_FieldToDisplayNameMap.Add( cEpisodeCount, "Episodes" );
+            s_FieldToDisplayNameMap.Add( cEpisodesUnWatched, "Episodes UnWatched" );
+            s_FieldToDisplayNameMap.Add( cLastEpisodeAirDate, "Last Aired" );
+            s_FieldToDisplayNameMap.Add( cLastUpdated, "Last Updated (UTC)" );
+            s_FieldToDisplayNameMap.Add( cOriginalName, "English Name" );
             #endregion
             ///////////////////////////////////////////////////
 
             //////////////////////////////////////////////////
             #region Local DB field mapping to Online DB
-            s_OnlineToFieldMap.Add("id", cID);            
-            s_OnlineToFieldMap.Add("SeriesName", cPrettyName);
-            s_OnlineToFieldMap.Add("Status", cStatus);
-            s_OnlineToFieldMap.Add("Genre", cGenre);
-            s_OnlineToFieldMap.Add("Overview", cSummary);
-            s_OnlineToFieldMap.Add("Airs_DayOfWeek", cAirsDay);
-            s_OnlineToFieldMap.Add("Airs_Time", cAirsTime);
-            s_OnlineToFieldMap.Add("SortName", cSortName);
+            s_OnlineToFieldMap.Add( "id", cID );
+            s_OnlineToFieldMap.Add( "SeriesName", cPrettyName );
+            s_OnlineToFieldMap.Add( "Status", cStatus );
+            s_OnlineToFieldMap.Add( "Genre", cGenre );
+            s_OnlineToFieldMap.Add( "Overview", cSummary );
+            s_OnlineToFieldMap.Add( "Airs_DayOfWeek", cAirsDay );
+            s_OnlineToFieldMap.Add( "Airs_Time", cAirsTime );
+            s_OnlineToFieldMap.Add( "SortName", cSortName );
             #endregion
             //////////////////////////////////////////////////
 
@@ -157,142 +160,143 @@ namespace WindowPlugins.GUITVSeries
 
         // returns a list of all series with information stored in the database. 
         public static List<DBOnlineSeries> getAllSeries() {
-            List<DBValue> seriesIDs = DBOnlineSeries.GetSingleField(DBOnlineSeries.cID, new SQLCondition(), new DBOnlineSeries());
+            List<DBValue> seriesIDs = DBOnlineSeries.GetSingleField( DBOnlineSeries.cID, new SQLCondition(), new DBOnlineSeries() );
             List<DBOnlineSeries> rtn = new List<DBOnlineSeries>();
 
-            foreach (DBValue currSeriesID in seriesIDs) {
-                rtn.Add(new DBOnlineSeries(currSeriesID));
+            foreach ( DBValue currSeriesID in seriesIDs ) {
+                rtn.Add( new DBOnlineSeries( currSeriesID ) );
             }
 
             return rtn;
         }
 
-
         public DBOnlineSeries()
-            : base(cTableName)
+            : base( cTableName )
         {
             InitColumns();
             InitValues();
         }
 
-        public DBOnlineSeries(int nSeriesID)
-            : base(cTableName)
+        public DBOnlineSeries( int nSeriesID )
+            : base( cTableName )
         {
             InitColumns();
-            if (!ReadPrimary(nSeriesID))
+            if ( !ReadPrimary( nSeriesID ) )
                 InitValues();
         }
 
         private void InitColumns()
         {
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
-            base.AddColumn(cID, new DBField(DBField.cTypeInt, true));
-            base.AddColumn(cPrettyName, new DBField(DBField.cTypeString));
-            base.AddColumn(cSortName, new DBField(DBField.cTypeString));
-            base.AddColumn(cOriginalName, new DBField(DBField.cTypeString));
-            base.AddColumn(cStatus, new DBField(DBField.cTypeString));
-            base.AddColumn(cGenre, new DBField(DBField.cTypeString));
-            base.AddColumn(cBannerFileNames, new DBField(DBField.cTypeString));
-            base.AddColumn(cCurrentBannerFileName, new DBField(DBField.cTypeString));
-            base.AddColumn(cPosterFileNames, new DBField(DBField.cTypeString));
-            base.AddColumn(cCurrentPosterFileName, new DBField(DBField.cTypeString));
-            base.AddColumn(cSummary, new DBField(DBField.cTypeString));
-            base.AddColumn(cOnlineDataImported, new DBField(DBField.cTypeInt));
-            base.AddColumn(cAirsDay, new DBField(DBField.cTypeString));
-            base.AddColumn(cAirsTime, new DBField(DBField.cTypeString));
-            base.AddColumn(cActors, new DBField(DBField.cTypeString));
-            base.AddColumn(cEpisodeOrders, new DBField(DBField.cType.String));
-            base.AddColumn(cChosenEpisodeOrder, new DBField(DBField.cType.String));
-            base.AddColumn(cEpisodeSortOrder, new DBField(DBField.cType.String));
-            base.AddColumn(cBannersDownloaded, new DBField(DBField.cTypeInt));
-            base.AddColumn(cHasLocalFiles, new DBField(DBField.cTypeInt));
-            base.AddColumn(cHasLocalFilesTemp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cGetEpisodesTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cUpdateBannersTimeStamp, new DBField(DBField.cTypeInt));           
-            base.AddColumn(cWatchedFileTimeStamp, new DBField(DBField.cTypeInt));
-            base.AddColumn(cUnwatchedItems, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodeCount, new DBField(DBField.cTypeInt));
-            base.AddColumn(cEpisodesUnWatched, new DBField(DBField.cTypeInt));
-            base.AddColumn(cRating, new DBField(DBField.cTypeString));
-            base.AddColumn(cRatingCount, new DBField(DBField.cTypeString));
-            base.AddColumn(cMyRating, new DBField(DBField.cTypeString));
-            base.AddColumn(cMyRatingAt, new DBField(DBField.cTypeString));
-            base.AddColumn(cViewTags, new DBField(DBField.cTypeString));
-            base.AddColumn(cTraktIgnore, new DBField(DBField.cTypeInt));
+            base.AddColumn( cID, new DBField( DBField.cTypeInt, true ) );
+            base.AddColumn( cPrettyName, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cSortName, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cOriginalName, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cStatus, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cGenre, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cBannerFileNames, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cCurrentBannerFileName, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cPosterFileNames, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cCurrentPosterFileName, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cSummary, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cOnlineDataImported, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cAirsDay, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cAirsTime, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cActors, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cEpisodeOrders, new DBField( DBField.cType.String ) );
+            base.AddColumn( cChosenEpisodeOrder, new DBField( DBField.cType.String ) );
+            base.AddColumn( cEpisodeSortOrder, new DBField( DBField.cType.String ) );
+            base.AddColumn( cBannersDownloaded, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cHasLocalFiles, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cHasLocalFilesTemp, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cGetEpisodesTimeStamp, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cUpdateBannersTimeStamp, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cWatchedFileTimeStamp, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cUnwatchedItems, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cEpisodeCount, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cEpisodesUnWatched, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cRating, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cRatingCount, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cMyRating, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cMyRatingAt, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cViewTags, new DBField( DBField.cTypeString ) );
+            base.AddColumn( cTraktIgnore, new DBField( DBField.cTypeInt ) );
 
-            foreach (KeyValuePair<String, DBField> pair in m_fields)
+            foreach ( KeyValuePair<String, DBField> pair in m_fields )
             {
-                if (!s_fields.ContainsKey(pair.Key))
-                    s_fields.Add(pair.Key, pair.Value);
+                if ( !s_fields.ContainsKey( pair.Key ) )
+                    s_fields.Add( pair.Key, pair.Value );
             }
         }
 
-        public override bool AddColumn(string sName, DBField field)
+        public override bool AddColumn( string sName, DBField field )
         {
-            if (!s_fields.ContainsKey(sName))
+            if ( !s_fields.ContainsKey( sName ) )
             {
-                s_fields.Add(sName, field);
-                return base.AddColumn(sName, field);
+                s_fields.Add( sName, field );
+                return base.AddColumn( sName, field );
             }
             else
             {
                 // we globally know about this key already, so don't call the base
-                if (!m_fields.ContainsKey(sName))
-                    m_fields.Add(sName, field);
+                if ( !m_fields.ContainsKey( sName ) )
+                    m_fields.Add( sName, field );
                 return false;
             }
         }
 
-        public static new String Q(String sField)
+        public static new String Q( String sField )
         {
             return cTableName + "." + sField;
         }
 
-        public static void Clear(SQLCondition conditions)
+        public static void Clear( SQLCondition conditions )
         {
-            Clear(new DBOnlineSeries(), conditions);
+            Clear( new DBOnlineSeries(), conditions );
         }
 
         public override DBValue this[String fieldName]
         {
             get
             {
-                switch (fieldName)
-                {                    
-                        // if the user choose a different language for the import, we don't have this as the prettyname
+                switch ( fieldName )
+                {
+                    // if the user chooses a different language for the import, we don't have this as the prettyname
                     case DBOnlineSeries.cOriginalName:
                         string origLanguage = "en"; // English (original)
                         DBValue currentTitle = base[DBOnlineSeries.cPrettyName];
 
-                        if (DBOption.GetOptions(DBOption.cOnlineLanguage) == origLanguage)
+                        if ( DBOption.GetOptions( DBOption.cOnlineLanguage ) == "en" && !DBOption.GetOptions( DBOption.cOverrideLanguage ) )
+                        {
                             return base[DBOnlineSeries.cPrettyName];
+                        }
                         else
                         {
-                            if (base[DBOnlineSeries.cOriginalName].ToString().Length > 0)
+                            if ( base[DBOnlineSeries.cOriginalName].ToString().Length > 0 )
                                 return base[DBOnlineSeries.cOriginalName];
                             else
                             {
                                 // we need to get it
-                                MPTVSeriesLog.Write("Retrieving Original Series Name for '{0}'", currentTitle);
-                                UpdateSeries origParser = new UpdateSeries(base[DBOnlineSeries.cID], origLanguage);
-                                if (origParser != null && origParser.Results.Count == 1)
+                                MPTVSeriesLog.Write( "Retrieving Original Series Name for '{0}'", currentTitle );
+                                UpdateSeries origParser = new UpdateSeries( base[DBOnlineSeries.cID], origLanguage, true );
+                                if ( origParser != null && origParser.Results.Count == 1 )
                                 {
                                     DBValue origTitle = origParser.Results[0][DBOnlineSeries.cPrettyName];
 
                                     // there may not be an english title, so localized title is the original name
-                                    origTitle = string.IsNullOrEmpty(origTitle) ? base[DBOnlineSeries.cPrettyName] : origTitle;
+                                    origTitle = string.IsNullOrEmpty( origTitle ) ? base[DBOnlineSeries.cPrettyName] : origTitle;
 
                                     // save for next time
                                     base[DBOnlineSeries.cOriginalName] = origTitle;
                                     Commit();
 
-                                    MPTVSeriesLog.Write("Original Series Name retrieved: '{0}'", origTitle);
+                                    MPTVSeriesLog.Write( "Original Series Name retrieved: '{0}'", origTitle );
                                     return origTitle;
                                 }
                                 else
                                 {
                                     // something wrong
-                                    MPTVSeriesLog.Write("Original Series Name could not be retrieved");
+                                    MPTVSeriesLog.Write( "Original Series Name could not be retrieved" );
                                     return base[DBOnlineSeries.cPrettyName];
                                 }
                             }
@@ -300,7 +304,7 @@ namespace WindowPlugins.GUITVSeries
 
                     case cSummary:
                         DBValue summary = base[cSummary];
-                        if (string.IsNullOrEmpty(summary))
+                        if ( string.IsNullOrEmpty( summary ) )
                             summary = Translation.SummaryNotAvailable;
                         return summary;
 

@@ -21,13 +21,13 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using MediaPortal.GUI.Library;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using MediaPortal.GUI.Library;
-using Action = MediaPortal.GUI.Library.Action;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
+using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -97,7 +97,7 @@ namespace WindowPlugins.GUITVSeries
         int seriesID = -1;
         BackgroundWorker loadingWorker = null; // to fetch list and thumbnails
         public static BackgroundWorker downloadingWorker = new BackgroundWorker(); // to do the actual downloading
-        static Queue<DBFanart> toDownload = new Queue<DBFanart>();
+        static Queue<DBFanart> DownloadItems = new Queue<DBFanart>();
         private object locker = new object();
         int m_PreviousSelectedItem = -1;
         private View currentView = View.LargeIcons;
@@ -140,74 +140,58 @@ namespace WindowPlugins.GUITVSeries
         {            
             do
             {
-                DBFanart fanart;
+                DBFanart lFanart;
                 setDownloadStatus();
-                lock (toDownload)
-                { 
-                    fanart = toDownload.Dequeue();                     
+                lock (DownloadItems)
+                {
+                    lFanart = DownloadItems.Dequeue();
                 }
 
-                bool bDownloadSuccess = true;
-                // ZF: async download of the fanart. Cancelling now works
-                if (fanart != null && !fanart.isAvailableLocally)
+                bool lDownloadSuccess = true;
+                
+                if (lFanart != null && !lFanart.IsAvailableLocally)
                 {
-                    string filename = fanart[DBFanart.cBannerPath];
-                    string localFilename = string.Empty;
-                    filename = filename.Replace("/", @"\");
-
-                    // we depend on fanart names containing the series ID
-                    // if it does not exist, prefix the existing one with it
-                    if (!filename.Contains(fanart[DBFanart.cSeriesID]))
-                    {
-                        try
-                        {
-                            // banner path looks like fanart\original\5b64ef95b86b2.jpg
-                            string[] filePaths = filename.Split('\\');
-                            localFilename = filename.Replace(filePaths[2], $"{fanart[DBFanart.cSeriesID]}-{filePaths[2]}");
-                        }
-                        catch
-                        {
-                            MPTVSeriesLog.Write("Error normalising fanart path");
-                        }
-                    }
-                    else
-                        localFilename = filename;
-
-                    string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + filename;
-                    int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, localFilename);
-                    while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID))
+                    // lets put fanart in expected location fanart\original\<seriesID>*.jpg
+                    string lLocalFilename = Fanart.GetLocalPath( lFanart );
+                    
+                    string lFullUrl = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + lFanart[DBFanart.cBannerPath];
+                    int lDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(lFullUrl, Settings.Path.fanart, lLocalFilename);
+                    while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(lDownloadGUID))
                     {
                         if (downloadingWorker.CancellationPending) 
                         {
                             // Cancel, clean up pending download
-                            bDownloadSuccess = false;
-                            Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                            MPTVSeriesLog.Write("Cancel Fanart download: " + fanart.FullLocalPath);
+                            lDownloadSuccess = false;
+                            Online_Parsing_Classes.OnlineAPI.CancelFileDownload(lDownloadGUID);
+                            MPTVSeriesLog.Write("Cancel Fanart download: " + lFanart.FullLocalPath);
                         }
                         System.Windows.Forms.Application.DoEvents();
                     }
+
                     // Download is either completed or canceled
-                    if (bDownloadSuccess) 
+                    if ( lDownloadSuccess )
                     {
-                        fanart[DBFanart.cLocalPath] = localFilename.Replace(Settings.GetPath(Settings.Path.fanart), string.Empty);
-                        fanart.Commit();
-                        MPTVSeriesLog.Write("Successfully downloaded Fanart: " + fanart.FullLocalPath);
-                        downloadingWorker.ReportProgress(0, fanart[DBFanart.cIndex]);                      
+                        lFanart[DBFanart.cLocalPath] = lLocalFilename.Replace( Settings.GetPath( Settings.Path.fanart ), string.Empty );
+                        lFanart.Commit();
+                        MPTVSeriesLog.Write( "Successfully downloaded Fanart: " + lFanart.FullLocalPath );
+                        downloadingWorker.ReportProgress( 0, lFanart[DBFanart.cIndex] );
                     }
-                    else 
-                        MPTVSeriesLog.Write("Error downloading Fanart: " + fanart.FullLocalPath);
+                    else
+                    {
+                        MPTVSeriesLog.Write( "Error downloading Fanart: " + lFanart.FullLocalPath );
+                    }
                 }
             } 
-            while (toDownload.Count > 0 && !downloadingWorker.CancellationPending);
+            while (DownloadItems.Count > 0 && !downloadingWorker.CancellationPending);
         }
 
         static void setDownloadStatus()
         {
-            lock (toDownload)
+            lock (DownloadItems)
             {
-                if (toDownload.Count > 0)
+                if (DownloadItems.Count > 0)
                 {
-                    TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", string.Format(Translation.FanDownloadingStatus, toDownload.Count));                    
+                    TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", string.Format(Translation.FanDownloadingStatus, DownloadItems.Count));                    
                 }
                 else                
                     TVSeriesPlugin.setGUIProperty("FanArt.DownloadingStatus", " ");
@@ -249,7 +233,7 @@ namespace WindowPlugins.GUITVSeries
         {            
             AllocResources();
 
-            MediaPortal.GUI.Library.GUIPropertyManager.SetProperty("#currentmodule", Translation.FanArt);
+            GUIPropertyManager.SetProperty("#currentmodule", Translation.FanArt);
 
             loadingWorker = new BackgroundWorker();            
             loadingWorker.WorkerReportsProgress = true;
@@ -294,8 +278,7 @@ namespace WindowPlugins.GUITVSeries
             fetchList(SeriesID);
             loadingWorker.RunWorkerAsync(SeriesID);            
 
-            downloadingWorker.ProgressChanged += new ProgressChangedEventHandler(downloadingWorker_ProgressChanged);            
-            
+            downloadingWorker.ProgressChanged += new ProgressChangedEventHandler(downloadingWorker_ProgressChanged);
         }
 
         protected bool AllowView(View view)
@@ -462,7 +445,7 @@ namespace WindowPlugins.GUITVSeries
                 if (DBOption.GetOptions(DBOption.cFanartRandom))
                 {
                     // if random it doesnt make sense to offer an option to explicitally use an available fanart
-                    if (!selectedFanart.isAvailableLocally)
+                    if (!selectedFanart.IsAvailableLocally)
                     {
                         pItem = new GUIListItem(Translation.FanArtGetAndUse);
                         dlg.Add(pItem);
@@ -472,13 +455,13 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // if we are not random, we can choose available fanart
-                    if (selectedFanart.isAvailableLocally && !selectedFanart.Disabled)
+                    if (selectedFanart.IsAvailableLocally && !selectedFanart.Disabled)
                     {
                         pItem = new GUIListItem(Translation.FanArtUse);
                         dlg.Add(pItem);
                         pItem.ItemId = (int)menuAction.use;
                     }
-                    else if (!selectedFanart.isAvailableLocally)
+                    else if (!selectedFanart.IsAvailableLocally)
                     {
                         pItem = new GUIListItem(Translation.FanArtGet);
                         dlg.Add(pItem);
@@ -486,7 +469,7 @@ namespace WindowPlugins.GUITVSeries
                     }
                 }
 
-                if (selectedFanart.isAvailableLocally)
+                if (selectedFanart.IsAvailableLocally)
                 {
                     if (selectedFanart.Disabled)
                     {
@@ -529,7 +512,7 @@ namespace WindowPlugins.GUITVSeries
                 switch (dlg.SelectedId) // what was chosen?
                 {
                     case (int)menuAction.delete:
-                        if (selectedFanart.isAvailableLocally)
+                        if (selectedFanart.IsAvailableLocally)
                         {                            
                             selectedFanart.Delete();  
                             // and reinit the display to get rid of it
@@ -538,11 +521,11 @@ namespace WindowPlugins.GUITVSeries
                         }
                         break;
                     case (int)menuAction.download:
-                        if (!selectedFanart.isAvailableLocally)
+                        if (!selectedFanart.IsAvailableLocally)
                             downloadFanart(selectedFanart);                        
                         break;
                     case (int)menuAction.use:
-                        if (selectedFanart.isAvailableLocally)
+                        if (selectedFanart.IsAvailableLocally)
                         {                           
                             TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);
                             SetFacadeItemAsChosen(m_Facade.SelectedListItemIndex);
@@ -874,7 +857,7 @@ namespace WindowPlugins.GUITVSeries
                 DBFanart chosen;
                 if ((chosen = this.m_Facade.SelectedListItem.TVTag as DBFanart) != null)
                 {
-                    if (chosen.isAvailableLocally && !chosen.Disabled)
+                    if (chosen.IsAvailableLocally && !chosen.Disabled)
                     {                        
                         TVSeriesPlugin.setGUIProperty("FanArt.SelectedFanartIsChosen", Translation.Yes);                        
                         SetFacadeItemAsChosen(m_Facade.SelectedListItemIndex);
@@ -885,7 +868,7 @@ namespace WindowPlugins.GUITVSeries
                         Fanart.RefreshFanart(SeriesID);                        
 
                     }
-                    else if (!chosen.isAvailableLocally)
+                    else if (!chosen.IsAvailableLocally)
                     {
                         downloadFanart(chosen);
                     }
@@ -919,9 +902,9 @@ namespace WindowPlugins.GUITVSeries
         void downloadFanart(DBFanart fanart)
         {
             // we need to get it, let's queue them up and download in the background
-            lock (toDownload)
+            lock (DownloadItems)
             {
-                toDownload.Enqueue(fanart);
+                DownloadItems.Enqueue(fanart);
             }
             setDownloadStatus();
             // don't return, user can queue up multiple fanart to download
@@ -974,7 +957,7 @@ namespace WindowPlugins.GUITVSeries
                 int i = 0;
                 foreach (DBFanart fanart in onlineFanart)
                 {                    
-                    if(fanart.isAvailableLocally)
+                    if(fanart.IsAvailableLocally)
                     {
                         if (fanart.Disabled)
                             item = new GUIListItem(Translation.FanartDisableLabel);
@@ -992,55 +975,32 @@ namespace WindowPlugins.GUITVSeries
                         item = new GUIListItem(Translation.FanArtOnline);
                         item.IsRemote = false;
                         item.IsDownloading = true;
-                    }                    
-                    string filename = fanart[DBFanart.cThumbnailPath];
-                    string localFilename = string.Empty;
-                    filename = filename.Replace("/", @"\");
-
-                    // we depend on fanart names containing the series ID
-                    // if it does not exist, prefix the existing one with it
-                    if (!filename.Contains(fanart[DBFanart.cSeriesID]))
-                    {
-                        try
-                        {
-                            // banner path looks like _cache\fanart\original\5b64ef95b86b2.jpg
-                            string[] filePaths = filename.Split('\\');
-                            localFilename = filename.Replace(filePaths[3], $"{fanart[DBFanart.cSeriesID]}-{filePaths[3]}");
-
-                            // update path
-                            fanart[DBFanart.cThumbnailPath] = localFilename;
-                            fanart.Commit();
-                        }
-                        catch
-                        {
-                            MPTVSeriesLog.Write("Error normalising fanart thumbnail path");
-                        }
                     }
-                    else
-                        localFilename = filename;
 
+                    // lets put the thumbnail in expected path _cache\fanart\original\<seriesID>*.jpg
+                    string lLocalThumbPath = Fanart.GetLocalThumbPath( fanart );
 
-                    string fullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + filename;
+                    string lFullURL = (DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : (DBOnlineMirror.Banners + "/")) + fanart[DBFanart.cThumbnailPath];
 
-                    bool bDownloadSuccess = true;
-                    int nDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(fullURL, Settings.Path.fanart, localFilename);
-                    while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(nDownloadGUID))
+                    bool lDownloadSuccess = true;
+                    int lDownloadGUID = Online_Parsing_Classes.OnlineAPI.StartFileDownload(lFullURL, Settings.Path.fanart, lLocalThumbPath);
+                    while (Online_Parsing_Classes.OnlineAPI.CheckFileDownload(lDownloadGUID))
                     {
                         if (loadingWorker.CancellationPending)
                         {
-                            // ZF: Cancel, clean up pending download
-                            bDownloadSuccess = false;
-                            Online_Parsing_Classes.OnlineAPI.CancelFileDownload(nDownloadGUID);
-                            MPTVSeriesLog.Write("Cancelling fanart thumbnail download: " + localFilename);
+                            // Cancel, clean up pending download
+                            lDownloadSuccess = false;
+                            Online_Parsing_Classes.OnlineAPI.CancelFileDownload(lDownloadGUID);
+                            MPTVSeriesLog.Write("Cancelling fanart thumbnail download for " + lLocalThumbPath);
                         }
                         System.Windows.Forms.Application.DoEvents();
                     }
 
-                    // ZF: should be downloaded now
-                    localFilename = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), localFilename);
-                    if (bDownloadSuccess)
+                    // should be downloaded now
+                    lLocalThumbPath = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), lLocalThumbPath);
+                    if (lDownloadSuccess)
                     {
-                        item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(localFilename, new Size(0, 0), false);
+                        item.IconImage = item.IconImageBig = ImageAllocator.GetOtherImage(lLocalThumbPath, new Size(0, 0), false);
                     }
                     item.TVTag = fanart;
                     
@@ -1065,7 +1025,7 @@ namespace WindowPlugins.GUITVSeries
 
         void setFanartPreviewBackground(DBFanart fanart)
         {
-            string fanartInfo = fanart.isAvailableLocally ? Translation.FanArtLocal : Translation.FanArtOnline;
+            string fanartInfo = fanart.IsAvailableLocally ? Translation.FanArtLocal : Translation.FanArtOnline;
             fanartInfo += Environment.NewLine;
 
             foreach (KeyValuePair<string, DBField> kv in fanart.m_fields)
@@ -1098,7 +1058,7 @@ namespace WindowPlugins.GUITVSeries
             
             lock (locker)
             {
-                if (fanart.isAvailableLocally)
+                if (fanart.IsAvailableLocally)
                 {
                     // Ensure Fanart on Disk is valid as well
                     if (ImageAllocator.LoadImageFastFromFile(fanart.FullLocalPath) == null)
@@ -1110,8 +1070,8 @@ namespace WindowPlugins.GUITVSeries
                     }                    
                 
                     // Should be safe to assign fullsize fanart if available
-                    preview = fanart.isAvailableLocally ?
-                              ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(System.Drawing.Size), false) :
+                    preview = fanart.IsAvailableLocally ?
+                              ImageAllocator.GetOtherImage(fanart.FullLocalPath, default(Size), false) :
                               m_Facade.SelectedListItem.IconImageBig;
                 }
                 else
