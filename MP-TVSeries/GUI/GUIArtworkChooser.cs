@@ -313,6 +313,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
+
+                // update the main GUI property so affect is immediate on exit
+                GUIPropertyManager.SetProperty( "#TVSeries.SeriesPoster", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
@@ -360,6 +363,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
+
+                // update the main GUI property so affect is immediate on exit
+                GUIPropertyManager.SetProperty( "#TVSeries.SeasonPoster", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
@@ -407,6 +413,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
+
+                // update the main GUI property so affect is immediate on exit
+                GUIPropertyManager.SetProperty( "#TVSeries.SeriesBanner", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
