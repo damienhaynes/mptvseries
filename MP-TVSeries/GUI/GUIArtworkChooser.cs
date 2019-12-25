@@ -1176,6 +1176,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 CurrentLayout = ( Layout )lDialog.SelectedLabel;
                 Facade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
+                GUIControl.FocusControl( GetID, Facade.GetID );
                 GUIControl.SetControlLabel( GetID, ButtonLayouts.GetID, GetLayoutTranslation( CurrentLayout ) );
             }
         }
