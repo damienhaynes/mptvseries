@@ -460,6 +460,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lOldDefault.Label2 = Translation.FanArtLocal;
                 lOldDefault.IsPlayed = false;
                 ( lOldDefault.Item as TvdbArt ).IsDefault = false;
+                lArtwork.Fanart.Chosen = false;
 
                 // update new art to default and commit
                 lArtwork.IsDefault = true;
