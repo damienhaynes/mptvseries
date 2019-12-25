@@ -1008,15 +1008,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                     lSelectedIndex = Facade.Count - 1;
             }
 
+            // Set Facade Layout
+            Facade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
+            GUIControl.FocusControl( GetID, Facade.GetID );
+
             // Set the selected item based on current
             Facade.SelectedListItemIndex = lSelectedIndex;
             DefaultArtIndex = lSelectedIndex;
-
-            // Set Facade Layout
-            Facade.CurrentLayout = ( GUIFacadeControl.Layout )CurrentLayout;
-
-            GUIControl.FocusControl( GetID, Facade.GetID );
-
+            
             // Download artwork thumbs async and set to facade
             GetImages( aArtwork );
         }
@@ -1244,7 +1243,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                     if ( aEventArgs.PropertyName == "LocalThumbPath" )
                     {
-                        SetImageToGui( lArtwork.LocalThumbPath );
+                        SetImageToGui( lArtwork );
                     }
                     else if ( aEventArgs.PropertyName == "DownloadProgress" )
                     {
@@ -1267,9 +1266,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 };
             }
         }
-        protected object _Item;
+        private object _Item;
 
-        protected void UpdateSelectedItemSkinProperties( TvdbArt aArtwork )
+        private int GetCurrentFacade( TvdbArt aArtwork )
         {
             int lFacadeId = 0;
             switch ( aArtwork.Type )
@@ -1287,6 +1286,13 @@ namespace WindowPlugins.GUITVSeries.GUI
                     break;
             }
 
+            return lFacadeId;
+        }
+
+        private void UpdateSelectedItemSkinProperties( TvdbArt aArtwork )
+        {
+            int lFacadeId = GetCurrentFacade( aArtwork );
+
             var lSelectedItem = GUIControl.GetSelectedListItem( GUIWindowManager.ActiveWindow, lFacadeId ) as GUIArtworkListItem;
             if ( lSelectedItem != null && lSelectedItem.Item == this.Item )
             {
@@ -1295,7 +1301,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
 
-        protected void SetArtworkAsLocal(TvdbArt aArtwork)
+        private void SetArtworkAsLocal(TvdbArt aArtwork)
         {
             aArtwork.IsLocal = true;
 
@@ -1342,28 +1348,37 @@ namespace WindowPlugins.GUITVSeries.GUI
         /// <summary>
         /// Update the facade when art thumbnail is downloaded/available
         /// </summary>
-        protected void SetImageToGui( string aImageFilePath )
+        private void SetImageToGui( TvdbArt aArtwork )
         {
-            if ( string.IsNullOrEmpty( aImageFilePath ) ) return;
+            if ( string.IsNullOrEmpty( aArtwork.LocalThumbPath ) ) return;
 
-            string lTexture = GetTextureFromFile( aImageFilePath );
+            string lTexture = GetTextureFromFile( aArtwork.LocalThumbPath );
 
-            if ( GUITextureManager.LoadFromMemory( ImageFast.FromFile( aImageFilePath ), lTexture, 0, 0, 0 ) > 0 )
+            if ( GUITextureManager.LoadFromMemory( ImageFast.FromFile( aArtwork.LocalThumbPath ), lTexture, 0, 0, 0 ) > 0 )
             {
                 ThumbnailImage = lTexture;
                 IconImage = lTexture;
                 IconImageBig = lTexture;
             }
 
-            // if selected and GUIArtworkChooser is the current window force an update of thumbnail
+            // if the selected item is the item with the new image added, then force an update of thumbnail
             var lArtworkWindow = GUIWindowManager.GetWindow( GUIWindowManager.ActiveWindow ) as GUIArtworkChooser;
-            if ( lArtworkWindow != null )
+            if ( lArtworkWindow == null ) return;
+
+            int lFacadeId = GetCurrentFacade( aArtwork );
+            int lSelectedItemIndex = ( lArtworkWindow.GetControl( lFacadeId ) as GUIFacadeControl ).SelectedListItemIndex;
+
+            GUIListItem lSelectedItem = GUIControl.GetSelectedListItem( GUIWindowManager.ActiveWindow, lFacadeId );
+            if ( lSelectedItem == this )
             {
-                //GUIListItem lSelectedItem = GUIControl.GetSelectedListItem( 9817, 50 );
-                //if ( lSelectedItem == this )
-                //{
-                //    GUIWindowManager.SendThreadMessage( new GUIMessage( GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, GUIWindowManager.ActiveWindow, 0, 50, ItemId, 0, null ) );
-                //}
+                GUIWindowManager.SendThreadMessage( 
+                    new GUIMessage( GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, 
+                                    GUIWindowManager.ActiveWindow, 
+                                    0, 
+                                    lFacadeId,
+                                    lSelectedItemIndex, 
+                                    0, 
+                                    null ) );
             }
         }
 
