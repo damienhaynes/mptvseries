@@ -3111,7 +3111,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
  If have .dll extension used like MP plugin configuration</Description>
         </SectionParam>
         <SectionParam Name="Online Screenshots">
-          <Value />
+          <Value>https://www.team-mediaportal.com/media/com_mtree/images/listings/o/148.jpg;https://www.team-mediaportal.com/media/com_mtree/images/listings/o/149.jpg</Value>
           <ValueType>String</ValueType>
           <Description>Online stored screenshot urls separated by ; </Description>
         </SectionParam>
