@@ -3069,7 +3069,7 @@ public class Script
       <Major>4</Major>
       <Minor>3</Minor>
       <Build>3</Build>
-      <Revision>10</Revision>
+      <Revision>11</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
@@ -3086,9 +3086,9 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
 * Handle bad API responses from TVDb API v1. Added workarounds to various issues recently introduced to get missing data and images;
 * Various fixes and improvements to the Configuration UI;
 * Updated Titan skin files.</VersionDescription>
-    <DevelopmentStatus>Beta</DevelopmentStatus>
+    <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/damienhaynes/mptvseries/releases/download/4.3.3-Beta/MP-TVSeries-4.3.3.10-Beta.mpe1</OnlineLocation>
-    <ReleaseDate>2019-12-22T15:25:06</ReleaseDate>
+    <ReleaseDate>2019-12-28T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>

@@ -443,7 +443,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( lArtwork.IsDefault ) return;
 
             // we should have it but just in case
-            if ( lArtwork.Fanart == null)
+            if ( lArtwork.Fanart == null && lArtwork.Id != 0 )
             {
                 var lFanart = new DBFanart( lArtwork.Id );
                 lFanart[DBFanart.cBannerType] = "fanart";
@@ -896,6 +896,33 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                         GetFanart( lBanners, lDBFanarts, ref lArtwork );
                     }
+
+                    //// check if there are any fanarts on disk that are not online/in-database
+                    //string lFanartFolder = Path.Combine( Settings.GetPath( Settings.Path.fanart ), @"fanart\original" );
+                    //if ( Directory.Exists( lFanartFolder ) )
+                    //{
+                    //    try
+                    //    {
+                    //        uint i = 0;
+                    //        var lLocalFanartsOnDisk = Directory.GetFiles( lFanartFolder, $"{ArtworkParams.SeriesId}*.jpg", SearchOption.AllDirectories );
+                    //        foreach (var fanart in lLocalFanartsOnDisk)
+                    //        {
+                    //            var lfanart = new TvdbArt();
+                    //            lfanart.IsLocal = true;
+                    //            lfanart.LocalPath = fanart;
+                    //            lfanart.Series = ArtworkParams.Series;
+                    //            lfanart.Id = (uint)ArtworkParams.SeriesId + i++;
+                    //            lfanart.Type = ArtworkType.SeriesFanart;
+                                
+                    //            if ( !lArtwork.Contains( lfanart ) )
+                    //                lArtwork.Add( lfanart );
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        MPTVSeriesLog.Write( $"Error reading local fanarts on disk, Exception={ex.Message}" );
+                    //    }
+                    //}
 
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Votes, SortingDirections.Descending ) );
                     return lArtwork;
@@ -1473,7 +1500,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( ( Object )p == null )
                 return false;
 
-            return ( OnlinePath == p.OnlinePath );
+            return ( OnlinePath == p.OnlinePath || LocalPath == p.LocalPath );
         }
 
         public bool Equals( TvdbArt a )
@@ -1481,7 +1508,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( ( object )a == null )
                 return false;
 
-            return ( OnlinePath == a.OnlinePath );
+            return ( OnlinePath == a.OnlinePath || LocalPath == a.LocalPath );
         }
 
         public static bool operator ==( TvdbArt a, TvdbArt b )
@@ -1492,7 +1519,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( ( object )a == null || ( object )b == null )
                 return false;
 
-            return a.OnlinePath == b.OnlinePath;
+            return a.OnlinePath == b.OnlinePath || a.LocalPath == b.LocalPath;
         }
 
         public static bool operator !=( TvdbArt a, TvdbArt b )
