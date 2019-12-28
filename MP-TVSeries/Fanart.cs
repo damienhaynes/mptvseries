@@ -96,7 +96,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public System.Drawing.Color[] Colors
+        public Color[] Colors
         {
             get
             {
@@ -111,7 +111,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public static string RGBColorToHex(System.Drawing.Color color)
+        public static string RGBColorToHex(Color color)
         {
             // without alpha
             return String.Format("{0:x}", color.R) +
@@ -447,7 +447,7 @@ namespace WindowPlugins.GUITVSeries
             // Check if Fanart folder exists in MediaPortal's Thumbs directory
             if (Directory.Exists(fanartFolder))
             {
-                MPTVSeriesLog.Write("Checking for Fanart on series: ", Helper.getCorrespondingSeries(mSeriesId).ToString(), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write($"Checking for local fanart on disk for series '{Helper.getCorrespondingSeries(mSeriesId)}'", MPTVSeriesLog.LogLevel.Debug);
                 try
                 {
                     // Create a Filename filter for Season / Series Fanart
@@ -464,10 +464,10 @@ namespace WindowPlugins.GUITVSeries
                     if (mFanarts.Count == 0 && mSeasonMode)
                     {
                         MPTVSeriesLog.Write("No Season Fanart found on disk, searching for series fanart", MPTVSeriesLog.LogLevel.Debug);
-                        mFanarts.AddRange(System.IO.Directory.GetFiles(fanartFolder, seriesFilter, SearchOption.AllDirectories));
+                        mFanarts.AddRange(Directory.GetFiles(fanartFolder, seriesFilter, SearchOption.AllDirectories));
                     }
 
-                    // Remove any files that we dont want e.g. thumbnails in the _cache folder
+                    // Remove any files that we don't want e.g. thumbnails in the _cache folder
                     // and Season fanart if we are not in Season Mode
                     if (!mSeasonMode) removeSeasonFromSeries();
                     removeFromFanart("_cache");
