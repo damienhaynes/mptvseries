@@ -53,3 +53,8 @@
 /ConfigLauncher/bin/Release/TVDatabase.dll
 /ConfigLauncher/bin/Release/TvBusinessLayer.dll
 /MPEI/Release/*.mpe1
+/ConfigLauncher/bin/Debug/Common.Utils.dll
+/ConfigLauncher/bin/Debug/Databases.dll
+/ConfigLauncher/bin/Debug/Dialogs.dll
+/ConfigLauncher/bin/Debug/GUIVideos.dll
+/ConfigLauncher/bin/Debug/Utils.dll
