@@ -787,20 +787,20 @@ namespace WindowPlugins.GUITVSeries
 
                         bool lArtworkChooserAvailable = File.Exists( GUIGraphicsContext.Skin + @"\TVSeries.ArtworkChooser.xml" );
 
-                        if ( lArtworkChooserAvailable && CurrentViewLevel != Listlevel.Group )
-                        {
-                            pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
-                            dlg.Add( pItem );
-                            pItem.ItemId = ( int )eContextItems.artworkChooser;
-                        }
-
                         if ( CurrentViewLevel == Listlevel.Episode)
                         {
                             pItem = new GUIListItem(Translation.Toggle_watched_flag);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
 
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if ( lArtworkChooserAvailable)
+                            {
+                                pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
+                                dlg.Add( pItem );
+                                pItem.ItemId = ( int )eContextItems.artworkChooser;
+                            }
+
+                            if ( !String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                             {
                                 pItem = new GUIListItem(Translation.RateEpisode + " ...");
                                 dlg.Add(pItem);
@@ -809,11 +809,11 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (CurrentViewLevel != Listlevel.Group)
                         {
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if ( lArtworkChooserAvailable )
                             {
-                                pItem = new GUIListItem(Translation.RateSeries + " ...");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextMenus.rate;
+                                pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
+                                dlg.Add( pItem );
+                                pItem.ItemId = ( int )eContextItems.artworkChooser;
                             }
 
                             pItem = new GUIListItem(Translation.Mark_all_as_watched);
@@ -824,6 +824,12 @@ namespace WindowPlugins.GUITVSeries
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionMarkAllUnwatched;
 
+                            if ( !String.IsNullOrEmpty( DBOption.GetOptions( DBOption.cOnlineUserID ) ) )
+                            {
+                                pItem = new GUIListItem( Translation.RateSeries + " ..." );
+                                dlg.Add( pItem );
+                                pItem.ItemId = ( int )eContextMenus.rate;
+                            }
                         }
 
                         // Add To Playlist is supported on all views
