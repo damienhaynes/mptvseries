@@ -2582,6 +2582,7 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     if (guiListItem != null)
                                     {
+                                        MPTVSeriesLog.Write( $"Added image '{image}' to facade", MPTVSeriesLog.LogLevel.Debug );
                                         guiListItem.IconImage = image;
                                         guiListItem.IconImageBig = image;
                                         guiListItem.ThumbnailImage = image;
@@ -2789,7 +2790,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // probably something was removed
-                    MPTVSeriesLog.Write("Nothing to display, going out");
+                    MPTVSeriesLog.Write("Nothing to display, going out", MPTVSeriesLog.LogLevel.Debug);
                     OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                 }
             }

@@ -671,7 +671,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static void disableNativeAutoplay()
         {
-            MPTVSeriesLog.Write("Disabling native autoplay.");
+            MPTVSeriesLog.Write("Disabling native autoplay", MPTVSeriesLog.LogLevel.Debug );
             AutoPlay.StopListening();
         }
 
@@ -679,7 +679,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (GUIGraphicsContext.CurrentState == GUIGraphicsContext.State.RUNNING)
             {
-                MPTVSeriesLog.Write("Re-enabling native autoplay.");
+                MPTVSeriesLog.Write("Re-enabling native autoplay", MPTVSeriesLog.LogLevel.Debug);
                 AutoPlay.StartListening();
             }
         }

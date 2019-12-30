@@ -1056,10 +1056,10 @@ namespace WindowPlugins.GUITVSeries
         layer.GetRecordingByFileName( filename ).Delete();
         MPTVSeriesLog.Write(string.Format("Also Deleting record in MP table recording"));
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         // this should succeed only when there is a record in MP database..
-        MPTVSeriesLog.Write($"Seems no recording line to delete in MPTvDB, Exception={ex.Message}");
+        MPTVSeriesLog.Write($"No record of file to delete in MPTvDB");
       }
     }
 

@@ -168,6 +168,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         protected override void OnPageLoad()
         {
+            MPTVSeriesLog.Write( "Entering Artwork Chooser window" );
+
             // set window name
             GUIPropertyManager.SetProperty( "#currentmodule", Translation.Artwork );
 
@@ -185,6 +187,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             // Deserialise loading parameter from JSON (ArtworkParameters)
             if (!LoadParameters())
             {
+                MPTVSeriesLog.Write( "Unable to load Artwork Chooser, loading parameters not provided. Reverting to main TV-Series window" );
                 GUIWindowManager.ActivateWindow( 9811 );
                 return;
             }
@@ -204,6 +207,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             // save current layout
             DBOption.SetOptions( DBOption.cArtworkChooserLayout, ( int )CurrentLayout );
+
+            MPTVSeriesLog.Write( "Exiting Artwork Chooser window" );
         }
 
         protected override void OnClicked( int controlId, GUIControl control, Action.ActionType actionType )
@@ -314,11 +319,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected series poster '{lArtwork.LocalPath}' as selected" );
+
                 // update the main GUI property so affect is immediate on exit
                 GUIPropertyManager.SetProperty( "#TVSeries.SeriesPoster", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected series poster '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
@@ -364,11 +373,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected season poster '{lArtwork.LocalPath}' as selected" );
+
                 // update the main GUI property so affect is immediate on exit
                 GUIPropertyManager.SetProperty( "#TVSeries.SeasonPoster", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected season poster '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
@@ -414,11 +427,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected series widebanner '{lArtwork.LocalPath}' as selected" );
+
                 // update the main GUI property so affect is immediate on exit
                 GUIPropertyManager.SetProperty( "#TVSeries.SeriesBanner", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected series widebanner '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadeWidebanners.SelectedListItemIndex;
@@ -456,7 +473,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lFanart[DBFanart.cResolution] = lArtwork.Resolution;
                 lFanart.Commit();
 
-                MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry." );
+                MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry" );
 
                 lArtwork.Fanart = lFanart;
             }
@@ -480,12 +497,16 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected series fanart '{lArtwork.LocalPath}' as selected" );
+
                 // update the current background
                 var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
                 TVSeriesPlugin.LoadFanart( lTvsWindow );
             }
             else if (!lArtwork.IsLocal)
             {
+                MPTVSeriesLog.Write( $"Selected series fanart '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadeThumbnails.SelectedListItemIndex;
@@ -523,6 +544,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             // _loadingParameter can be set by a plugin developer or a skin designer
             if ( string.IsNullOrEmpty( _loadParameter ) )
                 return false;
+
+            MPTVSeriesLog.Write( $"Deserialising loading parameter '{_loadParameter}'" );
 
             ArtworkParams = _loadParameter.FromJSON<ArtworkLoadingParameters>();
             if ( ArtworkParams == null ) return false;
@@ -1032,7 +1055,10 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // if default, get index
                 if ( lItem.IsDefault )
+                {
                     lSelectedIndex = Facade.Count - 1;
+                    MPTVSeriesLog.Write( "Setting default artwork at selected index " + lSelectedIndex, MPTVSeriesLog.LogLevel.Debug );
+                }   
             }
 
             // Set Facade Layout
@@ -1078,6 +1104,7 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             string propertyValue = string.IsNullOrEmpty( value ) ? "N/A" : value;
             string propertyKey = string.Concat( "#TVSeries.Artwork.", property );
+            MPTVSeriesLog.Write( $"Publishing skin property '{propertyKey}' with value '{propertyValue}'",MPTVSeriesLog.LogLevel.Debug );
             GUIPropertyManager.SetProperty( propertyKey, propertyValue );
         }
 
