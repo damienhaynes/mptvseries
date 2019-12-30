@@ -113,7 +113,7 @@ Fortsätt?</string>
   <string name="TVDB_INFO_TITLE" Original="theTVDB">theTVDB</string>
   <string name="TVDB_INFO_ACCOUNTID_1" Original="Account Identifier is not set">Konto-id är inte korrekt inmatat</string>
   <string name="TVDB_INFO_ACCOUNTID_2" Original="Enter your online account ID in Configuration">Mata in ditt theTVDB-konto i inställningarna för denna plugin</string>
-  <string name="ChangeLayout" Original="Change Layout">byt layout</string>
+  <string name="ChangeLayout" Original="Change Layout">Byt layout</string>
   <string name="UseOnlineFavourites" Original="Use Online Favourites">Använd online-favoriter</string>
   <string name="AddToPlaylist" Original="Add To Playlist">Lägg till i spellistan</string>
   <string name="FanartDisableLabel" Original="Disabled">Används ej</string>
