@@ -3274,11 +3274,10 @@ namespace WindowPlugins.GUITVSeries
                                 MPTVSeriesLog.Write(string.Format("Adding episode {0} to list", episode.ToString()), MPTVSeriesLog.LogLevel.Debug);
                                 try
                                 {
-                                    //bEmpty = false;
                                     item = new GUIListItem();
 
-                                    // its possible the user never selected a series/season (flat view)
-                                    // thus its desirable to display series and season index also)
+                                    // it's possible the user never selected a series/season (flat view)
+                                    // thus it's desirable to display series and season index also
 
                                     if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                     {
@@ -3297,12 +3296,18 @@ namespace WindowPlugins.GUITVSeries
                                         {
                                             item.Label = episode.ToString();
                                         }
-
                                     }
                                     else
                                     {
+                                        string lEpisodeFormat = m_sFormatEpisodeCol2;
+                                        bool lDvdSortOrder = m_SelectedSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                                        if ( lDvdSortOrder && episode[DBOnlineEpisode.cDVDEpisodeNumber] != 0 )
+                                        {
+                                            lEpisodeFormat = lEpisodeFormat.Replace( "Episode.EpisodeIndex", "Episode.DVD_episodenumber" );
+                                        }
+
                                         // we came from series on top, only display index/title
-                                        item.Label = FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
+                                        item.Label = FieldGetter.resolveDynString( lEpisodeFormat, episode );
                                     }
 
                                     item.Label2 = FieldGetter.resolveDynString(m_sFormatEpisodeCol3, episode);

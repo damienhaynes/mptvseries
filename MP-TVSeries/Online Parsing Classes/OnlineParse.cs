@@ -2875,15 +2875,19 @@ namespace WindowPlugins.GUITVSeries
                         else return int.MaxValue;
 
                     case "DVD":
-                        // use cCombinedEpisodeNumber and cCombinedSeasonNumber for DVD matching as
-                        // this will return the correct DVD order if any, otherwise will return aired order.
-                        
+                        // use cDVDEpisodeNumber and cDVDSeasonNumber for DVD matching
+                        // if the episode field is empty or 0 then fallback to air date fields
+                        if ( string.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cDVDEpisodeNumber]) || onlineEpisode[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
+                        {
+                            return matchOnlineToLocalEpisode( series, localEpisode, onlineEpisode, "Aired" );
+                        }
+
                         System.Globalization.NumberFormatInfo provider = new System.Globalization.NumberFormatInfo();
                         provider.NumberDecimalSeparator = ".";
                                                 
                         float onlineSeasonTemp;
                         int onlineSeason = -1;
-                        if (float.TryParse(onlineEpisode[DBOnlineEpisode.cCombinedSeason], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeasonTemp))
+                        if (float.TryParse(onlineEpisode[DBOnlineEpisode.cDVDSeasonNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineSeasonTemp))
                             onlineSeason = (int)onlineSeasonTemp;
 
                         int localSeason = 0;
@@ -2902,32 +2906,31 @@ namespace WindowPlugins.GUITVSeries
                         }
 
                         float onlineEp = -1;
-                        if (onlineSeason != -1 && float.TryParse(onlineEpisode[DBOnlineEpisode.cCombinedEpisodeNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp))
+                        if (onlineSeason != -1 && float.TryParse(onlineEpisode[DBOnlineEpisode.cDVDEpisodeNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provider, out onlineEp))
                         {
                             string localstring;
                             double localcomp;
                             localstring = (localEp.ToString() + "." + localEp2.ToString());
                             localcomp = Convert.ToDouble(localstring, provider);
-                            if (!String.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cCombinedSeason]) &&
-                                !String.IsNullOrEmpty(onlineEpisode[DBOnlineEpisode.cCombinedEpisodeNumber]) && 
-                                (localSeason == onlineSeason && (localcomp == onlineEp || localEp == (int)onlineEp)))
+                            if (localSeason == onlineSeason && 
+                               (localcomp == onlineEp || localEp == (int)onlineEp))
                             {
                                 return 0;
                             }
                             else
                             {
-                                //MPTVSeriesLog.Write(string.Format("File does not match current parse Series: {0} Episode: {1} : Online Episode: {2}", localSeason, localcomp, onlineEp), MPTVSeriesLog.LogLevel.Debug);
                                 return int.MaxValue;
                             }
                         }
                         break;
+
                     case "Absolute":
                         System.Globalization.NumberFormatInfo provided = new System.Globalization.NumberFormatInfo();
                         float onlineabs = -1;
                         float onlineabsTemp;
                         if (float.TryParse(onlineEpisode[DBOnlineEpisode.cAbsoluteNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provided, out onlineabsTemp))
                             onlineabs = onlineabsTemp;
-                        MPTVSeriesLog.Write(string.Format("Absolute number: {0}", onlineabs), MPTVSeriesLog.LogLevel.Debug);
+
                         if (onlineabs != -1)
                         {
                             double localabs = -1;
@@ -2936,24 +2939,24 @@ namespace WindowPlugins.GUITVSeries
                                 /*Now we have to figure out whether we are at ep 100 or more*/
                                 localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + localEpisode[DBEpisode.cEpisodeIndex].ToString());
                             }
-                            else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] < 10 /*&& String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/)
-                            {/* Any episode X0[0-9] should be combined in this manner */
+                            else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] < 10)
+                            {
+                                /* Any episode X0[0-9] should be combined in this manner */
                                 localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + "0" + localEpisode[DBEpisode.cEpisodeIndex].ToString());
                             }
-                            else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] >= 10 /*&& String.IsNullOrEmpty(localEpisode[DBEpisode.cEpisodeIndex2])*/)
-                            {/* All other episodes should fall into this category */
+                            else if ((int)localEpisode[DBEpisode.cSeasonIndex] >= 1 && (int)localEpisode[DBEpisode.cEpisodeIndex] >= 10)
+                            {
+                                /* All other episodes should fall into this category */
                                 localabs = Convert.ToDouble(localEpisode[DBEpisode.cSeasonIndex].ToString() + localEpisode[DBEpisode.cEpisodeIndex].ToString());
                             }
 
                             float.TryParse(onlineEpisode[DBOnlineEpisode.cAbsoluteNumber], System.Globalization.NumberStyles.AllowDecimalPoint, provided, out onlineabs);
                             if (localabs == onlineabs)
                             {
-                                //MPTVSeriesLog.Write(string.Format("Matched Absolute Ep {0} to local ep {1}x{2}", onlineabs, series, localEpisode), MPTVSeriesLog.LogLevel.Debug);
                                 return 0;
                             }
                             else
                             {
-                                //MPTVSeriesLog.Write(string.Format("Failed to Match local ep {1}x{2} to Absolute ep {0}", onlineabs, series, localEpisode), MPTVSeriesLog.LogLevel.Debug);
                                 return int.MaxValue;
                             }
                         }

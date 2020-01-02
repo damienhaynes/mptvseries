@@ -332,7 +332,7 @@ namespace WindowPlugins.GUITVSeries
                         // CombinedSeason gives us the DVD Season and if empty will give us the Aired Season
                         DBSeries series = Helper.getCorrespondingSeries(int.Parse(currentStepSelection[0]));
                         bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
-                        string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
+                        string seasonIndex = SortByDVD ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
 
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
