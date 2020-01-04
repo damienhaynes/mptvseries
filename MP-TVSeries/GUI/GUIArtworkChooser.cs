@@ -93,7 +93,8 @@ namespace WindowPlugins.GUITVSeries.GUI
         public enum ContextMenuItem
         {
             Layout,
-            Filter
+            Filter,
+            Delete
         }
 
         public enum Layout
@@ -254,27 +255,43 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         protected override void OnShowContextMenu()
         {
-            GUIListItem selectedItem = Facade.SelectedListItem;
-            if ( selectedItem == null ) return;
+            GUIListItem lSelectedItem = Facade.SelectedListItem;
+            if ( lSelectedItem == null ) return;
 
-            var dlg = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
-            dlg.Reset();
-            dlg.SetHeading( Translation.Actors );
+            var lSelectedArtworkItem = lSelectedItem as GUIArtworkListItem;
+            if ( lSelectedArtworkItem == null ) return;
 
-            GUIListItem listItem = null;
+            var lDlg = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
+            lDlg.Reset();
+            lDlg.SetHeading( Translation.ArtworkChooser );
 
-            listItem = new GUIListItem( Translation.ChangeLayout + " ..." );
-            dlg.Add( listItem );
-            listItem.ItemId = ( int )ContextMenuItem.Layout;
+            // create items for context menu
+            var lListItem = new GUIListItem( Translation.ChangeLayout + " ..." );
+            lDlg.Add( lListItem );
+            lListItem.ItemId = ( int )ContextMenuItem.Layout;
 
-            // Show Context Menu
-            dlg.DoModal( GUIWindowManager.ActiveWindow );
-            if ( dlg.SelectedId < 0 ) return;
+            // allow user to delete a locally downloaded artwork            
+            var lArtwork = lSelectedArtworkItem.Item as TvdbArt;
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
+            {
+                lListItem = new GUIListItem( Translation.ArtworkDelete );
+                lDlg.Add( lListItem );
+                lListItem.ItemId = ( int )ContextMenuItem.Delete;
+            }
 
-            switch ( dlg.SelectedId )
+            // show context menu
+            lDlg.DoModal( GUIWindowManager.ActiveWindow );
+            if ( lDlg.SelectedId < 0 ) return;
+
+            // do what was requested
+            switch ( lDlg.SelectedId )
             {
                 case ( ( int )ContextMenuItem.Layout ):
                     ShowLayoutsMenu();
+                    break;
+
+                case ( ( int )ContextMenuItem.Delete ):
+                    DeleteArtwork( lSelectedArtworkItem );
                     break;
             }
 
@@ -283,6 +300,110 @@ namespace WindowPlugins.GUITVSeries.GUI
         #endregion
 
         #region Private Methods
+        private void DeleteArtwork( GUIArtworkListItem aSelectedGUIItem )
+        {
+            // NB: we do not need to worry about deleting 'Default' artwork as 
+            // context menu item is not visible when default
+
+            var lArtwork = aSelectedGUIItem.Item as TvdbArt;
+
+            switch ( ArtworkParams.Type )
+            {
+                case ArtworkType.SeriesFanart:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove local reference from database
+                        lArtwork.Fanart[DBFanart.cLocalPath] = string.Empty;
+                        lArtwork.Fanart.Commit();
+
+                        // step 3: clear the fanart cache
+                        DBFanart.ClearSeriesFromCache(lArtwork.Series[DBOnlineSeries.cID]);
+
+                        // step 4: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+
+                case ArtworkType.SeriesPoster:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove from available artworks, pipe seperated relative paths
+                        string lPath = "posters/" + Path.GetFileName( lArtwork.OnlinePath );
+                        string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                        var lArtworks = lArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString().Split( '|' ).ToList();
+                        lArtworks.RemoveAll( a => a.Contains( lRelativePath ) );
+
+                        lArtwork.Series[DBOnlineSeries.cPosterFileNames] = string.Join( "|", lArtworks );
+                        lArtwork.Series.Commit();
+
+                        // step 3: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+
+                case ArtworkType.SeriesBanner:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove from available artworks, pipe seperated relative paths
+                        string lPath = "graphical/" + Path.GetFileName( lArtwork.OnlinePath );
+                        string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                        var lArtworks = lArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString().Split( '|' ).ToList();
+                        lArtworks.RemoveAll( a => a.Contains( lRelativePath ) );
+
+                        lArtwork.Series[DBOnlineSeries.cBannerFileNames] = string.Join( "|", lArtworks );
+                        lArtwork.Series.Commit();
+
+                        // step 3: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+
+                case ArtworkType.SeasonPoster:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove from available artworks, pipe seperated relative paths
+                        string lPath = "seasons/" + Path.GetFileName( lArtwork.OnlinePath );
+                        string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                        var lArtworks = lArtwork.Season[DBSeason.cBannerFileNames].ToString().Split( '|' ).ToList();
+                        lArtworks.RemoveAll( a => a.Contains( lRelativePath ) );
+
+                        lArtwork.Season[DBSeason.cBannerFileNames] = string.Join( "|", lArtworks );
+                        lArtwork.Season.Commit();
+
+                        // step 3: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+            }
+        }
+
+        private bool DeleteFile(string aFilename )
+        {
+            try
+            {
+                MPTVSeriesLog.Write( $"Deleting local artwork '{aFilename}' from disk" );
+                File.Delete( aFilename );
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write( "Failed to delete local artwork from disk. Reason=" + ex.Message );
+                return false;
+            }
+
+            return true;
+        }
+
         private void OnSeriesPosterClicked()
         {
             var lSelectedItem = mFacadePosters.SelectedListItem as GUIArtworkListItem;

@@ -6,6 +6,7 @@
   <string name="ArtworkTypes" Original="Artwork Types">Artwork Types</string>
   <string name="ArtworkSelected" Original="Selected">Selected</string>
   <string name="ArtworkDownloading" Original="Download Progress {0}%">Download Progress {0}%</string>
+  <string name="ArtworkDelete" Original="Delete Artwork">Delete Artwork</string>
   <string name="SeriesWideBanner" Original="Series WideBanner">Series WideBanner</string>
   <string name="SeriesPoster" Original="Series Poster">Series Poster</string>
   <string name="SeriesFanart" Original="Series Fanart">Series Fanart</string>
