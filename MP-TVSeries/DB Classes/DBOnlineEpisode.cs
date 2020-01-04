@@ -236,6 +236,8 @@ namespace WindowPlugins.GUITVSeries
                 DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
 
                 bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                if ( lDvdSortOrder && this[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
+                     lDvdSortOrder = false;
 
                 string lSeasonField = lDvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
                 string lEpisodeField = lDvdSortOrder ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
@@ -283,6 +285,8 @@ namespace WindowPlugins.GUITVSeries
             DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
 
             bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+            if ( lDvdSortOrder && this[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
+                 lDvdSortOrder = false;
 
             string lSeasonField = lDvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
             string lEpisodeField = lDvdSortOrder ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;

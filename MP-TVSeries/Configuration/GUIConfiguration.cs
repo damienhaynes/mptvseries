@@ -2099,45 +2099,70 @@ namespace WindowPlugins.GUITVSeries
 
             //////////////////////////////////////////////////////////////////////////////
             #region Load Episodes into season tree child nodes of expanding series
-            foreach (TreeNode childNode in node.Nodes) {
+            foreach (TreeNode childNode in node.Nodes)
+            {
                 // Check if we have already loaded episodes into season nodes
-                if (childNode.Nodes.Count == 0) {
+                if (childNode.Nodes.Count == 0)
+                {
                     // ensure we use the correct season field for DVD sort order
-                    string seasonField = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
-                    string episodeField = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
-
+                    bool lUseDVDOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                    string lSeasonField = DBOnlineEpisode.cSeasonIndex;
+                    
                     DBSeason season = (DBSeason)childNode.Tag;
-                    int seasonIndex = season[DBSeason.cIndex];
+                    int lSeasonIndex = season[DBSeason.cIndex];
 
+                    if ( lUseDVDOrder && lSeasonIndex > 0 )
+                        lSeasonField = DBOnlineEpisode.cDVDSeasonNumber;
+                    
                     SQLCondition conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                    conditions.Add(new DBOnlineEpisode(), seasonField, seasonIndex, SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), lSeasonField, lSeasonIndex, SQLConditionType.Equal);
+                    if ( lUseDVDOrder && lSeasonIndex > 0 )
+                    {
+                        // if we fell back to air order then also get these episodes i.e. DVD_episode = 0
+                        conditions.beginGroup();
+                        conditions.nextIsOr = true;
+                        conditions.AddCustom( $"online_episodes.SeasonIndex = '{lSeasonIndex}' and online_episodes.DVD_episodenumber = '0'" );
+                        conditions.nextIsOr = false;
+                        conditions.endGroup();
+                    }
                     List<DBEpisode> episodes = DBEpisode.Get(conditions);
-
+                    
                     // sort by correct order
                     episodes.Sort();
 
-                    foreach (DBEpisode episode in episodes) {
-                        String episodeName = (String)episode[DBEpisode.cEpisodeName];
-                        TreeNode episodeNode = new TreeNode(episode[seasonField] + "x" + episode[episodeField] + " - " + episodeName);
-                        episodeNode.Name = DBEpisode.cTableName;
-                        episodeNode.Tag = (DBEpisode)episode;
+                    foreach (DBEpisode episode in episodes)
+                    {
+                        String lEpisodeName = (String)episode[DBEpisode.cEpisodeName];
+                        TreeNode lEpisodeNode = null;
+                        if ( lUseDVDOrder && episode[DBOnlineEpisode.cDVDEpisodeNumber] != 0 )
+                        {
+                            lEpisodeNode = new TreeNode( episode[DBOnlineEpisode.cDVDSeasonNumber] + "x" + episode[DBOnlineEpisode.cDVDEpisodeNumber] + " - " + lEpisodeName );
+                        }
+                        else
+                        {
+                            lEpisodeNode = new TreeNode( episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + " - " + lEpisodeName );
+                        }
+                        lEpisodeNode.Name = DBEpisode.cTableName;
+                        lEpisodeNode.Tag = (DBEpisode)episode;
 
                         // set color for non-local file
-                        if (episode[DBEpisode.cFilename].ToString().Length == 0) {
-                            episodeNode.ForeColor = SystemColors.GrayText;
+                        if (episode[DBEpisode.cFilename].ToString().Length == 0)
+                        {
+                            lEpisodeNode.ForeColor = SystemColors.GrayText;
                         }
-                        else {
+                        else
+                        {
                             // set color for watched episode
                             if (episode[DBOnlineEpisode.cWatched] == 1)
-                                episodeNode.ForeColor = Color.DarkBlue;
+                                lEpisodeNode.ForeColor = Color.DarkBlue;
                         }
 
                         // set FontStyle for hidden episodes
                         if (episode[DBOnlineEpisode.cHidden])
-                            episodeNode.NodeFont = new Font(defaultFont.Name, defaultFont.Size, FontStyle.Italic);
+                            lEpisodeNode.NodeFont = new Font(defaultFont.Name, defaultFont.Size, FontStyle.Italic);
 
-                        childNode.Nodes.Add(episodeNode);
+                        childNode.Nodes.Add(lEpisodeNode);
                     }
                 }
             }

@@ -331,18 +331,29 @@ namespace WindowPlugins.GUITVSeries
                         // we want to query episodes using the CombinedSeason if Sort Order is "DVD"
                         // CombinedSeason gives us the DVD Season and if empty will give us the Aired Season
                         DBSeries series = Helper.getCorrespondingSeries(int.Parse(currentStepSelection[0]));
-                        bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
-                        string seasonIndex = SortByDVD ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
+
+                        // use sort by dvd only if not in specials
+                        bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" && currentStepSelection[1] != "0"; 
+                        string lSeasonField = SortByDVD ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
 
                         conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, currentStepSelection[0], SQLConditionType.Equal);
                         conditions.beginGroup();
-                        conditions.Add(new DBOnlineEpisode(), seasonIndex, currentStepSelection[1], SQLConditionType.Equal);
+                        conditions.Add(new DBOnlineEpisode(), lSeasonField, currentStepSelection[1], SQLConditionType.Equal);
                         if (DBOption.GetOptions(DBOption.cSortSpecials) && !SortByDVD && currentStepSelection[1] != "0" /*not in specials*/)
                         {
                             conditions.nextIsOr = true;
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsBeforeSeason, currentStepSelection[1], SQLConditionType.Equal);
                             conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cAirsAfterSeason, currentStepSelection[1], SQLConditionType.Equal);
                             conditions.nextIsOr = false;
+                        }
+                        if ( SortByDVD )
+                        {
+                            // if we fell back to air order then also get these episodes i.e. DVD_episode = 0
+                            conditions.beginGroup();
+                            conditions.nextIsOr = true;
+                            conditions.AddCustom( $"online_episodes.SeasonIndex = '{currentStepSelection[1]}' and online_episodes.DVD_episodenumber = '0'" );
+                            conditions.nextIsOr = false;
+                            conditions.endGroup();
                         }
                         conditions.endGroup();
                         break;

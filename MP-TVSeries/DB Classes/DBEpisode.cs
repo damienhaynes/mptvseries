@@ -1981,6 +1981,10 @@ namespace WindowPlugins.GUITVSeries
             DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
             bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
+            // check if we need to fallback to aired order if DVD order detail not available
+            if ( SortByDVD && ep[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
+                 SortByDVD = false;
+
             string seasonIndex = SortByDVD ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
             string episodeIndex = SortByDVD ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
