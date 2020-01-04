@@ -3685,11 +3685,11 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // Delete Physical Thumbnails
-            // Dont prompt if just doing a single episode update
-            bool deleteThumbs = true;
+            // Don't prompt if just doing a single episode update
+            bool lDeleteThumbs = true;
             if (CurrentViewLevel != Listlevel.Episode)
             {
-                GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                var dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
                 if (dlgYesNo != null)
                 {
                     dlgYesNo.Reset();
@@ -3698,28 +3698,29 @@ namespace WindowPlugins.GUITVSeries
                     dlgYesNo.SetLine(2, Translation.DeleteThumbnailsLine2);
                     dlgYesNo.SetDefaultToYes(false);
                     dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
-                    if (!dlgYesNo.IsConfirmed) deleteThumbs = false;
+                    if (!dlgYesNo.IsConfirmed) lDeleteThumbs = false;
                 }
             }
 
-            if (deleteThumbs)
-            {
-                string thumbnailPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(series.ToString()) + @"\Episodes");
 
+            string lThumbnailPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), Helper.cleanLocalPath( series.ToString() ) + @"\Episodes" );
+
+            if ( lDeleteThumbs && Directory.Exists( lThumbnailPath ) )
+            {
                 // Search and delete matching files that actually exist
-                string[] fileList = Directory.GetFiles(thumbnailPath, searchPattern);
+                string[] fileList = Directory.GetFiles(lThumbnailPath, searchPattern);
 
                 foreach (string file in fileList)
                 {
-                    MPTVSeriesLog.Write("Deleting Episode Thumbnail: " + file);
-                    FileInfo fileInfo = new FileInfo(file);
+                    MPTVSeriesLog.Write($"Deleting episode thumbnail '{file}'");
+                    var lFileInfo = new FileInfo(file);
                     try
                     {
-                        fileInfo.Delete();
+                        lFileInfo.Delete();
                     }
                     catch (Exception ex)
                     {
-                        MPTVSeriesLog.Write("Failed to Delete Episode Thumbnail: " + file + ": " + ex.Message);
+                        MPTVSeriesLog.Write($"Failed to Delete Episode Thumbnail '{file}'. Reason={ex.Message}");
                     }
                 }
 
@@ -3739,7 +3740,7 @@ namespace WindowPlugins.GUITVSeries
                     // Conditional parsing actions                    
                     if (CurrentViewLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
                     parsingActions.Add(ParsingAction.UpdateEpisodes);
-                    if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                    if (lDeleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
                     parsingActions.Add(ParsingAction.UpdateCommunityRatings);
                     parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
 
