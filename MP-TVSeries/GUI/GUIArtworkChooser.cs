@@ -323,6 +323,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                         // step 4: mark as remote
                         lArtwork.IsLocal = false;
                         aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+
+                        // step 5: rotate current background art if we're using random fanart
+                        // if using random fanart ignore rotated art in favour of chosen one
+                        if ( DBOption.GetOptions( DBOption.cFanartRandom ) && GUIPropertyManager.GetProperty( "#TVSeries.Current.Fanart" ) == lArtwork.LocalPath )
+                        {
+                            var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
+                            TVSeriesPlugin.LoadFanart( lTvsWindow );
+                        }
                     }
                     break;
 
@@ -600,7 +608,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
 
             // if the item is local and not default, make it the default
-            if ( lArtwork.IsLocal && !lArtwork.IsDefault)
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
             {
                 // remove existing art as default
                 var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeThumbnails.GetID, DefaultArtIndex ) as GUIArtworkListItem;
@@ -623,8 +631,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // update the current background
                 var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
                 TVSeriesPlugin.LoadFanart( lTvsWindow );
+
+                // if using random fanart ignore rotated art in favour of chosen one
+                if ( DBOption.GetOptions( DBOption.cFanartRandom ) )
+                {
+                    GUIPropertyManager.SetProperty( "#TVSeries.Current.Fanart", lArtwork.LocalPath );
+                }
             }
-            else if (!lArtwork.IsLocal)
+            else if ( !lArtwork.IsLocal )
             {
                 MPTVSeriesLog.Write( $"Selected series fanart '{lArtwork.OnlinePath}' does not exist, downloading now" );
 
