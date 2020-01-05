@@ -101,11 +101,10 @@ namespace WindowPlugins.GUITVSeries
         public const String cAliasNames = "AliasNames";
         public const String cLastEpisodeAirDate = "finale_aired";
         public const String cSlug = "slug";
-
         public const String cHasNewEpisodes = "HasNewEpisodes";
-
         public const String cTraktIgnore = "TraktIgnore";
-
+        public const String cArtworkChooserProvider = "ArtworkChooserProvider";
+        public const String cTmdbId = "TmdbId";
         #endregion
 
         public const int cDBVersion = 3;
@@ -187,7 +186,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             base.AddColumn( cID, new DBField( DBField.cTypeInt, true ) );
             base.AddColumn( cPrettyName, new DBField( DBField.cTypeString ) );
             base.AddColumn( cSortName, new DBField( DBField.cTypeString ) );
@@ -221,6 +219,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn( cMyRatingAt, new DBField( DBField.cTypeString ) );
             base.AddColumn( cViewTags, new DBField( DBField.cTypeString ) );
             base.AddColumn( cTraktIgnore, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cArtworkChooserProvider, new DBField( DBField.cTypeInt ) );
+            base.AddColumn( cTmdbId, new DBField( DBField.cTypeInt ) );
 
             foreach ( KeyValuePair<String, DBField> pair in m_fields )
             {

@@ -21,11 +21,10 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using MediaPortal.Database;
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -184,6 +183,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cTraktLastDateUpdated = "TraktLastDateUpdated";
         public const string cParsedNameFromFolder = "ParsedNameFromFolder";
         public const string cCheckShowOnlyEpisodesRequiringManualSelection = "CheckShowOnlyEpisodesRequiringManualSelection";
+        public const string cTmdbConfiguration = "TmdbConfiguration";
         #endregion
 
         private static readonly Object thisLock = new Object();

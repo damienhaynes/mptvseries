@@ -231,6 +231,34 @@
 					<onup>3</onup>
 					<ondown>3</ondown>
 				</control>
+				<control>
+					<description>Data Source</description>
+					<type>button</type>
+					<id>3</id>
+					<textureFocus>hiddenmenu_item_selected.png</textureFocus>
+					<textureNoFocus>-</textureNoFocus>
+					<width>499</width>
+					<height>69</height>
+					<textXOff>62</textXOff>
+					<textYOff>16</textYOff>
+					<!-- navigate to correct facade -->
+					<onleft>#(switch(
+                   eq(#TVSeries.Artwork.Type,'SeriesFanart'),52,
+                   eq(#TVSeries.Artwork.Type,'SeriesBanner'),51,
+									 eq(#TVSeries.Artwork.Type,'SeriesPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),52)
+                 )</onleft>
+					<onright>#(switch(
+                   eq(#TVSeries.Artwork.Type,'SeriesFanart'),52,
+                   eq(#TVSeries.Artwork.Type,'SeriesBanner'),51,
+									 eq(#TVSeries.Artwork.Type,'SeriesPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),52)
+                 )</onright>
+					<onup>2</onup>
+					<ondown>2</ondown>
+				</control>
 			</control>
 		</control>
 
@@ -306,7 +334,7 @@
   		<animation effect="fade" time="250">WindowClose</animation>
   	</control>
 		<control>
-      <description>Rating</description>
+      <description>Votes</description>
       <type>label</type>
       <label>#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label</label>
       <id>0</id>
@@ -315,7 +343,21 @@
       <width>315</width>
       <font>fontB12</font>
       <textcolor>FF00b7ff</textcolor>
-      <visible>facadeview.list+Control.IsVisible(52)</visible>
+      <visible>facadeview.list+Control.IsVisible(52)+string.equals(#TVSeries.Artwork.DataProvider,TVDb)+!string.equals(#itemcount,0)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+		<control>
+      <description>Rating/Votes</description>
+      <type>label</type>
+      <label>#TVSeries.Artwork.Rating (#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label)</label>
+      <id>0</id>
+      <posX>80</posX>
+      <posY>712</posY>
+      <width>315</width>
+      <font>fontB12</font>
+      <textcolor>FF00b7ff</textcolor>
+      <visible>facadeview.list+Control.IsVisible(52)+!string.equals(#TVSeries.Artwork.DataProvider,TVDb)+!string.equals(#itemcount,0)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
@@ -640,7 +682,7 @@
 					<lefttexture>osd_progress_mid_lists_cap.png</lefttexture>
 					<midtexture>osd_progress_mid_guide.png</midtexture>
 					<righttexture>osd_progress_mid_lists_cap.png</righttexture>
-					<ProgressBarWidth>1010</ProgressBarWidth>
+					<ProgressBarWidth>1000</ProgressBarWidth>
 					<ProgressBarHeight>3</ProgressBarHeight>
 					<ProgressBarXOffset>100</ProgressBarXOffset>
 					<ProgressBarYOffset>48</ProgressBarYOffset>

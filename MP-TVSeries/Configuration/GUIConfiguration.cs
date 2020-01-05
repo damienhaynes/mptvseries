@@ -33,8 +33,10 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using System.Threading.Tasks;
 using WindowPlugins.GUITVSeries.Configuration;
 using WindowPlugins.GUITVSeries.Feedback;
+using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
 
 // TODO: replace all checkboxes that are used to save options with a dboptioncheckbox
 
@@ -75,7 +77,7 @@ namespace WindowPlugins.GUITVSeries
             
             MPTVSeriesLog.AddNotifier(ref listBox_Log);
 
-            MPTVSeriesLog.Write("**** Plugin started in configuration mode ***");
+            MPTVSeriesLog.Write("Plugin started in configuration mode");
 
             Translation.Init();
 
@@ -116,9 +118,20 @@ namespace WindowPlugins.GUITVSeries
 
             DBOption.LogOptions();
 
+            #region TMDb Provider
+            var lTmdbTask = Task.Factory.StartNew( () =>
+            {
+                TmdbAPI.TmdbAPI.UserAgent = Settings.UserAgent;
+
+                // refresh configuration
+                var lTmdbConfig = TmdbAPI.TmdbAPI.GetConfiguration();
+                DBOption.SetOptions( DBOption.cTmdbConfiguration, lTmdbConfig.ToJSON() );
+            } );            
+            #endregion
+
             // Only Advanced Users / Skin Designers need to see these.
             // Tabs are visible if import="false" TVSeries.SkinSettings.xml
-            if (SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);
+            if ( SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);
             if (SkinSettings.ImportLogos) tabControl_Details.TabPages.Remove(tabLogoRules);
             
             if (mLoadDisplay != null) mLoadDisplay.Close();

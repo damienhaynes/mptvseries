@@ -53,6 +53,8 @@ namespace WindowPlugins.GUITVSeries
         public static string SeriesFanart = "Series Fanart";
         public static string SeasonPoster = "Season Poster";
         public static string EpisodeThumb = "Episode Thumbnail";
+        public static string ChangeOnlineProvider = "Change Online Provider";
+        public static string NoArtworkAvailable = "No {0} available from {1}";
         public static string Series = "Series";
         public static string Series_Plural = "Series";
         public static string Season = "Season";
@@ -145,6 +147,7 @@ namespace WindowPlugins.GUITVSeries
         public static string ErrorClear = "Error";
         public static string UnableToDelete = "Unable to Delete";
         public static string UnableToDeleteFile = "Unable to Delete File: {0}";
+        public static string Provider = "Provider: {0}";
 
         // Views
         public static string Genres = "Genres";

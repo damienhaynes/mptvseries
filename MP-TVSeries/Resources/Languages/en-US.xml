@@ -7,6 +7,9 @@
   <string name="ArtworkSelected" Original="Selected">Selected</string>
   <string name="ArtworkDownloading" Original="Download Progress {0}%">Download Progress {0}%</string>
   <string name="ArtworkDelete" Original="Delete Artwork">Delete Artwork</string>
+  <string name="ChangeOnlineProvider" Original="Change Online Provider">Change Online Provider</string>
+  <string name="Provider" Original="Provider: {0}">Provider: {0}</string>
+  <string name="NoArtworkAvailable" Original="No {0} available from {1}">No {0} available from {1}</string>
   <string name="SeriesWideBanner" Original="Series WideBanner">Series WideBanner</string>
   <string name="SeriesPoster" Original="Series Poster">Series Poster</string>
   <string name="SeriesFanart" Original="Series Fanart">Series Fanart</string>

@@ -24,12 +24,13 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Net;
+using WindowPlugins.GUITVSeries.TmdbAPI;
 
 namespace WindowPlugins.GUITVSeries
 {
     public class MPTVSeriesLog // can't call it Log because MP's own Log is called that
     {
-        const bool OmmitKey = true;
         public enum LogLevel
         {
             Normal,
@@ -86,8 +87,43 @@ namespace WindowPlugins.GUITVSeries
                 // oopps, can't create file
             }
             
+            // log data to and from themoviedb.org
+            TmdbAPI.TmdbAPI.OnDataSend += new TmdbAPI.TmdbAPI.OnDataSendDelegate( TmdbAPI_OnDataSend );
+            TmdbAPI.TmdbAPI.OnDataError += new TmdbAPI.TmdbAPI.OnDataErrorDelegate( TmdbAPI_OnDataError );
+            TmdbAPI.TmdbAPI.OnDataReceived += new TmdbAPI.TmdbAPI.OnDataReceivedDelegate( TmdbAPI_OnDataReceived );
+
             pauseAutoWriteDB = true;
             
+        }
+        #endregion
+
+        #region Private Methods
+        private static void TmdbAPI_OnDataSend( string aAddress, string aData )
+        {
+            if ( !string.IsNullOrEmpty( aData ) )
+            {
+                Write( string.Format("Address: {0}, Post: {1}", aAddress, aData), LogLevel.Debug );
+            }
+            else
+            {
+                Write( string.Format("Address: {0}", aAddress), LogLevel.Debug );
+            }
+        }
+
+        private static void TmdbAPI_OnDataReceived( string aResponse, HttpWebResponse aWebResponse )
+        {
+            string lHeaders = string.Empty;
+            foreach ( string key in aWebResponse.Headers.AllKeys )
+            {
+                lHeaders += string.Format( "{0}: {1}, ", key, aWebResponse.Headers[key] );
+            }
+
+            Write( string.Format("Response: {0}, Headers: {{{1}}}", aResponse ?? "null", lHeaders.TrimEnd( new char[] { ',', ' ' } ) ), LogLevel.Debug );
+        }
+
+        private static void TmdbAPI_OnDataError( string aError )
+        {
+            Write( aError );
         }
         #endregion
 
@@ -214,8 +250,8 @@ namespace WindowPlugins.GUITVSeries
                 if (m_LogStream != null)
                 {
                     #region Hide Personal Info
-                    if (OmmitKey && !String.IsNullOrEmpty(DBOnlineMirror.cApiKey))
-                        entry = entry.Replace(DBOnlineMirror.cApiKey, "<apikey>");
+                    entry = entry.Replace( DBOnlineMirror.cApiKey, "<apikey>" );
+                    entry = entry.Replace( TmdbURIs.ApiKey, "<apiKey>" );
                     #endregion
 
                     string sPrefix = CreatePrefix(level);

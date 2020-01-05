@@ -47,6 +47,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cSeriesName = "SeriesName"; // online
         public const String cRating = "Rating"; // online
         public const String cRatingCount = "RatingCount"; // online
+        public const String cDataSource = "DataSource";
 
         enum FanartResolution
         {

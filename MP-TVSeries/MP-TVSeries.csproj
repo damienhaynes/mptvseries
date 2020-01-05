@@ -320,6 +320,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TMDbFindResult.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbConfiguration.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbEpisodeImages.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbImage.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbRequestAge.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TMDbSearchResult.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbSeasonImages.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbShowImages.cs" />
+    <Compile Include="TmdbAPI\Extensions\JsonExtensions.cs" />
+    <Compile Include="TmdbAPI\TmdbAPI.cs" />
+    <Compile Include="TmdbAPI\TmdbURIs.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />

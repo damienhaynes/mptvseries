@@ -714,6 +714,28 @@
 									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),50,
 									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),52)
                  )</onright>
+					<ondown>3</ondown>
+        </control>
+				<control>
+          <description>Data Source</description>
+          <type>button</type>
+          <id>3</id>
+          <label>-</label>
+          <onup>2</onup>
+          <onleft>#(switch(
+                   eq(#TVSeries.Artwork.Type,'SeriesFanart'),52,
+                   eq(#TVSeries.Artwork.Type,'SeriesBanner'),51,
+									 eq(#TVSeries.Artwork.Type,'SeriesPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),52)
+                 )</onleft>
+					<onright>#(switch(
+                   eq(#TVSeries.Artwork.Type,'SeriesFanart'),52,
+                   eq(#TVSeries.Artwork.Type,'SeriesBanner'),51,
+									 eq(#TVSeries.Artwork.Type,'SeriesPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),50,
+									 eq(#TVSeries.Artwork.Type,'SeasonPoster'),52)
+                 )</onright>
         </control>
       </control>
     </control>
