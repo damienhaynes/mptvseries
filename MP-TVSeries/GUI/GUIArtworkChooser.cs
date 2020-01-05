@@ -721,14 +721,15 @@ namespace WindowPlugins.GUITVSeries.GUI
             ArtworkParams = _loadParameter.FromJSON<ArtworkLoadingParameters>();
             if ( ArtworkParams == null ) return false;
 
-            SetProperty( "SeriesID", ArtworkParams.SeriesId.ToString() );
-            SetProperty( "SeriesName", ArtworkParams.Series.ToString() );
-            SetProperty( "Type", ArtworkParams.Type.ToString() );
+            SetProperty( "SeriesID", ArtworkParams.SeriesId.ToString(), true );
+            SetProperty( "SeriesName", ArtworkParams.Series.ToString(), true );
+            SetProperty( "Type", ArtworkParams.Type.ToString(), true );
+            SetProperty( "LocalisedType", GetArtworkTypeName(ArtworkParams.Type), true );
             if ( ArtworkParams.Type == ArtworkType.SeasonPoster )
             {
-                SetProperty( "SeasonIndex", ArtworkParams.SeasonIndex.ToString() );
+                SetProperty( "SeasonIndex", ArtworkParams.SeasonIndex.ToString(), true );
             }
-            SetProperty( "DataProvider", ArtworkParams.Provider.ToString() );
+            SetProperty( "DataProvider", ArtworkParams.Provider.ToString(), true );
             return true;
         }
 
@@ -1813,7 +1814,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 ArtworkParams.Series[DBOnlineSeries.cArtworkChooserProvider] = (int)ArtworkParams.Provider;
                 ArtworkParams.Series.Commit();
 
-                SetProperty( "DataProvider", ArtworkParams.Provider.ToString() );
+                SetProperty( "DataProvider", ArtworkParams.Provider.ToString(), true );
 
                 GUIControl.FocusControl( GetID, Facade.GetID );
                 if ( ButtonOnlineProviders != null )

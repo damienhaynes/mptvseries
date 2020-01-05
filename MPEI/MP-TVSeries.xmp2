@@ -3069,17 +3069,16 @@ public class Script
       <Major>4</Major>
       <Minor>3</Minor>
       <Build>4</Build>
-      <Revision>0</Revision>
+      <Revision>1</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed DVD order not working during import (work around due to combined season/episode numbers not working correctly in v1 API);
-* Added context menu item to Artwork Chooser that allows user to delete a local artwork from disk if not selected as default;
-* Updated Swedish translations, thanks emphatic;
-* Changed the order of the Artwork Chooser context menu item when invoked from the episode view (toggle watched is now back in 1st position).
+    <VersionDescription>* Added support to get Posters and Fanart from themoviedb.org via the Artwork Chooser GUI;
+* Fixed exception when manually updating series with no episode thumbnails;
+* Improvements to Artwork Chooser current background art when deleting and selecting new fanart and random fanart is activated;
 </VersionDescription>
-    <DevelopmentStatus>Stable</DevelopmentStatus>
+    <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation>https://github.com/damienhaynes/mptvseries/releases/download/4.3.4/MP-TVSeries-4.3.4.0.mpe1</OnlineLocation>
     <ReleaseDate>2020-01-04T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
