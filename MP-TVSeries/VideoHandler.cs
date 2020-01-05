@@ -120,8 +120,8 @@ namespace WindowPlugins.GUITVSeries
                 var series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
                 bool dvdSortOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
-                string seasonField = dvdSortOrder ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
-                string episodeField = dvdSortOrder ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+                string seasonField = dvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
+                string episodeField = dvdSortOrder ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
                 if (DBOption.GetOptions(DBOption.cCheckPlayOutOfOrder) && !episode[DBOnlineEpisode.cWatched] && episode[seasonField] > 0 && episode[episodeField] > 1)
                 {

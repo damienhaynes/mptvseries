@@ -787,20 +787,20 @@ namespace WindowPlugins.GUITVSeries
 
                         bool lArtworkChooserAvailable = File.Exists( GUIGraphicsContext.Skin + @"\TVSeries.ArtworkChooser.xml" );
 
-                        if ( lArtworkChooserAvailable && CurrentViewLevel != Listlevel.Group )
-                        {
-                            pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
-                            dlg.Add( pItem );
-                            pItem.ItemId = ( int )eContextItems.artworkChooser;
-                        }
-
                         if ( CurrentViewLevel == Listlevel.Episode)
                         {
                             pItem = new GUIListItem(Translation.Toggle_watched_flag);
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.toggleWatched;
 
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if ( lArtworkChooserAvailable)
+                            {
+                                pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
+                                dlg.Add( pItem );
+                                pItem.ItemId = ( int )eContextItems.artworkChooser;
+                            }
+
+                            if ( !String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
                             {
                                 pItem = new GUIListItem(Translation.RateEpisode + " ...");
                                 dlg.Add(pItem);
@@ -809,11 +809,11 @@ namespace WindowPlugins.GUITVSeries
                         }
                         else if (CurrentViewLevel != Listlevel.Group)
                         {
-                            if (!String.IsNullOrEmpty(DBOption.GetOptions(DBOption.cOnlineUserID)))
+                            if ( lArtworkChooserAvailable )
                             {
-                                pItem = new GUIListItem(Translation.RateSeries + " ...");
-                                dlg.Add(pItem);
-                                pItem.ItemId = (int)eContextMenus.rate;
+                                pItem = new GUIListItem( Translation.ChooseArtwork + " ..." );
+                                dlg.Add( pItem );
+                                pItem.ItemId = ( int )eContextItems.artworkChooser;
                             }
 
                             pItem = new GUIListItem(Translation.Mark_all_as_watched);
@@ -824,6 +824,12 @@ namespace WindowPlugins.GUITVSeries
                             dlg.Add(pItem);
                             pItem.ItemId = (int)eContextItems.actionMarkAllUnwatched;
 
+                            if ( !String.IsNullOrEmpty( DBOption.GetOptions( DBOption.cOnlineUserID ) ) )
+                            {
+                                pItem = new GUIListItem( Translation.RateSeries + " ..." );
+                                dlg.Add( pItem );
+                                pItem.ItemId = ( int )eContextMenus.rate;
+                            }
                         }
 
                         // Add To Playlist is supported on all views
@@ -2576,6 +2582,7 @@ namespace WindowPlugins.GUITVSeries
                                 {
                                     if (guiListItem != null)
                                     {
+                                        MPTVSeriesLog.Write( $"Added image '{image}' to facade", MPTVSeriesLog.LogLevel.Debug );
                                         guiListItem.IconImage = image;
                                         guiListItem.IconImageBig = image;
                                         guiListItem.ThumbnailImage = image;
@@ -2783,7 +2790,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // probably something was removed
-                    MPTVSeriesLog.Write("Nothing to display, going out");
+                    MPTVSeriesLog.Write("Nothing to display, going out", MPTVSeriesLog.LogLevel.Debug);
                     OnAction(new Action(Action.ActionType.ACTION_PREVIOUS_MENU, 0, 0));
                 }
             }
@@ -3267,11 +3274,10 @@ namespace WindowPlugins.GUITVSeries
                                 MPTVSeriesLog.Write(string.Format("Adding episode {0} to list", episode.ToString()), MPTVSeriesLog.LogLevel.Debug);
                                 try
                                 {
-                                    //bEmpty = false;
                                     item = new GUIListItem();
 
-                                    // its possible the user never selected a series/season (flat view)
-                                    // thus its desirable to display series and season index also)
+                                    // it's possible the user never selected a series/season (flat view)
+                                    // thus it's desirable to display series and season index also
 
                                     if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
                                     {
@@ -3290,12 +3296,18 @@ namespace WindowPlugins.GUITVSeries
                                         {
                                             item.Label = episode.ToString();
                                         }
-
                                     }
                                     else
                                     {
+                                        string lEpisodeFormat = m_sFormatEpisodeCol2;
+                                        bool lDvdSortOrder = m_SelectedSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                                        if ( lDvdSortOrder && episode[DBOnlineEpisode.cDVDEpisodeNumber] != 0 )
+                                        {
+                                            lEpisodeFormat = lEpisodeFormat.Replace( "Episode.EpisodeIndex", "Episode.DVD_episodenumber" );
+                                        }
+
                                         // we came from series on top, only display index/title
-                                        item.Label = FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
+                                        item.Label = FieldGetter.resolveDynString( lEpisodeFormat, episode );
                                     }
 
                                     item.Label2 = FieldGetter.resolveDynString(m_sFormatEpisodeCol3, episode);
@@ -3673,11 +3685,11 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // Delete Physical Thumbnails
-            // Dont prompt if just doing a single episode update
-            bool deleteThumbs = true;
+            // Don't prompt if just doing a single episode update
+            bool lDeleteThumbs = true;
             if (CurrentViewLevel != Listlevel.Episode)
             {
-                GUIDialogYesNo dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
+                var dlgYesNo = (GUIDialogYesNo)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_YES_NO);
                 if (dlgYesNo != null)
                 {
                     dlgYesNo.Reset();
@@ -3686,28 +3698,29 @@ namespace WindowPlugins.GUITVSeries
                     dlgYesNo.SetLine(2, Translation.DeleteThumbnailsLine2);
                     dlgYesNo.SetDefaultToYes(false);
                     dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
-                    if (!dlgYesNo.IsConfirmed) deleteThumbs = false;
+                    if (!dlgYesNo.IsConfirmed) lDeleteThumbs = false;
                 }
             }
 
-            if (deleteThumbs)
-            {
-                string thumbnailPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(series.ToString()) + @"\Episodes");
 
+            string lThumbnailPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), Helper.cleanLocalPath( series.ToString() ) + @"\Episodes" );
+
+            if ( lDeleteThumbs && Directory.Exists( lThumbnailPath ) )
+            {
                 // Search and delete matching files that actually exist
-                string[] fileList = Directory.GetFiles(thumbnailPath, searchPattern);
+                string[] fileList = Directory.GetFiles(lThumbnailPath, searchPattern);
 
                 foreach (string file in fileList)
                 {
-                    MPTVSeriesLog.Write("Deleting Episode Thumbnail: " + file);
-                    FileInfo fileInfo = new FileInfo(file);
+                    MPTVSeriesLog.Write($"Deleting episode thumbnail '{file}'");
+                    var lFileInfo = new FileInfo(file);
                     try
                     {
-                        fileInfo.Delete();
+                        lFileInfo.Delete();
                     }
                     catch (Exception ex)
                     {
-                        MPTVSeriesLog.Write("Failed to Delete Episode Thumbnail: " + file + ": " + ex.Message);
+                        MPTVSeriesLog.Write($"Failed to Delete Episode Thumbnail '{file}'. Reason={ex.Message}");
                     }
                 }
 
@@ -3727,7 +3740,7 @@ namespace WindowPlugins.GUITVSeries
                     // Conditional parsing actions                    
                     if (CurrentViewLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
                     parsingActions.Add(ParsingAction.UpdateEpisodes);
-                    if (deleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+                    if (lDeleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
                     parsingActions.Add(ParsingAction.UpdateCommunityRatings);
                     parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
 

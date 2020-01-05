@@ -93,7 +93,8 @@ namespace WindowPlugins.GUITVSeries.GUI
         public enum ContextMenuItem
         {
             Layout,
-            Filter
+            Filter,
+            Delete
         }
 
         public enum Layout
@@ -168,6 +169,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         protected override void OnPageLoad()
         {
+            MPTVSeriesLog.Write( "Entering Artwork Chooser window" );
+
             // set window name
             GUIPropertyManager.SetProperty( "#currentmodule", Translation.Artwork );
 
@@ -185,6 +188,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             // Deserialise loading parameter from JSON (ArtworkParameters)
             if (!LoadParameters())
             {
+                MPTVSeriesLog.Write( "Unable to load Artwork Chooser, loading parameters not provided. Reverting to main TV-Series window" );
                 GUIWindowManager.ActivateWindow( 9811 );
                 return;
             }
@@ -204,6 +208,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             // save current layout
             DBOption.SetOptions( DBOption.cArtworkChooserLayout, ( int )CurrentLayout );
+
+            MPTVSeriesLog.Write( "Exiting Artwork Chooser window" );
         }
 
         protected override void OnClicked( int controlId, GUIControl control, Action.ActionType actionType )
@@ -249,27 +255,43 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         protected override void OnShowContextMenu()
         {
-            GUIListItem selectedItem = Facade.SelectedListItem;
-            if ( selectedItem == null ) return;
+            GUIListItem lSelectedItem = Facade.SelectedListItem;
+            if ( lSelectedItem == null ) return;
 
-            var dlg = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
-            dlg.Reset();
-            dlg.SetHeading( Translation.Actors );
+            var lSelectedArtworkItem = lSelectedItem as GUIArtworkListItem;
+            if ( lSelectedArtworkItem == null ) return;
 
-            GUIListItem listItem = null;
+            var lDlg = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
+            lDlg.Reset();
+            lDlg.SetHeading( Translation.ArtworkChooser );
 
-            listItem = new GUIListItem( Translation.ChangeLayout + " ..." );
-            dlg.Add( listItem );
-            listItem.ItemId = ( int )ContextMenuItem.Layout;
+            // create items for context menu
+            var lListItem = new GUIListItem( Translation.ChangeLayout + " ..." );
+            lDlg.Add( lListItem );
+            lListItem.ItemId = ( int )ContextMenuItem.Layout;
 
-            // Show Context Menu
-            dlg.DoModal( GUIWindowManager.ActiveWindow );
-            if ( dlg.SelectedId < 0 ) return;
+            // allow user to delete a locally downloaded artwork            
+            var lArtwork = lSelectedArtworkItem.Item as TvdbArt;
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
+            {
+                lListItem = new GUIListItem( Translation.ArtworkDelete );
+                lDlg.Add( lListItem );
+                lListItem.ItemId = ( int )ContextMenuItem.Delete;
+            }
 
-            switch ( dlg.SelectedId )
+            // show context menu
+            lDlg.DoModal( GUIWindowManager.ActiveWindow );
+            if ( lDlg.SelectedId < 0 ) return;
+
+            // do what was requested
+            switch ( lDlg.SelectedId )
             {
                 case ( ( int )ContextMenuItem.Layout ):
                     ShowLayoutsMenu();
+                    break;
+
+                case ( ( int )ContextMenuItem.Delete ):
+                    DeleteArtwork( lSelectedArtworkItem );
                     break;
             }
 
@@ -278,6 +300,118 @@ namespace WindowPlugins.GUITVSeries.GUI
         #endregion
 
         #region Private Methods
+        private void DeleteArtwork( GUIArtworkListItem aSelectedGUIItem )
+        {
+            // NB: we do not need to worry about deleting 'Default' artwork as 
+            // context menu item is not visible when default
+
+            var lArtwork = aSelectedGUIItem.Item as TvdbArt;
+
+            switch ( ArtworkParams.Type )
+            {
+                case ArtworkType.SeriesFanart:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove local reference from database
+                        lArtwork.Fanart[DBFanart.cLocalPath] = string.Empty;
+                        lArtwork.Fanart.Commit();
+
+                        // step 3: clear the fanart cache
+                        DBFanart.ClearSeriesFromCache(lArtwork.Series[DBOnlineSeries.cID]);
+
+                        // step 4: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+
+                        // step 5: rotate current background art if we're using random fanart
+                        // if using random fanart ignore rotated art in favour of chosen one
+                        if ( DBOption.GetOptions( DBOption.cFanartRandom ) && GUIPropertyManager.GetProperty( "#TVSeries.Current.Fanart" ) == lArtwork.LocalPath )
+                        {
+                            var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
+                            TVSeriesPlugin.LoadFanart( lTvsWindow );
+                        }
+                    }
+                    break;
+
+                case ArtworkType.SeriesPoster:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove from available artworks, pipe seperated relative paths
+                        string lPath = "posters/" + Path.GetFileName( lArtwork.OnlinePath );
+                        string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                        var lArtworks = lArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString().Split( '|' ).ToList();
+                        lArtworks.RemoveAll( a => a.Contains( lRelativePath ) );
+
+                        lArtwork.Series[DBOnlineSeries.cPosterFileNames] = string.Join( "|", lArtworks );
+                        lArtwork.Series.Commit();
+
+                        // step 3: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+
+                case ArtworkType.SeriesBanner:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove from available artworks, pipe seperated relative paths
+                        string lPath = "graphical/" + Path.GetFileName( lArtwork.OnlinePath );
+                        string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                        var lArtworks = lArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString().Split( '|' ).ToList();
+                        lArtworks.RemoveAll( a => a.Contains( lRelativePath ) );
+
+                        lArtwork.Series[DBOnlineSeries.cBannerFileNames] = string.Join( "|", lArtworks );
+                        lArtwork.Series.Commit();
+
+                        // step 3: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+
+                case ArtworkType.SeasonPoster:
+                    // step 1: delete artwork from disk
+                    if ( DeleteFile( lArtwork.LocalPath ) )
+                    {
+                        // step 2: remove from available artworks, pipe seperated relative paths
+                        string lPath = "seasons/" + Path.GetFileName( lArtwork.OnlinePath );
+                        string lRelativePath = Helper.cleanLocalPath( lArtwork.Series.ToString() ) + @"\-lang" + lArtwork.Language + "-" + lPath;
+
+                        var lArtworks = lArtwork.Season[DBSeason.cBannerFileNames].ToString().Split( '|' ).ToList();
+                        lArtworks.RemoveAll( a => a.Contains( lRelativePath ) );
+
+                        lArtwork.Season[DBSeason.cBannerFileNames] = string.Join( "|", lArtworks );
+                        lArtwork.Season.Commit();
+
+                        // step 3: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
+            }
+        }
+
+        private bool DeleteFile(string aFilename )
+        {
+            try
+            {
+                MPTVSeriesLog.Write( $"Deleting local artwork '{aFilename}' from disk" );
+                File.Delete( aFilename );
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write( "Failed to delete local artwork from disk. Reason=" + ex.Message );
+                return false;
+            }
+
+            return true;
+        }
+
         private void OnSeriesPosterClicked()
         {
             var lSelectedItem = mFacadePosters.SelectedListItem as GUIArtworkListItem;
@@ -314,11 +448,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected series poster '{lArtwork.LocalPath}' as selected" );
+
                 // update the main GUI property so affect is immediate on exit
                 GUIPropertyManager.SetProperty( "#TVSeries.SeriesPoster", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected series poster '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
@@ -364,11 +502,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected season poster '{lArtwork.LocalPath}' as selected" );
+
                 // update the main GUI property so affect is immediate on exit
                 GUIPropertyManager.SetProperty( "#TVSeries.SeasonPoster", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected season poster '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
@@ -414,11 +556,15 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected series widebanner '{lArtwork.LocalPath}' as selected" );
+
                 // update the main GUI property so affect is immediate on exit
                 GUIPropertyManager.SetProperty( "#TVSeries.SeriesBanner", lArtwork.LocalPath );
             }
             else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected series widebanner '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadeWidebanners.SelectedListItemIndex;
@@ -456,13 +602,13 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lFanart[DBFanart.cResolution] = lArtwork.Resolution;
                 lFanart.Commit();
 
-                MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry." );
+                MPTVSeriesLog.Write( "Selected fanart does not exist in database, creating entry" );
 
                 lArtwork.Fanart = lFanart;
             }
 
             // if the item is local and not default, make it the default
-            if ( lArtwork.IsLocal && !lArtwork.IsDefault)
+            if ( lArtwork.IsLocal && !lArtwork.IsDefault )
             {
                 // remove existing art as default
                 var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeThumbnails.GetID, DefaultArtIndex ) as GUIArtworkListItem;
@@ -480,12 +626,22 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
                 lSelectedItem.IsPlayed = true;
 
+                MPTVSeriesLog.Write( $"Marking selected series fanart '{lArtwork.LocalPath}' as selected" );
+
                 // update the current background
                 var lTvsWindow = GUIWindowManager.GetWindow( 9811 ) as TVSeriesPlugin;
                 TVSeriesPlugin.LoadFanart( lTvsWindow );
+
+                // if using random fanart ignore rotated art in favour of chosen one
+                if ( DBOption.GetOptions( DBOption.cFanartRandom ) )
+                {
+                    GUIPropertyManager.SetProperty( "#TVSeries.Current.Fanart", lArtwork.LocalPath );
+                }
             }
-            else if (!lArtwork.IsLocal)
+            else if ( !lArtwork.IsLocal )
             {
+                MPTVSeriesLog.Write( $"Selected series fanart '{lArtwork.OnlinePath}' does not exist, downloading now" );
+
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
                 lArtwork.DownloadItemIndex = mFacadeThumbnails.SelectedListItemIndex;
@@ -523,6 +679,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             // _loadingParameter can be set by a plugin developer or a skin designer
             if ( string.IsNullOrEmpty( _loadParameter ) )
                 return false;
+
+            MPTVSeriesLog.Write( $"Deserialising loading parameter '{_loadParameter}'" );
 
             ArtworkParams = _loadParameter.FromJSON<ArtworkLoadingParameters>();
             if ( ArtworkParams == null ) return false;
@@ -1032,7 +1190,10 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // if default, get index
                 if ( lItem.IsDefault )
+                {
                     lSelectedIndex = Facade.Count - 1;
+                    MPTVSeriesLog.Write( "Setting default artwork at selected index " + lSelectedIndex, MPTVSeriesLog.LogLevel.Debug );
+                }   
             }
 
             // Set Facade Layout
@@ -1078,6 +1239,7 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             string propertyValue = string.IsNullOrEmpty( value ) ? "N/A" : value;
             string propertyKey = string.Concat( "#TVSeries.Artwork.", property );
+            MPTVSeriesLog.Write( $"Publishing skin property '{propertyKey}' with value '{propertyValue}'",MPTVSeriesLog.LogLevel.Debug );
             GUIPropertyManager.SetProperty( propertyKey, propertyValue );
         }
 

@@ -344,10 +344,8 @@ namespace WindowPlugins.GUITVSeries
             InitColumns();
             if (!ReadPrimary(filename))
                 InitValues();
-            //if (System.IO.File.Exists(filename) && !HasMediaInfo && !Helper.IsImageFile(filename))
-            //    ReadMediaInfo();
 
-            //composite id will bw set automatically from setting these three
+            // composite ID will be set automatically from setting these three
             this[DBEpisode.cSeriesID] = onlineEpisode[DBOnlineEpisode.cSeriesID];
             this[DBEpisode.cSeasonIndex] = onlineEpisode[DBOnlineEpisode.cSeasonIndex];
             this[DBEpisode.cEpisodeIndex] = onlineEpisode[DBOnlineEpisode.cEpisodeIndex];
@@ -1056,10 +1054,10 @@ namespace WindowPlugins.GUITVSeries
         layer.GetRecordingByFileName( filename ).Delete();
         MPTVSeriesLog.Write(string.Format("Also Deleting record in MP table recording"));
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         // this should succeed only when there is a record in MP database..
-        MPTVSeriesLog.Write($"Seems no recording line to delete in MPTvDB, Exception={ex.Message}");
+        MPTVSeriesLog.Write($"No record of file to delete in MPTvDB");
       }
     }
 
@@ -1370,7 +1368,7 @@ namespace WindowPlugins.GUITVSeries
             string seasonIndex = DBOnlineEpisode.cSeasonIndex;
             if (series != null)
             {
-                seasonIndex = series.IsAiredOrder ? DBOnlineEpisode.cSeasonIndex : DBOnlineEpisode.cCombinedSeason;
+                seasonIndex = series.IsAiredOrder ? DBOnlineEpisode.cSeasonIndex : DBOnlineEpisode.cDVDSeasonNumber;
             }
             
             // build up a query to get episode counts for series/season
@@ -1983,8 +1981,12 @@ namespace WindowPlugins.GUITVSeries
             DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
             bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
-            string seasonIndex = SortByDVD ? DBOnlineEpisode.cCombinedSeason : DBOnlineEpisode.cSeasonIndex;
-            string episodeIndex = SortByDVD ? DBOnlineEpisode.cCombinedEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+            // check if we need to fallback to aired order if DVD order detail not available
+            if ( SortByDVD && ep[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
+                 SortByDVD = false;
+
+            string seasonIndex = SortByDVD ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
+            string episodeIndex = SortByDVD ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
             if ( ep[seasonIndex] == 0 && !Settings.isConfig )
             {

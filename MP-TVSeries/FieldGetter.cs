@@ -292,7 +292,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (Match m in matchRegex.Matches(what))
             {            
                 string result;
-                // check if we have useredted column             
+                // check if we have user edited column             
                 string userEditedEquivalent = m.Value + DBTable.cUserEditPostFix;
                 if (string.IsNullOrEmpty((result = item[userEditedEquivalent])))
                     result = item[m.Value];
