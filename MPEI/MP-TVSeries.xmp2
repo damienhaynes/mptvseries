@@ -2445,6 +2445,27 @@ Trailers can be accessed from the F9 context menu (INFO button on remote).</Desc
               <ZipFileName>Installer{CopyFile}\{08cbf4d3-b64b-4eb4-9f3e-80fe2cc0d09a}-defaultPictureWideBig.png</ZipFileName>
               <DestinationFilename>%Skin%\Titan\Media\defaultPictureWideBig.png</DestinationFilename>
             </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.Banners.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{edec0f7c-b2be-4e6a-b3ff-50a9f3907aad}-TVSeries.ArtworkChooser.Banners.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.Banners.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.Panels.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2e22a3f5-20ec-4f29-ab80-acb6678bf5a3}-TVSeries.ArtworkChooser.Panels.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.Panels.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.Posters.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{7fa790d0-ad91-429c-b704-9269f0b3be0e}-TVSeries.ArtworkChooser.Posters.xml</ZipFileName>
+              <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.Posters.xml</DestinationFilename>
+            </FileItem>
           </Items>
         </Files>
       </GroupItem>
@@ -2461,6 +2482,27 @@ Trailers can be accessed from the F9 context menu (INFO button on remote).</Desc
               <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.xml</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{18c0f8a0-f9e9-4d11-9f04-4629dcc47c33}-TVSeries.ArtworkChooser.xml</ZipFileName>
               <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.Banners.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3f2bfe26-7e5d-46ff-ad37-b8318aa23dc4}-TVSeries.ArtworkChooser.Banners.xml</ZipFileName>
+              <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.Banners.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.Panels.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c3eeb9a2-df11-4777-9cd0-1c1261933958}-TVSeries.ArtworkChooser.Panels.xml</ZipFileName>
+              <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.Panels.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.Posters.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{8747ef90-a126-4674-8ddc-2a7e02b8f1e8}-TVSeries.ArtworkChooser.Posters.xml</ZipFileName>
+              <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.Posters.xml</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -3069,7 +3111,7 @@ public class Script
       <Major>4</Major>
       <Minor>3</Minor>
       <Build>4</Build>
-      <Revision>1</Revision>
+      <Revision>2</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
@@ -3077,6 +3119,10 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
     <VersionDescription>* Added support to get Posters and Fanart from themoviedb.org via the Artwork Chooser GUI;
 * Fixed exception when manually updating series with no episode thumbnails;
 * Improvements to Artwork Chooser current background art when deleting and selecting new fanart and random fanart is activated;
+* Removed Facade with ID 51 and 52. Skinners should now use a single facade (ID 50) and use conditional includes basis the artwork type property (see included Titan skin for an example);
+* Added a localised skin property ( #TVSeries.Artwork.LocalisedType ) for the current artwork type;
+
+
 </VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation>https://github.com/damienhaynes/mptvseries/releases/download/4.3.4/MP-TVSeries-4.3.4.0.mpe1</OnlineLocation>
@@ -5483,12 +5529,54 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <ZipFileName>Installer{CopyFile}\{08cbf4d3-b64b-4eb4-9f3e-80fe2cc0d09a}-defaultPictureWideBig.png</ZipFileName>
         <DestinationFilename>%Skin%\Titan\Media\defaultPictureWideBig.png</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.Banners.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{edec0f7c-b2be-4e6a-b3ff-50a9f3907aad}-TVSeries.ArtworkChooser.Banners.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.Banners.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.Panels.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2e22a3f5-20ec-4f29-ab80-acb6678bf5a3}-TVSeries.ArtworkChooser.Panels.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.Panels.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\Titan\TVSeries.ArtworkChooser.Posters.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{7fa790d0-ad91-429c-b704-9269f0b3be0e}-TVSeries.ArtworkChooser.Posters.xml</ZipFileName>
+        <DestinationFilename>%Skin%\Titan\TVSeries.ArtworkChooser.Posters.xml</DestinationFilename>
+      </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.xml</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{18c0f8a0-f9e9-4d11-9f04-4629dcc47c33}-TVSeries.ArtworkChooser.xml</ZipFileName>
         <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.Banners.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3f2bfe26-7e5d-46ff-ad37-b8318aa23dc4}-TVSeries.ArtworkChooser.Banners.xml</ZipFileName>
+        <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.Banners.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.Panels.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c3eeb9a2-df11-4777-9cd0-1c1261933958}-TVSeries.ArtworkChooser.Panels.xml</ZipFileName>
+        <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.Panels.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\skin files\StreamedMP\TVSeries.ArtworkChooser.Posters.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{8747ef90-a126-4674-8ddc-2a7e02b8f1e8}-TVSeries.ArtworkChooser.Posters.xml</ZipFileName>
+        <DestinationFilename>%Skin%\StreamedMP\TVSeries.ArtworkChooser.Posters.xml</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
@@ -5536,6 +5624,16 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <DestinationFilename>%Skin%\Titan\</DestinationFilename>
         <Folder>..\skin files\Titan</Folder>
         <Group>TitanSkin</Group>
+        <Recursive>true</Recursive>
+      </FolderGroup>
+      <FolderGroup InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName />
+        <ZipFileName>Installer{CopyFile}\{7af95d38-f1a4-453b-9521-ab5f26f2d778}-</ZipFileName>
+        <DestinationFilename>%Skin%\StreamedMP\</DestinationFilename>
+        <Folder>..\skin files\StreamedMP</Folder>
+        <Group>StreamedMPSkin</Group>
         <Recursive>true</Recursive>
       </FolderGroup>
     </FolderGroups>

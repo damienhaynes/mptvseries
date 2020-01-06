@@ -10,10 +10,10 @@ using System.Net;
 using System.Threading;
 using System.Xml;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
-using Action = MediaPortal.GUI.Library.Action;
 using WindowPlugins.GUITVSeries.TmdbAPI;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
+using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries.GUI
 {
@@ -173,8 +173,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             ClearProperties();
 
             // set default layout
-            int defaultLayout = 0;
-            int.TryParse( DBOption.GetOptions( DBOption.cArtworkChooserLayout ), out defaultLayout );
+            int.TryParse(DBOption.GetOptions(DBOption.cArtworkChooserLayout), out int defaultLayout);
             CurrentLayout = ( Layout )defaultLayout;
 
             // update button label
@@ -228,21 +227,24 @@ namespace WindowPlugins.GUITVSeries.GUI
                 case 3:
                     ShowDataProvidersMenu();
                     break;
-                // Poster Facade
+                // Facade
                 case 50:
-                    if (ArtworkParams.Type == ArtworkType.SeriesPoster)
-                        OnSeriesPosterClicked();
-                    else
-                        OnSeasonPosterClicked();
+                    switch (ArtworkParams.Type)
+                    {
+                        case ArtworkType.SeriesPoster:
+                            OnSeriesPosterClicked();
+                            break;
+                        case ArtworkType.SeasonPoster:
+                            OnSeasonPosterClicked();
+                            break;
+                        case ArtworkType.SeriesBanner:
+                            OnSeriesWideBannerClicked();
+                            break;
+                        default:
+                            OnFanartClicked();
+                            break;
+                    }
                     break;
-                // Widebanner Facade
-                case 51:
-                    OnSeriesWideBannerClicked();
-                    break;
-                // Thumbnail Facade
-                case 52:
-                    OnFanartClicked();
-                    break;                
             }
 
             base.OnClicked( controlId, control, actionType );
@@ -1855,7 +1857,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                         this.ProgressBarPercentage = lArtwork.DownloadProgress;
 
                         // if the current download item is selected, update skin properties
-                        UpdateSelectedItemSkinProperties( lArtwork );
+                        UpdateSelectedItemSkinProperties( );
                     }
                     else if ( aEventArgs.PropertyName == "LocalPath" )
                     {
@@ -1871,7 +1873,7 @@ namespace WindowPlugins.GUITVSeries.GUI
         }
         private object _Item;
 
-        private void UpdateSelectedItemSkinProperties( Artwork aArtwork )
+        private void UpdateSelectedItemSkinProperties( )
         {
             int lFacadeId = 50;
 
