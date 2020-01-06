@@ -3982,6 +3982,8 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
 
+                // allow skin to use conditional includes basis the artwork type
+                GUIPropertyManager.SetProperty("#TVSeries.Artwork.Type", lArtworkParameters.Type.ToString());
                 GUIWindowManager.ActivateWindow( 9817, lArtworkParameters.ToJSON(), false );
             }
         }

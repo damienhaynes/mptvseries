@@ -72,31 +72,13 @@ namespace WindowPlugins.GUITVSeries.GUI
         #region Skin Controls
 
         [SkinControlAttribute( 50 )]
-        protected GUIFacadeControl mFacadePosters = null;
-
-        [SkinControlAttribute( 51 )]
-        protected GUIFacadeControl mFacadeWidebanners = null;
-
-        [SkinControlAttribute( 52 )]
-        protected GUIFacadeControl mFacadeThumbnails = null;
+        protected GUIFacadeControl Facade = null;
 
         [SkinControlAttribute( 2 )]
         protected GUIButtonControl ButtonLayouts = null;
 
         [SkinControlAttribute( 3 )]
         protected GUIButtonControl ButtonOnlineProviders = null;
-
-        [SkinControlAttribute( 4 )]
-        protected GUIButtonControl ButtonResolutionFilter = null;
-
-        [SkinControlAttribute( 5 )]
-        protected GUIButtonControl ButtonLanguageFilter = null;
-
-        [SkinControlAttribute( 6 )]
-        protected GUIButtonControl ButtonSortBy = null;
-
-        [SkinControlAttribute( 7 )]
-        protected GUIButtonControl ButtonRefresh = null;
 
         #endregion
 
@@ -134,31 +116,31 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         private ArtworkLoadingParameters ArtworkParams { get; set; }
 
-        private GUIFacadeControl Facade
-        {
-            get
-            {
-                GUIFacadeControl lFacade = null;
+        //private GUIFacadeControl Facade
+        //{
+        //    get
+        //    {
+        //        GUIFacadeControl lFacade = null;
 
-                switch ( ArtworkParams.Type )
-                {
-                    case ArtworkType.SeriesPoster:
-                    case ArtworkType.SeasonPoster:
-                        lFacade = mFacadePosters;
-                        break;
+        //        switch ( ArtworkParams.Type )
+        //        {
+        //            case ArtworkType.SeriesPoster:
+        //            case ArtworkType.SeasonPoster:
+        //                lFacade = mFacadePosters;
+        //                break;
 
-                    case ArtworkType.SeriesFanart:
-                    case ArtworkType.EpisodeThumb:
-                        lFacade = mFacadeThumbnails;
-                        break;
+        //            case ArtworkType.SeriesFanart:
+        //            case ArtworkType.EpisodeThumb:
+        //                lFacade = mFacadeThumbnails;
+        //                break;
 
-                    case ArtworkType.SeriesBanner:
-                        lFacade = mFacadeWidebanners;
-                        break;
-                }
-                return lFacade;
-            }
-        }
+        //            case ArtworkType.SeriesBanner:
+        //                lFacade = mFacadeWidebanners;
+        //                break;
+        //        }
+        //        return lFacade;
+        //    }
+        //}
 
         private int DefaultArtIndex { get; set; }
         
@@ -214,9 +196,6 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 GUIControl.SetControlLabel( GetID, ButtonOnlineProviders.GetID, string.Format( Translation.Provider, ArtworkParams.Provider.ToString() ) );
             }
-
-            // set facade visibility
-            SetFacadeVisibility();
 
             // get the thumbnails to load for user selection
             DownloadArtworkThumbs();
@@ -450,7 +429,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         private void OnSeriesPosterClicked()
         {
-            var lSelectedItem = mFacadePosters.SelectedListItem as GUIArtworkListItem;
+            var lSelectedItem = Facade.SelectedListItem as GUIArtworkListItem;
             if ( lSelectedItem == null ) return;
 
             var lArtwork = lSelectedItem.Item as Artwork;
@@ -466,7 +445,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( lArtwork.IsLocal && !lArtwork.IsDefault )
             {
                 // remove existing art as default
-                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadePosters.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, Facade.GetID, DefaultArtIndex ) as GUIArtworkListItem;
                 lOldDefault.Label2 = Translation.FanArtLocal;
                 lOldDefault.IsPlayed = false;
                 ( lOldDefault.Item as Artwork ).IsDefault = false;
@@ -478,7 +457,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lArtwork.IsDefault = true;
                 lArtwork.Series[DBOnlineSeries.cCurrentPosterFileName] = lRelativePath;
                 lArtwork.Series.Commit();
-                DefaultArtIndex = mFacadePosters.SelectedListItemIndex;
+                DefaultArtIndex = Facade.SelectedListItemIndex;
 
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
@@ -495,16 +474,16 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
-                lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
+                lArtwork.DownloadItemIndex = Facade.SelectedListItemIndex;
                 StartDownload( lArtwork );
             }
 
-            OnSelected( lSelectedItem, mFacadePosters );
+            OnSelected( lSelectedItem, Facade);
         }
 
         private void OnSeasonPosterClicked()
         {
-            var lSelectedItem = mFacadePosters.SelectedListItem as GUIArtworkListItem;
+            var lSelectedItem = Facade.SelectedListItem as GUIArtworkListItem;
             if ( lSelectedItem == null ) return;
 
             var lArtwork = lSelectedItem.Item as Artwork;
@@ -520,7 +499,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( lArtwork.IsLocal && !lArtwork.IsDefault )
             {
                 // remove existing art as default
-                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadePosters.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, Facade.GetID, DefaultArtIndex ) as GUIArtworkListItem;
                 lOldDefault.Label2 = Translation.FanArtLocal;
                 lOldDefault.IsPlayed = false;
                 ( lOldDefault.Item as Artwork ).IsDefault = false;
@@ -532,7 +511,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lArtwork.IsDefault = true;
                 lArtwork.Season[DBSeason.cCurrentBannerFileName] = lRelativePath;
                 lArtwork.Season.Commit();
-                DefaultArtIndex = mFacadePosters.SelectedListItemIndex;
+                DefaultArtIndex = Facade.SelectedListItemIndex;
 
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
@@ -549,16 +528,16 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
-                lArtwork.DownloadItemIndex = mFacadePosters.SelectedListItemIndex;
+                lArtwork.DownloadItemIndex = Facade.SelectedListItemIndex;
                 StartDownload( lArtwork );
             }
 
-            OnSelected( lSelectedItem, mFacadePosters );
+            OnSelected( lSelectedItem, Facade);
         }
 
         private void OnSeriesWideBannerClicked()
         {
-            var lSelectedItem = mFacadeWidebanners.SelectedListItem as GUIArtworkListItem;
+            var lSelectedItem = Facade.SelectedListItem as GUIArtworkListItem;
             if ( lSelectedItem == null ) return;
 
             var lArtwork = lSelectedItem.Item as Artwork;
@@ -574,7 +553,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( lArtwork.IsLocal && !lArtwork.IsDefault )
             {
                 // remove existing art as default
-                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeWidebanners.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, Facade.GetID, DefaultArtIndex ) as GUIArtworkListItem;
                 lOldDefault.Label2 = Translation.FanArtLocal;
                 lOldDefault.IsPlayed = false;
                 ( lOldDefault.Item as Artwork ).IsDefault = false;
@@ -586,7 +565,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lArtwork.IsDefault = true;
                 lArtwork.Series[DBOnlineSeries.cCurrentBannerFileName] = lRelativePath;
                 lArtwork.Series.Commit();
-                DefaultArtIndex = mFacadeWidebanners.SelectedListItemIndex;
+                DefaultArtIndex = Facade.SelectedListItemIndex;
 
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
@@ -603,16 +582,16 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
-                lArtwork.DownloadItemIndex = mFacadeWidebanners.SelectedListItemIndex;
+                lArtwork.DownloadItemIndex = Facade.SelectedListItemIndex;
                 StartDownload( lArtwork );
             }
 
-            OnSelected( lSelectedItem, mFacadeWidebanners );
+            OnSelected( lSelectedItem, Facade);
         }
 
         private void OnFanartClicked()
         {
-            var lSelectedItem = mFacadeThumbnails.SelectedListItem as GUIArtworkListItem;
+            var lSelectedItem = Facade.SelectedListItem as GUIArtworkListItem;
             if ( lSelectedItem == null ) return;
 
             var lArtwork = lSelectedItem.Item as Artwork;
@@ -647,7 +626,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( lArtwork.IsLocal && !lArtwork.IsDefault )
             {
                 // remove existing art as default
-                var lOldDefault = GUIFacadeControl.GetListItem( GetID, mFacadeThumbnails.GetID, DefaultArtIndex ) as GUIArtworkListItem;
+                var lOldDefault = GUIFacadeControl.GetListItem( GetID, Facade.GetID, DefaultArtIndex ) as GUIArtworkListItem;
                 lOldDefault.Label2 = Translation.FanArtLocal;
                 lOldDefault.IsPlayed = false;
                 ( lOldDefault.Item as Artwork ).IsDefault = false;
@@ -656,7 +635,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // update new art to default and commit
                 lArtwork.IsDefault = true;
                 lArtwork.Fanart.Chosen = true;
-                DefaultArtIndex = mFacadeThumbnails.SelectedListItemIndex;
+                DefaultArtIndex = Facade.SelectedListItemIndex;
 
                 // update facade
                 lSelectedItem.Label2 = Translation.ArtworkSelected;
@@ -680,34 +659,11 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 // the art it not local and we want to download it
                 // start download in background and let user continue selecting art to download
-                lArtwork.DownloadItemIndex = mFacadeThumbnails.SelectedListItemIndex;
+                lArtwork.DownloadItemIndex = Facade.SelectedListItemIndex;
                 StartDownload( lArtwork );
             }
             
-            OnSelected( lSelectedItem, mFacadeThumbnails );
-        }
-
-        private void SetFacadeVisibility()
-        {
-            switch ( ArtworkParams.Type )
-            {
-                case ArtworkType.SeriesPoster:
-                case ArtworkType.SeasonPoster:
-                    mFacadeThumbnails.Visible = false;
-                    mFacadeWidebanners.Visible = false;
-                    break;
-
-                case ArtworkType.SeriesFanart:
-                case ArtworkType.EpisodeThumb:
-                    mFacadePosters.Visible = false;
-                    mFacadeWidebanners.Visible = false;
-                    break;
-
-                case ArtworkType.SeriesBanner:
-                    mFacadePosters.Visible = false;
-                    mFacadeThumbnails.Visible = false;
-                    break;
-            }
+            OnSelected( lSelectedItem, Facade);
         }
 
         private bool LoadParameters()
@@ -1915,30 +1871,9 @@ namespace WindowPlugins.GUITVSeries.GUI
         }
         private object _Item;
 
-        private int GetCurrentFacade( Artwork aArtwork )
-        {
-            int lFacadeId = 0;
-            switch ( aArtwork.Type )
-            {
-                case ArtworkType.SeriesFanart:
-                case ArtworkType.EpisodeThumb:
-                    lFacadeId = 52;
-                    break;
-                case ArtworkType.SeriesPoster:
-                case ArtworkType.SeasonPoster:
-                    lFacadeId = 50;
-                    break;
-                default:
-                    lFacadeId = 51;
-                    break;
-            }
-
-            return lFacadeId;
-        }
-
         private void UpdateSelectedItemSkinProperties( Artwork aArtwork )
         {
-            int lFacadeId = GetCurrentFacade( aArtwork );
+            int lFacadeId = 50;
 
             var lSelectedItem = GUIControl.GetSelectedListItem( GUIWindowManager.ActiveWindow, lFacadeId ) as GUIArtworkListItem;
             if ( lSelectedItem != null && lSelectedItem.Item == this.Item )
@@ -2012,7 +1947,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtworkWindow = GUIWindowManager.GetWindow( GUIWindowManager.ActiveWindow ) as GUIArtworkChooser;
             if ( lArtworkWindow == null ) return;
 
-            int lFacadeId = GetCurrentFacade( aArtwork );
+            int lFacadeId = 50;
             int lSelectedItemIndex = ( lArtworkWindow.GetControl( lFacadeId ) as GUIFacadeControl ).SelectedListItemIndex;
 
             GUIListItem lSelectedItem = GUIControl.GetSelectedListItem( GUIWindowManager.ActiveWindow, lFacadeId );

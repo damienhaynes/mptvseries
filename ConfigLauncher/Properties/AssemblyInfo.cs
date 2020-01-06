@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "" )]
 [assembly: AssemblyProduct( "MP-TVSeries Configuration Launcher" )]
-[assembly: AssemblyCopyright( "Copyright © 2019" )]
+[assembly: AssemblyCopyright( "Copyright © 2020" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 // Align version with main library
-[assembly: AssemblyVersion( "4.3.4.1" )]
-[assembly: AssemblyFileVersion( "4.3.4.1" )]
+[assembly: AssemblyVersion( "4.3.4.2" )]
+[assembly: AssemblyFileVersion( "4.3.4.2" )]
