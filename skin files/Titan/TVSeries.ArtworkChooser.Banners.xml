@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+	<controls>
+		<control>
+  		<description>Widebanner</description>
+  		<type>image</type>
+  		<id>1</id>
+  		<posX>80</posX>
+  		<posY>330</posY>
+  		<width>644</width>
+  		<height>112</height>
+  		<texture>#selectedthumb</texture>
+  		<visible>facadeview.list+Control.IsVisible(50)</visible>
+  		<animation effect="fade" time="250">WindowOpen</animation>
+  		<animation effect="fade" time="250">WindowClose</animation>
+  	</control>
+		<control>
+      <description>Rating</description>
+      <type>label</type>
+      <label>#TVSeries.Artwork.RatingCount #TVSeries.Translation.Votes.Label</label>
+      <id>0</id>
+      <posX>80</posX>
+      <posY>462</posY>
+      <width>315</width>
+      <font>fontB12</font>
+      <textcolor>FF00b7ff</textcolor>
+      <visible>facadeview.list+Control.IsVisible(50)</visible>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
+    </control>
+		<control>
+			<description>group element</description>
+			<type>group</type>
+			<animation effect="fade" time="250">WindowOpen</animation>
+			<animation effect="fade" time="250">WindowClose</animation>
+			<control>
+			  <type>facadeview</type>
+				<id>50</id>
+				<control>
+					<description>listcontrol</description>
+					<type>listcontrol</type>
+					<id>50</id>
+					<onleft>2</onleft>
+					<onright>50</onright>
+					<scrollOffset>1</scrollOffset>
+					<posX>745</posX>
+					<posY>331</posY>
+					<width>1113</width>
+					<height>700</height>
+					<textXOff>25</textXOff>
+					<textXOff2>1090</textXOff2>
+					<IconXOff>20</IconXOff>
+					<IconYOff>3</IconYOff>
+					<itemWidth>259</itemWidth>
+					<itemHeight>48</itemHeight>
+					<textureFocus>listcontrol_item_selected_wide.png</textureFocus>
+					<textureNoFocus>-</textureNoFocus>
+					<dimColor>ffffffff</dimColor>
+					<spinPosX>1828</spinPosX>
+					<spinPosY>1000</spinPosY>
+					<texturebg>osd_progress_bg_list.png</texturebg>
+					<lefttexture>osd_progress_mid_lists_cap.png</lefttexture>
+					<midtexture>osd_progress_mid_guide.png</midtexture>
+					<righttexture>osd_progress_mid_lists_cap.png</righttexture>
+					<ProgressBarWidth>825</ProgressBarWidth>
+					<ProgressBarHeight>3</ProgressBarHeight>
+					<ProgressBarXOffset>270</ProgressBarXOffset>
+					<ProgressBarYOffset>48</ProgressBarYOffset>
+					<SelectedProgressOnly>No</SelectedProgressOnly>
+				</control>
+				<control>
+					<description>Filmstrip view</description>
+    			<type>filmstrip</type>
+    			<dimColor>90ffffff</dimColor>
+    			<id>50</id>
+    			<scrollOffset>3</scrollOffset>
+    			<folderPrefix></folderPrefix>
+    			<folderSuffix></folderSuffix>
+    			<posX>88</posX>
+    			<posY>665</posY>
+    			<width>1800</width>
+    			<height>340</height>
+    			<onup>2</onup>
+    			<ondown>2</ondown>
+    			<onleft>50</onleft>
+    			<onright>50</onright>
+    			<thumbWidth>338</thumbWidth>
+    			<thumbHeight>190</thumbHeight>
+    			<thumbPosX>0</thumbPosX>
+    			<thumbPosY>0</thumbPosY>
+    			<itemWidth>353</itemWidth>
+    			<itemHeight>190</itemHeight>
+    			<textureWidth>338</textureWidth>
+    			<textureHeight>190</textureHeight>
+    			<textYOff>-2000</textYOff>
+    			<imageFolderFocus>-</imageFolderFocus>
+    			<frame>-</frame>
+    			<frameFocus>-</frameFocus>
+    			<background>-</background>
+    			<thumbs flipY="true" diffuse="Thumb_Mask.png" mask="pictures_filmstrip_mask.png"></thumbs>
+    			<showFrame>yes</showFrame>
+    			<showFolder>no</showFolder>
+    			<showBackGround>no</showBackGround>
+    			<showInfoImage>no</showInfoImage>
+          <keepaspectratio>yes</keepaspectratio>
+     			<scrollbarBackground>scrollbar_bg_hor.png</scrollbarBackground>
+    			<scrollbarLeft>scrollbar_left_hor.png</scrollbarLeft>
+    			<scrollbarRight>scrollbar_right_hor.png</scrollbarRight>
+    			<scrollbarWidth>717</scrollbarWidth>
+    			<scrollbarHeight>8</scrollbarHeight>
+    			<scrollbarYOff>293</scrollbarYOff>
+    		  <spinPosX>1828</spinPosX>
+    		  <spinPosY>1000</spinPosY>
+    			<thumbAnimation effect="zoom" acceleration="-2" start="100,100" reversible="false" end="135,135" center="0,800" time="200">focus</thumbAnimation>
+    			<thumbAnimation effect="zoom" start="135,135" reversible="false" end="100,100" center="0,800" time="100">unfocus</thumbAnimation>
+				</control>
+				<control>
+					<description>Thumbnail Panel</description>
+					<type>thumbnailpanel</type>
+					<dimColor>90ffffff</dimColor>
+					<id>50</id>
+					<posX>146</posX>
+					<posY>340</posY>
+					<width>1850</width>
+					<height>625</height>
+					<onleft>2</onleft>
+					<onright>2</onright>					
+					<imageFolder>-</imageFolder>
+					<selectedColor>00ffffff</selectedColor>
+					<textcolor>ffffffff</textcolor>
+					<colordiffuse>ffffffff</colordiffuse>          
+					<suffix>|</suffix>
+					
+					<itemWidthBig>778</itemWidthBig>
+					<itemHeightBig>150</itemHeightBig>
+					<textureWidthBig>758</textureWidthBig>
+					<textureHeightBig>140</textureHeightBig>
+					<thumbWidthBig>748</thumbWidthBig>
+					<thumbHeightBig>128</thumbHeightBig>
+					<thumbPosXBig>4</thumbPosXBig>
+					<thumbPosYBig>5</thumbPosYBig>
+					
+					<itemWidth>407</itemWidth>
+					<itemHeight>85</itemHeight>
+					<textureWidth>405</textureWidth>
+					<textureHeight>85</textureHeight>
+					<thumbWidth>400</thumbWidth>
+					<thumbHeight>78</thumbHeight>
+					<thumbPosX>2</thumbPosX>
+					<thumbPosY>4</thumbPosY>
+					
+					<thumbZoom>no</thumbZoom>
+					<unfocusedAlpha>200</unfocusedAlpha>
+					<textXOff>0</textXOff>
+					<textYOff>0</textYOff>
+					<frame>-</frame>
+					<frameFocus>tvseries_widebanner_large_focus.png</frameFocus>
+					<frameNoFocus>-</frameNoFocus>
+					<textureMask></textureMask>
+					<scrollOffset>1</scrollOffset>
+					<keepaspectratio>no</keepaspectratio>
+					<enableFocusZoom>no</enableFocusZoom>
+					<spinPosX>1828</spinPosX>
+					<spinPosY>1000</spinPosY>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

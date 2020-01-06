@@ -21,12 +21,6 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
 using aclib.Performance;
 using Cornerstone.MP;
 using MediaPortal.Configuration;
@@ -35,6 +29,13 @@ using MediaPortal.GUI.Library;
 using MediaPortal.GUI.Video;
 using MediaPortal.Player;
 using MediaPortal.Util;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Trailers.Providers;
 using WindowPlugins.GUITVSeries.Extensions;
 using WindowPlugins.GUITVSeries.Feedback;
@@ -392,7 +393,7 @@ namespace WindowPlugins.GUITVSeries
             m_localControlForInvoke = new Control();
             m_localControlForInvoke.CreateControl();
 
-            MPTVSeriesLog.Write("**** Plugin started in MediaPortal ****");
+            MPTVSeriesLog.Write("Plugin started in MediaPortal");
             DBOption.LogOptions();
 
             #region Translations
@@ -454,6 +455,18 @@ namespace WindowPlugins.GUITVSeries
 
             // Setup Importer
             InitImporter();
+            #endregion
+
+            #region TMDb Provider
+            var lTmdbTask = Task.Factory.StartNew( () =>
+            {
+                MPTVSeriesLog.Write( "Getting online configuration details for themoviedb.org" );
+                TmdbAPI.TmdbAPI.UserAgent = Settings.UserAgent;
+
+                // refresh configuration
+                var lTmdbConfig = TmdbAPI.TmdbAPI.GetConfiguration();
+                DBOption.SetOptions( DBOption.cTmdbConfiguration, lTmdbConfig.ToJSON() );
+            } );
             #endregion
 
             #region Skin Settings / Load
@@ -3925,6 +3938,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            Provider = (ArtworkDataProvider)((int)m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider]),
                             Type = ArtworkType.SeriesFanart
                         };
                         break;
@@ -3933,6 +3947,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            Provider = ( ArtworkDataProvider )( ( int )m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider] ),
                             Type = ArtworkType.SeriesPoster
                         };
                         break;
@@ -3941,6 +3956,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            Provider = ArtworkDataProvider.TVDb /* tmdb does not have widebanners */,
                             Type = ArtworkType.SeriesBanner
                         };
                         break;
@@ -3949,6 +3965,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            Provider = ( ArtworkDataProvider )( ( int )m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider] ), /* we could configure per season */
                             Type = ArtworkType.SeasonPoster,
                             SeasonIndex = m_SelectedSeason[DBSeason.cIndex]
                         };
@@ -3965,6 +3982,8 @@ namespace WindowPlugins.GUITVSeries
                         break;
                 }
 
+                // allow skin to use conditional includes basis the artwork type
+                GUIPropertyManager.SetProperty("#TVSeries.Artwork.Type", lArtworkParameters.Type.ToString());
                 GUIWindowManager.ActivateWindow( 9817, lArtworkParameters.ToJSON(), false );
             }
         }

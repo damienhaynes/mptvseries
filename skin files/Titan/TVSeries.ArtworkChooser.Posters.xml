@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window>
+	<controls>
+		<!-- Selected Poster Image -->
+  	<control>
+  		<description>Poster shadow</description>
+  		<type>image</type>
+  		<id>1</id>
+  		<posX>105</posX>
+  		<posY>346</posY>
+  		<width>429</width>
+  		<height>613</height>
+  		<texture>list_poster_shadow.png</texture>
+  		<visible>facadeview.list+Control.IsVisible(50)</visible>
+  		<animation effect="fade" time="250">WindowOpen</animation>
+  		<animation effect="fade" time="250">WindowClose</animation>
+  	</control>
+  	<control>
+  		<description>Poster</description>
+  		<type>image</type>
+  		<id>1</id>
+  		<posX>123</posX>
+  		<posY>360</posY>
+  		<width>379</width>
+  		<height>563</height>
+  		<texture>#selectedthumb</texture>
+  		<visible>facadeview.list+Control.IsVisible(50)</visible>
+  		<animation effect="fade" time="250">WindowOpen</animation>
+  		<animation effect="fade" time="250">WindowClose</animation>
+  	</control>
+		<control>
+			<description>group element</description>
+			<type>group</type>
+			<animation effect="fade" time="250">WindowOpen</animation>
+			<animation effect="fade" time="250">WindowClose</animation>
+			<control>
+			  <type>facadeview</type>
+				<id>50</id>
+				<control>
+					<description>listcontrol</description>
+					<type>listcontrol</type>
+					<id>50</id>
+					<onleft>2</onleft>
+					<onright>50</onright>
+					<scrollOffset>1</scrollOffset>
+					<posX>745</posX>
+					<posY>331</posY>
+					<width>1113</width>
+					<height>700</height>
+					<textXOff>50</textXOff>
+					<textXOff2>1090</textXOff2>
+					<IconXOff>25</IconXOff>
+					<IconYOff>0</IconYOff>
+					<itemWidth>32</itemWidth>
+					<itemHeight>48</itemHeight>
+					<textureFocus>listcontrol_item_selected_wide.png</textureFocus>
+					<textureNoFocus>-</textureNoFocus>
+					<dimColor>ffffffff</dimColor>
+					<spinPosX>1828</spinPosX>
+					<spinPosY>1000</spinPosY>
+					<texturebg>osd_progress_bg_list.png</texturebg>
+					<lefttexture>osd_progress_mid_lists_cap.png</lefttexture>
+					<midtexture>osd_progress_mid_guide.png</midtexture>
+					<righttexture>osd_progress_mid_lists_cap.png</righttexture>
+					<ProgressBarWidth>1035</ProgressBarWidth>
+					<ProgressBarHeight>3</ProgressBarHeight>
+					<ProgressBarXOffset>75</ProgressBarXOffset>
+					<ProgressBarYOffset>48</ProgressBarYOffset>
+					<SelectedProgressOnly>No</SelectedProgressOnly>	
+				</control>
+				<control>
+					<description>Filmstrip view</description>
+					<type>filmstrip</type>
+					<dimColor>90ffffff</dimColor>
+					<id>50</id>
+					<scrollOffset>3</scrollOffset>
+					<folderPrefix></folderPrefix>
+					<folderSuffix></folderSuffix>
+					<posX>130</posX>
+					<posY>595</posY>
+					<width>1700</width>
+					<height>340</height>
+					<onup>2</onup>
+					<ondown>2</ondown>
+					<onleft>50</onleft>
+					<onright>50</onright>
+					<thumbWidth>230</thumbWidth>
+					<thumbHeight>327</thumbHeight>
+					<thumbPosX>0</thumbPosX>
+					<thumbPosY>0</thumbPosY>
+					<itemWidth>240</itemWidth>
+					<itemHeight>327</itemHeight>
+					<textureWidth>230</textureWidth>
+					<textureHeight>327</textureHeight>
+					<textYOff>-2000</textYOff>
+					<imageFolderFocus>-</imageFolderFocus>
+					<frame>-</frame>
+					<frameFocus>-</frameFocus>
+					<background>-</background>
+					<thumbs flipY="true" diffuse="Thumb_Mask_test.png" mask="filmstrip_mask.png"></thumbs>
+					<showFrame>yes</showFrame>
+					<showFolder>no</showFolder>
+					<showBackGround>no</showBackGround>
+					<showInfoImage>no</showInfoImage>
+					<scrollbarBackground>scrollbar_bg_hor.png</scrollbarBackground>
+					<scrollbarLeft>scrollbar_left_hor.png</scrollbarLeft>
+					<scrollbarRight>scrollbar_right_hor.png</scrollbarRight>
+					<scrollbarWidth>717</scrollbarWidth>
+					<scrollbarHeight>8</scrollbarHeight>
+					<scrollbarYOff>375</scrollbarYOff>
+					<thumbAnimation effect="zoom" acceleration="-2" start="100,100" reversible="false" end="120,120" center="0,880" time="200">focus</thumbAnimation>
+					<thumbAnimation effect="zoom" start="120,120" reversible="false" end="100,100" center="0,880" time="100">unfocus</thumbAnimation>
+				</control>      		
+				<control>
+					<description>Thumbnail Panel</description>
+					<type>thumbnailpanel</type>
+					<id>50</id>
+					<posX>127</posX>
+					<posY>342</posY>
+					<width>1700</width>
+					<height>700</height>
+					<folderPrefix></folderPrefix>
+					<folderSuffix></folderSuffix>
+					<onleft>2</onleft>
+					<onright>2</onright>
+					<itemWidth>138</itemWidth>
+					<itemHeight>196</itemHeight>
+					<textureWidth>138</textureWidth>
+					<textureHeight>196</textureHeight>
+					<thumbWidth>138</thumbWidth>
+					<thumbHeight>196</thumbHeight>
+					<thumbPosX>0</thumbPosX>
+					<thumbPosY>0</thumbPosY>
+					<itemWidthBig>208</itemWidthBig>
+					<itemHeightBig>296</itemHeightBig>
+					<thumbWidthBig>208</thumbWidthBig>
+					<thumbHeightBig>296</thumbHeightBig>
+					<textureWidthBig>208</textureWidthBig>
+					<textureHeightBig>296</textureHeightBig>
+					<thumbPosXBig>0</thumbPosXBig>
+					<thumbPosYBig>0</thumbPosYBig>
+					<zoomXPixels>20</zoomXPixels>
+					<zoomYPixels>30</zoomYPixels>
+					<hideUnfocusTexture>no</hideUnfocusTexture>
+					<keepaspectratio>no</keepaspectratio>
+					<renderFocusText>no</renderFocusText>
+					<renderUnfocusText>no</renderUnfocusText>
+					<frameNoFocus>-</frameNoFocus>
+					<frameFocus>video_thumb_focus.png</frameFocus>
+					<textureMask>video_thumb_mask.png</textureMask>
+					<shadowAngle>90</shadowAngle>
+					<shadowDistance>50</shadowDistance>
+					<thumbZoom>no</thumbZoom>
+					<spinPosX>1828</spinPosX>
+					<spinPosY>1000</spinPosY>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>
