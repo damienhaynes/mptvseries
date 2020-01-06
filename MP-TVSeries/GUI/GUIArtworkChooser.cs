@@ -1661,19 +1661,20 @@ namespace WindowPlugins.GUITVSeries.GUI
             if ( item is GUIArtworkListItem )
             {
                 var lArtwork = ( item as GUIArtworkListItem ).Item as Artwork;
+                bool lLog = !item.IsDownloading;
 
-                SetProperty( "Filename", lArtwork.LocalThumbPath.Replace( "/", @"\" ), true ); // publish fullsize if available ?
-                SetProperty( "Language", lArtwork.Language, true );
-                SetProperty( "OnlinePath", lArtwork.OnlinePath, true );
-                SetProperty( "OnlineThumbPath", lArtwork.OnlineThumbPath, true );
-                SetProperty( "Rating", lArtwork.Rating.ToString(), true );
-                SetProperty( "RatingCount", lArtwork.Votes.ToString(), true );
-                SetProperty( "IsDefault", lArtwork.IsDefault.ToString(), true );
-                SetProperty( "IsLocal", lArtwork.IsLocal.ToString(), true );
+                SetProperty( "Filename", lArtwork.LocalThumbPath.Replace( "/", @"\" ), lLog ); // publish fullsize if available ?
+                SetProperty( "Language", lArtwork.Language, lLog );
+                SetProperty( "OnlinePath", lArtwork.OnlinePath, lLog );
+                SetProperty( "OnlineThumbPath", lArtwork.OnlineThumbPath, lLog );
+                SetProperty( "Rating", lArtwork.Rating.ToString(), lLog );
+                SetProperty( "RatingCount", lArtwork.Votes.ToString(), lLog );
+                SetProperty( "IsDefault", lArtwork.IsDefault.ToString(), lLog );
+                SetProperty( "IsLocal", lArtwork.IsLocal.ToString(), lLog );
                 if ( ArtworkParams.Provider == ArtworkDataProvider.TVDb )
                 {
                     // thetvdb.com only has votes
-                    SetProperty( "SelectedItem", $"{lArtwork.Votes} {Translation.Votes} | {GetLabelTwo( lArtwork )}", true );
+                    SetProperty( "SelectedItem", $"{lArtwork.Votes} {Translation.Votes} | {GetLabelTwo( lArtwork )}", lLog );
                 }
                 else
                 {

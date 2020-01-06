@@ -2020,6 +2020,8 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cTraktID:
                                 case DBOnlineSeries.cSlug:
                                 case DBSeries.cParsedName:
+                                case DBOnlineSeries.cTmdbId:
+                                case DBOnlineSeries.cArtworkChooserProvider:
                                     // hide these fields as we are not so interested in,   
                                     // possibly add a toggle option to display all fields later
                                     break;
