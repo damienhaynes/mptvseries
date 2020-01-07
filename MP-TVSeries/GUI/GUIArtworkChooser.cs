@@ -1740,7 +1740,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     DBFanart.ClearSeriesFromCache( ArtworkParams.SeriesId );
                     var lDBFanarts = DBFanart.GetAll( ArtworkParams.SeriesId, false );
 
-                    GetFanartFromTMDb( lShowImages.Backdrops, lDBFanarts, ref lArtwork );
+                    GetFanartFromTMDb( lShowImages?.Backdrops, lDBFanarts, ref lArtwork );
 
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
                     return lArtwork;
@@ -1749,7 +1749,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #region Series Posters
                 case ArtworkType.SeriesPoster:
                     lShowImages = TmdbAPI.TmdbAPI.GetShowImages( lTmdbId.ToString(), lLanguages );
-                    GetSeriesPostersFromTMDb( lShowImages.Posters, ref lArtwork );
+                    GetSeriesPostersFromTMDb( lShowImages?.Posters, ref lArtwork );
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
                     return lArtwork;
                 #endregion
@@ -1757,7 +1757,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #region Season Posters
                 case ArtworkType.SeasonPoster:
                     var lSeasonImages = TmdbAPI.TmdbAPI.GetSeasonImages( lTmdbId.ToString(), ArtworkParams.SeasonIndex, lLanguages );
-                    GetSeasonPostersFromTMDb( lSeasonImages.Posters, ref lArtwork );
+                    GetSeasonPostersFromTMDb( lSeasonImages?.Posters, ref lArtwork );
                     lArtwork.Sort( new GUIListItemSorter( SortingFields.Score, SortingDirections.Descending ) );
                     return lArtwork;
                 #endregion
@@ -1784,7 +1784,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     DBFanart.ClearSeriesFromCache(ArtworkParams.SeriesId);
                     var lDBFanarts = DBFanart.GetAll(ArtworkParams.SeriesId, false);
 
-                    GetFanartFromFanartTv(lShowImages.TvShowBackgrounds, lDBFanarts, ref lArtwork);
+                    GetFanartFromFanartTv(lShowImages?.TvShowBackgrounds, lDBFanarts, ref lArtwork);
 
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
@@ -1793,7 +1793,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #region Series Posters
                 case ArtworkType.SeriesPoster:
                     lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
-                    GetSeriesPostersFromFanartTv(lShowImages.TvPosters, ref lArtwork);
+                    GetSeriesPostersFromFanartTv(lShowImages?.TvPosters, ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
                 #endregion
@@ -1801,7 +1801,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #region Series Widebanners
                 case ArtworkType.SeriesBanner:
                     lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
-                    GetSeriesWideBannersFromFanartTv(lShowImages.TvBanners, ref lArtwork);
+                    GetSeriesWideBannersFromFanartTv(lShowImages?.TvBanners, ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
                 #endregion
@@ -1809,7 +1809,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #region Season Posters
                 case ArtworkType.SeasonPoster:
                     lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
-                    GetSeasonPostersFromFanartTv(lShowImages.TvSeasonPosters?.Where(i => i.Season == ArtworkParams.SeasonIndex.ToString())?.ToList(), ref lArtwork);
+                    GetSeasonPostersFromFanartTv(lShowImages?.TvSeasonPosters?.Where(i => i.Season == ArtworkParams.SeasonIndex.ToString())?.ToList(), ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
                 #endregion
