@@ -1832,7 +1832,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 MPTVSeriesLog.Write( $"No '{ArtworkParams.Type}' artwork available for '{ArtworkParams.Series[DBOnlineSeries.cSeriesID]}' from provider '{ArtworkParams.Provider}'" );
 
-                var lNoItem = new GUIListItem( string.Format(Translation.NoArtworkAvailable, GetArtworkTypeName(ArtworkParams.Type), GetProviderName( ArtworkParams.Provider) ) );
+                var lNoItem = new GUIListItem( string.Format(Translation.NoArtworkAvailable, GetArtworkTypeName(ArtworkParams.Type), GetDataProviderNameFromEnum( ArtworkParams.Provider) ) );
                 lNoItem.IconImage = GetDefaultImage();
                 lNoItem.IconImageBig = GetDefaultImage();
                 lNoItem.ThumbnailImage = GetDefaultImage();
@@ -1890,7 +1890,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             GetImages( aArtwork );
         }
 
-        private string GetProviderName(ArtworkDataProvider aProvider)
+        private string GetDataProviderNameFromEnum(ArtworkDataProvider aProvider)
         {
             switch ( aProvider )
             {
@@ -1900,6 +1900,19 @@ namespace WindowPlugins.GUITVSeries.GUI
                     return "fanart.tv";
                 default:
                     return "thetvdb.com";
+            }
+        }
+
+        private ArtworkDataProvider GetProviderEnumFromString(string aName)
+        {
+            switch (aName)
+            {
+                case "themoviedb.org":
+                    return ArtworkDataProvider.TMDb;
+                case "fanart.tv":
+                    return ArtworkDataProvider.FanartTV;
+                default:
+                    return ArtworkDataProvider.TVDb;
             }
         }
 
@@ -2118,7 +2131,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             lDialog.Reset();
             lDialog.SetHeading( Translation.ChangeOnlineProvider );
             
-            var lItem = new GUIListItem( GetProviderName(ArtworkDataProvider.TVDb) );
+            var lItem = new GUIListItem( GetDataProviderNameFromEnum(ArtworkDataProvider.TVDb) );
             if ( ArtworkParams.Provider == ArtworkDataProvider.TVDb ) lItem.Selected = true;
             lItem.ItemId = (int)ArtworkDataProvider.TVDb;
             lDialog.Add( lItem );
@@ -2126,13 +2139,13 @@ namespace WindowPlugins.GUITVSeries.GUI
             // themoviedb.org does not support WideBanners
             if (ArtworkParams.Type != ArtworkType.SeriesBanner)
             {
-                lItem = new GUIListItem( GetProviderName( ArtworkDataProvider.TMDb ) );
+                lItem = new GUIListItem( GetDataProviderNameFromEnum( ArtworkDataProvider.TMDb ) );
                 if ( ArtworkParams.Provider == ArtworkDataProvider.TMDb ) lItem.Selected = true;
                 lItem.ItemId = (int)ArtworkDataProvider.TMDb;
                 lDialog.Add( lItem );
             }
 
-            lItem = new GUIListItem(GetProviderName(ArtworkDataProvider.FanartTV));
+            lItem = new GUIListItem(GetDataProviderNameFromEnum(ArtworkDataProvider.FanartTV));
             if (ArtworkParams.Provider == ArtworkDataProvider.FanartTV) lItem.Selected = true;
             lItem.ItemId = (int)ArtworkDataProvider.FanartTV;
             lDialog.Add(lItem);
@@ -2141,7 +2154,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             if ( lDialog.SelectedLabel >= 0 )
             {
-                ArtworkParams.Provider = ( ArtworkDataProvider )lDialog.SelectedId;
+                ArtworkParams.Provider = GetProviderEnumFromString(lDialog.SelectedLabelText);
                 ArtworkParams.Series[DBOnlineSeries.cArtworkChooserProvider] = (int)ArtworkParams.Provider;
                 ArtworkParams.Series.Commit();
 
