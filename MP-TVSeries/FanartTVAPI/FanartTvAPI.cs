@@ -3,11 +3,11 @@ using System.Net;
 using WindowPlugins.GUITVSeries.FanartTvAPI.DataStructures;
 using WindowPlugins.GUITVSeries.FanartTvAPI.Extensions;
 
-namespace WindowPlugins.GUITVSeries.TmdbAPI
+namespace WindowPlugins.GUITVSeries.FanartTvAPI
 {
     public static class FanartTvAPI
     {
-        private const string ApiUrl = "http://webservice.fanart.tv/v3/movies/{0}";
+        private const string ApiUrl = "http://webservice.fanart.tv/v3/tv/{0}";
 
         #region Web Events
 
