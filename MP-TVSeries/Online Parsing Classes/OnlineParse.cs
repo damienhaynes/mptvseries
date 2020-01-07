@@ -1068,6 +1068,9 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineSeries.cTraktIgnore:
                                 case DBOnlineSeries.cOriginalName:
                                 case DBOnlineSeries.cTraktID:
+                                case DBOnlineSeries.cSlug:
+                                case DBOnlineSeries.cTmdbId:
+                                case DBOnlineSeries.cArtworkChooserProvider:
                                     break;
 
                                 // dont update community ratings if we get from trakt
