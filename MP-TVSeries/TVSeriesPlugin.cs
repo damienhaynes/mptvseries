@@ -469,6 +469,11 @@ namespace WindowPlugins.GUITVSeries
             } );
             #endregion
 
+            #region Fanart.tv Provider
+            // https://fanart.tv/get-an-api-key/
+            FanartTvAPI.FanartTvAPI.Init(Settings.UserAgent, "4fe5df4e1a4069867074458c7f9c795e", DBOption.GetOptions(DBOption.cFanartTvClientKey));
+            #endregion
+
             #region Skin Settings / Load
             SkinSettings.Init();
 
@@ -3953,10 +3958,16 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ( int )eContextItems.artworkChoiceSeriesWideBanner:
+                        // tmdb does not have widebanners
+                        var lProvider = (ArtworkDataProvider)((int)m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider]);
+                        if (lProvider == ArtworkDataProvider.TMDb)
+                        {
+                            lProvider = ArtworkDataProvider.TVDb;
+                        }
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
-                            Provider = ArtworkDataProvider.TVDb /* tmdb does not have widebanners */,
+                            Provider = lProvider,
                             Type = ArtworkType.SeriesBanner
                         };
                         break;

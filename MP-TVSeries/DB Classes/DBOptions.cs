@@ -184,6 +184,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cParsedNameFromFolder = "ParsedNameFromFolder";
         public const string cCheckShowOnlyEpisodesRequiringManualSelection = "CheckShowOnlyEpisodesRequiringManualSelection";
         public const string cTmdbConfiguration = "TmdbConfiguration";
+        public const string cFanartTvClientKey = "FanartTvClientKey";
         #endregion
 
         private static readonly Object thisLock = new Object();

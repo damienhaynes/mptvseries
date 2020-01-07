@@ -180,6 +180,7 @@ namespace WindowPlugins.GUITVSeries
             this.dbOptionCheckBoxMarkRatedEpsAsWatched = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.optionAsk2Rate = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionParsedNameFromFolder = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
+            this.txtFanartTVClientKey = new System.Windows.Forms.TextBox();
             this.splitMain_Log = new System.Windows.Forms.SplitContainer();
             this.tabControl_Details = new System.Windows.Forms.TabControl();
             this.tabPage_Details = new System.Windows.Forms.TabPage();
@@ -228,6 +229,8 @@ namespace WindowPlugins.GUITVSeries
             this.tabOnlineData = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.panel_OnlineData = new System.Windows.Forms.Panel();
+            this.lnkFanartTvClientKey = new System.Windows.Forms.LinkLabel();
+            this.lblFanartTvClientKey = new System.Windows.Forms.Label();
             this.dbOptCheckBoxRemoveEpZero = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptCheckBoxDownloadActors = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -254,6 +257,7 @@ namespace WindowPlugins.GUITVSeries
             this.label26 = new System.Windows.Forms.Label();
             this.tabPage_MP_DisplayControl = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dbOptionSkipEpisodeMatchWizardStep = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionDisableMediaInfoInConfig = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.dbOptionCheckBox3 = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.lblRecentAddedDays = new System.Windows.Forms.Label();
@@ -321,7 +325,6 @@ namespace WindowPlugins.GUITVSeries
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.aboutScreen = new WindowPlugins.GUITVSeries.About();
             this.listBox_Log = new System.Windows.Forms.ListBox();
-            this.dbOptionSkipEpisodeMatchWizardStep = new WindowPlugins.GUITVSeries.Configuration.DBOptionCheckBox();
             this.contextMenuStrip_DetailsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Replace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecentlyAddedDays)).BeginInit();
@@ -1293,13 +1296,13 @@ namespace WindowPlugins.GUITVSeries
             this.addLogo.UseVisualStyleBackColor = true;
             this.addLogo.Click += new System.EventHandler(this.addLogo_Click);
             // 
-            // button1
+            // btnShowLog
             // 
             this.btnShowLog.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.btnShowLog.Image = global::WindowPlugins.GUITVSeries.Properties.Resources.arrow_up_small;
             this.btnShowLog.Location = new System.Drawing.Point(0, 977);
             this.btnShowLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnShowLog.Name = "button1";
+            this.btnShowLog.Name = "btnShowLog";
             this.btnShowLog.Size = new System.Drawing.Size(1203, 22);
             this.btnShowLog.TabIndex = 0;
             this.toolTip_Help.SetToolTip(this.btnShowLog, "Click here to show/hide the log window, useful for diagnosing any errors or watch" +
@@ -1672,6 +1675,8 @@ namespace WindowPlugins.GUITVSeries
             // dbCheckBoxTraktCommunityRatings
             // 
             this.dbCheckBoxTraktCommunityRatings.AutoSize = true;
+            this.dbCheckBoxTraktCommunityRatings.Checked = true;
+            this.dbCheckBoxTraktCommunityRatings.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dbCheckBoxTraktCommunityRatings.Location = new System.Drawing.Point(12, 238);
             this.dbCheckBoxTraktCommunityRatings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dbCheckBoxTraktCommunityRatings.Name = "dbCheckBoxTraktCommunityRatings";
@@ -1837,6 +1842,16 @@ namespace WindowPlugins.GUITVSeries
             this.toolTip_InfoHelp.SetToolTip(this.dbOptionParsedNameFromFolder, resources.GetString("dbOptionParsedNameFromFolder.ToolTip"));
             this.dbOptionParsedNameFromFolder.UseVisualStyleBackColor = true;
             // 
+            // txtFanartTVClientKey
+            // 
+            this.txtFanartTVClientKey.Location = new System.Drawing.Point(632, 27);
+            this.txtFanartTVClientKey.Name = "txtFanartTVClientKey";
+            this.txtFanartTVClientKey.Size = new System.Drawing.Size(231, 20);
+            this.txtFanartTVClientKey.TabIndex = 44;
+            this.toolTip_InfoHelp.SetToolTip(this.txtFanartTVClientKey, "Optiona client key that can be used when requesting images from fanart.tv via the" +
+        " Artwork Chooser.");
+            this.txtFanartTVClientKey.TextChanged += new System.EventHandler(this.txtFanartTVClientKey_TextChanged);
+            // 
             // splitMain_Log
             // 
             this.splitMain_Log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1952,7 +1967,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkIMDbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkIMDbSeries.AutoSize = true;
-            this.lnkIMDbSeries.Location = new System.Drawing.Point(751, 914);
+            this.lnkIMDbSeries.Location = new System.Drawing.Point(747, 914);
             this.lnkIMDbSeries.Name = "lnkIMDbSeries";
             this.lnkIMDbSeries.Size = new System.Drawing.Size(56, 13);
             this.lnkIMDbSeries.TabIndex = 155;
@@ -1965,7 +1980,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkTraktSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkTraktSeries.AutoSize = true;
-            this.lnkTraktSeries.Location = new System.Drawing.Point(812, 914);
+            this.lnkTraktSeries.Location = new System.Drawing.Point(808, 914);
             this.lnkTraktSeries.Name = "lnkTraktSeries";
             this.lnkTraktSeries.Size = new System.Drawing.Size(40, 13);
             this.lnkTraktSeries.TabIndex = 154;
@@ -1978,7 +1993,7 @@ namespace WindowPlugins.GUITVSeries
             // 
             this.lnkTVDbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lnkTVDbSeries.AutoSize = true;
-            this.lnkTVDbSeries.Location = new System.Drawing.Point(857, 914);
+            this.lnkTVDbSeries.Location = new System.Drawing.Point(853, 914);
             this.lnkTVDbSeries.Name = "lnkTVDbSeries";
             this.lnkTVDbSeries.Size = new System.Drawing.Size(73, 13);
             this.lnkTVDbSeries.TabIndex = 153;
@@ -2091,7 +2106,7 @@ namespace WindowPlugins.GUITVSeries
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.Size = new System.Drawing.Size(931, 629);
+            this.dataGridView1.Size = new System.Drawing.Size(927, 629);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
@@ -2123,7 +2138,7 @@ namespace WindowPlugins.GUITVSeries
             this.pictureBox_Series.Location = new System.Drawing.Point(132, 72);
             this.pictureBox_Series.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox_Series.Name = "pictureBox_Series";
-            this.pictureBox_Series.Size = new System.Drawing.Size(799, 197);
+            this.pictureBox_Series.Size = new System.Drawing.Size(795, 197);
             this.pictureBox_Series.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox_Series.TabIndex = 147;
             this.pictureBox_Series.TabStop = false;
@@ -2137,7 +2152,7 @@ namespace WindowPlugins.GUITVSeries
             this.comboBox_BannerSelection.Location = new System.Drawing.Point(132, 45);
             this.comboBox_BannerSelection.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox_BannerSelection.Name = "comboBox_BannerSelection";
-            this.comboBox_BannerSelection.Size = new System.Drawing.Size(799, 21);
+            this.comboBox_BannerSelection.Size = new System.Drawing.Size(795, 21);
             this.comboBox_BannerSelection.TabIndex = 1;
             this.comboBox_BannerSelection.SelectedIndexChanged += new System.EventHandler(this.comboBox_BannerSelection_SelectedIndexChanged);
             // 
@@ -2590,6 +2605,9 @@ namespace WindowPlugins.GUITVSeries
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OnlineData.AutoScroll = true;
+            this.panel_OnlineData.Controls.Add(this.lnkFanartTvClientKey);
+            this.panel_OnlineData.Controls.Add(this.lblFanartTvClientKey);
+            this.panel_OnlineData.Controls.Add(this.txtFanartTVClientKey);
             this.panel_OnlineData.Controls.Add(this.dbCheckBoxTraktCommunityRatings);
             this.panel_OnlineData.Controls.Add(this.dbOptCheckBoxRemoveEpZero);
             this.panel_OnlineData.Controls.Add(this.dbOptCheckBoxCleanOnlineEpisodes);
@@ -2640,6 +2658,26 @@ namespace WindowPlugins.GUITVSeries
             this.panel_OnlineData.Size = new System.Drawing.Size(1163, 876);
             this.panel_OnlineData.TabIndex = 0;
             this.panel_OnlineData.Tag = "Online Data";
+            // 
+            // lnkFanartTvClientKey
+            // 
+            this.lnkFanartTvClientKey.AutoSize = true;
+            this.lnkFanartTvClientKey.Location = new System.Drawing.Point(629, 53);
+            this.lnkFanartTvClientKey.Name = "lnkFanartTvClientKey";
+            this.lnkFanartTvClientKey.Size = new System.Drawing.Size(109, 13);
+            this.lnkFanartTvClientKey.TabIndex = 46;
+            this.lnkFanartTvClientKey.TabStop = true;
+            this.lnkFanartTvClientKey.Text = "Why set a client key?";
+            this.lnkFanartTvClientKey.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFanartTvClientKey_LinkClicked);
+            // 
+            // lblFanartTvClientKey
+            // 
+            this.lblFanartTvClientKey.AutoSize = true;
+            this.lblFanartTvClientKey.Location = new System.Drawing.Point(629, 8);
+            this.lblFanartTvClientKey.Name = "lblFanartTvClientKey";
+            this.lblFanartTvClientKey.Size = new System.Drawing.Size(99, 13);
+            this.lblFanartTvClientKey.TabIndex = 45;
+            this.lblFanartTvClientKey.Text = "Fanart.tv Client Key";
             // 
             // dbOptCheckBoxRemoveEpZero
             // 
@@ -3020,6 +3058,19 @@ namespace WindowPlugins.GUITVSeries
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Settings";
+            // 
+            // dbOptionSkipEpisodeMatchWizardStep
+            // 
+            this.dbOptionSkipEpisodeMatchWizardStep.AutoSize = true;
+            this.dbOptionSkipEpisodeMatchWizardStep.Location = new System.Drawing.Point(467, 437);
+            this.dbOptionSkipEpisodeMatchWizardStep.Name = "dbOptionSkipEpisodeMatchWizardStep";
+            this.dbOptionSkipEpisodeMatchWizardStep.Option = "CheckShowOnlyEpisodesRequiringManualSelection";
+            this.dbOptionSkipEpisodeMatchWizardStep.Size = new System.Drawing.Size(411, 17);
+            this.dbOptionSkipEpisodeMatchWizardStep.TabIndex = 44;
+            this.dbOptionSkipEpisodeMatchWizardStep.Text = "Skip episode matching step in config Import Wizard when no files require attentio" +
+    "n";
+            this.dbOptionSkipEpisodeMatchWizardStep.ToolTip = "";
+            this.dbOptionSkipEpisodeMatchWizardStep.UseVisualStyleBackColor = true;
             // 
             // dbOptionDisableMediaInfoInConfig
             // 
@@ -3872,19 +3923,6 @@ namespace WindowPlugins.GUITVSeries
             this.listBox_Log.Size = new System.Drawing.Size(120, 16);
             this.listBox_Log.TabIndex = 5;
             // 
-            // dbOptionSkipEpisodeMatchWizardStep
-            // 
-            this.dbOptionSkipEpisodeMatchWizardStep.AutoSize = true;
-            this.dbOptionSkipEpisodeMatchWizardStep.Location = new System.Drawing.Point(467, 437);
-            this.dbOptionSkipEpisodeMatchWizardStep.Name = "dbOptionSkipEpisodeMatchWizardStep";
-            this.dbOptionSkipEpisodeMatchWizardStep.Option = "CheckShowOnlyEpisodesRequiringManualSelection";
-            this.dbOptionSkipEpisodeMatchWizardStep.Size = new System.Drawing.Size(411, 17);
-            this.dbOptionSkipEpisodeMatchWizardStep.TabIndex = 44;
-            this.dbOptionSkipEpisodeMatchWizardStep.Text = "Skip episode matching step in config Import Wizard when no files require attentio" +
-    "n";
-            this.dbOptionSkipEpisodeMatchWizardStep.ToolTip = "";
-            this.dbOptionSkipEpisodeMatchWizardStep.UseVisualStyleBackColor = true;
-            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4224,5 +4262,8 @@ namespace WindowPlugins.GUITVSeries
         private DBOptionCheckBox dbOptionParsedNameFromFolder;
         private DBOptionCheckBox dbOptionDisableMediaInfoInConfig;
         private DBOptionCheckBox dbOptionSkipEpisodeMatchWizardStep;
+        private System.Windows.Forms.LinkLabel lnkFanartTvClientKey;
+        private System.Windows.Forms.Label lblFanartTvClientKey;
+        private System.Windows.Forms.TextBox txtFanartTVClientKey;
     }
 }

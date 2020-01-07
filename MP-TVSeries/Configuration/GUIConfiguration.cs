@@ -279,6 +279,8 @@ namespace WindowPlugins.GUITVSeries
             spinMaxFanarts.Value = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
             checkboxAutoDownloadFanartSeriesName.Checked = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
 
+            txtFanartTVClientKey.Text = DBOption.GetOptions( DBOption.cFanartTvClientKey );
+
             checkBox_Series_UseSortName.Checked = DBOption.GetOptions(DBOption.cUseSortName);                        
             
             richTextBox_seriesFormat_Col1.Tag = new FieldTag(DBOption.cViewSeriesColOne, FieldTag.Level.Series);
@@ -4984,6 +4986,16 @@ namespace WindowPlugins.GUITVSeries
                     Process.Start( lUrl );
                     break;
             }
+        }
+        
+        private void txtFanartTVClientKey_TextChanged( object sender, EventArgs e )
+        {
+            DBOption.SetOptions( DBOption.cFanartTvClientKey, txtFanartTVClientKey.Text );
+        }
+
+        private void lnkFanartTvClientKey_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
+        {
+            Process.Start( "https://fanart.tv/2015/01/personal-api-keys/" );
         }
 
         /// <summary>

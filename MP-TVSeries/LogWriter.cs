@@ -88,9 +88,14 @@ namespace WindowPlugins.GUITVSeries
             }
             
             // log data to and from themoviedb.org
-            TmdbAPI.TmdbAPI.OnDataSend += new TmdbAPI.TmdbAPI.OnDataSendDelegate( TmdbAPI_OnDataSend );
-            TmdbAPI.TmdbAPI.OnDataError += new TmdbAPI.TmdbAPI.OnDataErrorDelegate( TmdbAPI_OnDataError );
-            TmdbAPI.TmdbAPI.OnDataReceived += new TmdbAPI.TmdbAPI.OnDataReceivedDelegate( TmdbAPI_OnDataReceived );
+            TmdbAPI.TmdbAPI.OnDataSend += new TmdbAPI.TmdbAPI.OnDataSendDelegate( API_OnDataSend );
+            TmdbAPI.TmdbAPI.OnDataError += new TmdbAPI.TmdbAPI.OnDataErrorDelegate( API_OnDataError );
+            TmdbAPI.TmdbAPI.OnDataReceived += new TmdbAPI.TmdbAPI.OnDataReceivedDelegate( API_OnDataReceived );
+
+            // log data to and from themoviedb.org
+            FanartTvAPI.FanartTvAPI.OnDataSend += new FanartTvAPI.FanartTvAPI.OnDataSendDelegate(API_OnDataSend);
+            FanartTvAPI.FanartTvAPI.OnDataError += new FanartTvAPI.FanartTvAPI.OnDataErrorDelegate(API_OnDataError);
+            FanartTvAPI.FanartTvAPI.OnDataReceived += new FanartTvAPI.FanartTvAPI.OnDataReceivedDelegate(API_OnDataReceived);
 
             pauseAutoWriteDB = true;
             
@@ -98,7 +103,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Private Methods
-        private static void TmdbAPI_OnDataSend( string aAddress, string aData )
+        private static void API_OnDataSend( string aAddress, string aData )
         {
             if ( !string.IsNullOrEmpty( aData ) )
             {
@@ -110,7 +115,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private static void TmdbAPI_OnDataReceived( string aResponse, HttpWebResponse aWebResponse )
+        private static void API_OnDataReceived( string aResponse, HttpWebResponse aWebResponse )
         {
             string lHeaders = string.Empty;
             foreach ( string key in aWebResponse.Headers.AllKeys )
@@ -121,7 +126,7 @@ namespace WindowPlugins.GUITVSeries
             Write( string.Format("Response: {0}, Headers: {{{1}}}", aResponse ?? "null", lHeaders.TrimEnd( new char[] { ',', ' ' } ) ), LogLevel.Debug );
         }
 
-        private static void TmdbAPI_OnDataError( string aError )
+        private static void API_OnDataError( string aError )
         {
             Write( aError );
         }

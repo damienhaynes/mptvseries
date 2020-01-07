@@ -5,7 +5,8 @@ namespace WindowPlugins.GUITVSeries.FanartTvAPI.DataStructures
     [DataContract]
     public class FanartTvSeasonImage : FanartTvImage
     {
+        // data type as string to cater for "all" season
         [DataMember(Name = "season")]
-        public int Season { get; set; }
+        public string Season { get; set; }
     }
 }

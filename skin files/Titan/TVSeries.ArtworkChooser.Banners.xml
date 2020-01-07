@@ -24,7 +24,7 @@
       <width>315</width>
       <font>fontB12</font>
       <textcolor>FF00b7ff</textcolor>
-      <visible>facadeview.list+Control.IsVisible(50)</visible>
+      <visible>facadeview.list+Control.IsVisible(50)+!string.equals(#TVSeries.Artwork.RatingCount,)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>

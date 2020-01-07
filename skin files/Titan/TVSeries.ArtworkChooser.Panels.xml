@@ -24,7 +24,7 @@
       <width>315</width>
       <font>fontB12</font>
       <textcolor>FF00b7ff</textcolor>
-      <visible>facadeview.list+Control.IsVisible(50)+string.equals(#TVSeries.Artwork.DataProvider,TVDb)+!string.equals(#itemcount,0)</visible>
+      <visible>facadeview.list+Control.IsVisible(50)+!string.equals(#TVSeries.Artwork.DataProvider,TMDb)+!string.equals(#itemcount,0)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
@@ -38,7 +38,7 @@
       <width>315</width>
       <font>fontB12</font>
       <textcolor>FF00b7ff</textcolor>
-      <visible>facadeview.list+Control.IsVisible(50)+!string.equals(#TVSeries.Artwork.DataProvider,TVDb)+!string.equals(#itemcount,0)</visible>
+      <visible>facadeview.list+Control.IsVisible(50)+string.equals(#TVSeries.Artwork.DataProvider,TMDb)+!string.equals(#itemcount,0)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
     </control>

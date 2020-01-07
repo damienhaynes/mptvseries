@@ -216,12 +216,13 @@ namespace WindowPlugins.GUITVSeries
         public static string GetLocalThumbPath(string aOnlineThumbPath, string aSeriesID)
         {
             // fanart thumbs are stored in: _cache\fanart\original\<seriesId>-*.jpg
-            string lThumbPath = "_cache/fanart/original/" + Path.GetFileName( aOnlineThumbPath );
-            if ( !lThumbPath.Contains( aSeriesID ) )
+            string lFilename = Path.GetFileName(aOnlineThumbPath);
+            string lThumbPath = "_cache/fanart/original/" + lFilename;
+            if ( !lFilename.StartsWith( aSeriesID ) )
             {
                 // add the series id to the filename
-                string lOldValue = Path.GetFileName( aOnlineThumbPath );
-                string lNewValue = aSeriesID + "-" + Path.GetFileName( aOnlineThumbPath );
+                string lOldValue = lFilename;
+                string lNewValue = aSeriesID + "-" + lFilename;
                 lThumbPath = lThumbPath.Replace( lOldValue, lNewValue );
             }
             return lThumbPath.Replace( "/", @"\" );
@@ -234,12 +235,13 @@ namespace WindowPlugins.GUITVSeries
         public static string GetLocalPath( string aThumbPath, string aSeriesID )
         {
             // fanart thumbs are stored in: fanart\original\<seriesId>-*.jpg
-            string lPath = "fanart/original/" + Path.GetFileName( aThumbPath );
-            if ( !lPath.Contains( aSeriesID ) )
+            string lFilename = Path.GetFileName(aThumbPath);
+            string lPath = "fanart/original/" + lFilename;
+            if ( !lFilename.StartsWith( aSeriesID ) )
             {
                 // add the series id to the filename
-                string lOldValue = Path.GetFileName( aThumbPath );
-                string lNewValue = aSeriesID + "-" + Path.GetFileName( aThumbPath );
+                string lOldValue = lFilename;
+                string lNewValue = aSeriesID + "-" + lFilename;
                 lPath = lPath.Replace( lOldValue, lNewValue );
             }
             return lPath.Replace( "/", @"\" );
