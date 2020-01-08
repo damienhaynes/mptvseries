@@ -9,12 +9,11 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Xml;
+using WindowPlugins.GUITVSeries.FanartTvAPI.DataStructures;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 using WindowPlugins.GUITVSeries.TmdbAPI;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
-using WindowPlugins.GUITVSeries.FanartTvAPI;
-using WindowPlugins.GUITVSeries.FanartTvAPI.DataStructures;
 using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries.GUI

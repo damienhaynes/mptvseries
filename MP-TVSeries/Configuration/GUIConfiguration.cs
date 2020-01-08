@@ -37,6 +37,7 @@ using System.Threading.Tasks;
 using WindowPlugins.GUITVSeries.Configuration;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
+using WindowPlugins.GUITVSeries.TmdbAPI;
 
 // TODO: replace all checkboxes that are used to save options with a dboptioncheckbox
 
@@ -126,7 +127,7 @@ namespace WindowPlugins.GUITVSeries
                 // refresh configuration
                 var lTmdbConfig = TmdbAPI.TmdbAPI.GetConfiguration();
                 DBOption.SetOptions( DBOption.cTmdbConfiguration, lTmdbConfig.ToJSON() );
-            } );            
+            } );
             #endregion
 
             // Only Advanced Users / Skin Designers need to see these.
@@ -4996,6 +4997,56 @@ namespace WindowPlugins.GUITVSeries
         private void lnkFanartTvClientKey_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             Process.Start( "https://fanart.tv/2015/01/personal-api-keys/" );
+        }
+
+        private void lnkFanartTvSeries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start($"https://fanart.tv/series/{mSelectedSeries[DBOnlineSeries.cID]}/");
+        }
+
+        private void lnkTMDbSeries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // don't lock up the GUI in case we need to search online for TMDb ID first
+            var lTmdbTask = Task.Factory.StartNew(() =>
+            {
+                // first check if we have the TMDb ID for the series
+                int lTmdbId = mSelectedSeries[DBOnlineSeries.cTmdbId];
+                if (lTmdbId <= 0)
+                {
+                    MPTVSeriesLog.Write($"Searching themoviedb.org for series '{mSelectedSeries[DBOnlineSeries.cPrettyName]}' with TVDb ID '{mSelectedSeries[DBOnlineSeries.cID]}'");
+
+                    // we don't have it, let's search for it and save it for next time
+                    // there should only be one result for a tvdb ID.
+                    var lResults = TmdbAPI.TmdbAPI.TMDbFind(mSelectedSeries[DBOnlineSeries.cID], ExternalSource.tvdb_id);
+                    if (lResults == null || lResults.Shows == null || lResults.Shows.Count == 0)
+                    {
+                        MPTVSeriesLog.Write($"Failed to find TMDb ID for series '{mSelectedSeries[DBOnlineSeries.cPrettyName]}'");
+                        return;
+                    }
+
+                    lTmdbId = lResults.Shows.FirstOrDefault().Id;
+                    MPTVSeriesLog.Write($"Found TMDb ID '{lTmdbId}' for tv show '{mSelectedSeries[DBOnlineSeries.cPrettyName]}' with TVDb ID '{mSelectedSeries[DBOnlineSeries.cID]}'");
+
+                    // save it for next time
+                    mSelectedSeries[DBOnlineSeries.cTmdbId] = lTmdbId;
+                    mSelectedSeries.Commit();
+                }
+
+                switch (mSelectedStep)
+                {
+                    case SelectedViewStep.Season:
+                        Process.Start($"https://www.themoviedb.org/tv/{lTmdbId}/season/{mSelectedSeason[DBSeason.cIndex]}");
+                        break;
+
+                    case SelectedViewStep.Episode:
+                        Process.Start($"https://www.themoviedb.org/tv/{lTmdbId}/season/{mSelectedEpisode[DBOnlineEpisode.cSeasonIndex]}/episode/{mSelectedEpisode[DBOnlineEpisode.cEpisodeIndex]}");
+                        break;
+
+                    default: // series
+                        Process.Start($"https://www.themoviedb.org/tv/{lTmdbId}/");
+                        break;
+                }
+            });
         }
 
         /// <summary>
