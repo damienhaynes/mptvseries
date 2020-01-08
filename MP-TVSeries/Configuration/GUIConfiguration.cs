@@ -2134,6 +2134,7 @@ namespace WindowPlugins.GUITVSeries
                     
                     SQLCondition conditions = new SQLCondition();
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
+                    conditions.beginGroup();
                     conditions.Add(new DBOnlineEpisode(), lSeasonField, lSeasonIndex, SQLConditionType.Equal);
                     if ( lUseDVDOrder && lSeasonIndex > 0 )
                     {
@@ -2144,6 +2145,7 @@ namespace WindowPlugins.GUITVSeries
                         conditions.nextIsOr = false;
                         conditions.endGroup();
                     }
+                    conditions.endGroup();
                     List<DBEpisode> episodes = DBEpisode.Get(conditions);
                     
                     // sort by correct order
