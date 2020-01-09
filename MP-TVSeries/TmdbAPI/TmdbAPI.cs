@@ -50,15 +50,15 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI
             return lResponse.FromJSON<TmdbShowImages>();
         }
 
-        public static TmdbSeasonImages GetSeasonImages(string aId, int aSeason, string aIncludeLanguages = "en,null" )
+        public static TmdbSeasonImages GetSeasonImages( string aId, int aSeason, string aIncludeLanguages = "en,null" )
         {
             string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiGetSeasonImages, aId, aSeason, aIncludeLanguages));
             return lResponse.FromJSON<TmdbSeasonImages>();
         }
 
-        public static TmdbEpisodeImages GetEpisodeImages(string aId, int aSeason, int aEpisode)
+        public static TmdbEpisodeImages GetEpisodeImages( string aId, int aSeason, int aEpisode, string aIncludeLanguages = "en,null" )
         {
-            string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiGetEpisodeImages, aId, aSeason, aEpisode));
+            string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiGetEpisodeImages, aId, aSeason, aEpisode, aIncludeLanguages));
             return lResponse.FromJSON<TmdbEpisodeImages>();
         }
         #endregion

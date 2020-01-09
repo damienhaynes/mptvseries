@@ -41,10 +41,15 @@ namespace WindowPlugins.GUITVSeries.GUI
     public class ArtworkLoadingParameters
     {
         public int SeriesId { get; set; }
+
         public int SeasonIndex { get; set; }
+
         public int EpisodeIndex { get; set; }
+
         public ArtworkType Type { get; set; }
+
         public ArtworkDataProvider Provider { get; set; }
+
         public DBSeries Series
         {
             get
@@ -56,6 +61,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
         private DBSeries series;
+
         public DBSeason Season
         {
             get
@@ -67,6 +73,18 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
         private DBSeason season;
+
+        public DBEpisode Episode
+        {
+            get
+            {
+                if (episode == null)
+                    episode = DBEpisode.Get(SeriesId, SeasonIndex, EpisodeIndex);
+
+                return episode;
+            }
+        }
+        private DBEpisode episode;
     }
 
     public class GUIArtworkChooser : GUIWindow
@@ -242,6 +260,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                         case ArtworkType.SeriesBanner:
                             OnSeriesWideBannerClicked();
                             break;
+                        case ArtworkType.EpisodeThumb:
+                            OnEpisodeThumbnailClicked();
+                            break;
                         default:
                             OnFanartClicked();
                             break;
@@ -412,6 +433,16 @@ namespace WindowPlugins.GUITVSeries.GUI
                         aSelectedGUIItem.Label2 = Translation.FanArtOnline;
                     }
                     break;
+
+                case ArtworkType.EpisodeThumb:
+                    // step 1: delete artwork from disk
+                    if (DeleteFile(lArtwork.LocalPath))
+                    {
+                        // step 2: mark as remote
+                        lArtwork.IsLocal = false;
+                        aSelectedGUIItem.Label2 = Translation.FanArtOnline;
+                    }
+                    break;
             }
         }
 
@@ -431,6 +462,66 @@ namespace WindowPlugins.GUITVSeries.GUI
             return true;
         }
 
+        private void OnEpisodeThumbnailClicked()
+        {
+            var lSelectedItem = Facade.SelectedListItem as GUIArtworkListItem;
+            if (lSelectedItem == null) return;
+
+            var lArtwork = lSelectedItem.Item as Artwork;
+            if (lArtwork == null) return;
+
+            // if the item is currently downloading do nothing (maybe prompt to cancel later)
+            if (lSelectedItem.IsDownloading) return;
+
+            // if the item is default, then nothing to do
+            if (lArtwork.IsDefault) return;
+
+            // if the item is local and not default, make it the default
+            if (lArtwork.IsLocal && !lArtwork.IsDefault)
+            {
+                // remove existing art as default
+                var lOldDefault = GUIFacadeControl.GetListItem(GetID, Facade.GetID, DefaultArtIndex) as GUIArtworkListItem;
+                lOldDefault.Label2 = Translation.FanArtLocal;
+                lOldDefault.IsPlayed = false;
+                (lOldDefault.Item as Artwork).IsDefault = false;
+
+                // set the source of image in episode table
+                if (lArtwork.Provider == ArtworkDataProvider.TMDb)
+                {
+                    lArtwork.Episode[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl] = lArtwork.OnlinePath;
+                    
+                }
+                lArtwork.Episode[DBOnlineEpisode.cEpisodeThumbnailSource] = (int)lArtwork.Provider;
+                lArtwork.Episode.Commit();
+
+                // update new art to default and commit
+                lArtwork.IsDefault = true;
+                lArtwork.Episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = lArtwork.Episode.BuildEpisodeThumbFilename();
+                lArtwork.Episode.Commit();
+                DefaultArtIndex = Facade.SelectedListItemIndex;
+
+                // update facade
+                lSelectedItem.Label2 = Translation.ArtworkSelected;
+                lSelectedItem.IsPlayed = true;
+
+                MPTVSeriesLog.Write($"Marking selected episode thumbnail '{lArtwork.LocalPath}' as selected");
+
+                // update the main GUI property so affect is immediate on exit
+                GUIPropertyManager.SetProperty("#TVSeries.EpisodeImage", lArtwork.LocalPath);
+            }
+            else if (!lArtwork.IsLocal)
+            {
+                MPTVSeriesLog.Write($"Selected episode thumbnail '{lArtwork.OnlinePath}' does not exist, downloading now");
+
+                // the art it not local and we want to download it
+                // start download in background and let user continue selecting art to download
+                lArtwork.DownloadItemIndex = Facade.SelectedListItemIndex;
+                StartDownload(lArtwork);
+            }
+
+            OnSelected(lSelectedItem, Facade);
+        }
+
         private void OnSeriesPosterClicked()
         {
             var lSelectedItem = Facade.SelectedListItem as GUIArtworkListItem;
@@ -439,7 +530,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtwork = lSelectedItem.Item as Artwork;
             if ( lArtwork == null ) return;
 
-            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            // if the item is currently downloading do nothing (maybe prompt to cancel later)
             if ( lSelectedItem.IsDownloading ) return;
 
             // if the item is default, then nothing to do
@@ -493,7 +584,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtwork = lSelectedItem.Item as Artwork;
             if ( lArtwork == null ) return;
 
-            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            // if the item is currently downloading do nothing (maybe prompt to cancel later)
             if ( lSelectedItem.IsDownloading ) return;
 
             // if the item is default, then nothing to do
@@ -547,7 +638,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtwork = lSelectedItem.Item as Artwork;
             if ( lArtwork == null ) return;
 
-            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            // if the item is currently downloading do nothing (maybe prompt to cancel later)
             if ( lSelectedItem.IsDownloading ) return;
 
             // if the item is default, then nothing to do
@@ -601,7 +692,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtwork = lSelectedItem.Item as Artwork;
             if ( lArtwork == null ) return;
 
-            // if the item is currently downloading so nothing (maybe prompt to cancel later)
+            // if the item is currently downloading do nothing (maybe prompt to cancel later)
             if ( lSelectedItem.IsDownloading ) return;
 
             // if the item is default, then nothing to do
@@ -685,9 +776,13 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "SeriesName", ArtworkParams.Series.ToString(), true );
             SetProperty( "Type", ArtworkParams.Type.ToString(), true );
             SetProperty( "LocalisedType", GetArtworkTypeName(ArtworkParams.Type), true );
-            if ( ArtworkParams.Type == ArtworkType.SeasonPoster )
+            if ( ArtworkParams.Type == ArtworkType.SeasonPoster || ArtworkParams.Type == ArtworkType.EpisodeThumb)
             {
                 SetProperty( "SeasonIndex", ArtworkParams.SeasonIndex.ToString(), true );
+            }
+            if (ArtworkParams.Type == ArtworkType.EpisodeThumb)
+            {
+                SetProperty("EpisodeIndex", ArtworkParams.EpisodeIndex.ToString(), true);
             }
             SetProperty( "DataProvider", ArtworkParams.Provider.ToString(), true );
             return true;
@@ -1572,6 +1667,117 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
         }
 
+        private void GetEpisodeThumbnailsFromTVDb( ref List<Artwork> aArtwork)
+        {
+            // there is only a single episode thumbnail available from thetvdb.com
+            // NB: users can still choose to update an outdated thumbnail so worth having as an option
+            if (string.IsNullOrEmpty(ArtworkParams.Episode[DBOnlineEpisode.cEpisodeThumbnailUrl]))
+                return;
+
+            var lEpisodeImage = new Artwork
+            {
+                Episode = ArtworkParams.Episode,
+                Season = ArtworkParams.Season,
+                Series = ArtworkParams.Series,
+                Provider = ArtworkDataProvider.TVDb,
+                Type = ArtworkType.EpisodeThumb,
+                Resolution = $"{ArtworkParams.Episode[DBOnlineEpisode.cThumbWidth]}x{ArtworkParams.Episode[DBOnlineEpisode.cThumbHeight]}",
+                OnlinePath = ArtworkParams.Episode[DBOnlineEpisode.cEpisodeThumbnailUrl],
+                OnlineThumbPath = ArtworkParams.Episode[DBOnlineEpisode.cEpisodeThumbnailUrl]
+            };
+
+            // create full dowload url's
+            // tvdb do not store thumbs for episode thumbnails so it's the same
+            string lBaseUrl = DBOnlineMirror.Banners.EndsWith("/") ? DBOnlineMirror.Banners : DBOnlineMirror.Banners + "/";
+            lEpisodeImage.Url = lBaseUrl + lEpisodeImage.OnlinePath;
+            lEpisodeImage.ThumbnailUrl = lBaseUrl + lEpisodeImage.OnlineThumbPath;
+
+            string lEpisodeId = $"{ArtworkParams.Episode[DBOnlineEpisode.cSeasonIndex]}x{ArtworkParams.Episode[DBOnlineEpisode.cEpisodeIndex]}";
+
+            // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\episodes\tvdb\episodes\71663\4444267.jpg
+            string lThumbPath = $"/Thumbnails/episodes/tvdb/{lEpisodeId}_" + Path.GetFileName(lEpisodeImage.OnlinePath);
+            string lRelativeThumbPath = Helper.cleanLocalPath(ArtworkParams.Series.ToString()) + lThumbPath;
+            lEpisodeImage.LocalThumbPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), lRelativeThumbPath);
+            
+            // create the local filename path for the online image
+            string lPath = $"/episodes/{lEpisodeId}.jpg";
+            string lRelativePath = Helper.cleanLocalPath(ArtworkParams.Series.ToString()) + lPath;
+            lEpisodeImage.LocalPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), lRelativePath);
+
+            // if the artwork is already downloaded, then set it (no reason why it shouldn't be unless it keeps failing)
+            if (File.Exists(lEpisodeImage.LocalPath))
+            {
+                lEpisodeImage.IsLocal = true;
+
+                // if the current image source is tvdb then mark as default
+                int lCurrentSource = ArtworkParams.Episode[DBOnlineEpisode.cEpisodeThumbnailSource];
+                if (lCurrentSource == (int)ArtworkDataProvider.TVDb)
+                {
+                    lEpisodeImage.IsDefault = true;
+                }
+            }
+
+            aArtwork.Add(lEpisodeImage);
+        }
+
+        private void GetEpisodeThumbnailsFromTMDb( List<TmdbImage> aImages, ref List<Artwork> aArtwork )
+        {
+            foreach (var episodeImage in aImages)
+            {
+                var lEpisodeImage = new Artwork
+                {
+                    Language = episodeImage.LanguageCode,
+                    OnlinePath = "original" + episodeImage.FilePath, /* make configurable */
+                    OnlineThumbPath = "w300" + episodeImage.FilePath, /* make configurable */
+                    Resolution = $"{episodeImage.Width}x{episodeImage.Height}",
+                    Rating = episodeImage.Score,
+                    Votes = (uint)episodeImage.Votes,
+                    Type = ArtworkType.EpisodeThumb,
+                    Series = ArtworkParams.Series,
+                    Season = ArtworkParams.Season,
+                    Episode = ArtworkParams.Episode,
+                    Provider = ArtworkDataProvider.TMDb
+                };
+
+                string lEpisodeId = $"{ArtworkParams.Episode[DBOnlineEpisode.cSeasonIndex]}x{ArtworkParams.Episode[DBOnlineEpisode.cEpisodeIndex]}";
+
+                // create the local filename path for the online thumbnail image e.g. 13 Reasons Why\Thumbnails\episodes\tmdb\1x1_enSKInSK5OpHuLlAWOy6cB6CBmJ.jpg
+                string lThumbPath = $"/Thumbnails/Episodes/tmdb/{lEpisodeId}_" + Path.GetFileName(lEpisodeImage.OnlineThumbPath);
+                string lRelativeThumbPath = Helper.cleanLocalPath(ArtworkParams.Series.ToString()) + lThumbPath;
+                lEpisodeImage.LocalThumbPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), lRelativeThumbPath);
+
+                // create the local filename path for the online image
+                string lPath = $"/Episodes/{lEpisodeId}_" + Path.GetFileName(lEpisodeImage.OnlinePath);
+                string lRelativePath = Helper.cleanLocalPath(ArtworkParams.Series.ToString()) + lPath;
+                lEpisodeImage.LocalPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), lRelativePath);
+
+                // if the fullsize artwork is already downloaded, then set it
+                if (File.Exists(lEpisodeImage.LocalPath)) lEpisodeImage.IsLocal = true;
+
+                // if the artwork is default/selected, then set it
+                if (ArtworkParams.Episode[DBOnlineEpisode.cEpisodeThumbnailFilename] == lRelativePath.Replace("/", @"\"))
+                    lEpisodeImage.IsDefault = true;
+
+                // create full dowload url's
+                string lBaseUrl;
+                var lTmdbConfig = DBOption.GetOptions(DBOption.cTmdbConfiguration).ToString().FromJSON<TmdbConfiguration>();
+                if (lTmdbConfig == null)
+                {
+                    lBaseUrl = "https://image.tmdb.org/t/p/";
+                }
+                else
+                {
+                    lBaseUrl = lTmdbConfig.Images.SecureBaseUrl;
+                }
+
+                lEpisodeImage.ThumbnailUrl = lBaseUrl + lEpisodeImage.OnlineThumbPath;
+                lEpisodeImage.Url = lBaseUrl + lEpisodeImage.OnlinePath;
+
+                if (!aArtwork.Contains(lEpisodeImage))
+                    aArtwork.Add(lEpisodeImage);
+            }
+        }
+
         private List<Artwork> GetArtworkThumbsFromTVDb()
         {
             var lArtwork = new List<Artwork>();
@@ -1690,6 +1896,8 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #endregion
 
                 case ArtworkType.EpisodeThumb:
+                    GetEpisodeThumbnailsFromTVDb(ref lArtwork);
+                    lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
 
                 default:
@@ -1762,6 +1970,9 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #endregion
 
                 case ArtworkType.EpisodeThumb:
+                    var lEpisodeImages = TmdbAPI.TmdbAPI.GetEpisodeImages(lTmdbId.ToString(), ArtworkParams.SeasonIndex, ArtworkParams.EpisodeIndex, lLanguages);
+                    GetEpisodeThumbnailsFromTMDb(lEpisodeImages?.Stills, ref lArtwork);
+                    lArtwork.Sort(new GUIListItemSorter(SortingFields.Score, SortingDirections.Descending));
                     return lArtwork;
 
                 default:
@@ -1976,7 +2187,9 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "SeriesID", " " );
             SetProperty( "SeriesName", " " );
             SetProperty( "SeasonIndex", " " );
+            SetProperty( "EpisodeIndex", " " );
             SetProperty( "Type", " " );
+            SetProperty( "LocalisedType", " " );
             SetProperty( "DataProvider", " " );
 
             // Selected
@@ -1984,6 +2197,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "Language", " " );
             SetProperty( "OnlinePath", " " );
             SetProperty( "OnlineThumbPath", " " );
+            SetProperty( "Resolution", " " );
             SetProperty( "Rating", " " );
             SetProperty( "RatingCount", " " );            
             SetProperty( "IsDefault", " " );
@@ -2002,10 +2216,12 @@ namespace WindowPlugins.GUITVSeries.GUI
                 SetProperty( "Language", lArtwork.Language, lLog );
                 SetProperty( "OnlinePath", lArtwork.OnlinePath, lLog );
                 SetProperty( "OnlineThumbPath", lArtwork.OnlineThumbPath, lLog );
+                SetProperty( "Resolution", lArtwork.Resolution, lLog );
                 SetProperty( "Rating", lArtwork.Rating.ToString(), lLog );
                 SetProperty( "RatingCount", lArtwork.Votes.ToString(), lLog );
                 SetProperty( "IsDefault", lArtwork.IsDefault.ToString(), lLog );
                 SetProperty( "IsLocal", lArtwork.IsLocal.ToString(), lLog );
+                
                 if ( ArtworkParams.Provider != ArtworkDataProvider.TMDb )
                 {
                     // thetvdb.com and fanart.tv only has votes
@@ -2022,6 +2238,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 SetProperty( "Language", " " );
                 SetProperty( "OnlinePath", " " );
                 SetProperty( "OnlineThumbPath", " " );
+                SetProperty( "Resolution", " " );
                 SetProperty( "Rating", " " );
                 SetProperty( "RatingCount", " " );
                 SetProperty( "IsDefault", " " );
@@ -2144,10 +2361,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                 lDialog.Add( lItem );
             }
 
-            lItem = new GUIListItem(GetDataProviderNameFromEnum(ArtworkDataProvider.FanartTV));
-            if (ArtworkParams.Provider == ArtworkDataProvider.FanartTV) lItem.Selected = true;
-            lItem.ItemId = (int)ArtworkDataProvider.FanartTV;
-            lDialog.Add(lItem);
+            // fanart.tv does not support episode thumbs
+            if (ArtworkParams.Type != ArtworkType.EpisodeThumb)
+            {
+                lItem = new GUIListItem(GetDataProviderNameFromEnum(ArtworkDataProvider.FanartTV));
+                if (ArtworkParams.Provider == ArtworkDataProvider.FanartTV) lItem.Selected = true;
+                lItem.ItemId = (int)ArtworkDataProvider.FanartTV;
+                lDialog.Add(lItem);
+            }
 
             lDialog.DoModal( GUIWindowManager.ActiveWindow );
 
@@ -2230,27 +2451,32 @@ namespace WindowPlugins.GUITVSeries.GUI
                     var lArtwork = aSource as Artwork;
                     if ( lArtwork == null ) return;
 
-                    if ( aEventArgs.PropertyName == "LocalThumbPath" )
+                    switch (aEventArgs.PropertyName)
                     {
-                        SetImageToGui( lArtwork );
-                    }
-                    else if ( aEventArgs.PropertyName == "DownloadProgress" )
-                    {
-                        this.IsDownloading = true;
-                        this.Label2 = string.Format(Translation.ArtworkDownloading, lArtwork.DownloadProgress);
-                        this.ProgressBarPercentage = lArtwork.DownloadProgress;
+                        case "LocalThumbPath":
+                            SetImageToGui(lArtwork);
+                            break;
 
-                        // if the current download item is selected, update skin properties
-                        UpdateSelectedItemSkinProperties( );
-                    }
-                    else if ( aEventArgs.PropertyName == "LocalPath" )
-                    {
-                        this.Label2 = Translation.FanArtLocal;
-                        this.IsDownloading = false;
-                        this.ProgressBarPercentage = 0;
-                        
-                        // update database as downloaded
-                        SetArtworkAsLocal( lArtwork );
+                        case "DownloadProgress":
+                            this.IsDownloading = true;
+                            this.Label2 = string.Format(Translation.ArtworkDownloading, lArtwork.DownloadProgress);
+                            this.ProgressBarPercentage = lArtwork.DownloadProgress;
+
+                            // if the current download item is selected, update skin properties
+                            UpdateSelectedItemSkinProperties();
+                            break;
+
+                        case "LocalPath":
+                            this.Label2 = Translation.FanArtLocal;
+                            this.IsDownloading = false;
+                            this.ProgressBarPercentage = 0;
+
+                            // update database as downloaded
+                            SetArtworkAsLocal(lArtwork);
+                            break;
+
+                        default:
+                            break;
                     }
                 };
             }
@@ -2310,6 +2536,11 @@ namespace WindowPlugins.GUITVSeries.GUI
                     aArtwork.Season[DBSeason.cBannerFileNames] = lAvailableSeasonPosters += "|" + lRelativePath;
                     aArtwork.Season.Commit();
                     break;
+
+                case ArtworkType.EpisodeThumb:
+                    // nothing more to do, user can click on it to make default
+                    break;
+
             }
         }
 
@@ -2391,6 +2622,8 @@ namespace WindowPlugins.GUITVSeries.GUI
         public DBSeries Series { get; set; }
 
         public DBSeason Season { get; set; }
+
+        public DBEpisode Episode { get; set; }
 
         /// <summary>
         /// True if the Fanart contains a series logo
@@ -2529,7 +2762,6 @@ namespace WindowPlugins.GUITVSeries.GUI
                         lResult = aArtworkA.Votes.CompareTo( aArtworkY.Votes );
                         break;
 
-                    // default to the title field
                     default:
                         lResult = 0;
                         break;

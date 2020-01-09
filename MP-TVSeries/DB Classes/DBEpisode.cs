@@ -1939,6 +1939,26 @@ namespace WindowPlugins.GUITVSeries
 			}
         }
 
+        public string BuildEpisodeThumbFilename()
+        {
+            DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+
+            string lEpisodeId = $"{m_onlineEpisode[DBOnlineEpisode.cSeasonIndex]}x{m_onlineEpisode[DBOnlineEpisode.cEpisodeIndex]}";
+
+            string lSeriesFolder = Helper.cleanLocalPath(series.ToString());
+
+            int lThumbSource = this[DBOnlineEpisode.cEpisodeThumbnailSource];
+            if (lThumbSource == 0 /* tvdb */)
+            {
+                return Helper.PathCombine(lSeriesFolder, $"Episodes\\{lEpisodeId}.jpg");
+            }
+            else
+            {
+                // themoviedb.org
+                return Helper.PathCombine(lSeriesFolder, $"Episodes\\{lEpisodeId}_" + Path.GetFileName(this[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl]));
+            }
+        }
+
         #region PrettyFilesize
         [DllImport("Shlwapi.dll", CharSet = CharSet.Auto)]
         static extern long StrFormatByteSize(long fileSize,

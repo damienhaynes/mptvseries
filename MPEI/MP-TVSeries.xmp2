@@ -3117,13 +3117,10 @@ public class Script
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
     <VersionDescription>* Added support to get Posters and Fanart from themoviedb.org via the Artwork Chooser GUI;
+* Added a localised skin property ( #TVSeries.Artwork.LocalisedType ) for the current artwork type;
 * Fixed exception when manually updating series with no episode thumbnails;
 * Improvements to Artwork Chooser current background art when deleting and selecting new fanart and random fanart is activated;
-* Removed Facade with ID 51 and 52. Skinners should now use a single facade (ID 50) and use conditional includes basis the artwork type property (see included Titan skin for an example);
-* Added a localised skin property ( #TVSeries.Artwork.LocalisedType ) for the current artwork type;
-
-
-</VersionDescription>
+* Removed Facade with ID 51 and 52. Skinners should now use a single facade (ID 50) and use conditional includes basis the artwork type property (see included Titan skin for an example);</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation>https://github.com/damienhaynes/mptvseries/releases/download/4.3.4/MP-TVSeries-4.3.4.0.mpe1</OnlineLocation>
     <ReleaseDate>2020-01-04T15:25:06</ReleaseDate>

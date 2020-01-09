@@ -3925,12 +3925,12 @@ namespace WindowPlugins.GUITVSeries
                 pItem.ItemId = ( int )eContextItems.artworkChoiceSeasonPoster;
             }
 
-            //if ( CurrentViewLevel == Listlevel.Episode )
-            //{
-            //    pItem = new GUIListItem( Translation.EpisodeThumb );
-            //    dlg.Add( pItem );
-            //    pItem.ItemId = ( int )eContextItems.artworkChoiceEpisodeThumb;
-            //}
+            if (CurrentViewLevel == Listlevel.Episode)
+            {
+                pItem = new GUIListItem(Translation.EpisodeThumb);
+                dlg.Add(pItem);
+                pItem.ItemId = (int)eContextItems.artworkChoiceEpisodeThumb;
+            }
 
             dlg.DoModal( GUIWindowManager.ActiveWindow );
             if ( dlg.SelectedId >= 0 )
@@ -3983,9 +3983,16 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ( int )eContextItems.artworkChoiceEpisodeThumb:
+                        // only themoviedb.org and thetvdb.com have support for episode thumbs
+                        lProvider = (ArtworkDataProvider)((int)m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider]);
+                        if (lProvider == ArtworkDataProvider.FanartTV)
+                        {
+                            lProvider = ArtworkDataProvider.TVDb;
+                        }
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedEpisode[DBOnlineEpisode.cSeriesID],
+                            Provider = lProvider,
                             Type = ArtworkType.EpisodeThumb,
                             SeasonIndex = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex],
                             EpisodeIndex = m_SelectedEpisode[DBOnlineEpisode.cEpisodeIndex]

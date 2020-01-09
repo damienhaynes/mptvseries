@@ -51,6 +51,8 @@ namespace WindowPlugins.GUITVSeries
         public const String cLastUpdated = "lastupdated";        
         public const String cEpisodeThumbnailUrl = "ThumbUrl";
         public const String cEpisodeThumbnailFilename = "thumbFilename";
+        public const String cTMDbEpisodeThumbnailUrl = "ThumbUrl_TMDb";
+        public const String cEpisodeThumbnailSource = "episodethumbsource";
         public const String cAirsBeforeSeason = "airsbefore_season";
         public const String cAirsBeforeEpisode = "airsbefore_episode";
         public const String cAirsAfterSeason = "airsafter_season";
@@ -142,7 +144,6 @@ namespace WindowPlugins.GUITVSeries
 
         private void InitColumns()
         {
-            // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST ( I suck at SQL )
             base.AddColumn(cCompositeID, new DBField(DBField.cTypeString, true));
             base.AddColumn(cID, new DBField(DBField.cTypeInt));
             base.AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
@@ -168,6 +169,8 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cLastUpdated, new DBField(DBField.cTypeString));            
             base.AddColumn(cEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
             base.AddColumn(cEpisodeThumbnailFilename, new DBField(DBField.cTypeString));
+            base.AddColumn(cTMDbEpisodeThumbnailUrl, new DBField(DBField.cTypeString));
+            base.AddColumn(cEpisodeThumbnailSource, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {

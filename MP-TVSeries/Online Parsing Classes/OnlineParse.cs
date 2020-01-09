@@ -1221,10 +1221,12 @@ namespace WindowPlugins.GUITVSeries
                                     case DBOnlineEpisode.cLastWatchedDate:
                                     case DBOnlineEpisode.cFirstWatchedDate:
                                     case DBOnlineEpisode.cPlayCount:
-                                    case DBOnlineEpisode.cHidden:                                    
+                                    case DBOnlineEpisode.cHidden:
                                     case DBOnlineEpisode.cMyRating:
                                     case DBOnlineEpisode.cMyRatingAt:
                                     case DBOnlineEpisode.cEpisodeThumbnailFilename:
+                                    case DBOnlineEpisode.cEpisodeThumbnailSource:
+                                    case DBOnlineEpisode.cTMDbEpisodeThumbnailUrl:
                                         // do nothing here, this information is local only
                                         break;
 
@@ -2323,42 +2325,45 @@ namespace WindowPlugins.GUITVSeries
             {
                 MPTVSeriesLog.Write(bigLogMessage("Updating Episode Thumbnails"), MPTVSeriesLog.LogLevel.Normal);
 
-                // Get all online episodes that have a image but not yet downloaded                
-                string query = string.Empty;
-                
+                // Get all online episodes that have an image but not yet downloaded                
+                string lQuery;
+
                 if (Settings.isConfig)
-                    // Be more thorough in configuration, user may have deleted thumbs locally
-                    query = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
-                else
-                    query = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
-
-                DBSeries series = null;
-                var episodes = DBEpisode.Get(query);
-                var episodesToDownload = new List<DBEpisode>();
-
-                #region Check for Thumbs To Download
-                foreach (var episode in episodes)
                 {
-                    if (series == null || series[DBSeries.cID] != episode[DBEpisode.cSeriesID])
-                        series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                    if (series == null) continue;
+                    // Be more thorough in configuration, user may have deleted thumbs locally
+                    lQuery = "select * from online_episodes where ThumbURL != '' order by SeriesID asc";
+                }
+                else
+                {
+                    lQuery = "select * from online_episodes where ThumbURL != '' and thumbFilename = '' order by SeriesID asc";
+                }
 
-                    string seriesFolder = Helper.cleanLocalPath(series.ToString());
-                    string thumbFilename = Helper.PathCombine(seriesFolder, string.Format(@"Episodes\{0}x{1}.jpg", episode[DBOnlineEpisode.cSeasonIndex], episode[DBOnlineEpisode.cEpisodeIndex]));
-                    string completePath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), thumbFilename);
+                DBSeries lSeries = null;
+                var lEpisodes = DBEpisode.Get(lQuery);
+                var lEpisodesThumbsForDownload = new List<DBEpisode>();
 
-                    // if it doesn't exist 
-                    // image check takes too long as we check every thumbnail in config
-                    if (!File.Exists(completePath)) //|| ImageAllocator.LoadImageFastFromFile(completePath) == null) 
+                #region Check for thumbs to download
+                foreach (var episode in lEpisodes)
+                {
+                    if (lSeries == null || lSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
+                        lSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+
+                    if (lSeries == null) continue;
+
+                    string lThumbFilename = episode.BuildEpisodeThumbFilename();
+                    string lCompletePath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), lThumbFilename);
+
+                    // if it doesn't exist download it
+                    if (!File.Exists(lCompletePath))
                     {
-                        episodesToDownload.Add(episode);
+                        lEpisodesThumbsForDownload.Add(episode);
                     }
                     else
                     {
                         // if we already have the file check db entry
-                        if (!episode[DBOnlineEpisode.cEpisodeThumbnailFilename].ToString().Equals(thumbFilename))
+                        if (!episode[DBOnlineEpisode.cEpisodeThumbnailFilename].ToString().Equals(lThumbFilename))
                         {
-                            episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = thumbFilename;
+                            episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = lThumbFilename;
                             episode.Commit();
                         }
                     }
@@ -2368,16 +2373,16 @@ namespace WindowPlugins.GUITVSeries
                 #region Download Thumbs
                 int nIndex = 0;
 
-                foreach (var episode in episodesToDownload)
+                foreach (var episode in lEpisodesThumbsForDownload)
                 {
-                    if (series == null || series[DBSeries.cID] != episode[DBEpisode.cSeriesID])
-                        series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
-                    if (series == null) continue;
+                    if (lSeries == null || lSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
+                        lSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
 
-                    string seriesFolder = Helper.cleanLocalPath(series.ToString());
-                    string thumbFilename = Helper.PathCombine(seriesFolder, string.Format(@"Episodes\{0}x{1}.jpg", episode[DBOnlineEpisode.cSeasonIndex], episode[DBOnlineEpisode.cEpisodeIndex]));
-                    string completePath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), thumbFilename);
-                    string url = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
+                    if (lSeries == null) continue;
+
+                    string lThumbFilename = episode.BuildEpisodeThumbFilename();
+                    string lCompletePath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), lThumbFilename);
+                    string lUrl = DBOnlineMirror.Banners + episode[DBOnlineEpisode.cEpisodeThumbnailUrl];
 
                     MPTVSeriesLog.Write(string.Format("New Episode Image found for \"{0}\": {1}", episode.ToString(), episode[DBOnlineEpisode.cEpisodeThumbnailUrl]), MPTVSeriesLog.LogLevel.Debug);
                     WebClient webClient = new WebClient();
@@ -2388,36 +2393,36 @@ namespace WindowPlugins.GUITVSeries
 
                     try
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(completePath));
+                        Directory.CreateDirectory(Path.GetDirectoryName(lCompletePath));
                         
-                        if (!url.Contains(".jpg"))
+                        if (!lUrl.Contains(".jpg"))
                         {
-                            MPTVSeriesLog.Write("Episode Thumbnail location is incorrect: " + url, MPTVSeriesLog.LogLevel.Normal);
+                            MPTVSeriesLog.Write("Episode thumbnail location is incorrect: " + lUrl, MPTVSeriesLog.LogLevel.Normal);
                             episode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "";
                             episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = "";
                         }
                         else
                         {
-                            MPTVSeriesLog.Write("Downloading new Image from: " + url, MPTVSeriesLog.LogLevel.Debug);
-                            webClient.DownloadFile(url, completePath);
+                            MPTVSeriesLog.Write("Downloading new image from: " + lUrl, MPTVSeriesLog.LogLevel.Debug);
+                            webClient.DownloadFile(lUrl, lCompletePath);
 
-                            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), ++nIndex, episodesToDownload.Count, episode, completePath));
+                            mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episode.ToString(), ++nIndex, lEpisodesThumbsForDownload.Count, episode, lCompletePath));
                         }
                     }
                     catch (WebException)
                     {
-                        MPTVSeriesLog.Write("Episode Thumbnail download failed ( " + url + " )");
-                        thumbFilename = "";
+                        MPTVSeriesLog.Write("Episode thumbnail download failed ( " + lUrl + " )");
+                        lThumbFilename = "";
 
                         // try to delete file if it exists on disk. maybe download was cut short. Re-download next time
-                        try { System.IO.File.Delete(completePath); } catch { }
+                        try { File.Delete(lCompletePath); } catch { }
                     }
-                    episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = thumbFilename;
+                    episode[DBOnlineEpisode.cEpisodeThumbnailFilename] = lThumbFilename;
                     episode.Commit();
                 }
                 #endregion
 
-                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, episodesToDownload.Count));
+                mWorker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodeThumbNails, lEpisodesThumbsForDownload.Count));
             }
         }
 

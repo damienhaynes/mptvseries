@@ -1647,6 +1647,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cPlayCount:
                                 case DBOnlineEpisode.cEpisodeThumbnailFilename:
                                 case DBOnlineEpisode.cEpisodeThumbnailUrl:
+                                case DBOnlineEpisode.cEpisodeThumbnailSource:
                                 case DBOnlineEpisode.cCombinedEpisodeNumber:
                                 case DBOnlineEpisode.cCombinedSeason:
                                 case DBOnlineEpisode.cDVDSeasonNumber:
