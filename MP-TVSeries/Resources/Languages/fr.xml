@@ -6,6 +6,7 @@
   <string name="ArtworkTypes" Original="Artwork Types">Types d\'oeuvres d\'art</string>
   <string name="ArtworkSelected" Original="Selected">Selectionné</string>
   <string name="ArtworkDownloading" Original="Download Progress {0}%">Progression du téléchargement {0}%</string>
+  <string name="ArtworkDelete" Original="Delete Artwork">Supprimer l\'oeuvre d\'art</string>
   <string name="SeriesWideBanner" Original="Series WideBanner">Bannière large de séries</string>
   <string name="SeriesPoster" Original="Series Poster">Affiche de séries</string>
   <string name="SeriesFanart" Original="Series Fanart">Fanart de séries</string>
