@@ -2474,6 +2474,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                             // update database as downloaded
                             SetArtworkAsLocal(lArtwork);
+                            // publish big artwork to GUI
+                            SetImageToGui(lArtwork);
                             break;
 
                         default:
@@ -2551,13 +2553,52 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             if ( string.IsNullOrEmpty( aArtwork.LocalThumbPath ) ) return;
 
-            string lTexture = GetTextureFromFile( aArtwork.LocalThumbPath );
+            string lFilename = aArtwork.IsLocal ? aArtwork.LocalPath : aArtwork.LocalThumbPath;
+            string lTexture = GetTextureFromFile(lFilename);
 
-            if ( GUITextureManager.LoadFromMemory( ImageFast.FromFile( aArtwork.LocalThumbPath ), lTexture, 0, 0, 0 ) > 0 )
+            int lMaxHeight = 0;
+            int lMaxWidth = 0;
+
+            // if we have the full size artwork then favour this as opposed to low resolution thumbnail
+            if (aArtwork.IsLocal)
+            {   
+                switch (aArtwork.Type)
+                {
+                    case ArtworkType.EpisodeThumb:
+                    case ArtworkType.SeriesFanart:
+                        lMaxWidth = 1280;
+                        lMaxHeight = 720;
+                        break;
+
+                    case ArtworkType.SeasonPoster:
+                    case ArtworkType.SeriesPoster:
+                        lMaxWidth = 680;
+                        lMaxHeight = 1000;
+                        break;
+
+                    case ArtworkType.SeriesBanner:
+                        lMaxWidth = 758;
+                        lMaxHeight = 140;
+                        break;
+                }
+
+                var lBitMap = new System.Drawing.Bitmap(ImageFast.FromFile(lFilename), lMaxWidth, lMaxHeight);
+
+                if (GUITextureManager.LoadFromMemory(lBitMap, lTexture, 0, 0, 0) > 0)
+                {
+                    ThumbnailImage = lTexture;
+                    IconImage = lTexture;
+                    IconImageBig = lTexture;
+                }
+            }
+            else
             {
-                ThumbnailImage = lTexture;
-                IconImage = lTexture;
-                IconImageBig = lTexture;
+                if (GUITextureManager.LoadFromMemory(ImageFast.FromFile(lFilename), lTexture, 0, 0, 0) > 0)
+                {
+                    ThumbnailImage = lTexture;
+                    IconImage = lTexture;
+                    IconImageBig = lTexture;
+                }
             }
 
             // if the selected item is the item with the new image added, then force an update of thumbnail
@@ -2582,7 +2623,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         private string GetTextureFromFile( string aFilename )
         {
-            return "[TVSeries:" + aFilename.GetHashCode() + "]";
+            return "[TVSeries:" + aFilename + "]";
         }
 
         #endregion
