@@ -450,6 +450,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Resources\Images\arrow_up.png" />
     <None Include="Resources\Images\arrow_down.png" />
   </ItemGroup>

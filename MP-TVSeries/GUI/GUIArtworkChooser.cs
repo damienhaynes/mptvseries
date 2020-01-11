@@ -2450,9 +2450,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             set
             {
                 _Item = value;
-                var notifier = value as INotifyPropertyChanged;
-                if ( notifier == null ) return;
-                
+                if (!(value is INotifyPropertyChanged notifier)) return;
+
                 notifier.PropertyChanged += ( aSource, aEventArgs ) =>
                 {
                     var lArtwork = aSource as Artwork;
@@ -2494,11 +2493,10 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             int lFacadeId = 50;
 
-            var lSelectedItem = GUIControl.GetSelectedListItem( GUIWindowManager.ActiveWindow, lFacadeId ) as GUIArtworkListItem;
-            if ( lSelectedItem != null && lSelectedItem.Item == this.Item )
+            if (GUIControl.GetSelectedListItem(GUIWindowManager.ActiveWindow, lFacadeId) is GUIArtworkListItem lSelectedItem && lSelectedItem.Item == this.Item)
             {
                 // this should trigger the onSelected event which updates the selected item skin properties
-                GUIWindowManager.SendThreadMessage( new GUIMessage( GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, GUIWindowManager.ActiveWindow, 0, lFacadeId, ( lSelectedItem.Item as Artwork ).DownloadItemIndex, 0, null ) );
+                GUIWindowManager.SendThreadMessage(new GUIMessage(GUIMessage.MessageType.GUI_MSG_ITEM_SELECT, GUIWindowManager.ActiveWindow, 0, lFacadeId, (lSelectedItem.Item as Artwork).DownloadItemIndex, 0, null));
             }
         }
 
@@ -2519,7 +2517,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     string lPath = "posters/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
                     string lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
 
-                    var lAvailableSeriesPosters = aArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString();
+                    string lAvailableSeriesPosters = aArtwork.Series[DBOnlineSeries.cPosterFileNames].ToString();
                     aArtwork.Series[DBOnlineSeries.cPosterFileNames] = lAvailableSeriesPosters += "|" + lRelativePath;
                     aArtwork.Series.Commit();
                     break;
@@ -2529,7 +2527,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     lPath = "graphical/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
                     lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
 
-                    var lAvailableSeriesBanners = aArtwork.Series[DBOnlineSeries.cBannerFileNames].ToString();
+                    string lAvailableSeriesBanners = aArtwork.Series[DBOnlineSeries.cBannerFileNames].ToString();
                     aArtwork.Series[DBOnlineSeries.cBannerFileNames] = lAvailableSeriesBanners += "|" + lRelativePath;
                     aArtwork.Series.Commit();
                     break;
@@ -2539,7 +2537,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                     lPath = "seasons/" + System.IO.Path.GetFileName( aArtwork.OnlinePath );
                     lRelativePath = Helper.cleanLocalPath( aArtwork.Series.ToString() ) + @"\-lang" + aArtwork.Language + "-" + lPath;
 
-                    var lAvailableSeasonPosters = aArtwork.Season[DBSeason.cBannerFileNames].ToString();
+                    string lAvailableSeasonPosters = aArtwork.Season[DBSeason.cBannerFileNames].ToString();
                     aArtwork.Season[DBSeason.cBannerFileNames] = lAvailableSeasonPosters += "|" + lRelativePath;
                     aArtwork.Season.Commit();
                     break;
@@ -2568,8 +2566,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             }
 
             // if the selected item is the item with the new image added, then force an update of thumbnail
-            var lArtworkWindow = GUIWindowManager.GetWindow( GUIWindowManager.ActiveWindow ) as GUIArtworkChooser;
-            if ( lArtworkWindow == null ) return;
+            if (!(GUIWindowManager.GetWindow(GUIWindowManager.ActiveWindow) is GUIArtworkChooser lArtworkWindow)) return;
 
             int lFacadeId = 50;
             int lSelectedItemIndex = ( lArtworkWindow.GetControl( lFacadeId ) as GUIFacadeControl ).SelectedListItemIndex;
@@ -2738,8 +2735,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
     public class GUIListItemSorter : IComparer<Artwork>
     {
-        private SortingFields mSortField;
-        private SortingDirections mSortDirection;
+        private readonly SortingFields mSortField;
+        private readonly SortingDirections mSortDirection;
 
         public GUIListItemSorter( SortingFields aSortField, SortingDirections aSortDirection )
         {
@@ -2749,40 +2746,35 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         public int Compare( Artwork aArtworkA, Artwork aArtworkY )
         {
-            try
-            {
-                int lResult;
-
-                switch ( mSortField )
-                {
-                    case SortingFields.Score:
-                        lResult = aArtworkA.Rating.CompareTo( aArtworkY.Rating );
-                        if ( lResult == 0 )
-                        {
-                            // if same score compare votes
-                            lResult = aArtworkA.Votes.CompareTo( aArtworkY.Votes );
-                        }
-                        break;
-
-                    case SortingFields.Votes:
-                        lResult = 0;
-                        lResult = aArtworkA.Votes.CompareTo( aArtworkY.Votes );
-                        break;
-
-                    default:
-                        lResult = 0;
-                        break;
-                }
-                
-                if ( mSortDirection == SortingDirections.Descending )
-                    lResult = -lResult;
-
-                return lResult;
-            }
-            catch
-            {
+            if (aArtworkA == null || aArtworkY == null)
                 return 0;
+
+            int lResult;
+
+            switch ( mSortField )
+            {
+                case SortingFields.Score:
+                    lResult = aArtworkA.Rating.CompareTo( aArtworkY.Rating );
+                    if ( lResult == 0 )
+                    {
+                        // if same score compare votes
+                        lResult = aArtworkA.Votes.CompareTo( aArtworkY.Votes );
+                    }
+                    break;
+
+                case SortingFields.Votes:
+                    lResult = aArtworkA.Votes.CompareTo( aArtworkY.Votes );
+                    break;
+
+                default:
+                    lResult = 0;
+                    break;
             }
+                
+            if ( mSortDirection == SortingDirections.Descending )
+                lResult = -lResult;
+
+            return lResult;
         }
     }
 }
