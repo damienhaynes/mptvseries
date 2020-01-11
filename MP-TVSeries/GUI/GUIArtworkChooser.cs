@@ -2190,6 +2190,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
             // Selected
             SetProperty( "Filename", " " );
+            SetProperty( "ThumbFilename", " " );
             SetProperty( "Language", " " );
             SetProperty( "OnlinePath", " " );
             SetProperty( "OnlineThumbPath", " " );
@@ -2208,7 +2209,8 @@ namespace WindowPlugins.GUITVSeries.GUI
                 var lArtwork = ( item as GUIArtworkListItem ).Item as Artwork;
                 bool lLog = !item.IsDownloading;
 
-                SetProperty( "Filename", lArtwork.LocalThumbPath.Replace( "/", @"\" ), lLog ); // publish fullsize if available ?
+                SetProperty( "Filename", lArtwork.LocalPath.Replace("/", @"\"), lLog );
+                SetProperty( "ThumbFilename", lArtwork.LocalThumbPath.Replace( "/", @"\" ), lLog );
                 SetProperty( "Language", lArtwork.Language, lLog );
                 SetProperty( "OnlinePath", lArtwork.OnlinePath, lLog );
                 SetProperty( "OnlineThumbPath", lArtwork.OnlineThumbPath, lLog );
