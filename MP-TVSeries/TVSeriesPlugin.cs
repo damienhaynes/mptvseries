@@ -73,16 +73,21 @@ namespace WindowPlugins.GUITVSeries
             seasonbanner.Property = "#TVSeries.SeasonPoster";
             seasonbanner.Delay = artworkDelay;
 
+            episodethumb = new AsyncImageResource();
+            episodethumb.Property = "#TVSeries.EpisodeImage";
+            episodethumb.Delay = artworkDelay;
+
             MPTVSeriesLog.Write(string.Format("MP-TVSeries Version: v{0}", Settings.Version.ToString()));
             MPTVSeriesLog.Write("MP-TVSeries Build Date: " + Settings.BuildDate);
         }
         #endregion
 
         #region Varibles
-        private ImageSwapper backdrop;
-        private AsyncImageResource seriesbanner = null;
-        private AsyncImageResource seriesposter = null;
-        private AsyncImageResource seasonbanner = null;
+        private readonly ImageSwapper backdrop;
+        private readonly AsyncImageResource seriesbanner = null;
+        private readonly AsyncImageResource seriesposter = null;
+        private readonly AsyncImageResource seasonbanner = null;
+        private readonly AsyncImageResource episodethumb = null;
 
         public static Listlevel CurrentViewLevel = Listlevel.Series;
         public static DBSeries m_SelectedSeries;
@@ -3417,6 +3422,16 @@ namespace WindowPlugins.GUITVSeries
                                     {
                                         ReportFacadeLoadingProgress(BackGroundLoadingArgumentType.FullElement, count, item);
                                     }
+
+                                    // load the episode thumbnail in advance
+                                    if (selectedIndex >= 0)
+                                    {
+                                        setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(episodesToDisplay[selectedIndex]));
+                                    }
+                                    else
+                                    {
+                                        setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(episodesToDisplay[0]));
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -5742,10 +5757,12 @@ namespace WindowPlugins.GUITVSeries
 
             m_SelectedEpisode = episode;
             setGUIProperty(guiProperty.Logos, localLogos.getLogos(ref episode, logosHeight, logosWidth));
-            setGUIProperty(guiProperty.EpisodeImage, ImageAllocator.GetEpisodeImage(m_SelectedEpisode));
             setGUIProperty(guiProperty.Title, FieldGetter.resolveDynString(m_sFormatEpisodeTitle, episode));
             setGUIProperty(guiProperty.Subtitle, FieldGetter.resolveDynString(m_sFormatEpisodeSubtitle, episode));
             setGUIProperty(guiProperty.Description, FieldGetter.resolveDynString(m_sFormatEpisodeMain, episode));
+
+            // async loading of thumbnail
+            episodethumb.Filename = ImageAllocator.GetEpisodeImage(m_SelectedEpisode);
 
             // with groups in episode view its possible the user never selected a series/season (flat view)
             // thus its desirable to display the series_banner and season banner on hover)
