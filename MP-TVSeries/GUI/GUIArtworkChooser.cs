@@ -15,6 +15,7 @@ using WindowPlugins.GUITVSeries.TmdbAPI;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
 using Action = MediaPortal.GUI.Library.Action;
+using Cornerstone.MP;
 
 namespace WindowPlugins.GUITVSeries.GUI
 {
@@ -124,43 +125,26 @@ namespace WindowPlugins.GUITVSeries.GUI
 
         #region Constructor
 
-        public GUIArtworkChooser() { }
+        public GUIArtworkChooser()
+        {
+            AsyncArtworkImage = new AsyncImageResource
+            {
+                Property = "#TVSeries.Artwork.AsyncFilename",
+                Delay = DBOption.GetOptions(DBOption.cArtworkLoadingDelay)
+            };
+        }
 
         #endregion
 
         #region Private Properties
+
+        private AsyncImageResource AsyncArtworkImage = null;
 
         private bool StopDownload { get; set; }
 
         private Layout CurrentLayout { get; set; }
 
         private ArtworkLoadingParameters ArtworkParams { get; set; }
-
-        //private GUIFacadeControl Facade
-        //{
-        //    get
-        //    {
-        //        GUIFacadeControl lFacade = null;
-
-        //        switch ( ArtworkParams.Type )
-        //        {
-        //            case ArtworkType.SeriesPoster:
-        //            case ArtworkType.SeasonPoster:
-        //                lFacade = mFacadePosters;
-        //                break;
-
-        //            case ArtworkType.SeriesFanart:
-        //            case ArtworkType.EpisodeThumb:
-        //                lFacade = mFacadeThumbnails;
-        //                break;
-
-        //            case ArtworkType.SeriesBanner:
-        //                lFacade = mFacadeWidebanners;
-        //                break;
-        //        }
-        //        return lFacade;
-        //    }
-        //}
 
         private int DefaultArtIndex { get; set; }
         
@@ -2200,6 +2184,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             SetProperty( "IsDefault", " " );
             SetProperty( "IsLocal", " " );
             SetProperty( "SelectedItem", " " );
+
+            AsyncArtworkImage.Filename = string.Empty;
         }
 
         private void OnSelected( GUIListItem item, GUIControl parent )
@@ -2209,7 +2195,6 @@ namespace WindowPlugins.GUITVSeries.GUI
                 var lArtwork = ( item as GUIArtworkListItem ).Item as Artwork;
                 bool lLog = !item.IsDownloading;
 
-                SetProperty( "Filename", lArtwork.LocalPath.Replace("/", @"\"), lLog );
                 SetProperty( "ThumbFilename", lArtwork.LocalThumbPath.Replace( "/", @"\" ), lLog );
                 SetProperty( "Language", lArtwork.Language, lLog );
                 SetProperty( "OnlinePath", lArtwork.OnlinePath, lLog );
@@ -2219,6 +2204,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                 SetProperty( "RatingCount", lArtwork.Votes.ToString(), lLog );
                 SetProperty( "IsDefault", lArtwork.IsDefault.ToString(), lLog );
                 SetProperty( "IsLocal", lArtwork.IsLocal.ToString(), lLog );
+
+                if (lArtwork.IsLocal)
+                {
+                    SetProperty("Filename", lArtwork.LocalPath.Replace("/", @"\"), lLog);
+
+                    // delay image loading for big artworks
+                    AsyncArtworkImage.Filename = lArtwork.LocalPath.Replace("/", @"\");
+                }
 
                 string lSelectedItemProperty;
 
