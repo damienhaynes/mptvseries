@@ -1605,8 +1605,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cRating:
                                     if (!String.IsNullOrEmpty(episode[key]))
                                     {
-                                        decimal val = 0;
-                                        decimal.TryParse(episode[key].ToString(), out val);
+                                        decimal.TryParse(episode[key].ToString(), out decimal val);
                                         string score = val.ToString("#.#");
                                         string votes = episode[DBOnlineEpisode.cRatingCount];
                                         if (!String.IsNullOrEmpty(votes))
@@ -1668,6 +1667,7 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cAirsAfterSeason:
                                 case DBOnlineEpisode.cAirsBeforeEpisode:
                                 case DBOnlineEpisode.cAirsBeforeSeason:
+                                case DBOnlineEpisode.cTMDbEpisodeThumbnailUrl:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;

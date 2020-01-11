@@ -486,11 +486,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 (lOldDefault.Item as Artwork).IsDefault = false;
 
                 // set the source of image in episode table
-                if (lArtwork.Provider == ArtworkDataProvider.TMDb)
-                {
-                    lArtwork.Episode[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl] = lArtwork.OnlinePath;
-                    
-                }
+                lArtwork.Episode[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl] = lArtwork.Provider == ArtworkDataProvider.TMDb ? lArtwork.OnlinePath : string.Empty;
                 lArtwork.Episode[DBOnlineEpisode.cEpisodeThumbnailSource] = (int)lArtwork.Provider;
                 lArtwork.Episode.Commit();
 
@@ -2221,16 +2217,27 @@ namespace WindowPlugins.GUITVSeries.GUI
                 SetProperty( "RatingCount", lArtwork.Votes.ToString(), lLog );
                 SetProperty( "IsDefault", lArtwork.IsDefault.ToString(), lLog );
                 SetProperty( "IsLocal", lArtwork.IsLocal.ToString(), lLog );
-                
-                if ( ArtworkParams.Provider != ArtworkDataProvider.TMDb )
+
+                string lSelectedItemProperty;
+
+                // thetvdb.com and fanart.tv only have votes/likes
+                // themovidb.org have rating and votes
+                if (ArtworkParams.Provider == ArtworkDataProvider.TMDb && lArtwork.Votes != 0)
                 {
-                    // thetvdb.com and fanart.tv only has votes
-                    SetProperty( "SelectedItem", $"{lArtwork.Votes} {Translation.Votes} | {GetLabelTwo( lArtwork )}", lLog );
+                    lSelectedItemProperty = $"{lArtwork.Rating} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}";
                 }
                 else
                 {
-                    SetProperty( "SelectedItem", $"{lArtwork.Rating} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo( lArtwork )} | {lArtwork.Resolution}", true );
+                    lSelectedItemProperty = $"{lArtwork.Votes} {Translation.Votes} | {GetLabelTwo(lArtwork)}";
                 }
+
+                // only thetvdb.com and themoviedb.org have resolution
+                if (ArtworkParams.Provider != ArtworkDataProvider.FanartTV)
+                {
+                    lSelectedItemProperty += " | " + lArtwork.Resolution;
+                }
+
+                SetProperty("SelectedItem", lSelectedItemProperty, lLog);
             }
             else
             {
