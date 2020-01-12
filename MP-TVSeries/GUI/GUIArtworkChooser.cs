@@ -2219,7 +2219,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 // themovidb.org have rating and votes
                 if (ArtworkParams.Provider == ArtworkDataProvider.TMDb && lArtwork.Votes != 0)
                 {
-                    lSelectedItemProperty = $"{lArtwork.Rating} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}";
+                    lSelectedItemProperty = $"{lArtwork.Rating.ToString("#,##0.00")} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}";
                 }
                 else
                 {
