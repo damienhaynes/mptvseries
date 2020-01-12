@@ -113,6 +113,9 @@ namespace WindowPlugins.GUITVSeries
         {
             string lUserLanguage = DBOption.GetOptions( DBOption.cOnlineLanguage );
 
+            if (DBOption.GetOptions(DBOption.cOverrideSearchLanguageToEnglish))
+                lUserLanguage = "en";
+
             // search for series basis the user's language
             XmlNode lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, lUserLanguage );
             if ( lNode == null ) return;

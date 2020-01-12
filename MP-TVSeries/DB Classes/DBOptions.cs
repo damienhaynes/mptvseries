@@ -92,7 +92,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cRandomBanner = "randomBanner";
         public const string cOnlineLanguage = "onlineLanguage";
         public const string cShowDeleteMenu = "ShowDeleteMenu";
-        public const string cMainMirrorHardCoded = "http://thetvdb.com";
+        public const string cMainMirrorHardCoded = "https://thetvdb.com";
         public const string cMainMirror = "mainMirror";
         public const string cGetBlankBanners = "getBlankBanners";
         public const string cGetTextBanners = "getTextBanners";
@@ -185,6 +185,7 @@ namespace WindowPlugins.GUITVSeries
         public const string cCheckShowOnlyEpisodesRequiringManualSelection = "CheckShowOnlyEpisodesRequiringManualSelection";
         public const string cTmdbConfiguration = "TmdbConfiguration";
         public const string cFanartTvClientKey = "FanartTvClientKey";
+        public const string cOverrideSearchLanguageToEnglish = "OverrideSearchLanguageToEnglish";
         #endregion
 
         private static readonly Object thisLock = new Object();
