@@ -2401,6 +2401,9 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 MPTVSeriesLog.Write( $"Starting download of artwork from '{lArtwork.Url}'" );
 
+                // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xc00;
+
                 var lWebClient = new WebClient();
                 lWebClient.DownloadProgressChanged += DownloadProgressChanged;
                 lWebClient.DownloadFileCompleted += DownloadFileCompleted;

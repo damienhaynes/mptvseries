@@ -430,36 +430,44 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                     sUrl += ".zip";
                     break;
             }
-            Stream data = RetrieveData( sUrl );
+            Stream lStreamData = RetrieveData( sUrl );
 
-            if ( data != null )
+            if ( lStreamData != null )
             {
                 if ( format == Format.Zip )
                 {
                     if ( !String.IsNullOrEmpty( aLanguageId ) && seriesIDIfZip != 0 )
                     {
-                        Dictionary<string, XmlDocument> x = DecompressZipToXmls( data );
+                        // save the zip file downloaded to disk
+                        //string lFilename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}\{1}.zip", seriesIDIfZip, aLanguageId));
+                        //Helper.SaveZipCache(lFilename, lStreamData);
+
+                        Dictionary<string, XmlDocument> lZip = DecompressZipToXmls( lStreamData );
                         string lFilenameInZip = aLanguageId + ".xml";
-                        XmlNode root = null;
+                        XmlNode lRoot;
+
                         // save all xmls in zip to cache
-                        foreach ( var key in x.Keys )
+                        foreach ( string key in lZip.Keys )
                         {
-                            string filename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}\{2}", seriesIDIfZip, aLanguageId, key ) );
-                            Helper.SaveXmlCache( filename, x[key].FirstChild.NextSibling ?? x[key].FirstChild );
+                            string lFilename = Path.Combine( Settings.GetPath( Settings.Path.config ), string.Format( @"Cache\{0}\{1}\{2}", seriesIDIfZip, aLanguageId, key ) );
+                            Helper.SaveXmlCache( lFilename, lZip[key].FirstChild.NextSibling ?? lZip[key].FirstChild );
                         }
+
                         // get what we are looking for            
-                        if ( x.ContainsKey( lFilenameInZip ) )
+                        if (lZip.ContainsKey(lFilenameInZip))
                         {
-                            root = x[lFilenameInZip].FirstChild.NextSibling;
-                            return root;
+                            lRoot = lZip[lFilenameInZip].FirstChild.NextSibling;
+                            return lRoot;
                         }
-                        else MPTVSeriesLog.Write( "Decompression returned null or not the requested entry" );
+                        else
+                        {
+                            MPTVSeriesLog.Write("Decompression returned null or not the requested entry");
+                        }
                     }
                 }
                 else
                 {
-
-                    StreamReader reader = new StreamReader( data );
+                    var reader = new StreamReader( lStreamData );
                     String sXmlData = string.Empty;
                     try
                     {
@@ -469,7 +477,8 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                     {
                         MPTVSeriesLog.Write( "Error reading stream: {0}", e.Message );
                     }
-                    data.Close();
+
+                    lStreamData.Close();
                     reader.Close();
                     if ( !string.IsNullOrEmpty( sXmlData ) )
                     {
@@ -478,7 +487,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                         MPTVSeriesLog.Write( "*************************************", MPTVSeriesLog.LogLevel.Debug );
                         try
                         {
-                            XmlDocument doc = new XmlDocument();
+                            var doc = new XmlDocument();
                             doc.LoadXml( sXmlData );
                             XmlNode root = doc.FirstChild.NextSibling;
                             return root;
@@ -494,66 +503,40 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             return null;
         }
 
-        static Stream RetrieveData( String sUrl )
+        static Stream RetrieveData( String aUrl )
         {
-            MPTVSeriesLog.Write( "Retrieving Data from: ", sUrl, MPTVSeriesLog.LogLevel.Debug );
-            if ( sUrl == null || sUrl.Length < 1 || sUrl[0] == '/' )
+            MPTVSeriesLog.Write( $"Retrieving Data from '{aUrl}'", MPTVSeriesLog.LogLevel.Debug );
+            if ( aUrl == null || aUrl.Length < 1 || aUrl[0] == '/' )
             {
                 // this happens if no active mirror is set
                 return null;
             }
 
-            //string newUrl = null;
-            HttpWebRequest request = null;
-            HttpWebResponse response = null;
+            HttpWebRequest lRequest;
+            HttpWebResponse lResponse;
 
             try
             {
                 // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
                 ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
 
-                request = ( HttpWebRequest )WebRequest.Create( sUrl );
+                // force secure http
+                lRequest = ( HttpWebRequest )WebRequest.Create( aUrl );
                 // Note: some network proxies require the useragent string to be set or they will deny the http request
                 // this is true for instance for EVERY thailand internet connection (also needs to be set for banners/episodethumbs and any other http request we send)
-                request.UserAgent = Settings.UserAgent;
-                request.Timeout = 60000;
+                lRequest.UserAgent = Settings.UserAgent;
+                lRequest.Timeout = 60000;
 
-                // turn off auto-redirection on the initial request. 
-                // then we can pull out the header and do the redirection manually by making a new request.
-                //request.AllowAutoRedirect = false;
-                response = ( HttpWebResponse )request.GetResponse();
+                lResponse = ( HttpWebResponse )lRequest.GetResponse();
 
-                //MPTVSeriesLog.Write( $"Status Code={ response.StatusCode }, Headers={ response.Headers.ToString().Trim() }", MPTVSeriesLog.LogLevel.Debug );
-
-                //// check for redirect
-                //switch ( response.StatusCode )
-                //{
-                //  case HttpStatusCode.Redirect:
-                //  case HttpStatusCode.MovedPermanently:
-                //  case HttpStatusCode.RedirectKeepVerb:
-                //  case HttpStatusCode.RedirectMethod:
-                //    newUrl = response.Headers["Location"];
-                //    if ( newUrl == null )
-                //      return null;
-
-                //    if ( newUrl.IndexOf( "://", System.StringComparison.Ordinal ) == -1 )
-                //    {
-                //      // doesn't have a URL Schema, meaning it's a relative or absolute URL
-                //      var u = new Uri( new Uri( sUrl ), newUrl );
-                //      newUrl = u.ToString();
-                //    }
-
-                //    // now re-request using new url
-                //    return RetrieveData( newUrl );
-                //}
-
-                if ( response != null ) // Get the stream associated with the response.
-                    return response.GetResponseStream();
+                if ( lResponse != null ) // Get the stream associated with the response.
+                {
+                    return lResponse.GetResponseStream();
+                }   
             }
             catch ( Exception e )
             {
-                // can't connect, timeout, etc
-                MPTVSeriesLog.Write( "Can't connect to " + sUrl + " : " + e.Message );
+                MPTVSeriesLog.Write( $"Unable to connect to '{aUrl}'. Error = '{e.Message}'" );
             }
             finally
             {
@@ -563,15 +546,15 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
             return null;
         }
 
-        static Dictionary<string, XmlDocument> DecompressZipToXmls( Stream s )
+        static Dictionary<string, XmlDocument> DecompressZipToXmls( Stream aStream )
         {
             MPTVSeriesLog.Write( "Decompressing Stream...", MPTVSeriesLog.LogLevel.Debug );
 
-            var docsInZip = new Dictionary<string, XmlDocument>();
+            var lDocsInZip = new Dictionary<string, XmlDocument>();
 
             ZipConstants.DefaultCodePage = 850;
-            ZipInputStream zis = new ZipInputStream( s );
-            ZipEntry currEntry = zis.GetNextEntry();
+            var lZipStream = new ZipInputStream( aStream );
+            ZipEntry currEntry = lZipStream.GetNextEntry();
 
             while ( currEntry != null )
             {
@@ -582,13 +565,13 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 var stream = new MemoryStream();
                 try
                 {
-                    StreamUtils.Copy( zis, stream, buffer );
+                    StreamUtils.Copy( lZipStream, stream, buffer );
                     stream.Position = 0;
                     MPTVSeriesLog.Write( "Decompression done, now loading as XML...", MPTVSeriesLog.LogLevel.Debug );
                     doc.Load( stream );
                     MPTVSeriesLog.Write( "Loaded as valid XML", MPTVSeriesLog.LogLevel.Debug );
                     // check if .zip in filename and remove for backwards compatibility
-                    docsInZip.Add( currEntry.Name.Replace( ".zip", string.Empty ), doc );
+                    lDocsInZip.Add( currEntry.Name.Replace( ".zip", string.Empty ), doc );
                 }
                 catch ( XmlException e )
                 {
@@ -596,9 +579,9 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 }
 
                 stream.Close();
-                currEntry = zis.GetNextEntry();
+                currEntry = lZipStream.GetNextEntry();
             }
-            return docsInZip;
+            return lDocsInZip;
         }
 
         #endregion

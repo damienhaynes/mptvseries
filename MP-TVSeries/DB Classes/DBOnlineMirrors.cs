@@ -24,9 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
@@ -48,27 +45,26 @@ namespace WindowPlugins.GUITVSeries
         public const String cBanners = "Banners";
         public const String cMirrorpath = "mirrorpath";
         public const String cTypeMask = "Typemask";
+        readonly Dictionary<string, DBField> mfields = new Dictionary<string, DBField>();
 
-        Dictionary<string, DBField> m_fields = new Dictionary<string, DBField>();
-
-        private static String s_sCurrentInterface = String.Empty;
-        private static String s_sCurrentBanner = String.Empty;
-        private static String s_sCurrentZip = String.Empty;
-        private static Dictionary<String, String> s_OnlineToFieldMap = new Dictionary<String, String>();
-        private static List<DBOnlineMirror> memoryMirrors = new List<DBOnlineMirror>();
+        private static String mCurrentInterface = String.Empty;
+        private static String mCurrentBanner = String.Empty;
+        private static String mCurrentZip = String.Empty;
+        private static readonly Dictionary<String, String> mOnlineToFieldMap = new Dictionary<String, String>();
+        private static readonly List<DBOnlineMirror> mMemoryMirrors = new List<DBOnlineMirror>();
 
         /// <summary>
         /// if you compile yourself get you're own key or it will have to be disabled!
         /// </summary>
         public static string cApiKey = string.Empty;
-        private static bool m_bMirrorsAvaiable = false;
+        private static bool mMirrorsAvailable = false;
 
         static DBOnlineMirror()
         {
-            s_OnlineToFieldMap.Add("id", cID);
-            s_OnlineToFieldMap.Add("interface", cInterface);
-            s_OnlineToFieldMap.Add("banners", cBanners);
-            s_OnlineToFieldMap.Add("typemask", cTypeMask);
+            mOnlineToFieldMap.Add("id", cID);
+            mOnlineToFieldMap.Add("interface", cInterface);
+            mOnlineToFieldMap.Add("banners", cBanners);
+            mOnlineToFieldMap.Add("typemask", cTypeMask);
 
             cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("Key");
         }
@@ -80,8 +76,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                if (m_fields.ContainsKey(fieldName))
-                    return m_fields[fieldName].Value;
+                if (mfields.ContainsKey(fieldName))
+                    return mfields[fieldName].Value;
                 else
                     return String.Empty;
             }
@@ -89,16 +85,16 @@ namespace WindowPlugins.GUITVSeries
             {
                 try
                 {
-                    if (m_fields.ContainsKey(fieldName))
+                    if (mfields.ContainsKey(fieldName))
                     {
-                        if (m_fields[fieldName].Type == DBField.cTypeInt)
-                            m_fields[fieldName].Value = (long)value;
+                        if (mfields[fieldName].Type == DBField.cTypeInt)
+                            mfields[fieldName].Value = (long)value;
                         else
-                            m_fields[fieldName].Value = value;
+                            mfields[fieldName].Value = value;
                     }
                     else
                     {
-                        m_fields.Add(fieldName, new DBField(DBField.cTypeString));
+                        mfields.Add(fieldName, new DBField(DBField.cTypeString));
                         this[fieldName] = value;
                     }
                 }
@@ -107,7 +103,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private static void checkMirrorCapable(List<DBOnlineMirror> mirrorList, TypeMask mask)
+        private static void CheckMirrorCapable(List<DBOnlineMirror> mirrorList, TypeMask mask)
         {
             for (int i = 0; i < mirrorList.Count; i++)
             {
@@ -137,7 +133,7 @@ namespace WindowPlugins.GUITVSeries
 
             // no mirrors yet - refresh using "seed"
             IsMirrorsAvailable = true;
-            string sMirror = DBOption.GetOptions(DBOption.cMainMirror);
+            string sMirror = DBOption.GetOptions(DBOption.cMainMirror).ToString().Replace("http://", "https://");
             if (!LoadMirrorList(sMirror))
             {
                 IsMirrorsAvailable = false;
@@ -161,36 +157,36 @@ namespace WindowPlugins.GUITVSeries
             //This is now handled server-side using mod_rewrite and round-robin DNS,
             //so the mirrors file is somewhat deprecated.
 
-            List<DBOnlineMirror> xmlMirrors = new List<DBOnlineMirror>(memoryMirrors);
-            List<DBOnlineMirror> zipMirrors = new List<DBOnlineMirror>(memoryMirrors);
-            List<DBOnlineMirror> bannerMirrors = new List<DBOnlineMirror>(memoryMirrors);
+            var xmlMirrors = new List<DBOnlineMirror>(mMemoryMirrors);
+            var zipMirrors = new List<DBOnlineMirror>(mMemoryMirrors);
+            var bannerMirrors = new List<DBOnlineMirror>(mMemoryMirrors);
 
             // seperate them by which one can do what
-            checkMirrorCapable(xmlMirrors, TypeMask.XML);
-            checkMirrorCapable(zipMirrors, TypeMask.Zip);
-            checkMirrorCapable(bannerMirrors, TypeMask.Banners);
+            CheckMirrorCapable(xmlMirrors, TypeMask.XML);
+            CheckMirrorCapable(zipMirrors, TypeMask.Zip);
+            CheckMirrorCapable(bannerMirrors, TypeMask.Banners);
 
             // select a random one for each of them
-            Random r = new Random();
+            var r = new Random();
             if(xmlMirrors.Count > 0)
-                s_sCurrentInterface = xmlMirrors[r.Next(xmlMirrors.Count)][cMirrorpath];
+                mCurrentInterface = xmlMirrors[r.Next(xmlMirrors.Count)][cMirrorpath].ToString().Replace("http://", "https://");
             if (zipMirrors.Count > 0)
-                s_sCurrentZip = zipMirrors[r.Next(zipMirrors.Count)][cMirrorpath] + "/";
+                mCurrentZip = zipMirrors[r.Next(zipMirrors.Count)][cMirrorpath].ToString().Replace("http://", "https://") + "/";
             if (bannerMirrors.Count > 0)
-                s_sCurrentBanner = bannerMirrors[r.Next(bannerMirrors.Count)][cMirrorpath] + "/banners/";
+                mCurrentBanner = bannerMirrors[r.Next(bannerMirrors.Count)][cMirrorpath].ToString().Replace("http://", "https://") + "/banners/";
         }
 
         public static bool IsMirrorsAvailable
         {
-            get { return m_bMirrorsAvaiable; }
-            set { m_bMirrorsAvaiable = value; }
+            get { return mMirrorsAvailable; }
+            set { mMirrorsAvailable = value; }
         }
           
         private static bool LoadMirrorList(String sServer)
         {
             try
             {
-                XmlNode node = Online_Parsing_Classes.OnlineAPI.GetMirrors(appendAPI(sServer, true));
+                XmlNode node = Online_Parsing_Classes.OnlineAPI.GetMirrors(AppendAPI(sServer, true));
 
                 if (node == null)
                     return false;
@@ -199,19 +195,19 @@ namespace WindowPlugins.GUITVSeries
                 foreach (XmlNode itemNode in node.ChildNodes)
                 {
                     // create a new OnlineMirror object
-                    DBOnlineMirror mirror = new DBOnlineMirror();
+                    var mirror = new DBOnlineMirror();
 
                     foreach (XmlNode propertyNode in itemNode.ChildNodes)
                     {
-                        if (s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                            mirror[s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
+                        if (mOnlineToFieldMap.ContainsKey(propertyNode.Name))
+                            mirror[mOnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
                         else
                         {
                             mirror[propertyNode.Name] = propertyNode.InnerText;
                         }
                     }
                     count++;
-                    memoryMirrors.Add(mirror);
+                    mMemoryMirrors.Add(mirror);
                 }
                 MPTVSeriesLog.Write("Received " + count.ToString() + " mirror site(s) from " + sServer);
                 return true;
@@ -223,7 +219,7 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        static string appendAPI(string path, bool appendKey)
+        static string AppendAPI(string path, bool appendKey)
         {
             return string.Format("{0}api/{1}", (path.EndsWith("/") ? path : (path + "/")), (appendKey ? (cApiKey + "/") : string.Empty));
         }
@@ -233,8 +229,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                initIfNullOrEmpty(s_sCurrentInterface);
-                return appendAPI(s_sCurrentInterface, true);
+                InitIfNullOrEmpty(mCurrentInterface);
+                return AppendAPI(mCurrentInterface, true);
             }
         }
 
@@ -242,8 +238,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get 
             {
-                initIfNullOrEmpty(s_sCurrentInterface);
-                return appendAPI(s_sCurrentInterface, false);
+                InitIfNullOrEmpty(mCurrentInterface);
+                return AppendAPI(mCurrentInterface, false);
             }
         }
 
@@ -251,8 +247,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                initIfNullOrEmpty(s_sCurrentBanner);
-                return s_sCurrentBanner;
+                InitIfNullOrEmpty(mCurrentBanner);
+                return mCurrentBanner;
             }
         }
 
@@ -260,12 +256,12 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                initIfNullOrEmpty(s_sCurrentZip);
-                return appendAPI(s_sCurrentZip, true);
+                InitIfNullOrEmpty(mCurrentZip);
+                return AppendAPI(mCurrentZip, true);
             }
         }
 
-        static void initIfNullOrEmpty(string value)
+        static void InitIfNullOrEmpty(string value)
         {
             if (String.IsNullOrEmpty(value)) Init();
         }

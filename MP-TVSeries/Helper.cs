@@ -345,7 +345,30 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        #region XML File Cache
+        #region XML/ZIP File Cache
+        public static void SaveZipCache(string aFilename, Stream aStreamData)
+        {
+            try
+            {
+                MPTVSeriesLog.Write("Saving zip to file cache: " + aFilename, MPTVSeriesLog.LogLevel.Debug);
+
+                if (!Directory.Exists(Path.GetDirectoryName(aFilename)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(aFilename));
+
+                if (File.Exists(aFilename))
+                    File.Delete(aFilename);
+
+                using (FileStream lFileStream = File.Create(aFilename))
+                {
+                    aStreamData.CopyTo(lFileStream);
+                }
+            }
+            catch (Exception e)
+            {
+                MPTVSeriesLog.Write("Failed to save zip to cache: {0}", aFilename);
+                MPTVSeriesLog.Write("Exception: {0}", e.Message);
+            }
+        }
 
         public static void SaveXmlCache(string filename, XmlNode node)
         {
@@ -353,7 +376,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 MPTVSeriesLog.Write("Saving xml to file cache: " + filename, MPTVSeriesLog.LogLevel.Debug);
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.LoadXml(node.OuterXml);
                 if (!Directory.Exists(Path.GetDirectoryName(filename)))
                     Directory.CreateDirectory(Path.GetDirectoryName(filename));
@@ -371,7 +394,7 @@ namespace WindowPlugins.GUITVSeries
             if (!File.Exists(filename)) return null;
 
             // Load cache
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             try
             {
                 MPTVSeriesLog.Write("Loading xml from file cache: " + filename, MPTVSeriesLog.LogLevel.Debug);
