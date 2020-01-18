@@ -323,6 +323,26 @@ namespace WindowPlugins.GUITVSeries.GUI
         }
         #endregion
 
+        #region Public Methods
+
+        public static bool DeleteFile(string aFilename)
+        {
+            try
+            {
+                MPTVSeriesLog.Write($"Deleting local artwork '{aFilename}' from disk");
+                File.Delete(aFilename);
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("Failed to delete local artwork from disk. Reason=" + ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
         #region Private Methods
         private void DeleteArtwork( GUIArtworkListItem aSelectedGUIItem )
         {
@@ -428,22 +448,6 @@ namespace WindowPlugins.GUITVSeries.GUI
                     }
                     break;
             }
-        }
-
-        private bool DeleteFile(string aFilename )
-        {
-            try
-            {
-                MPTVSeriesLog.Write( $"Deleting local artwork '{aFilename}' from disk" );
-                File.Delete( aFilename );
-            }
-            catch (Exception ex)
-            {
-                MPTVSeriesLog.Write( "Failed to delete local artwork from disk. Reason=" + ex.Message );
-                return false;
-            }
-
-            return true;
         }
 
         private void OnEpisodeThumbnailClicked()
@@ -2427,10 +2431,19 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             var lArtwork = e.UserState as Artwork;
 
-            // report we now have finished downloading the file
-            lArtwork.NotifyPropertyChanged( "LocalPath" );
+            if (e.Error == null)
+            {
+                MPTVSeriesLog.Write($"Completed download of artwork '{lArtwork.LocalPath.Replace("/", @"\")}'");
+            }
+            else
+            {
+                lArtwork.DownloadException = e.Error;
+                MPTVSeriesLog.Write($"Download of artwork '{lArtwork.LocalPath.Replace("/", @"\")}' failed. Error={lArtwork.DownloadException.Message}");
+            }
 
-            MPTVSeriesLog.Write( $"Completed download of artwork '{lArtwork.LocalPath.Replace("/",@"\")}'" );
+            // report we now have finished download operation
+            lArtwork.NotifyPropertyChanged("LocalPath");
+
         }
         #endregion
 
@@ -2471,14 +2484,30 @@ namespace WindowPlugins.GUITVSeries.GUI
                             break;
 
                         case "LocalPath":
-                            this.Label2 = Translation.FanArtLocal;
                             this.IsDownloading = false;
                             this.ProgressBarPercentage = 0;
 
-                            // update database as downloaded
-                            SetArtworkAsLocal(lArtwork);
-                            // publish big artwork to GUI
-                            SetImageToGui(lArtwork);
+                            // check if artwork download was successful
+                            // if an error occurs we will attach an exception object
+                            if (lArtwork.DownloadException == null)
+                            {
+                                this.Label2 = Translation.FanArtLocal;
+
+                                // update database as downloaded
+                                SetArtworkAsLocal(lArtwork);
+                                // publish big artwork to GUI
+                                SetImageToGui(lArtwork);
+                            }
+                            else
+                            {
+                                // delete the local artwork if it exists, probably corrupted
+                                if (File.Exists(lArtwork.LocalPath))
+                                {
+                                    GUIArtworkChooser.DeleteFile(lArtwork.LocalPath);
+                                }
+                                this.Label2 = Translation.DownloadFailed;
+                                lArtwork.DownloadException = null;
+                            }
                             break;
 
                         default:
@@ -2575,8 +2604,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                     case ArtworkType.SeasonPoster:
                     case ArtworkType.SeriesPoster:
-                        lMaxWidth = 680;
-                        lMaxHeight = 1000;
+                        lMaxWidth = 510;
+                        lMaxHeight = 750;
                         break;
 
                     case ArtworkType.SeriesBanner:
@@ -2585,22 +2614,36 @@ namespace WindowPlugins.GUITVSeries.GUI
                         break;
                 }
 
-                var lBitMap = new System.Drawing.Bitmap(ImageFast.FromFile(lFilename), lMaxWidth, lMaxHeight);
-
-                if (GUITextureManager.LoadFromMemory(lBitMap, lTexture, 0, 0, 0) > 0)
+                try
                 {
-                    ThumbnailImage = lTexture;
-                    IconImage = lTexture;
-                    IconImageBig = lTexture;
+                    var lBitMap = new System.Drawing.Bitmap(ImageFast.FromFile(lFilename), lMaxWidth, lMaxHeight);
+
+                    if (GUITextureManager.LoadFromMemory(lBitMap, lTexture, 0, 0, 0) > 0)
+                    {
+                        ThumbnailImage = lTexture;
+                        IconImage = lTexture;
+                        IconImageBig = lTexture;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write($"Failed to load image '{lFilename}' into facade item. Error = '{ex.Message}'");
                 }
             }
             else
             {
-                if (GUITextureManager.LoadFromMemory(ImageFast.FromFile(lFilename), lTexture, 0, 0, 0) > 0)
+                try
                 {
-                    ThumbnailImage = lTexture;
-                    IconImage = lTexture;
-                    IconImageBig = lTexture;
+                    if (GUITextureManager.LoadFromMemory(ImageFast.FromFile(lFilename), lTexture, 0, 0, 0) > 0)
+                    {
+                        ThumbnailImage = lTexture;
+                        IconImage = lTexture;
+                        IconImageBig = lTexture;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MPTVSeriesLog.Write($"Failed to load image '{lFilename}' into facade item. Error = '{ex.Message}'");
                 }
             }
 
@@ -2693,6 +2736,11 @@ namespace WindowPlugins.GUITVSeries.GUI
         /// The index of the GUIListItem artwork being downloaded
         /// </summary>
         public int DownloadItemIndex { get; set; }
+
+        /// <summary>
+        /// Error if async download failed
+        /// </summary>
+        public Exception DownloadException { get; set; }
 
         #region INotifyPropertyChanged
 
