@@ -539,6 +539,7 @@ namespace WindowPlugins.GUITVSeries
             base.AddColumn(cIsAvailable, new DBField(DBField.cTypeInt));
             base.AddColumn(cDateWatched, new DBField(DBField.cTypeString)); // we should now remove this as we have it on the onlineepisode table which is persistent
             base.AddColumn(cStopTime, new DBField(DBField.cTypeInt)); // we may sync resume time from trakt before partially watching anything
+            base.AddColumn(cLocalPlaytime, new DBField(DBField.cTypeInt));
 
             foreach (KeyValuePair<String, DBField> pair in m_fields)
             {
