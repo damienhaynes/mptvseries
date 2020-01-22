@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 // Align version with main library
-[assembly: AssemblyVersion( "4.3.5.0" )]
-[assembly: AssemblyFileVersion( "4.3.5.0" )]
+[assembly: AssemblyVersion( "4.3.5.1" )]
+[assembly: AssemblyFileVersion( "4.3.5.1" )]

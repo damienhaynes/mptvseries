@@ -3311,14 +3311,7 @@ namespace WindowPlugins.GUITVSeries
                                             corrSeries = DBSeries.Get(episode[DBEpisode.cSeriesID]);
                                             cache.addChangeSeries(corrSeries);
                                         }
-                                        if (corrSeries == null)
-                                        {
-                                            item.Label = FieldGetter.resolveDynString(m_sFormatEpisodeCol2, episode);
-                                        }
-                                        else
-                                        {
-                                            item.Label = episode.ToString();
-                                        }
+                                        item.Label = episode.ToString();
                                     }
                                     else
                                     {
@@ -3528,6 +3521,7 @@ namespace WindowPlugins.GUITVSeries
             catch (Exception e)
             {
                 MPTVSeriesLog.Write("The 'LoadFacade' function has generated an error: " + e.Message);
+                MPTVSeriesLog.WriteMultiLine(e.StackTrace);
             }
         }
 

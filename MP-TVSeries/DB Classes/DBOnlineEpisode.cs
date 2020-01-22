@@ -235,19 +235,22 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                string lCompleteTitle = string.Empty;
                 DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                if (lSeries != null)
+                {
+                    bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                    if (lDvdSortOrder && this[cDVDEpisodeNumber] == 0)
+                        lDvdSortOrder = false;
 
-                bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
-                if ( lDvdSortOrder && this[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
-                     lDvdSortOrder = false;
+                    string lSeasonField = lDvdSortOrder ? cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
+                    string lEpisodeField = lDvdSortOrder ? cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
-                string lSeasonField = lDvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
-                string lEpisodeField = lDvdSortOrder ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
-                
-                lCompleteTitle = lSeries.ToString() + " " + this[lSeasonField] + "x" + this[lEpisodeField] + ": " + this[DBOnlineEpisode.cEpisodeName];
-             
-                return lCompleteTitle;
+                    return lSeries.ToString() + " " + this[lSeasonField] + "x" + this[lEpisodeField] + ": " + this[DBOnlineEpisode.cEpisodeName];
+                }
+                else
+                {
+                    return string.Format("{0} - {1}x{2} - {3}", Translation.Unknown, this[cSeasonIndex], this[cEpisodeIndex], this[cEpisodeName]);
+                }
             }
         }
 
@@ -286,15 +289,22 @@ namespace WindowPlugins.GUITVSeries
         public override string ToString()
         {
             DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+            if (lSeries != null)
+            {
+                bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
+                if (lDvdSortOrder && this[cDVDEpisodeNumber] == 0)
+                    lDvdSortOrder = false;
 
-            bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
-            if ( lDvdSortOrder && this[DBOnlineEpisode.cDVDEpisodeNumber] == 0 )
-                 lDvdSortOrder = false;
+                string lSeasonField = lDvdSortOrder ? cDVDSeasonNumber : cSeasonIndex;
+                string lEpisodeField = lDvdSortOrder ? cDVDEpisodeNumber : cEpisodeIndex;
 
-            string lSeasonField = lDvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
-            string lEpisodeField = lDvdSortOrder ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
+                return string.Format("{0} - {1}x{2} - {3}", lSeries[DBOnlineSeries.cPrettyName].ToString(), this[lSeasonField], this[lEpisodeField], this[cEpisodeName]);
+            }
+            else
+            {
+                return string.Format("{0} - {1}x{2} - {3}", Translation.Unknown, this[cSeasonIndex], this[cEpisodeIndex], this[cEpisodeName]);
+            }
 
-            return string.Format("{0} - {1}x{2} - {3}", (lSeries == null ? string.Empty : lSeries[DBOnlineSeries.cPrettyName].ToString()), this[lSeasonField], this[lEpisodeField], this[cEpisodeName]);
         }
     };
 }

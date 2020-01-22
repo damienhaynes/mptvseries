@@ -3111,29 +3111,15 @@ public class Script
       <Major>4</Major>
       <Minor>3</Minor>
       <Build>5</Build>
-      <Revision>0</Revision>
+      <Revision>1</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Added support to get Posters, Banners and Fanart from fanart.tv via the Artwork Chooser GUI;
-* Added support to get Posters and Fanart from themoviedb.org via the Artwork Chooser GUI;
-* Added support to get Episode thumbnails from themoviedb.org via the Artwork Chooser GUI;
-* Added a localised skin property ( #TVSeries.Artwork.LocalisedType ) for the current artwork type;
-* Added links to fanart.tv and themoviedb.org in the configuration dialog for selected series;
-* Added async image loading in tvseries episode views (required for large images from themoviedb.org);
-* Added option to override the search language to English. Useful if named series on disk are in English and chosen online language is otherwise);
-* Fixed exception when manually updating series with no episode thumbnails;
-* Fixed DVD ordered episodes in the configuration dialog;
-* Fixed crash in Artwork Chooser when a full sized artwork download fails;
-* Improvements to Artwork Chooser current background art when deleting and selecting new fanart and random fanart is activated;
-* Improvements to image resolution when selecting local artwork in Artwork Chooser;
-* Removed Facade with ID 51 and 52. Skinners should now use a single facade (ID 50) and use conditional includes basis the artwork type property (see included Titan skin for an example);
-* Updated all v1 API endpoints to secure connections (https);
-* Updated Dutch, French and German translations.</VersionDescription>
+    <VersionDescription>* Fixed regression when loading recently added view containing episodes that have no online series matched from import.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://github.com/damienhaynes/mptvseries/releases/download/4.3.5/MP-TVSeries-4.3.5.0.mpe1</OnlineLocation>
-    <ReleaseDate>2020-01-18T15:25:06</ReleaseDate>
+    <OnlineLocation>https://github.com/damienhaynes/mptvseries/releases/download/4.3.5.1/MP-TVSeries-4.3.5.1.mpe1</OnlineLocation>
+    <ReleaseDate>2020-01-22T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
     <Params>
