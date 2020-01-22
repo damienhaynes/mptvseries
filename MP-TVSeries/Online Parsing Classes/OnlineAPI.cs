@@ -116,7 +116,18 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         static public XmlNode GetSeries( String sSeriesName, string aLanguageCode = "en" )
         {
-            return Generic( string.Format( apiURIs.GetSeries, HttpUtility.UrlEncode( sSeriesName ), aLanguageCode ), true, false, Format.NoExtension );
+            string lEncodedSeriesName;
+            try
+            {
+                lEncodedSeriesName = Uri.EscapeDataString(sSeriesName);
+            }
+            catch (UriFormatException ex)
+            {
+                MPTVSeriesLog.Write($"Failed to get encoded series name of '{sSeriesName}'. Error={ex.Message}");
+                lEncodedSeriesName = HttpUtility.UrlEncode(sSeriesName);
+            }
+            
+            return Generic( string.Format( apiURIs.GetSeries, lEncodedSeriesName, aLanguageCode ), true, false, Format.NoExtension );
         }
 
         static public XmlNode GetUserRatings( String sSeriesID, String sAccountID )
