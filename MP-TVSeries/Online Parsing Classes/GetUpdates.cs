@@ -94,12 +94,18 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
                 {
                     long.TryParse( updates.Attributes["time"].Value, out timestamp );
 
+                    // get all available series in database, there is not point processing updates from online if not needed
+                    var lAvailableSeriesInDb = DBSeries.Get(new SQLCondition()).Select(field => (string)field[DBOnlineSeries.cID]).ToList();
+
                     // NB: updates from xml only includes series (no episodes or artwork!)
                     foreach ( XmlNode node in updates.SelectNodes( "/Data/Series" ) )
                     {
-                        long lTime;
-                        long.TryParse( node.SelectSingleNode( "time" ).InnerText, out lTime );
+                        long.TryParse(node.SelectSingleNode("time").InnerText, out long lTime);
                         string lSeriesId = node.SelectSingleNode( "id" ).InnerText;
+
+                        // check if we're interested in this series
+                        if (!lAvailableSeriesInDb.Contains(lSeriesId))
+                            continue;
 
                         series.Add( lSeriesId, lTime );
                         banners.Add( lSeriesId, lTime );

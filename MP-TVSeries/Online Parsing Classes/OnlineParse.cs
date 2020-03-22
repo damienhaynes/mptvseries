@@ -930,13 +930,13 @@ namespace WindowPlugins.GUITVSeries
             else if (sinceLastUpdate < 3600 * 24 * 30)
                 uType = Online_Parsing_Classes.OnlineAPI.UpdateType.month;
 
-            Online_Parsing_Classes.GetUpdates GU = new Online_Parsing_Classes.GetUpdates(uType);
-            if ( GU.UpdatedSeries == null ) return null;
+            var lUpdates = new Online_Parsing_Classes.GetUpdates(uType);
+            if ( lUpdates.UpdatedSeries == null ) return null;
 
-            MPTVSeriesLog.Write("Series with Updates: {0}", GU.UpdatedSeries?.Count);
-            MPTVSeriesLog.Write("Episodes with Updates: {0}", GU.UpdatedEpisodes?.Count);
-            MPTVSeriesLog.Write("Series with Updated Fanart: {0}", GU.UpdatedFanart?.Count);
-            MPTVSeriesLog.Write("Series with Updated Banners: {0}", GU.UpdatedBanners?.Count);
+            MPTVSeriesLog.Write("Available series with updates: {0}", lUpdates.UpdatedSeries?.Count);
+            MPTVSeriesLog.Write("Available episodes with updates: {0}", lUpdates.UpdatedEpisodes?.Count);
+            MPTVSeriesLog.Write("Avaialble series with updated Backdrops: {0}", lUpdates.UpdatedFanart?.Count);
+            MPTVSeriesLog.Write("Available series with updated Artwork: {0}", lUpdates.UpdatedBanners?.Count);
 
             #region remove cache files that need updating
 
@@ -947,7 +947,7 @@ namespace WindowPlugins.GUITVSeries
                 // get series cache directories
                 var lSeriesDirs = new DirectoryInfo(lCacheDir).GetDirectories().Select(d => d.Name).ToList();
 
-                foreach (var series in GU.UpdatedSeries.Where(s => lSeriesDirs.Contains(s.Key)))
+                foreach (var series in lUpdates.UpdatedSeries.Where(s => lSeriesDirs.Contains(s.Key)))
                 {
                     bool lCacheCleared = false;
 
@@ -995,7 +995,7 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write(bigLogMessage("Finished processing updates from online database"));
 
-            return GU;
+            return lUpdates;
         }
 
         private void UpdateSeries(bool bUpdateNewSeries, List<DBValue> seriesUpdated)

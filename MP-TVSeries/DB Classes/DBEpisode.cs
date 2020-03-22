@@ -326,7 +326,6 @@ namespace WindowPlugins.GUITVSeries
     
             DBTVSeries.CreateDBIndices("create index if not exists epComp1 ON local_episodes(CompositeID ASC)","local_episodes",false);
             DBTVSeries.CreateDBIndices("create index if not exists epComp2 ON local_episodes(CompositeID2 ASC)","local_episodes", true);
-
         }
 
         public DBEpisode(bool bCreateEmptyOnline)
