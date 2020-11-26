@@ -22,11 +22,9 @@
 #endregion
 
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -309,7 +307,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cToReplace] = "x264";
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
-            
+
             replacement[DBReplacements.cIndex] = "7";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
@@ -349,11 +347,19 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
+            replacement[DBReplacements.cIndex] = "12";
+            replacement[DBReplacements.cEnabled] = "1";
+            replacement[DBReplacements.cBefore] = "1";
+            replacement[DBReplacements.cTagEnabled] = "1";
+            replacement[DBReplacements.cToReplace] = "x265";
+            replacement[DBReplacements.cWith] = @"<empty>";
+            replacement.Commit();
+
             DBReplacements.GlobalSet(new DBReplacements(), DBReplacements.cIsRegex, new DBValue(0), new SQLCondition());
 
             // low roman numerals preceded by Part or pt (for eg. Part 4 => 1x04)
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 12;
+            replacement[DBReplacements.cIndex] = 13;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -368,7 +374,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Part n or Part n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 13;
+            replacement[DBReplacements.cIndex] = 14;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -383,7 +389,7 @@ namespace WindowPlugins.GUITVSeries
 
             // n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 14;
+            replacement[DBReplacements.cIndex] = 15;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -397,7 +403,7 @@ namespace WindowPlugins.GUITVSeries
             catch (Exception) { }
 
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 15;
+            replacement[DBReplacements.cIndex] = 16;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
