@@ -157,7 +157,7 @@ namespace WindowPlugins.GUITVSeries
             try
             {
                 lastWasCached = false;
-                DBEpisode inCache = !Settings.isConfig ? cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]) : null;
+                DBEpisode inCache = !Settings.IsConfig ? cache.getEpisode(ep[DBEpisode.cSeriesID], ep[DBEpisode.cSeasonIndex], ep[DBOnlineEpisode.cEpisodeIndex]) : null;
                 tmpEp = inCache == null || inCache[DBEpisode.cFilename] != ep[DBEpisode.cFilename] ? ep : inCache;
                 // zeflash: since we use an image allocator we can't use a cache for the episode image anymore - so always call getLogos
                 tmpEp.cachedLogoResults = null; // have to redo caching here
@@ -180,7 +180,7 @@ namespace WindowPlugins.GUITVSeries
         public static string getLogos(ref DBSeason season, int imgHeight, int imgWidth)
         {
             if (season == null) return null;
-            DBSeason inCache = !Settings.isConfig ? cache.getSeason(season[DBSeason.cSeriesID], season[DBSeason.cIndex]) : null;
+            DBSeason inCache = !Settings.IsConfig ? cache.getSeason(season[DBSeason.cSeriesID], season[DBSeason.cIndex]) : null;
             tmpSeason = inCache == null ? season : inCache;
             lastResult = getLogos(Level.Season, imgHeight, imgWidth, ref tmpSeason.cachedLogoResults);
             if (!lastWasCached) cache.addChangeSeason(tmpSeason);
@@ -190,7 +190,7 @@ namespace WindowPlugins.GUITVSeries
         public static string getLogos(ref DBSeries series, int imgHeight, int imgWidth)
         {
             if (series == null) return null;
-            DBSeries inCache = !Settings.isConfig ? cache.getSeries(series[DBSeries.cID]) : null;
+            DBSeries inCache = !Settings.IsConfig ? cache.getSeries(series[DBSeries.cID]) : null;
             tmpSeries = inCache == null ? series : inCache;
             lastResult = getLogos(Level.Series, imgHeight, imgWidth, ref tmpSeries.cachedLogoResults);
             if (!lastWasCached) cache.addChangeSeries(tmpSeries);
@@ -200,7 +200,7 @@ namespace WindowPlugins.GUITVSeries
         static string getLogos(Level level, int imgHeight, int imgWidth, bool firstOnly, ref List<string> logosForBuilding)
         {
             string res = work(level, imgHeight, imgWidth, firstOnly, ref logosForBuilding);
-            if (!Settings.isConfig && res != null && res.Length > 0 && res[0] != '[')
+            if (!Settings.IsConfig && res != null && res.Length > 0 && res[0] != '[')
             {
                 if (tmpEp != null && tmpEp.Image == res)
                     return ImageAllocator.GetOtherImage(res, new Size(), false); // don't resize by allocator
@@ -226,7 +226,7 @@ namespace WindowPlugins.GUITVSeries
                 epImgAppended = true;
             }
 
-            if ((!(lastWasCached = logosForBuilding != null)) || Settings.isConfig) // means it was tested before, so we don't even test anymore
+            if ((!(lastWasCached = logosForBuilding != null)) || Settings.IsConfig) // means it was tested before, so we don't even test anymore
             {
                 logosForBuilding = new List<string>(); // null means hasn't been tested yet
                 if (epImgAppended) logosForBuilding.Add(tmpEp.Image);
@@ -292,7 +292,7 @@ namespace WindowPlugins.GUITVSeries
                     Image img = b;
                     Graphics g = Graphics.FromImage(img);
                     appendLogos(logosForBuilding, ref g, imgHeight, imgWidth);
-                    if (Settings.isConfig)
+                    if (Settings.IsConfig)
                     {
                         b.Save(tmpFile);
                         return tmpFile;

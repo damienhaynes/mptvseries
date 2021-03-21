@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 namespace WindowPlugins.GUITVSeries.TmdbAPI.DataStructures
 {
     [DataContract]
-    public class TMDbFindResult
+    public class TmdbFindResult
     {
         [DataMember( Name = "tv_results" )]
-        public List<TMDbSearchResultShow> Shows { get; set; }
+        public List<TmdbSearchResultShow> Shows { get; set; }
     }
 }

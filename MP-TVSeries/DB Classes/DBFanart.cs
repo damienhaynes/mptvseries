@@ -48,6 +48,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cRating = "Rating"; // online
         public const String cRatingCount = "RatingCount"; // online
         public const String cDataSource = "DataSource";
+        public const String cTmdbID = "TmdbID";
 
         enum FanartResolution
         {
@@ -76,6 +77,7 @@ namespace WindowPlugins.GUITVSeries
             // all mandatory fields. WARNING: INDEX HAS TO BE INCLUDED FIRST
             AddColumn(cIndex, new DBField(DBField.cTypeInt, true));
             AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
+            AddColumn(cTmdbID, new DBField(DBField.cTypeInt));
             AddColumn(cChosen, new DBField(DBField.cTypeString));
             AddColumn(cLocalPath, new DBField(DBField.cTypeString));
             AddColumn(cBannerPath, new DBField(DBField.cTypeString));

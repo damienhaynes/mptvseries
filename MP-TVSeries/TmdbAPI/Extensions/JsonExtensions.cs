@@ -51,8 +51,9 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI.Extensions
                     return (T)ser.ReadObject(ms);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return default(T);
             }
         }

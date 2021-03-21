@@ -190,6 +190,7 @@
     <Compile Include="GUI\GUIArtworkChooser.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
+    <Compile Include="Online Parsing Classes\GetFanart.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -270,7 +271,6 @@
     <Compile Include="DB Classes\DBReplacements.cs" />
     <Compile Include="DB Classes\DBView.cs" />
     <Compile Include="Fanart.cs" />
-    <Compile Include="FanartChooser.cs" />
     <Compile Include="feedback.cs" />
     <Compile Include="FieldGetter.cs" />
     <Compile Include="Helper.cs" />
@@ -283,7 +283,6 @@
     <Compile Include="DB Classes\DBExpressions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DB Classes\DBOnlineMirrors.cs" />
     <Compile Include="DB Classes\DBOptions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -325,16 +324,37 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="settings.cs" />
-    <Compile Include="TmdbAPI\DataStructures\TMDbFindResult.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbCast.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbContentRating.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbContentRatings.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbCredit.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbCredits.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbCrew.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbEpisodeBase.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbEpisodeDetail.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbExternalId.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbFindResult.cs" />
     <Compile Include="TmdbAPI\DataStructures\TmdbConfiguration.cs" />
     <Compile Include="TmdbAPI\DataStructures\TmdbEpisodeImages.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbGenre.cs" />
     <Compile Include="TmdbAPI\DataStructures\TmdbImage.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbLanguage.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbNetwork.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbProductionCompany.cs" />
     <Compile Include="TmdbAPI\DataStructures\TmdbRequestAge.cs" />
-    <Compile Include="TmdbAPI\DataStructures\TMDbSearchResult.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbSearchResult.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbSeasonBase.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbSeasonDetail.cs" />
     <Compile Include="TmdbAPI\DataStructures\TmdbSeasonImages.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbShow.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbShowDetail.cs" />
     <Compile Include="TmdbAPI\DataStructures\TmdbShowImages.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbPerson.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbProductionCountry.cs" />
+    <Compile Include="TmdbAPI\DataStructures\TmdbTvChanges.cs" />
     <Compile Include="TmdbAPI\Extensions\JsonExtensions.cs" />
     <Compile Include="TmdbAPI\TmdbAPI.cs" />
+    <Compile Include="TmdbAPI\TmdbCache.cs" />
     <Compile Include="TmdbAPI\TmdbURIs.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="TVSeriesPlugin.cs" />

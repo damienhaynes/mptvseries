@@ -93,7 +93,7 @@ namespace WindowPlugins.GUITVSeries
 
         public static IEnumerable<DBFormatting> GetAll(bool includeDisabled)
         {
-            if (cache == null || Settings.isConfig)
+            if (cache == null || Settings.IsConfig)
             {
                 try
                 {

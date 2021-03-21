@@ -406,7 +406,7 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
         private string getDisplayStringForSeries(DBOnlineSeries series)
         {
-            return string.Format("{0} ({1})", series[DBOnlineSeries.cPrettyName], series[DBOnlineSeries.cID]);
+            return $"{series[DBOnlineSeries.cPrettyName]} ({series[DBOnlineSeries.cFirstAired]})";
         }
         
         private Dictionary<string, UserInputResultSeriesActionPair> getApprovedResults()

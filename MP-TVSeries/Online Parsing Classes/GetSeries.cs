@@ -24,7 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
+using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
+
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -81,7 +82,7 @@ namespace WindowPlugins.GUITVSeries
                                             MinLSDistance = ur.Min(r => r.LSDistance),
                                             SeriesScored = ur.OrderBy(r => r.LSDistance).FirstOrDefault(),
                                             SeriesUserLang = ur.FirstOrDefault(r => r.Series["language"] == r.Series[DBOnlineSeries.cLanguage]),
-                                            SeriesEng = ur.FirstOrDefault(r => r.Series["language"] == "en"),
+                                            SeriesEng = ur.FirstOrDefault(r => r.Series["language"] == "en" || r.Series["language"] == "en-US"),
                                         };
 
             // now decide which one to display
@@ -100,7 +101,7 @@ namespace WindowPlugins.GUITVSeries
             orderedCandidates = weightedDisplayResults.Select(r => r.Series).ToList();
 
             // get the best one that's under a certain distance, which is a bit more fuzzy than the perfect requirement before
-            if (Settings.isConfig || DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1)
+            if (Settings.IsConfig || DBOption.GetOptions(DBOption.cAutoChooseSeries) == 1)
             {
                 var best = weightedDisplayResults.FirstOrDefault(m => m.LSDistance <= FuzzyMatching_MaxLSDistance);
                 if (best != null)
@@ -117,37 +118,32 @@ namespace WindowPlugins.GUITVSeries
                 lUserLanguage = "en";
 
             // search for series basis the user's language
-            XmlNode lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, lUserLanguage );
-            if ( lNode == null ) return;
+            TmdbSearchResult lResult = TmdbAPI.TmdbAPI.Search( aSeriesName, lUserLanguage );
+            if (lResult == null ) return;
 
             // if we have no results from the user's language try English
-            if ( lNode.ChildNodes.Count == 0 && lUserLanguage != "en" )
+            if (lResult.Results.Count == 0 && lUserLanguage != "en")
             {
-                lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, "en" );
-                if ( lNode == null ) return;
+                lResult = TmdbAPI.TmdbAPI.Search( aSeriesName, "en");
+                if (lResult == null || lResult.Results.Count == 0 ) return;
             }
 
-            foreach ( XmlNode itemNode in lNode.ChildNodes)
+            foreach ( TmdbSearchResultShow show in lResult.Results)
             {
+                // provide enough details for series matching
                 var lSeries = new DBOnlineSeries();
-                    
-                foreach (XmlNode propertyNode in itemNode.ChildNodes)
-                {
-                    if ( propertyNode.Name == "seriesid" ) // work around SeriesID inconsistancy
-                    {
-                        lSeries[DBOnlineSeries.cID] = propertyNode.InnerText;
-                    }
-                    else if ( DBOnlineSeries.s_OnlineToFieldMap.ContainsKey( propertyNode.Name ) )
-                    {
-                        lSeries[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                    }
-                    else
-                    {
-                        // we don't know that field, add it to the series table
-                        lSeries.AddColumn( propertyNode.Name, new DBField( DBField.cTypeString ) );
-                        lSeries[propertyNode.Name] = propertyNode.InnerText;
-                    }
-                }
+
+                lSeries[DBOnlineSeries.cID] = show.Id;
+                lSeries[DBOnlineSeries.cTmdbId] = show.Id;
+
+                lSeries[DBOnlineSeries.cOriginalName] = show.OriginalName;
+                lSeries[DBOnlineSeries.cPrettyName] = show.Name;
+                lSeries[DBOnlineSeries.cFirstAired] = show.FirstAirDate;
+                lSeries[DBOnlineSeries.cRating] = show.VoteAverage;
+                lSeries[DBOnlineSeries.cRatingCount] = show.VoteCount;
+                lSeries[DBOnlineSeries.cSummary] = show.Overview;
+                lSeries[DBOnlineSeries.cLanguage] = show.OriginalLanguage;
+
                 mListSeries.Add(lSeries);
             }
 

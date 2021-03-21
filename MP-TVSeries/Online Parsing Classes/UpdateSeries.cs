@@ -1,7 +1,7 @@
 #region GNU license
 // MP-TVSeries - Plugin for Mediaportal
 // http://www.team-mediaportal.com
-// Copyright (C) 2006-2007
+// Copyright (C) 2006-2021
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -21,20 +21,21 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using WindowPlugins.GUITVSeries.TmdbAPI;
+using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 
 namespace WindowPlugins.GUITVSeries
 {
     class UpdateSeries
     {
-        private List<String> mSeriesIDs = null;
-        private long mServerTimeStamp = 0;
+        private readonly List<String> mSeriesIDs = null;
+        private readonly long mServerTimeStamp = 0;
         private List<DBOnlineSeries> mSeriesList = new List<DBOnlineSeries>();
-        private List<int> mIncorrectIdsList = new List<int>();
+        private readonly List<int> mIncorrectIdsList = new List<int>();
 
         public long ServerTimeStamp
         {
@@ -62,8 +63,10 @@ namespace WindowPlugins.GUITVSeries
                 {
                     var results = Work(id);
                     foreach (var r in results)
-                        if(r != null && r[DBOnlineSeries.cID] > 0)
-                          yield return r;
+                    {
+                        if (r != null && r[DBOnlineSeries.cID] > 0)
+                            yield return r;
+                    }
                 }
             }
         }
@@ -73,19 +76,19 @@ namespace WindowPlugins.GUITVSeries
             get { return mIncorrectIdsList; }
         }
 
-        public UpdateSeries(String sSeriesID)
+        public UpdateSeries(String aSeriesID)
         {
-            mSeriesList = Work(sSeriesID).ToList();
+            mSeriesList = Work(aSeriesID).ToList();
         }
 
-        public UpdateSeries(List<String> sSeriesIDs)
+        public UpdateSeries(List<String> aSeriesIDs)
         {
-            this.mSeriesIDs = sSeriesIDs;            
+            this.mSeriesIDs = aSeriesIDs;            
         }
 
-        public UpdateSeries(String sSeriesID, String languageID, bool aOverride = false )
+        public UpdateSeries(String aSeriesID, String aLanguageID, bool aOverride = false )
         {
-            mSeriesList = Work(sSeriesID, languageID, aOverride).ToList();
+            mSeriesList = Work(aSeriesID, aLanguageID, aOverride).ToList();
         }
 
         private IEnumerable<DBOnlineSeries> Work(String sSeriesID)
@@ -93,79 +96,73 @@ namespace WindowPlugins.GUITVSeries
             return Work(sSeriesID, "");
         }
 
-        private IEnumerable<DBOnlineSeries> Work(String sSeriesID, String languageID, bool aOverride = false)
+        private IEnumerable<DBOnlineSeries> Work(String aSeriesID, String aLanguageID, bool aOverride = false)
         {
-            if (sSeriesID.Length > 0)
-            {
-                int result;
-                if (int.TryParse(sSeriesID,out result))
-                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}",Helper.getCorrespondingSeries(result)), MPTVSeriesLog.LogLevel.Debug);
-
-                XmlNode node = null;
-                if (String.IsNullOrEmpty(languageID))
+            if (aSeriesID.Length > 0)
+            {                
+                if (int.TryParse(aSeriesID, out int lSeriesId))
                 {
-                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID);
+                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}", Helper.GetCorrespondingSeries(lSeriesId)), MPTVSeriesLog.LogLevel.Debug);
+                }
+
+                TmdbShowDetail lShowDetail = null;
+                if (String.IsNullOrEmpty(aLanguageID))
+                {
+                    lShowDetail = TmdbAPI.TmdbAPI.GetShowDetail(lSeriesId);
                 }
                 else
                 {
-                    node = Online_Parsing_Classes.OnlineAPI.UpdateSeries(sSeriesID, languageID, aOverride );
+                    lShowDetail = TmdbAPI.TmdbAPI.GetShowDetail(lSeriesId, aLanguageID);
                 }
 
-                if (node != null)
+                if (lShowDetail != null)
                 {
-                    foreach (XmlNode itemNode in node.SelectNodes("/Data"))
-                    {
-                        bool hasDVDOrdering = false;
-                        bool hasAbsoluteOrdering = false;
-                        DBOnlineSeries series = new DBOnlineSeries();
-                        foreach (XmlNode seriesNode in itemNode)
-                        {
-                            // first return item SHOULD ALWAYS be the series
-                            if (seriesNode.Name.Equals("Series", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                foreach (XmlNode propertyNode in seriesNode.ChildNodes)
-                                {
-                                    if (propertyNode.Name == "Language") // work around inconsistancy (language = Language)
-                                    {
-                                        series["language"] = propertyNode.InnerText;
-                                    }
-                                    else if (DBOnlineSeries.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                                        series[DBOnlineSeries.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                                    else
-                                    {
-                                        // we don't know that field, add it to the series table
-                                        series.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                                        series[propertyNode.Name] = propertyNode.InnerText;
-                                    }
-                                }
-                                if (series != null) mSeriesList.Add(series);
-                            }
-                            else if(!hasDVDOrdering || !hasAbsoluteOrdering || seriesNode.Name.Equals("Episode", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                foreach (XmlNode propertyNode in seriesNode.ChildNodes)
-                                {
-                                    switch (propertyNode.Name)
-                                    {
-                                        case "DVD_episodenumber":
-                                        case "DVD_season":
-                                            if(!String.IsNullOrEmpty(propertyNode.InnerText)) hasDVDOrdering = true;
-                                            break;
-                                        case "absolute_number":
-                                            if (!String.IsNullOrEmpty(propertyNode.InnerText)) hasAbsoluteOrdering = true;
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                        if ((hasAbsoluteOrdering || hasDVDOrdering))
-                        {
-                            string ordering = series[DBOnlineSeries.cEpisodeOrders] == string.Empty ? "Aired|" : (string)series[DBOnlineSeries.cEpisodeOrders];
-                            if (hasAbsoluteOrdering) ordering += "Absolute|";
-                            if (hasDVDOrdering) ordering += "DVD";
-                            series[DBOnlineSeries.cEpisodeOrders] = ordering;
-                        }
-                        if(series != null) yield return series;
-                    }
+                    var lSeries = new DBOnlineSeries();
+
+                    lSeries[DBOnlineSeries.cID] = lShowDetail.Id;
+                    lSeries[DBOnlineSeries.cTmdbId] = lShowDetail.Id;
+                    
+                    lSeries[DBOnlineSeries.cActors] = string.Join("|", lShowDetail.Credits?.Cast?.Select(c => c.Name));
+                    //lSeries[DBOnlineSeries.cAirsDay] = string.Empty;
+                    //lSeries[DBOnlineSeries.cAirsTime] = string.Empty;
+                    //lSeries[DBOnlineSeries.cAliasNames] = string.Empty; // could append 'alternative_titles'
+                    lSeries[DBOnlineSeries.cContentRating] = lShowDetail.ContentRatings.Results.FirstOrDefault(r => r.Code == "US")?.Rating; // Allow user to choose which country
+                    lSeries[DBOnlineSeries.cCountry] = lShowDetail.OriginCountries.FirstOrDefault(); // create a split field
+                    lSeries[DBOnlineSeries.cEpisodeOrders] = "Aired|"; // will need need review of API
+                    //lSeries[DBOnlineSeries.cEpisodeSortOrder] = string.Empty;
+                    lSeries[DBOnlineSeries.cFanart] = lShowDetail.BackdropPath; // useless
+                    lSeries[DBOnlineSeries.cFirstAired] = lShowDetail.FirstAirDate;
+                    lSeries[DBOnlineSeries.cGenre] = string.Join("|", lShowDetail.Genres?.Select(g => g.Name));
+                    lSeries[DBOnlineSeries.cIMDBID] = lShowDetail.ExternalIds?.ImdbId;
+                    //lSeries[DBOnlineSeries.cIsOnlineFavourite] = string.Empty; // could append 'account_states' endpoint
+                    lSeries[DBOnlineSeries.cLanguage] = lShowDetail.Languages.FirstOrDefault(); // create a split field
+                    lSeries[DBOnlineSeries.cLastEpisodeAirDate] = lShowDetail.LastEpisodeToAir?.AirDate;
+                    lSeries[DBOnlineSeries.cLastUpdatedDetail] = string.Empty;
+                    lSeries[DBOnlineSeries.cNetwork] = lShowDetail.Networks.FirstOrDefault()?.Name; // create a split field 
+                    lSeries[DBOnlineSeries.cNetworkID] = lShowDetail.Networks.FirstOrDefault()?.Id; // could be removed or create new table
+                    lSeries[DBOnlineSeries.cOriginalName] = lShowDetail.OriginalName;
+                    lSeries[DBOnlineSeries.cPoster] = lShowDetail.PosterPath; // useless
+                    lSeries[DBOnlineSeries.cPrettyName] = lShowDetail.Name;
+                    lSeries[DBOnlineSeries.cRating] = lShowDetail.Score;
+                    lSeries[DBOnlineSeries.cRatingCount] = lShowDetail.Votes;
+                    lSeries[DBOnlineSeries.cSeriesID] = lShowDetail.Id; // redundant
+                    lSeries[DBOnlineSeries.cStatus] = lShowDetail.Status; // "Returning Series" == "Continuing"
+                    lSeries[DBOnlineSeries.cSummary] = lShowDetail.Overview;
+                    lSeries[DBOnlineSeries.cRuntime] = lShowDetail.EpisodeRuntimes.FirstOrDefault(); // could create a split field
+                    lSeries[DBOnlineSeries.cCreators] = string.Join("|", lShowDetail.Creators?.Select(c => c.Name));
+                    lSeries[DBOnlineSeries.cHomepage] = lShowDetail.Homepage;
+                    lSeries[DBOnlineSeries.cProductionCompanies] = string.Join("|", lShowDetail.ProductionCompanies?.Select(c => c.Name));
+                    lSeries[DBOnlineSeries.cProductionCountries] = string.Join("|", lShowDetail.ProductionCountries?.Select(c => c.Name));
+                    lSeries[DBOnlineSeries.cTagline] = lShowDetail.Tagline;
+                    lSeries[DBOnlineSeries.cType] = lShowDetail.Type;
+                    lSeries[DBOnlineSeries.cSpokenLanguages] = string.Join("|", lShowDetail.SpokenLanaguages?.Select(l => l.EnglishName));
+                    lSeries[DBOnlineSeries.cOnlineSeasonCount] = lShowDetail.SeasonCount;
+                    lSeries[DBOnlineSeries.cOnlineEpisodeCount] = lShowDetail.EpisodeCount;
+                    lSeries[DBOnlineSeries.cTvdbId] = lShowDetail.ExternalIds?.TvdbId;
+                    lSeries[DBOnlineSeries.cOnlineSeasonsAvailable] = string.Join(",", lShowDetail.Seasons?.Select(s => s.SeasonNumber)); // for query of season details so we can get every episode for series
+
+                    mSeriesList.Add(lSeries);
+                    yield return lSeries;
                 }
             }
         }

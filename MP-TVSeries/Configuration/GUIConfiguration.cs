@@ -435,7 +435,7 @@ namespace WindowPlugins.GUITVSeries
             // get the online languages from the interface
             if (mOnlineLanguages.Count == 0)
             {
-                mOnlineLanguages.AddRange(new GetLanguages().languages);
+                mOnlineLanguages.AddRange(new GetLanguages().Languages);
             }
 
             // Not necessary to read into the combobox if not used!
@@ -1392,11 +1392,11 @@ namespace WindowPlugins.GUITVSeries
                 ParsingWizardHost.ImportFinished += new EventHandler(ImportWizard_OnFinished);          
 
                 // only now do we set up the parser itself and fire it off
-                ImportWizardParseParams.m_userInputResult = inputResults;
+                ImportWizardParseParams.UserInputResult = inputResults;
 
                 // this will be requested by the the parsing engine at the appropriate time
                 ImportWizardParseParams.UserEpisodeMatcher = ParsingWizardEpIDPage;
-                ImportWizardParseParams.m_files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
+                ImportWizardParseParams.Files = ParsingWizardParsingPage.allFoundFiles; // else they will be marked as removed
 
                 ParsingWizardEpIDPage.UserFinishedEditing += new UserFinishedEditingDelegate(ImportWizard_OnFinishedEditingEpisodes);
 
@@ -1565,7 +1565,7 @@ namespace WindowPlugins.GUITVSeries
                         // Updated selected series if bypassed in tree view
                         if ( mSelectedEpisode[DBOnlineEpisode.cSeriesID] != mSelectedSeries[DBOnlineSeries.cID] )
                         {
-                            mSelectedSeries = Helper.getCorrespondingSeries( mSelectedEpisode[DBOnlineEpisode.cSeriesID] );
+                            mSelectedSeries = Helper.GetCorrespondingSeries( mSelectedEpisode[DBOnlineEpisode.cSeriesID] );
                         }
 
                         #region Images
@@ -1769,7 +1769,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // let configs know what was selected (for samples)
                         if (!SkinSettings.ImportFormatting) {
-                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                            this.formattingConfiguration1.Series = Helper.GetCorrespondingSeries(episode[DBEpisode.cSeriesID]);
                             this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
                             this.formattingConfiguration1.Episode = episode;
                         }
@@ -1791,7 +1791,7 @@ namespace WindowPlugins.GUITVSeries
                         // Updated selected series if bypassed in tree view
                         if (mSelectedSeason[DBSeason.cSeriesID] != mSelectedSeries[DBOnlineSeries.cID])
                         {
-                            mSelectedSeries = Helper.getCorrespondingSeries( mSelectedSeason[DBSeason.cSeriesID] );
+                            mSelectedSeries = Helper.GetCorrespondingSeries( mSelectedSeason[DBSeason.cSeriesID] );
                         }
 
                         #region Images
@@ -1892,7 +1892,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // let configs now what was selected (for samples)
                         if (!SkinSettings.ImportFormatting) {
-                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
+                            this.formattingConfiguration1.Series = Helper.GetCorrespondingSeries(season[DBSeason.cSeriesID]);
                             this.formattingConfiguration1.Season = season;
                             this.formattingConfiguration1.Episode = null;
                         }
@@ -2257,7 +2257,7 @@ namespace WindowPlugins.GUITVSeries
                     // Second Column (Value)
                     if (mOnlineLanguages.Count == 0)
                     {
-                        mOnlineLanguages.AddRange(new GetLanguages().languages);
+                        mOnlineLanguages.AddRange(new GetLanguages().Languages);
                     }
 
                     // populate languages drop-down and select overridden language for series
@@ -2637,41 +2637,41 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void UpdateNode(TreeNode nodeUpdated)
+        private void UpdateNode(TreeNode aNodeUpdated)
         {
-            if (nodeUpdated != null)
+            if (aNodeUpdated != null)
             {
                 int lSeriesID = 0;
-                SQLCondition conditions = new SQLCondition();
-                List<DBValue> epIdsUpdates = new List<DBValue>();
-                List<DBValue> seriesIDsUpdates = new List<DBValue>();
+                var lConditions = new SQLCondition();
+                var lEpisodeIdUpdates = new List<DBValue>();
+                var lSeriesIdUpdates = new List<int>();
 
-                switch (nodeUpdated.Name)
+                switch (aNodeUpdated.Name)
                 {
                     case DBSeries.cTableName:
-                        DBSeries series = nodeUpdated.Tag as DBSeries;
-                        seriesIDsUpdates.Add(series[DBSeries.cID]);
-                        conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                        epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
-                        lSeriesID = series[DBOnlineSeries.cID];
+                        var lSeries = aNodeUpdated.Tag as DBSeries;
+                        lSeriesIdUpdates.Add(lSeries[DBSeries.cID]);
+                        lConditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, lSeries[DBSeries.cID], SQLConditionType.Equal);
+                        lEpisodeIdUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, lConditions, new DBOnlineEpisode()));
+                        lSeriesID = lSeries[DBOnlineSeries.cID];
                         break;
 
                     case DBSeason.cTableName:
-                        DBSeason season = nodeUpdated.Tag as DBSeason;
-                        conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                        conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                        epIdsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
-                        lSeriesID = season[DBSeason.cSeriesID];
+                        var lSeason = aNodeUpdated.Tag as DBSeason;
+                        lConditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, lSeason[DBSeason.cSeriesID], SQLConditionType.Equal);
+                        lConditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, lSeason[DBSeason.cIndex], SQLConditionType.Equal);
+                        lEpisodeIdUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, lConditions, new DBOnlineEpisode()));
+                        lSeriesID = lSeason[DBSeason.cSeriesID];
                         break;
 
                     case DBEpisode.cTableName:
-                        DBEpisode episode = nodeUpdated.Tag as DBEpisode;
-                        epIdsUpdates.Add(episode[DBOnlineEpisode.cID]);
-                        lSeriesID = episode[DBOnlineEpisode.cSeriesID];
+                        var lEpisode = aNodeUpdated.Tag as DBEpisode;
+                        lEpisodeIdUpdates.Add(lEpisode[DBOnlineEpisode.cID]);
+                        lSeriesID = lEpisode[DBOnlineEpisode.cSeriesID];
                         break;
                 }
 
-                if (epIdsUpdates.Count > 0)
+                if (lEpisodeIdUpdates.Count > 0)
                 {
                     // Delete API Cache so we make sure we get the latest updates
                     Helper.DeleteXmlCache( lSeriesID );
@@ -2680,7 +2680,7 @@ namespace WindowPlugins.GUITVSeries
                                                                                     ParsingAction.UpdateEpisodes, 
                                                                                     ParsingAction.UpdateEpisodeThumbNails, 
                                                                                     ParsingAction.UpdateCommunityRatings
-                                                                                  }, seriesIDsUpdates, epIdsUpdates)));
+                                                                                  }, lSeriesIdUpdates, lEpisodeIdUpdates)));
                 }
             }
         }
@@ -3726,7 +3726,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Add to online database
             if (selectedView == DBView.cTranslateTokenOnlineFavourite) {
-                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(add, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                // TODO: Add to TMDb Favourites
             }
                       
 		}
@@ -3942,7 +3942,7 @@ namespace WindowPlugins.GUITVSeries
                 view_selectedName.Text = string.Empty;
                 view_selStepsList.Items.Clear();
 
-                mSelectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, mAvailableViews);
+                mSelectedView = Helper.GetElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, mAvailableViews);
                 view_selectedName.Text = mSelectedView.prettyName;
                 checkCurViewEnabled.Checked = mSelectedView.m_Enabled;
                 checkBoxParentalControl.Checked = mSelectedView.ParentalControl;             
@@ -3973,14 +3973,14 @@ namespace WindowPlugins.GUITVSeries
             if ( comboOnlineLang.SelectedIndex < 0 )
                 return;
 
-            var selectedLanguage = comboOnlineLang.SelectedItem as Language;
-            if ( selectedLanguage == null ) return;
+            var lSelectedLanguage = comboOnlineLang.SelectedItem as Language;
+            if ( lSelectedLanguage == null ) return;
 
-            if ( selectedLanguage.Abbreviation != DBOption.GetOptions(DBOption.cOnlineLanguage))
+            if ( lSelectedLanguage.Abbreviation != DBOption.GetOptions(DBOption.cOnlineLanguage))
             {
-                DBOption.SetOptions(DBOption.cOnlineLanguage, selectedLanguage.Abbreviation );
+                DBOption.SetOptions(DBOption.cOnlineLanguage, lSelectedLanguage.Abbreviation );
                 DBOption.SetOptions(DBOption.cUpdateTimeStamp, 0);
-                Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty; // to overcome caching
+                Online_Parsing_Classes.OnlineAPI.SelectedLanguage = string.Empty; // to overcome caching
                 MPTVSeriesLog.Write("You need to do a manual import everytime the language is changed or your old items will not be updated. New language: " + comboOnlineLang.SelectedItem.ToString());
             }
         }
@@ -3994,7 +3994,7 @@ namespace WindowPlugins.GUITVSeries
                 comboOnlineLang.Items.Clear();
                 comboOnlineLang.Enabled = false;
                 DBOption.SetOptions(DBOption.cOnlineLanguage, "en"); //Set the default value.
-                Online_Parsing_Classes.OnlineAPI.SelLanguageAsString = string.Empty;
+                Online_Parsing_Classes.OnlineAPI.SelectedLanguage = string.Empty;
 
                 MPTVSeriesLog.Write("Now you can change the language on each Series in Details Tab");
                 // Reload the tree for showing the language property
@@ -4025,7 +4025,7 @@ namespace WindowPlugins.GUITVSeries
         {
             if (!pauseViewConfigSave)
             {
-                mSelectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, mAvailableViews);
+                mSelectedView = Helper.GetElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, mAvailableViews);
                 if (mSelectedView != null)
                 {
                     mSelectedView.prettyName = view_selectedName.Text;
@@ -4459,7 +4459,7 @@ namespace WindowPlugins.GUITVSeries
                 return;
             
             // Get Selected View from list
-            mSelectedView = Helper.getElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, mAvailableViews);
+            mSelectedView = Helper.GetElementFromList<logicalView, string>((string)_availViews.SelectedItem, "Name", 0, mAvailableViews);
             
             // Confirm Delete
             string message = string.Format("Are you sure you want to delete view \"{0}\"?",mSelectedView.prettyName);
@@ -4483,7 +4483,9 @@ namespace WindowPlugins.GUITVSeries
 
                     // Remove from online database
                     if (mSelectedView.Name == DBView.cTranslateTokenOnlineFavourite)
-                        Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), s[DBOnlineSeries.cID]);                    
+                    {
+                        // TODO: TMDb Favourites
+                    }
                 }
             }
 
@@ -4560,8 +4562,9 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
                             
                             // Add from online database
-                            if (name == DBView.cTranslateTokenOnlineFavourite) {
-                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(true, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            if (name == DBView.cTranslateTokenOnlineFavourite)
+                            {
+                                // TODO: TMDb Favourites
                             }
                         }
 
@@ -4572,8 +4575,9 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
 
                             // Remove from online database
-                            if (name == DBView.cTranslateTokenOnlineFavourite) {
-                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            if (name == DBView.cTranslateTokenOnlineFavourite)
+                            {
+                                // TODO: TMDb Favourites
                             }
                         }
                     }					
@@ -4606,8 +4610,9 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
 
                             // Add from online database
-                            if (name == DBView.cTranslateTokenOnlineFavourite) {
-                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(true, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            if (name == DBView.cTranslateTokenOnlineFavourite)
+                            {
+                                // TODO: TMDb Favourites
                             }
                         }
 
@@ -4618,8 +4623,9 @@ namespace WindowPlugins.GUITVSeries
                             series.Commit();
 
                             // Remove from online database
-                            if (name == DBView.cTranslateTokenOnlineFavourite) {
-                                Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(false, DBOption.GetOptions(DBOption.cOnlineUserID), series[DBOnlineSeries.cID]);
+                            if (name == DBView.cTranslateTokenOnlineFavourite)
+                            {
+                                // TODO: TMDb Favourites
                             }
                         }
                     }
@@ -4907,7 +4913,7 @@ namespace WindowPlugins.GUITVSeries
         private void lnkImageCache_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             string lArtworkFolder = Settings.GetPath( Settings.Path.banners ) + "\\";
-            lArtworkFolder += Helper.cleanLocalPath( mSelectedSeries.ToString() );
+            lArtworkFolder += Helper.CleanLocalPath( mSelectedSeries.ToString() );
 
             // Open Directory
             Process.Start( "explorer.exe", lArtworkFolder );
@@ -5020,7 +5026,7 @@ namespace WindowPlugins.GUITVSeries
 
                     // we don't have it, let's search for it and save it for next time
                     // there should only be one result for a tvdb ID.
-                    var lResults = TmdbAPI.TmdbAPI.TMDbFind(mSelectedSeries[DBOnlineSeries.cID], ExternalSource.tvdb_id);
+                    var lResults = TmdbAPI.TmdbAPI.TmdbFind(mSelectedSeries[DBOnlineSeries.cID], ExternalSource.tvdb_id);
                     if (lResults == null || lResults.Shows == null || lResults.Shows.Count == 0)
                     {
                         MPTVSeriesLog.Write($"Failed to find TMDb ID for series '{mSelectedSeries[DBOnlineSeries.cPrettyName]}'");

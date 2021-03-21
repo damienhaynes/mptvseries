@@ -1362,7 +1362,7 @@ namespace WindowPlugins.GUITVSeries
             // some series have different number of episodes per season for different orders e.g. Futurama
             if (series == null)
             {
-                series = Helper.getCorrespondingSeries(int.Parse(season[DBSeason.cSeriesID]));
+                series = Helper.GetCorrespondingSeries(int.Parse(season[DBSeason.cSeriesID]));
             }
 
             string seasonIndex = DBOnlineEpisode.cSeasonIndex;
@@ -1532,7 +1532,7 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 SQLCondition conditions = new SQLCondition();
-                if ((!Settings.isConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
+                if ((!Settings.IsConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                     conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?
@@ -1905,7 +1905,7 @@ namespace WindowPlugins.GUITVSeries
         public override string ToString()
         {
             if (this.m_onlineEpisode != null) return m_onlineEpisode.ToString();
-            DBSeries s = Helper.getCorrespondingSeries(this[DBEpisode.cSeriesID]);
+            DBSeries s = Helper.GetCorrespondingSeries(this[DBEpisode.cSeriesID]);
             return string.Format("{0} - {1}x{2}", (s == null ? "(" + this[DBEpisode.cSeriesID] + ")" : s.ToString()), this[DBEpisode.cSeasonIndex], this[DBEpisode.cEpisodeIndex]);
         }
 
@@ -1941,11 +1941,11 @@ namespace WindowPlugins.GUITVSeries
 
         public string BuildEpisodeThumbFilename()
         {
-            DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+            DBSeries series = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
 
             string lEpisodeId = $"{m_onlineEpisode[DBOnlineEpisode.cSeasonIndex]}x{m_onlineEpisode[DBOnlineEpisode.cEpisodeIndex]}";
 
-            string lSeriesFolder = Helper.cleanLocalPath(series.ToString());
+            string lSeriesFolder = Helper.CleanLocalPath(series.ToString());
 
             int lThumbSource = this[DBOnlineEpisode.cEpisodeThumbnailSource];
             if (lThumbSource == 0 /* tvdb */)
@@ -1998,7 +1998,7 @@ namespace WindowPlugins.GUITVSeries
         double getRelSortingIndexOfEp(DBEpisode ep)
         {
             // consider episode sort order when sorting
-            DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
+            DBSeries series = Helper.GetCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
             bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
             // check if we need to fallback to aired order if DVD order detail not available
@@ -2008,7 +2008,7 @@ namespace WindowPlugins.GUITVSeries
             string seasonIndex = SortByDVD ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
             string episodeIndex = SortByDVD ? DBOnlineEpisode.cDVDEpisodeNumber : DBOnlineEpisode.cEpisodeIndex;
 
-            if ( ep[seasonIndex] == 0 && !Settings.isConfig )
+            if ( ep[seasonIndex] == 0 && !Settings.IsConfig )
             {
                 // Episode is a special
                 // Airs After Season overrides AirsBeforeEpisode and AirsBeforeSeason

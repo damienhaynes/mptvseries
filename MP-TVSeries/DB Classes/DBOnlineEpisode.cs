@@ -216,13 +216,13 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // check for custom image
-                    DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                    DBSeries series = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
                     if (series != null)
                     {
                         string seriesName = series.ToString();
                         string seasonIdx = this[DBOnlineEpisode.cSeasonIndex];
                         string episodeIdx = this[DBOnlineEpisode.cEpisodeIndex];
-                        string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), string.Format(@"{0}\episodes\custom-{1}x{2}.jpg", Helper.cleanLocalPath(seriesName), seasonIdx, episodeIdx).ToLowerInvariant());
+                        string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), string.Format(@"{0}\episodes\custom-{1}x{2}.jpg", Helper.CleanLocalPath(seriesName), seasonIdx, episodeIdx).ToLowerInvariant());
                         if (System.IO.File.Exists(customArtwork))
                             return customArtwork;
                     }
@@ -235,7 +235,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                DBSeries lSeries = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
                 if (lSeries != null)
                 {
                     bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
@@ -288,7 +288,7 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         public override string ToString()
         {
-            DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+            DBSeries lSeries = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
             if (lSeries != null)
             {
                 bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";

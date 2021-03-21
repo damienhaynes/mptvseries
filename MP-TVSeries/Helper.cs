@@ -192,32 +192,32 @@ namespace WindowPlugins.GUITVSeries
             return result;
         }
        
-        public static T getElementFromList<T, P>(P currPropertyValue, string PropertyName, int indexOffset, List<T> elements)
+        public static T GetElementFromList<T, P>(P aCurrPropertyValue, string aPropertyName, int aIndexOffset, List<T> aElements)
         {
             // takes care of "looping"
-            if (elements.Count == 0) return default(T);
-            int indexToGet = 0;
-            P value = default(P);
-            for (int i = 0; i < elements.Count; i++)
+            if (aElements.Count == 0) return default(T);
+            int lIndexToGet = 0;
+            P lValue = default(P);
+            for (int i = 0; i < aElements.Count; i++)
             {
                 try
                 {
-                    value = (P)elements[i].GetType().InvokeMember(PropertyName, System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.GetField, null, elements[i], null);
-                    if (value.Equals(currPropertyValue))
+                    lValue = (P)aElements[i].GetType().InvokeMember(aPropertyName, BindingFlags.GetProperty | BindingFlags.GetField, null, aElements[i], null);
+                    if (lValue.Equals(aCurrPropertyValue))
                     {
-                        indexToGet = i + indexOffset;
+                        lIndexToGet = i + aIndexOffset;
                         break;
                     }
                 }
-                catch (Exception x)
+                catch (Exception aEx)
                 {
-                    MPTVSeriesLog.Write("Wrong call of getElementFromList<T,P>: the Type " + elements[i].GetType().Name + " - " + x.Message);
+                    MPTVSeriesLog.Write("Wrong call of getElementFromList<T,P>: the Type " + aElements[i].GetType().Name + " - " + aEx.Message);
                     return default(T);
                 }
             }
-            if (indexToGet < 0) indexToGet = elements.Count + indexToGet;
-            if (indexToGet >= elements.Count) indexToGet = indexToGet - elements.Count;
-            return elements[indexToGet];
+            if (lIndexToGet < 0) lIndexToGet = aElements.Count + lIndexToGet;
+            if (lIndexToGet >= aElements.Count) lIndexToGet -= aElements.Count;
+            return aElements[lIndexToGet];
         }
 
         public static List<string> getFieldNameListFromList<T>(string FieldNameToGet, List<T> elements) where T : DBTable
@@ -295,7 +295,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Get Corresponding Series/Season Methods
-        public static DBSeries getCorrespondingSeries(int id)
+        public static DBSeries GetCorrespondingSeries(int id)
         {
             try
             {
@@ -510,7 +510,7 @@ namespace WindowPlugins.GUITVSeries
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string cleanLocalPath(string path) {
+        public static string CleanLocalPath(string path) {
             foreach (char c in System.IO.Path.GetInvalidFileNameChars()) {
                 path = path.Replace(c, invalidCharReplacement);                
             }

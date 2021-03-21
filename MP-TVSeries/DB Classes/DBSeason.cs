@@ -290,12 +290,12 @@ namespace WindowPlugins.GUITVSeries
                 String sList = this[cBannerFileNames];
 
                 // Add custom artwork by user
-                DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
+                DBSeries series = Helper.GetCorrespondingSeries(this[DBSeason.cSeriesID]);
                 if (series != null)
                 {
                     string seriesName = series.ToString();
                     string seasonIdx = this[DBSeason.cIndex];
-                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), string.Format(@"{0}\seasons\custom-{1}.jpg", Helper.cleanLocalPath(seriesName), seasonIdx));
+                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), string.Format(@"{0}\seasons\custom-{1}.jpg", Helper.CleanLocalPath(seriesName), seasonIdx));
                     if (File.Exists(customArtwork))
                         outList.Add(customArtwork);
                 }
@@ -355,13 +355,13 @@ namespace WindowPlugins.GUITVSeries
                 //    conditions.Add(new DBSeason(), cHasLocalFiles, 0, SQLConditionType.NotEqual);
 
 
-                if(!Settings.isConfig) conditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
+                if(!Settings.IsConfig) conditions.Add(new DBSeason(), cHasEpisodes, 1, SQLConditionType.Equal);
 
                 // include hidden?
                 if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
 
-                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
+                if (!Settings.IsConfig && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                 {
                     SQLCondition fullSubCond = new SQLCondition();
                     fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
@@ -388,7 +388,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 condition.AddCustom(stdConditions.ConditionsSQLString);
 
-                if (!Settings.isConfig)
+                if (!Settings.IsConfig)
                 {
                     SQLCondition fullSubCond = new SQLCondition();
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBSeason.Q(DBSeason.cSeriesID), SQLConditionType.Equal);
@@ -543,13 +543,13 @@ namespace WindowPlugins.GUITVSeries
                 bool hasLocalEpisodesToDelete = episodes.Exists(e => !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
                 hasLocalEpisodesToDelete &= (type == TVSeriesPlugin.DeleteMenuItems.disk || type == TVSeriesPlugin.DeleteMenuItems.diskdatabase);
 
-                DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
+                DBSeries series = Helper.GetCorrespondingSeries(this[DBSeason.cSeriesID]);
                 string seriesName = series == null ? this[DBSeason.cSeriesID].ToString() : series.ToString();
 
                 // show progress dialog as this can be a long process esp for network drives
                 // will show new progress for each season if deleting from the series level
                 GUIDialogProgress progressDialog = null;
-                if (!Settings.isConfig)
+                if (!Settings.IsConfig)
                 {
                     progressDialog = (GUIDialogProgress)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_PROGRESS);
                     progressDialog.Reset();
@@ -570,17 +570,17 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode episode in episodes)
                 {
                     string episodeName = string.Format("{0}x{1} - {2}", episode[DBOnlineEpisode.cSeasonIndex], episode[DBOnlineEpisode.cEpisodeIndex], episode[DBOnlineEpisode.cEpisodeName]);
-                    if (!Settings.isConfig) progressDialog.SetLine(2, episodeName);
-                    if (!Settings.isConfig) GUIWindowManager.Process();
+                    if (!Settings.IsConfig) progressDialog.SetLine(2, episodeName);
+                    if (!Settings.IsConfig) GUIWindowManager.Process();
 
                     resultMsg.AddRange(episode.deleteEpisode(type, true));
 
-                    if (!Settings.isConfig) progressDialog.Percentage = Convert.ToInt32(((double)++counter / (double)episodes.Count) * 100.0);
-                    if (!Settings.isConfig) GUIWindowManager.Process();
+                    if (!Settings.IsConfig) progressDialog.Percentage = Convert.ToInt32(((double)++counter / (double)episodes.Count) * 100.0);
+                    if (!Settings.IsConfig) GUIWindowManager.Process();
                 }
 
                 // close progress dialog
-                if (!Settings.isConfig) progressDialog.Close();
+                if (!Settings.IsConfig) progressDialog.Close();
                 
                 // if we have removed all episodes in season without error, cleanup the online table
                 if (resultMsg.Count == 0 && type != TVSeriesPlugin.DeleteMenuItems.disk)
@@ -666,7 +666,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void HideSeason(bool hide)
         {
-            MPTVSeriesLog.Write(string.Format("{0} series {1}, season {2} from view", (hide ? "Hiding" : "UnHiding"), Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]), this[DBSeason.cIndex]));
+            MPTVSeriesLog.Write(string.Format("{0} series {1}, season {2} from view", (hide ? "Hiding" : "UnHiding"), Helper.GetCorrespondingSeries(this[DBSeason.cSeriesID]), this[DBSeason.cIndex]));
 
             // respect 'Show Local Files Only' setting
             List<DBEpisode> episodes = DBEpisode.Get(int.Parse(this[DBSeason.cSeriesID]), int.Parse((this[DBSeason.cIndex])));

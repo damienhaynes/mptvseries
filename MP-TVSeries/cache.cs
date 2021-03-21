@@ -78,7 +78,7 @@ namespace WindowPlugins.GUITVSeries
         #region Constructor
         static cache()
         {
-            if (!Settings.isConfig)
+            if (!Settings.IsConfig)
             {
                 // for globalset and clear we dumb all objects in question
                 DBTable.dbUpdateOccured += new DBTable.dbUpdateOccuredDelegate(DBTable_dbUpdateOccured);

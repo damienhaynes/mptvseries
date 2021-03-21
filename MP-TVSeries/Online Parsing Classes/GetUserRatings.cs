@@ -23,10 +23,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using System.Xml;
 using System.IO;
+using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -82,14 +80,14 @@ namespace WindowPlugins.GUITVSeries
 
         public GetUserRatings(string sSeriesID, string sAccountID)
         {
-            doWork(sSeriesID, sAccountID);
+            DoWork(sSeriesID, sAccountID);
         }
 
         #endregion
 
         #region private methods
 
-        void doWork(String sSeriesID, string sAccountID)
+        void DoWork(String sSeriesID, string sAccountID)
         {
             XmlNode node = null;
             string filename = string.Empty;
@@ -105,7 +103,7 @@ namespace WindowPlugins.GUITVSeries
             // download ratings
             if (node == null)
             {
-                node = Online_Parsing_Classes.OnlineAPI.GetUserRatings(sSeriesID, sAccountID);
+                // TODO: Get TMDB User Ratings
 
                 if (node == null) return;
 

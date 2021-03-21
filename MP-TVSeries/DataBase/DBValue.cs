@@ -153,6 +153,11 @@ namespace WindowPlugins.GUITVSeries
             return new DBValue(value.ToString(provider));
         }
 
+        static public implicit operator DBValue(decimal value)
+        {
+            return new DBValue(value.ToString(provider));
+        }
+
         static public bool operator == (DBValue first, DBValue second)
         {
             if ((object)first == null || (object)second == null)

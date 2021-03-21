@@ -38,7 +38,7 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI.DataStructures
     }
 
     [DataContract]
-    public class TMDbSearchResultShow : TMDbSearchResultBase
+    public class TmdbSearchResultShow : TMDbSearchResultBase
     {
         [DataMember( Name = "first_air_date" )]
         public string FirstAirDate { get; set; }
@@ -48,5 +48,21 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI.DataStructures
 
         [DataMember( Name = "name" )]
         public string Name { get; set; }
+    }
+
+    [DataContract]
+    public class TmdbSearchResult
+    {
+        [DataMember(Name = "page")]
+        public int Page { get; set; }
+
+        [DataMember(Name = "total_results")]
+        public int TotalResults { get; set; }
+
+        [DataMember(Name = "total_pages")]
+        public int TotalPages { get; set; }
+
+        [DataMember(Name = "results")]
+        public List<TmdbSearchResultShow> Results { get; set; }
     }
 }

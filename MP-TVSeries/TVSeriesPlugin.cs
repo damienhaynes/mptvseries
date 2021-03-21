@@ -113,7 +113,7 @@ namespace WindowPlugins.GUITVSeries
         private System.Threading.Timer m_ParentalControlTimer = null;
         private OnlineParsing m_parserUpdater = null;
         private bool m_parserUpdaterWorking = false;
-        private List<CParsingParameters> m_parserUpdaterQueue = new List<CParsingParameters>();
+        private List<CParsingParameters> mParserUpdaterQueue = new List<CParsingParameters>();
 
         private Watcher m_watcherUpdater = null;
         private int m_nUpdateScanLapse = 0;
@@ -560,7 +560,7 @@ namespace WindowPlugins.GUITVSeries
 
                 int viewLevels = m_CurrLView.m_steps.Count;
 
-                m_SelectedSeries = Helper.getCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));                
+                m_SelectedSeries = Helper.GetCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));                
                 if (m_SelectedSeries == null)
                 {
                     MPTVSeriesLog.Write("Failed to get series object from loading parameter!", MPTVSeriesLog.LogLevel.Debug);
@@ -759,14 +759,14 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 selectedEpisode = (DBEpisode)currentitem.TVTag;
                                 selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
-                                selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
+                                selectedSeries = Helper.GetCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
                             }
                             break;
 
                         case Listlevel.Season:
                             {
                                 selectedSeason = (DBSeason)currentitem.TVTag;
-                                selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
+                                selectedSeries = Helper.GetCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
                             }
                             break;
 
@@ -1341,12 +1341,6 @@ namespace WindowPlugins.GUITVSeries
                         break;
                     #endregion
 
-                    #region Fanart Chooser
-                    case (int)eContextItems.showFanartChooser:
-                        ShowFanartChooser(m_SelectedSeries[DBOnlineSeries.cID]);
-                        break;
-                    #endregion
-
                     #region Artwork Chooser
                     case ( int )eContextItems.artworkChooser:
                         ShowArtworkChoicesMenu();
@@ -1384,7 +1378,7 @@ namespace WindowPlugins.GUITVSeries
                             DBOnlineSeries.Clear(condition);
 
                             // look for it again
-                            m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.NoExactMatch, null, true, false));
+                            mParserUpdaterQueue.Add(new CParsingParameters(ParsingAction.NoExactMatch, null, true, false));
 
                             // Start Import if delayed
                             ChangeImportTimer(1000, 1000);
@@ -1517,9 +1511,9 @@ namespace WindowPlugins.GUITVSeries
                     #region Import
                     case (int)eContextItems.actionLocalScan:
                         // queue scan
-                        lock (m_parserUpdaterQueue)
+                        lock (mParserUpdaterQueue)
                         {
-                            m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                            mParserUpdaterQueue.Add(new CParsingParameters(true, false));
                         }
                         
                         // Start Import if delayed
@@ -1528,9 +1522,9 @@ namespace WindowPlugins.GUITVSeries
 
                     case (int)eContextItems.actionFullRefresh:
                         // queue scan
-                        lock (m_parserUpdaterQueue)
+                        lock (mParserUpdaterQueue)
                         {
-                            m_parserUpdaterQueue.Add(new CParsingParameters(false, true));
+                            mParserUpdaterQueue.Add(new CParsingParameters(false, true));
                         }
 
                         // Start Import if delayed
@@ -1640,12 +1634,12 @@ namespace WindowPlugins.GUITVSeries
                                 break;
                             case Listlevel.Season:
                                 selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
-                                selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
+                                selectedSeries = Helper.GetCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
                                 break;
                             case Listlevel.Episode:
                                 selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
                                 selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
-                                selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
+                                selectedSeries = Helper.GetCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
                                 break;
                         }
                         // Invoke Delete Menu
@@ -1909,7 +1903,7 @@ namespace WindowPlugins.GUITVSeries
                 
                 if (onlineLanguages.Count == 0)
                 {
-                    onlineLanguages.AddRange(new GetLanguages().languages);
+                    onlineLanguages.AddRange(new GetLanguages().Languages);
                 }
 
                 foreach (Language lang in onlineLanguages)
@@ -2115,9 +2109,9 @@ namespace WindowPlugins.GUITVSeries
 
             if (control == this.ImportButton)
             {
-                lock (m_parserUpdaterQueue)
+                lock (mParserUpdaterQueue)
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(true, true));
+                    mParserUpdaterQueue.Add(new CParsingParameters(true, true));
                 }
                 
                 // Start Import if delayed
@@ -2337,7 +2331,6 @@ namespace WindowPlugins.GUITVSeries
             else
             {
                 MPTVSeriesLog.Write("MP-TVSeries is disconnected from the network");
-                DBOnlineMirror.IsMirrorsAvailable = false; // Force to recheck later
                 IsNetworkAvailable = false;
             }
         }
@@ -2366,18 +2359,18 @@ namespace WindowPlugins.GUITVSeries
             if (filesAdded.Count > 0)
             {
                 // queue it
-                lock (m_parserUpdaterQueue)
+                lock (mParserUpdaterQueue)
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Add, filesAdded, false, false));
+                    mParserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Add, filesAdded, false, false));
                 }
             }
 
             if (filesRemoved.Count > 0)
             {
                 // queue it
-                lock (m_parserUpdaterQueue)
+                lock (mParserUpdaterQueue)
                 {
-                    m_parserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Remove, filesRemoved, false, false));
+                    mParserUpdaterQueue.Add(new CParsingParameters(ParsingAction.List_Remove, filesRemoved, false, false));
                 }
             }
         }
@@ -3675,39 +3668,39 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        private void UpdateEpisodes(DBSeries series, DBSeason season, DBEpisode episode)
+        private void UpdateEpisodes(DBSeries aSeries, DBSeason aSeason, DBEpisode aEpisode)
         {
-            List<DBValue> epIDsUpdates = new List<DBValue>();
-            List<DBValue> seriesIDsUpdates = new List<DBValue>();
+            var lEpisodeIdUpdates = new List<DBValue>();
+            var lSeriesIdUpdates = new List<int>();
 
-            SQLCondition conditions = null;
-            string searchPattern = string.Empty;
+            SQLCondition lConditions = null;
+            string lSearchPattern = string.Empty;
             int lSeriesID = 0;
 
             // Get selected Series and/or list of Episode(s) to update
             switch (CurrentViewLevel)
             {
                 case Listlevel.Series:
-                    seriesIDsUpdates.Add(series[DBSeries.cID]);
-                    conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
-                    epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
-                    searchPattern = "*.jpg";
-                    lSeriesID = series[DBSeries.cID];
+                    lSeriesIdUpdates.Add(aSeries[DBSeries.cID]);
+                    lConditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, aSeries[DBSeries.cID], SQLConditionType.Equal);
+                    lEpisodeIdUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, lConditions, new DBOnlineEpisode()));
+                    lSearchPattern = "*.jpg";
+                    lSeriesID = aSeries[DBSeries.cID];
                     break;
 
                 case Listlevel.Season:
-                    conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, season[DBSeason.cSeriesID], SQLConditionType.Equal);
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, season[DBSeason.cIndex], SQLConditionType.Equal);
-                    epIDsUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, conditions, new DBOnlineEpisode()));
-                    searchPattern = season[DBSeason.cIndex] + "x*.jpg";
-                    lSeriesID = season[DBSeason.cSeriesID];
+                    lConditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, aSeason[DBSeason.cSeriesID], SQLConditionType.Equal);
+                    lConditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeasonIndex, aSeason[DBSeason.cIndex], SQLConditionType.Equal);
+                    lEpisodeIdUpdates.AddRange(DBEpisode.GetSingleField(DBOnlineEpisode.cID, lConditions, new DBOnlineEpisode()));
+                    lSearchPattern = aSeason[DBSeason.cIndex] + "x*.jpg";
+                    lSeriesID = aSeason[DBSeason.cSeriesID];
                     break;
 
                 case Listlevel.Episode:
-                    epIDsUpdates.Add(episode[DBOnlineEpisode.cID]);
-                    conditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, episode[DBOnlineEpisode.cID], SQLConditionType.Equal);
-                    searchPattern = episode[DBOnlineEpisode.cSeasonIndex] + "x" + episode[DBOnlineEpisode.cEpisodeIndex] + ".jpg";
-                    lSeriesID = episode[DBOnlineEpisode.cSeriesID];
+                    lEpisodeIdUpdates.Add(aEpisode[DBOnlineEpisode.cID]);
+                    lConditions = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cID, aEpisode[DBOnlineEpisode.cID], SQLConditionType.Equal);
+                    lSearchPattern = aEpisode[DBOnlineEpisode.cSeasonIndex] + "x" + aEpisode[DBOnlineEpisode.cEpisodeIndex] + ".jpg";
+                    lSeriesID = aEpisode[DBOnlineEpisode.cSeriesID];
                     break;
             }
 
@@ -3730,12 +3723,12 @@ namespace WindowPlugins.GUITVSeries
             }
 
 
-            string lThumbnailPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), Helper.cleanLocalPath( series.ToString() ) + @"\Episodes" );
+            string lThumbnailPath = Helper.PathCombine( Settings.GetPath( Settings.Path.banners ), Helper.CleanLocalPath( aSeries.ToString() ) + @"\Episodes" );
 
             if ( lDeleteThumbs && Directory.Exists( lThumbnailPath ) )
             {
                 // Search and delete matching files that actually exist
-                string[] fileList = Directory.GetFiles(lThumbnailPath, searchPattern);
+                string[] fileList = Directory.GetFiles(lThumbnailPath, lSearchPattern);
 
                 foreach (string file in fileList)
                 {
@@ -3752,26 +3745,32 @@ namespace WindowPlugins.GUITVSeries
                 }
 
                 // Remove local thumbnail reference from db so that thumbnails will be downloaded
-                DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", conditions);
+                DBEpisode.GlobalSet(new DBOnlineEpisode(), DBOnlineEpisode.cEpisodeThumbnailFilename, (DBValue)"", lConditions);
             }
 
             // Delete API Cache so we make sure we get the latest updates
             Helper.DeleteXmlCache( lSeriesID );
 
             // Execute Online Parsing Actions
-            if (epIDsUpdates.Count > 0)
+            if (lEpisodeIdUpdates.Count > 0)
             {
-                lock (m_parserUpdaterQueue)
+                lock (mParserUpdaterQueue)
                 {
-                    List<ParsingAction> parsingActions = new List<ParsingAction>();
-                    // Conditional parsing actions                    
-                    if (CurrentViewLevel == Listlevel.Series) parsingActions.Add(ParsingAction.UpdateSeries);
-                    parsingActions.Add(ParsingAction.UpdateEpisodes);
-                    if (lDeleteThumbs) parsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
-                    parsingActions.Add(ParsingAction.UpdateCommunityRatings);
-                    parsingActions.Add(ParsingAction.UpdateEpisodeCounts);
+                    var lParsingActions = new List<ParsingAction>();
 
-                    m_parserUpdaterQueue.Add(new CParsingParameters(parsingActions, seriesIDsUpdates, epIDsUpdates));
+                    // Conditional parsing actions                    
+                    if (CurrentViewLevel == Listlevel.Series)
+                        lParsingActions.Add(ParsingAction.UpdateSeries);
+
+                    lParsingActions.Add(ParsingAction.UpdateEpisodes);
+
+                    if (lDeleteThumbs)
+                        lParsingActions.Add(ParsingAction.UpdateEpisodeThumbNails);
+
+                    lParsingActions.Add(ParsingAction.UpdateCommunityRatings);
+                    lParsingActions.Add(ParsingAction.UpdateEpisodeCounts);
+
+                    mParserUpdaterQueue.Add(new CParsingParameters(lParsingActions, lSeriesIdUpdates, lEpisodeIdUpdates));
                 }
             }
         }
@@ -3881,7 +3880,7 @@ namespace WindowPlugins.GUITVSeries
                 int rating = -1;
                 if (Int32.TryParse(tValue, out rating))
                 {
-                    Online_Parsing_Classes.OnlineAPI.SubmitRating(tLevel == Listlevel.Episode ? Online_Parsing_Classes.OnlineAPI.RatingType.episode : Online_Parsing_Classes.OnlineAPI.RatingType.series, id, rating);
+                    // TODO: TMDb User Ratings
                 }
             })
             {
@@ -4509,7 +4508,7 @@ namespace WindowPlugins.GUITVSeries
                 }
                 else
                 {
-                    Online_Parsing_Classes.OnlineAPI.ConfigureFavourites(add, account, series[DBOnlineSeries.cID]);
+                    // TODO: TMDb Favourites
                 }
             }
 
@@ -4649,10 +4648,13 @@ namespace WindowPlugins.GUITVSeries
             MPTVSeriesLog.Write("Changing Episode Match Order for {0}, to {1}", series.ToString(), order);
 
             // get list of local episodes to re-match
-            SQLCondition conditions = new SQLCondition();
+            var conditions = new SQLCondition();
             conditions.Add(new DBEpisode(), DBEpisode.cSeriesID, series[DBSeries.cID], SQLConditionType.Equal);
             List<DBEpisode> localEpisodes = DBEpisode.Get(conditions);
-            OnlineParsing.matchOnlineToLocalEpisodes(series, localEpisodes, new GetEpisodes(series[DBSeries.cID]), order);
+
+            string[] lSeasons = series[DBOnlineSeries.cOnlineSeasonsAvailable].ToString().Split(',');
+
+            OnlineParsing.matchOnlineToLocalEpisodes(series, localEpisodes, new GetEpisodes(series[DBSeries.cID], Array.ConvertAll(lSeasons, s => int.Parse(s))), order);
             return;
         }
         #endregion
@@ -4891,7 +4893,7 @@ namespace WindowPlugins.GUITVSeries
         private void switchView(int offset)
         {
             // Switch to previous view
-            switchView(Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
+            switchView(Helper.GetElementFromList<logicalView, string>(m_CurrLView.Name, "Name", offset, m_allViews));
         }
 
         private bool switchView(string viewName)
@@ -4961,8 +4963,8 @@ namespace WindowPlugins.GUITVSeries
                 setCurPositionLabel();
                 if (m_allViews.Count > 1)
                 {
-                    setGUIProperty(guiProperty.NextView, Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).prettyName);
-                    setGUIProperty(guiProperty.LastView, Helper.getElementFromList<logicalView, string>(m_CurrLView.Name, "Name", -1, m_allViews).prettyName);
+                    setGUIProperty(guiProperty.NextView, Helper.GetElementFromList<logicalView, string>(m_CurrLView.Name, "Name", 1, m_allViews).prettyName);
+                    setGUIProperty(guiProperty.LastView, Helper.GetElementFromList<logicalView, string>(m_CurrLView.Name, "Name", -1, m_allViews).prettyName);
                 }
                 else
                 {
@@ -5212,9 +5214,9 @@ namespace WindowPlugins.GUITVSeries
                 backdrop.Filename = fanartFile;
                 
                 if (fanart.Found)
-                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.GetCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
                 else
-                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
+                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}", Helper.GetCorrespondingSeries(fanart.SeriesID).ToString()));
 
                 // I don't think we can support these anymore with dbfanart now
                 //if (this.dummyIsLightFanartLoaded != null)
@@ -5380,7 +5382,7 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write("Starting initial import scan in: {0} secs", importDelay);
                 // if online updates are required then this will be picked up 
                 // in ImporterQueueMonitor where last update time is compared
-                m_parserUpdaterQueue.Add(new CParsingParameters(true, false));
+                mParserUpdaterQueue.Add(new CParsingParameters(true, false));
             }
 
             // timer check every second to check for queued parsing parameters
@@ -5433,20 +5435,20 @@ namespace WindowPlugins.GUITVSeries
                 if (bUpdateScanNeeded)
                 {
                     // queue scan
-                    lock (m_parserUpdaterQueue)
+                    lock (mParserUpdaterQueue)
                     {
-                        m_parserUpdaterQueue.Add(new CParsingParameters(false, bUpdateScanNeeded));
+                        mParserUpdaterQueue.Add(new CParsingParameters(false, bUpdateScanNeeded));
                     }
                 }
 
-                lock (m_parserUpdaterQueue)
+                lock (mParserUpdaterQueue)
                 {
-                    if (m_parserUpdaterQueue.Count > 0)
+                    if (mParserUpdaterQueue.Count > 0)
                     {
                         setProcessAnimationStatus(true);
                         m_parserUpdaterWorking = true;
-                        m_parserUpdater.Start(m_parserUpdaterQueue[0]);
-                        m_parserUpdaterQueue.RemoveAt(0);
+                        m_parserUpdater.Start(mParserUpdaterQueue[0]);
+                        mParserUpdaterQueue.RemoveAt(0);
                     }
                     else
                         setProcessAnimationStatus(false);
@@ -5465,7 +5467,7 @@ namespace WindowPlugins.GUITVSeries
                 setGUIProperty(guiProperty.LastOnlineUpdate, m_LastUpdateScan.ToString());
             }
             m_parserUpdaterWorking = false;
-            if (OnlineParsing.mDataUpdated)
+            if (OnlineParsing.DataUpdated)
             {
                 if (m_Facade != null) LoadFacade();
             }
@@ -5699,7 +5701,7 @@ namespace WindowPlugins.GUITVSeries
             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
             {
                 // it is the case    
-                m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
+                m_SelectedSeries = Helper.GetCorrespondingSeries(season[DBSeason.cSeriesID]);
                 if (m_SelectedSeries != null)
                 {
                     seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
@@ -5764,7 +5766,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 // it is the case			
                 m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                m_SelectedSeries = Helper.GetCorrespondingSeries(episode[DBEpisode.cSeriesID]);
 
                 if (m_SelectedSeries != null)
                 {
@@ -6165,53 +6167,6 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        FanartChooser fc = null;
-        public void ShowFanartChooser(int seriesID)
-        {
-            if (!DBOnlineMirror.IsMirrorsAvailable)
-            {
-                // Server maybe available now.
-                DBOnlineMirror.Init();
-                if (!DBOnlineMirror.IsMirrorsAvailable)
-                {
-                    GUIDialogOK dlgOK = (GUIDialogOK)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_OK);
-                    dlgOK.SetHeading(Translation.TVDB_ERROR_TITLE);
-                    if (!TVSeriesPlugin.IsNetworkAvailable)
-                    {
-                        dlgOK.SetLine(1, Translation.NETWORK_ERROR_UNAVAILABLE_1);
-                        dlgOK.SetLine(2, Translation.NETWORK_ERROR_UNAVAILABLE_2);
-                    }
-                    else
-                    {
-                        dlgOK.SetLine(1, Translation.TVDB_ERROR_UNAVAILABLE_1);
-                        dlgOK.SetLine(2, Translation.TVDB_ERROR_UNAVAILABLE_2);
-                    }
-
-                    dlgOK.DoModal(GUIWindowManager.ActiveWindow);
-                    MPTVSeriesLog.Write("Cannot Display Fanart Chooser, the online database is unavailable or network is unavailable.");
-                    return;
-                }
-
-            }
-
-            MPTVSeriesLog.Write("Switching to Fanart Chooser Window");
-            // lets show the other xml
-
-            if (fc == null)
-            {
-                fc = new FanartChooser();
-                GUIWindow fcwindow = (GUIWindow)fc;
-                GUIWindowManager.Add(ref fcwindow);
-                fc.Init();
-            }
-            fc.SeriesID = seriesID;
-            fc.setPageTitle(Translation.FanArt);
-            //if (listLevel == Listlevel.Season || listLevel == Listlevel.Episode)
-            //    fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> Fanart");
-            //else fc.setPageTitle(GUIPropertyManager.GetProperty("#TVSeries." + guiProperty.CurrentView) + " -> " + m_SelectedSeries[DBOnlineSeries.cPrettyName] + " -> Fanart");            
-            GUIWindowManager.ActivateWindow(fc.GetID, false);
-        }
-
         #region Playlist Actions
         GUITVSeriesPlayList TVSeriesPlaylist = null;
         public void ShowPlaylistWindow()
@@ -6588,8 +6543,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 episodeListNew.Sort(new Comparison<DBEpisode>((x, y) =>
                 {
-                    DBSeries seriesX = Helper.getCorrespondingSeries(x[DBOnlineEpisode.cSeriesID]);
-                    DBSeries seriesY = Helper.getCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
+                    DBSeries seriesX = Helper.GetCorrespondingSeries(x[DBOnlineEpisode.cSeriesID]);
+                    DBSeries seriesY = Helper.GetCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
                     string seriesXSortName = seriesX != null ? seriesX[DBOnlineSeries.cSortName].ToString() : string.Empty;
                     string seriesYSortName = seriesY != null ? seriesY[DBOnlineSeries.cSortName].ToString() : string.Empty;
                     return 2 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +
@@ -6812,7 +6767,7 @@ namespace WindowPlugins.GUITVSeries
                 this.m_Logos_Image = null;
             }
             // only when inside MP
-            if (!Settings.isConfig) localLogos.cleanUP();
+            if (!Settings.IsConfig) localLogos.cleanUP();
         }
     }
 

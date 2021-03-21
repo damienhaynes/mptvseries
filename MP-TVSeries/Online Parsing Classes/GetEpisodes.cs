@@ -1,7 +1,7 @@
 #region GNU license
 // MP-TVSeries - Plugin for Mediaportal
 // http://www.team-mediaportal.com
-// Copyright (C) 2006-2007
+// Copyright (C) 2006-2021
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -21,53 +21,71 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using System.Xml;
+using System.Linq;
+using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 
 namespace WindowPlugins.GUITVSeries
 {
     public class GetEpisodes
     {
-        private List<DBOnlineEpisode> listEpisodes = new List<DBOnlineEpisode>();
+        private readonly List<DBOnlineEpisode> mListEpisodes = new List<DBOnlineEpisode>();
 
         public List<DBOnlineEpisode> Results
         {
-            get { return listEpisodes; }
+            get { return mListEpisodes; }
         }
 
-        public GetEpisodes(string seriesID)
+        public GetEpisodes(string aSeriesID, int[] aSeasons)
         {
-            int s = 0;
-            if(Int32.TryParse(seriesID, out s) && s > 0)
-                doWork(s);
+            if (Int32.TryParse(aSeriesID, out int lSeriesId) && lSeriesId > 0)
+            {
+                foreach (int season in aSeasons)
+                {
+                    DoWork(lSeriesId, season);
+                }
+            }
         }        
         
-        public void doWork(int nSeriesID)
-        {            
-            XmlNode node = Online_Parsing_Classes.OnlineAPI.UpdateEpisodes(nSeriesID);
-            if (node == null) return;
-            
-            foreach (XmlNode episodeNode in node.SelectNodes("Episode"))
+        public void DoWork(int aSeriesID, int aSeason)
+        {
+            // we can only query for episodes per season at TMDb
+            TmdbSeasonDetail lSeason = TmdbAPI.TmdbAPI.GetSeasonDetail(aSeriesID, aSeason);
+
+            foreach (TmdbEpisodeDetail epsiode in lSeason.Episodes)
             {
-                DBOnlineEpisode episode = new DBOnlineEpisode();
-                foreach (XmlNode propertyNode in episodeNode.ChildNodes)
-                {
-                    if (DBOnlineEpisode.s_OnlineToFieldMap.ContainsKey(propertyNode.Name))
-                        episode[DBOnlineEpisode.s_OnlineToFieldMap[propertyNode.Name]] = propertyNode.InnerText;
-                    else
-                    {
-                        // we don't know that field, add it to the table
-                        episode.AddColumn(propertyNode.Name, new DBField(DBField.cTypeString));
-                        episode[propertyNode.Name] = propertyNode.InnerText;
-                    }
-                }                            
-                listEpisodes.Add(episode);
-            }                             
-            
+                var lEpisode = new DBOnlineEpisode();
+
+                lEpisode[DBOnlineEpisode.cID] = epsiode.Id;
+                lEpisode[DBOnlineEpisode.cDirector] = string.Join("|", epsiode.Crew.Where(c => c.Job == "Director").Select(d => d.Name));
+                lEpisode[DBOnlineEpisode.cDVDEpisodeNumber] = string.Empty;
+                lEpisode[DBOnlineEpisode.cDVDSeasonNumber] = string.Empty;
+                lEpisode[DBOnlineEpisode.cEpisodeIndex] = epsiode.EpisodeNumber;
+                lEpisode[DBOnlineEpisode.cEpisodeName] = epsiode.Name;
+                lEpisode[DBOnlineEpisode.cEpisodeSummary] = epsiode.Overview;
+                lEpisode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "original" + epsiode.StillPath;
+                lEpisode[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl] = "original" + epsiode.StillPath;
+                lEpisode[DBOnlineEpisode.cFirstAired] = epsiode.AirDate;
+                lEpisode[DBOnlineEpisode.cGuestStars] = string.Join("|", epsiode.GuestStars.Select(g => g.Name));
+                lEpisode[DBOnlineEpisode.cProductionCode] = epsiode.ProductionCode;
+                lEpisode[DBOnlineEpisode.cRating] = epsiode.Score;
+                lEpisode[DBOnlineEpisode.cRatingCount] = epsiode.Votes;
+                lEpisode[DBOnlineEpisode.cSeasonIndex] = epsiode.SeasonNumber;
+                lEpisode[DBOnlineEpisode.cSeasonID] = lSeason.Id;
+                lEpisode[DBOnlineEpisode.cSeriesID] = aSeriesID;
+                lEpisode[DBOnlineEpisode.cWriter] = string.Join("|", epsiode.Crew.Where(c => c.Job == "Writer").Select(d => d.Name));
+                lEpisode[DBOnlineEpisode.cEpisodeThumbnailSource] = (int)GUI.ArtworkDataProvider.TMDb;
+
+                //lEpisode[DBOnlineEpisode.cAbsoluteNumber] = string.Empty;
+                //lEpisode[DBOnlineEpisode.cAirsAfterSeason] = string.Empty;
+                //lEpisode[DBOnlineEpisode.cAirsBeforeSeason] = string.Empty;
+                //lEpisode[DBOnlineEpisode.cAirsBeforeEpisode] = string.Empty;
+                //lEpisode[DBOnlineEpisode.cCombinedEpisodeNumber] = string.Empty;
+                //lEpisode[DBOnlineEpisode.cCombinedSeason] = string.Empty;
+
+                mListEpisodes.Add(lEpisode);
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI.DataStructures
         public List<TmdbImage> Posters { get; set; }
 
         [DataMember]
-        public int Season { get; set; }
+        public int? Season { get; set; }
 
         public override bool Equals(object obj)
         {

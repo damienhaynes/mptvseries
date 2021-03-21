@@ -31,6 +31,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cTableName = "online_series";
 
         public const String cID = "ID";
+        public const String cCountry = "Country";
         public const String cPrettyName = "Pretty_Name";
         public const String cSortName = "SortName";
         public const String cStatus = "Status";
@@ -105,6 +106,20 @@ namespace WindowPlugins.GUITVSeries
         public const String cTraktIgnore = "TraktIgnore";
         public const String cArtworkChooserProvider = "ArtworkChooserProvider";
         public const String cTmdbId = "TmdbId";
+
+        public const String cRuntime = "Runtime";
+        public const String cCreators = "Creators";
+        public const String cHomepage = "Homepage";
+        public const String cProductionCompanies = "ProductionCompanies";
+        public const String cProductionCountries = "ProductionCountries";
+        public const String cTagline = "Tagline";
+        public const String cType = "Type";
+        public const String cSpokenLanguages = "SpokenLanguages";
+        public const String cOnlineSeasonCount = "OnlineSeasonCount";
+        public const String cOnlineEpisodeCount = "OnlineEpisodeCount";
+        public const String cTvdbId = "Tvdbid";
+        public const String cOnlineSeasonsAvailable = "OnlineSeasonsAvailable";
+
         #endregion
 
         public const int cDBVersion = 3;

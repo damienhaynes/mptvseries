@@ -85,7 +85,7 @@ namespace WindowPlugins.GUITVSeries
                 _mpVersion = Assembly.GetEntryAssembly().GetName().Version;
                 _buildDate = getLinkerTimeStamp(Assembly.GetAssembly(typeof(Settings)).Location);
                 _mpBuildDate = getLinkerTimeStamp(System.IO.Path.Combine(Settings.GetPath(Path.app), "MediaPortal.exe"));
-                _userAgent = string.Format("MPTVSeries{0}/{1}", isConfig ? "Config" : string.Empty, Version);
+                _userAgent = string.Format("MPTVSeries{0}/{1}", IsConfig ? "Config" : string.Empty, Version);
             }
             catch (Exception) { }
 
@@ -128,7 +128,7 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Gets a bool indicating wether or not the plugin has been loaded inside the configuration (checks EntryAssembly)
         /// </summary>
-        public static bool isConfig
+        public static bool IsConfig
         { get { return _isConfig; } }
 
         /// <summary>

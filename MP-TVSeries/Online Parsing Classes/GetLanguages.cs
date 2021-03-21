@@ -23,6 +23,8 @@
 
 using System.Collections.Generic;
 using System.Xml;
+using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
+using WindowPlugins.GUITVSeries.TmdbAPI;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -41,37 +43,21 @@ namespace WindowPlugins.GUITVSeries
 
     public class GetLanguages
     {
-        public List<Language> languages = new List<Language>();
+        public List<Language> Languages = new List<Language>();
 
         public GetLanguages()
         {
-            XmlNode rootNode = Online_Parsing_Classes.OnlineAPI.GetLanguages();
-            if (rootNode != null)
+            var lLanguages = TmdbAPI.TmdbAPI.GetLanguages();
+            var lLanguage = new Language();
+
+            foreach (var language in lLanguages)
             {
-                Language lang = null;
-                foreach (XmlNode itemNode in rootNode.ChildNodes)
-                {
-                    lang = new Language();
-                    foreach (XmlNode node in itemNode)
-                    {
-                        if (node.Name == "id") int.TryParse(node.InnerText, out lang.Id);
-                        if (node.Name == "name") lang.Name = node.InnerText;
-                        if (node.Name == "abbreviation")
-                        {
-                            lang.Abbreviation = node.InnerText;
-                            try
-                            {
-                                lang.EnglishName = new System.Globalization.CultureInfo( lang.Abbreviation ).EnglishName;
-                            }
-                            catch
-                            {
-                                MPTVSeriesLog.Write( $"Unable to get English name for language code '{lang.Abbreviation}'", MPTVSeriesLog.LogLevel.Debug );
-                            }
-                        }
-                    }
-                    if (lang.Id != default(int) && lang.EnglishName.Length > 0 && !lang.EnglishName.StartsWith("Unknown"))
-                        languages.Add(lang);
-                }
+                Languages.Add( new Language
+                { 
+                    Name = language.Name,
+                    Abbreviation = language.Code,
+                    EnglishName = language.EnglishName
+                });
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
+using System.Collections.Generic;
 
 namespace WindowPlugins.GUITVSeries.TmdbAPI
 {
@@ -37,12 +38,22 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI
 
         #endregion
 
-        #region Images
+        #region Configuration
         public static TmdbConfiguration GetConfiguration()
         {
             string lResponse = GetFromTmdb(TmdbURIs.ApiConfig);
             return lResponse.FromJSON<TmdbConfiguration>();
         }
+
+        public static IEnumerable<TmdbLanguage> GetLanguages()
+        {
+            string lResponse = GetFromTmdb(TmdbURIs.ApiGetLanguages );
+            return lResponse.FromJSONArray<TmdbLanguage>();
+        }
+
+        #endregion
+
+        #region Images
 
         public static TmdbShowImages GetShowImages( string aId, string aIncludeLanguages = "en,null" )
         {
@@ -64,11 +75,75 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI
         #endregion
 
         #region Search
-        public static TMDbFindResult TMDbFind( string aId, ExternalSource aSourceId )
+        public static TmdbFindResult TmdbFind( string aId, ExternalSource aSourceId )
         {
-            string lResponse = GetFromTmdb( string.Format( TmdbURIs.apiFind, aId, aSourceId.ToString() ) );
-            return lResponse.FromJSON<TMDbFindResult>();
+            string lResponse = GetFromTmdb( string.Format( TmdbURIs.ApiFind, aId, aSourceId.ToString() ) );
+            return lResponse.FromJSON<TmdbFindResult>();
         }
+
+        public static TmdbSearchResult Search( string aName, string aLanguage = "en", int aPage = 1, bool aIncludeAdult = false )
+        {
+            string lEncodedSeriesName;
+            try
+            {
+                lEncodedSeriesName = System.Uri.EscapeDataString(aName);
+            }
+            catch (System.UriFormatException)
+            {
+                lEncodedSeriesName = System.Web.HttpUtility.UrlEncode(aName);
+            }
+
+            string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiSearchTvShow, aLanguage, aPage, lEncodedSeriesName, aIncludeAdult));
+            return lResponse.FromJSON<TmdbSearchResult>();
+        }
+
+        #endregion
+
+        #region Details
+
+        public static TmdbShowDetail GetShowDetail(int aSeriesId, string aLanguage = "en")
+        {
+            // load from cache if it exists
+            TmdbShowDetail lShowDetail = TmdbCache.LoadSeriesFromCache(aSeriesId, aLanguage);
+            if (lShowDetail == null)
+            {
+                string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiTvShowDetail, aSeriesId, aLanguage));
+                lShowDetail = lResponse.FromJSON<TmdbShowDetail>();
+            }
+
+            // save to cache
+            TmdbCache.SaveSeriesToCache(lShowDetail, aLanguage);
+
+            return lShowDetail;
+        }
+
+        public static TmdbSeasonDetail GetSeasonDetail(int aSeriesId, int aSeason, string aLanguage = "en")
+        {
+            // load from cache if it exists
+            TmdbSeasonDetail lSeasonDetail = TmdbCache.LoadSeasonFromCache(aSeriesId, aSeason, aLanguage);
+            if (lSeasonDetail == null)
+            {
+                string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiTvSeasonDetail, aSeriesId, aSeason, aLanguage));
+                lSeasonDetail = lResponse.FromJSON<TmdbSeasonDetail>();
+            }
+
+            // save to cache
+            TmdbCache.SaveSeasonToCache(lSeasonDetail, aSeriesId, aSeason, aLanguage);
+
+            return lSeasonDetail;
+        }
+
+        #endregion
+
+        #region Changes
+
+        public static TmdbTvChanges GetTvChanges(string aStartDate, string aPage = "1")
+        {   
+            string lResponse = GetFromTmdb(string.Format(TmdbURIs.ApiChanges, aStartDate, aPage));
+            return lResponse.FromJSON<TmdbTvChanges>();
+        }
+
+
         #endregion
 
         static string GetFromTmdb(string address, int delayRequest = 0)

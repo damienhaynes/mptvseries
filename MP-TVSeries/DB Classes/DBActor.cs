@@ -168,8 +168,8 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                string seriesName = Helper.getCorrespondingSeries(this[cSeriesID]).ToString();
-                string seriesPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(seriesName));
+                string seriesName = Helper.GetCorrespondingSeries(this[cSeriesID]).ToString();
+                string seriesPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.CleanLocalPath(seriesName));
 
                 return Helper.PathCombine(seriesPath, this[cImage]);
             }            

@@ -49,7 +49,7 @@ namespace WindowPlugins.GUITVSeries
         public const int cDBVersion = 16;
 
         private DBOnlineSeries m_onlineSeries = null;
-		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags" });
+		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags", "Creators", "ProductionCompanies", "ProductionCountries", "SpokenLanguages" });
         public static Dictionary<String, String> s_FieldToDisplayNameMap = new Dictionary<String, String>();
         static int s_nLastLocalID;
 
@@ -485,7 +485,7 @@ namespace WindowPlugins.GUITVSeries
                     String sList = m_onlineSeries[DBOnlineSeries.cBannerFileNames];
 
                     // Add custom artwork by user
-                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(m_onlineSeries.ToString()) + @"\widebanner\custom.jpg");
+                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.CleanLocalPath(m_onlineSeries.ToString()) + @"\widebanner\custom.jpg");
                     if (File.Exists(customArtwork))
                         outList.Add(customArtwork);
 
@@ -525,7 +525,7 @@ namespace WindowPlugins.GUITVSeries
                     String sList = m_onlineSeries[DBOnlineSeries.cPosterFileNames];
 
                     // Add custom artwork by user
-                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.cleanLocalPath(m_onlineSeries.ToString()) + @"\posters\custom.jpg");
+                    string customArtwork = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.CleanLocalPath(m_onlineSeries.ToString()) + @"\posters\custom.jpg");
                     if (File.Exists(customArtwork))
                         outList.Add(customArtwork);
 
@@ -628,7 +628,7 @@ namespace WindowPlugins.GUITVSeries
                 if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBSeries(), DBSeries.cHidden, 0, SQLConditionType.Equal);
 
-                if (!Settings.isConfig && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles) && !conditions.ConditionsSQLString.Contains(DBEpisode.cTableName))
+                if (!Settings.IsConfig && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles) && !conditions.ConditionsSQLString.Contains(DBEpisode.cTableName))
                 {
                     SQLCondition fullSubCond = new SQLCondition();
                     //fullSubCond.AddCustom(DBOnlineEpisode.Q(DBOnlineEpisode.cSeriesID), DBOnlineSeries.Q(DBOnlineSeries.cID), SQLConditionType.Equal);
@@ -989,7 +989,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void HideSeries(bool hide)
         {
-            MPTVSeriesLog.Write(string.Format("{0} series {1} from view", (hide ? "Hiding" : "UnHiding"), Helper.getCorrespondingSeries(this[DBSeries.cID])));
+            MPTVSeriesLog.Write(string.Format("{0} series {1} from view", (hide ? "Hiding" : "UnHiding"), Helper.GetCorrespondingSeries(this[DBSeries.cID])));
             
             // respect 'Show Local Files Only' setting
             List<DBSeason> seasons = DBSeason.Get(this[DBSeries.cID]);

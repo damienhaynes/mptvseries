@@ -330,7 +330,7 @@ namespace WindowPlugins.GUITVSeries
                         
                         // we want to query episodes using the CombinedSeason if Sort Order is "DVD"
                         // CombinedSeason gives us the DVD Season and if empty will give us the Aired Season
-                        DBSeries series = Helper.getCorrespondingSeries(int.Parse(currentStepSelection[0]));
+                        DBSeries series = Helper.GetCorrespondingSeries(int.Parse(currentStepSelection[0]));
 
                         // use sort by dvd only if not in specials
                         bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" && currentStepSelection[1] != "0"; 
@@ -373,7 +373,7 @@ namespace WindowPlugins.GUITVSeries
             this.IsTaggedView = fromDB[DBView.cTaggedView];
             this.ParentalControl = fromDB[DBView.cParentalControl];
 
-            if (Settings.isConfig) m_toUpdateForConfig = fromDB;
+            if (Settings.IsConfig) m_toUpdateForConfig = fromDB;
 
             //steps[0] = steps[0].Split(new string[] { "<name>" }, StringSplitOptions.RemoveEmptyEntries)[1];
             for (int i = 0; i < steps.Length; i++)

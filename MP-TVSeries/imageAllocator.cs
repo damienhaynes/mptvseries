@@ -471,7 +471,7 @@ namespace WindowPlugins.GUITVSeries
         public static string GetRandomBanner(List<string> BannerList)
         {
             const string graphicalBannerRecognizerSubstring = "-g";
-            string englishLangIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelLanguageAsString + "-";
+            string englishLangIdentifier = "-lang" + Online_Parsing_Classes.OnlineAPI.SelectedLanguage + "-";
 
             // random banners are prefered in the following order
             // 1) Series Language with Graphical

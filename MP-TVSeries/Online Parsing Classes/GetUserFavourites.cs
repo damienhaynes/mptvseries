@@ -21,10 +21,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using System.Xml;
 
 namespace WindowPlugins.GUITVSeries
@@ -37,38 +34,25 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                return _series;
+                return mSeries;
             }
             set
             {
-                _series = value;
+                mSeries = value;
             }
-        } private List<string> _series = new List<string>();
+        } 
+        private List<string> mSeries = new List<string>();
 
         # endregion properties
 
-        public GetUserFavourites(string sAccountID)
+        public GetUserFavourites(string aAccountId)
         {
-            doWork(sAccountID);
+            DoWork(aAccountId);
         }
 
-        public void doWork(string sAccountID)
+        public void DoWork(string aAccountId)
         {
-            XmlNode node = Online_Parsing_Classes.OnlineAPI.GetUserFavourites(sAccountID);          
-
-            if (node != null)
-            {
-                string id = string.Empty;
-                foreach (XmlNode itemNode in node.ChildNodes)
-                {
-                    if (itemNode.Name == "Series")
-                    {
-                        id = string.Empty;
-                        id = itemNode.InnerText;                            
-                        Series.Add(id);
-                    }                
-                }
-            }
+            // TODO: Get TMDb Favourites
         }
     }
 }

@@ -117,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
                 #region PlayBack Order
 
                 // check sort order so our check is accurate
-                var series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                var series = Helper.GetCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
                 bool dvdSortOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
                 string seasonField = dvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
@@ -129,7 +129,7 @@ namespace WindowPlugins.GUITVSeries
                     // we are only interested in current season (could be multi-user watching multiple seasons)
                     // API for GetNextUnwatched is not desirable as that works from Date Watched, we only care about watched here
                     var conditions = new SQLCondition();
-                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineSeries.cSeriesID], SQLConditionType.Equal);
+                    conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, episode[DBOnlineEpisode.cSeriesID], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), seasonField, episode[seasonField], SQLConditionType.Equal);
                     conditions.Add(new DBOnlineEpisode(), episodeField, episode[episodeField], SQLConditionType.LessThan);
                     conditions.Add(new DBOnlineEpisode(), episodeField, 0, SQLConditionType.GreaterThan);
@@ -322,7 +322,7 @@ namespace WindowPlugins.GUITVSeries
             if (m_currentEpisode == null) return;
 
             DBSeries series = null;
-            if (!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            if (!clear) series = Helper.GetCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = null;
             if (!clear) season = Helper.getCorrespondingSeason(m_currentEpisode[DBEpisode.cSeriesID], m_currentEpisode[DBEpisode.cSeasonIndex]);
 
@@ -423,7 +423,7 @@ namespace WindowPlugins.GUITVSeries
                 ep.Commit(); 
             }
             // Update Episode Counts
-            DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            DBSeries series = Helper.GetCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
             DBSeason.UpdateEpisodeCounts(series, season);
         }
@@ -458,7 +458,7 @@ namespace WindowPlugins.GUITVSeries
                 listenToExternalPlayerEvents = true;
 
                 #region Publish Play properties for InfoService plugin
-                string seriesName = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
+                string seriesName = Helper.GetCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
                 string seasonID = m_currentEpisode[DBEpisode.cSeasonIndex];
                 string episodeID = m_currentEpisode[DBEpisode.cEpisodeIndex];
                 string episodeName = m_currentEpisode[DBEpisode.cEpisodeName];
