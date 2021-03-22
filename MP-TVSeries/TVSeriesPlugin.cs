@@ -560,7 +560,7 @@ namespace WindowPlugins.GUITVSeries
 
                 int viewLevels = m_CurrLView.m_steps.Count;
 
-                m_SelectedSeries = Helper.GetCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));                
+                m_SelectedSeries = Helper.getCorrespondingSeries(Convert.ToInt32(m_LoadingParameter.SeriesId));                
                 if (m_SelectedSeries == null)
                 {
                     MPTVSeriesLog.Write("Failed to get series object from loading parameter!", MPTVSeriesLog.LogLevel.Debug);
@@ -759,14 +759,14 @@ namespace WindowPlugins.GUITVSeries
                             {
                                 selectedEpisode = (DBEpisode)currentitem.TVTag;
                                 selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
-                                selectedSeries = Helper.GetCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
+                                selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
                             }
                             break;
 
                         case Listlevel.Season:
                             {
                                 selectedSeason = (DBSeason)currentitem.TVTag;
-                                selectedSeries = Helper.GetCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
+                                selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
                             }
                             break;
 
@@ -1634,12 +1634,12 @@ namespace WindowPlugins.GUITVSeries
                                 break;
                             case Listlevel.Season:
                                 selectedSeason = this.m_Facade.SelectedListItem.TVTag as DBSeason;
-                                selectedSeries = Helper.GetCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
+                                selectedSeries = Helper.getCorrespondingSeries(selectedSeason[DBSeason.cSeriesID]);
                                 break;
                             case Listlevel.Episode:
                                 selectedEpisode = this.m_Facade.SelectedListItem.TVTag as DBEpisode;
                                 selectedSeason = Helper.getCorrespondingSeason(selectedEpisode[DBEpisode.cSeriesID], selectedEpisode[DBEpisode.cSeasonIndex]);
-                                selectedSeries = Helper.GetCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
+                                selectedSeries = Helper.getCorrespondingSeries(selectedEpisode[DBEpisode.cSeriesID]);
                                 break;
                         }
                         // Invoke Delete Menu
@@ -5214,9 +5214,9 @@ namespace WindowPlugins.GUITVSeries
                 backdrop.Filename = fanartFile;
                 
                 if (fanart.Found)
-                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.GetCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("Fanart found and loaded for series {0}, loading: {1}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString(), backdrop.Filename), MPTVSeriesLog.LogLevel.Debug);
                 else
-                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}", Helper.GetCorrespondingSeries(fanart.SeriesID).ToString()));
+                    MPTVSeriesLog.Write(string.Format("Fanart not found for series {0}", Helper.getCorrespondingSeries(fanart.SeriesID).ToString()));
 
                 // I don't think we can support these anymore with dbfanart now
                 //if (this.dummyIsLightFanartLoaded != null)
@@ -5701,7 +5701,7 @@ namespace WindowPlugins.GUITVSeries
             if (!m_CurrLView.stepHasSeriesBeforeIt(m_CurrViewStep))
             {
                 // it is the case    
-                m_SelectedSeries = Helper.GetCorrespondingSeries(season[DBSeason.cSeriesID]);
+                m_SelectedSeries = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
                 if (m_SelectedSeries != null)
                 {
                     seriesbanner.Filename = ImageAllocator.GetSeriesBannerAsFilename(m_SelectedSeries);
@@ -5766,7 +5766,7 @@ namespace WindowPlugins.GUITVSeries
             {
                 // it is the case			
                 m_SelectedSeason = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
-                m_SelectedSeries = Helper.GetCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                m_SelectedSeries = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
 
                 if (m_SelectedSeries != null)
                 {
@@ -6543,8 +6543,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 episodeListNew.Sort(new Comparison<DBEpisode>((x, y) =>
                 {
-                    DBSeries seriesX = Helper.GetCorrespondingSeries(x[DBOnlineEpisode.cSeriesID]);
-                    DBSeries seriesY = Helper.GetCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
+                    DBSeries seriesX = Helper.getCorrespondingSeries(x[DBOnlineEpisode.cSeriesID]);
+                    DBSeries seriesY = Helper.getCorrespondingSeries(y[DBOnlineEpisode.cSeriesID]);
                     string seriesXSortName = seriesX != null ? seriesX[DBOnlineSeries.cSortName].ToString() : string.Empty;
                     string seriesYSortName = seriesY != null ? seriesY[DBOnlineSeries.cSortName].ToString() : string.Empty;
                     return 2 * string.Compare(x[DBOnlineEpisode.cFirstAired].ToString(), y[DBOnlineEpisode.cFirstAired].ToString()) +

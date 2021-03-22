@@ -102,7 +102,7 @@ namespace WindowPlugins.GUITVSeries
             {                
                 if (int.TryParse(aSeriesID, out int lSeriesId))
                 {
-                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}", Helper.GetCorrespondingSeries(lSeriesId)), MPTVSeriesLog.LogLevel.Debug);
+                    MPTVSeriesLog.Write(string.Format("Retrieving updated Metadata for series {0}", Helper.getCorrespondingSeries(lSeriesId)), MPTVSeriesLog.LogLevel.Debug);
                 }
 
                 TmdbShowDetail lShowDetail = null;

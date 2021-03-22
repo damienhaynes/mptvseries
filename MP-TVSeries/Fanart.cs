@@ -449,7 +449,7 @@ namespace WindowPlugins.GUITVSeries
             // Check if Fanart folder exists in MediaPortal's Thumbs directory
             if (Directory.Exists(fanartFolder))
             {
-                MPTVSeriesLog.Write($"Checking for local fanart on disk for series '{Helper.GetCorrespondingSeries(mSeriesId)}'", MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write($"Checking for local fanart on disk for series '{Helper.getCorrespondingSeries(mSeriesId)}'", MPTVSeriesLog.LogLevel.Debug);
                 try
                 {
                     // Create a Filename filter for Season / Series Fanart

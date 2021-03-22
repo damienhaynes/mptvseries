@@ -835,100 +835,100 @@ namespace WindowPlugins.GUITVSeries
             return episodesForCount;
         }
 
-        public static void UpdateEpisodeCounts(DBSeries series, Dictionary<string, List<EpisodeCounter>> episodes)
+        public static void UpdateEpisodeCounts(DBSeries aSeries, Dictionary<string, List<EpisodeCounter>> aEpisodes)
         {
-            if (series == null) return;
+            if (aSeries == null) return;
 
-            string seriesId = series[DBSeries.cID];
-            int seriesEpsTotal = 0;
-            int seriesEpsUnWatched = 0;
-            bool airedOrder = series.IsAiredOrder;
+            string lSeriesId = aSeries[DBSeries.cID];
+            int lSeriesEpsTotal = 0;
+            int lSeriesEpsUnWatched = 0;
+            bool lAiredOrder = aSeries.IsAiredOrder;
 
             // dont worry about filtering season list, we already have a filtered episode list
             // query without std conditions for faster response.
-            var conditions = new SQLCondition(new DBSeason(), DBSeason.cSeriesID, seriesId, SQLConditionType.Equal); 
-            var seasons = DBSeason.Get(conditions, false);
+            var lConditions = new SQLCondition(new DBSeason(), DBSeason.cSeriesID, lSeriesId, SQLConditionType.Equal);
+            List<DBSeason> lSeasons = DBSeason.Get(lConditions, false);
 
             // update season counts
-            List<EpisodeCounter> eps = new List<EpisodeCounter>();
-            if (episodes.TryGetValue(seriesId, out eps))
+            var lEpisodeCounter = new List<EpisodeCounter>();
+            if (aEpisodes.TryGetValue(lSeriesId, out lEpisodeCounter))
             {
-                foreach(var season in seasons)
+                foreach(DBSeason season in lSeasons)
                 {
-                    var seasonEps = eps.Where(e => airedOrder ? e.SeasonAirIdx == season[DBSeason.cIndex] : e.SeasonDvdIdx == season[DBSeason.cIndex]).ToList();
+                    var lSeasonEps = lEpisodeCounter.Where(e => lAiredOrder ? e.SeasonAirIdx == season[DBSeason.cIndex] : e.SeasonDvdIdx == season[DBSeason.cIndex]).ToList();
                     
                     // dont commit seasons if are not viewing them
                     // episodes for count is already filtered so can return 0 results
-                    if (seasonEps.Count == 0) continue;
+                    if (lSeasonEps.Count == 0) continue;
 
-                    int count = seasonEps.Count();
-                    int unWatchedCount = seasonEps.Where(e => e.EpisodeWatched != "1").Count();
+                    int lCount = lSeasonEps.Count();
+                    int lUnWatchedCount = lSeasonEps.Where(e => e.EpisodeWatched != "1").Count();
 
-                    season[DBSeason.cEpisodeCount] = count;
-                    season[DBSeason.cEpisodesUnWatched] = unWatchedCount;
-                    season[DBSeason.cUnwatchedItems] = unWatchedCount > 0;
+                    season[DBSeason.cEpisodeCount] = lCount;
+                    season[DBSeason.cEpisodesUnWatched] = lUnWatchedCount;
+                    season[DBSeason.cUnwatchedItems] = lUnWatchedCount > 0;
                     season.Commit();
 
-                    seriesEpsTotal += count;
+                    lSeriesEpsTotal += lCount;
                     // Count the Special (Season 0 (zero)) episodes as watched!
                     if ((season[DBSeason.cIndex] != 0) || (season[DBSeason.cIndex] == 0 && !DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
                     {
-                        seriesEpsUnWatched += unWatchedCount;
+                        lSeriesEpsUnWatched += lUnWatchedCount;
                     }
                 }
 
                 // update series counts
-                series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
-                series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
-                series[DBOnlineSeries.cUnwatchedItems] = seriesEpsUnWatched > 0;
-                series.Commit();
+                aSeries[DBOnlineSeries.cEpisodeCount] = lSeriesEpsTotal;
+                aSeries[DBOnlineSeries.cEpisodesUnWatched] = lSeriesEpsUnWatched;
+                aSeries[DBOnlineSeries.cUnwatchedItems] = lSeriesEpsUnWatched > 0;
+                aSeries.Commit();
             }
         }
 
-        public static void UpdateEpisodeCounts(DBSeries series)
+        public static void UpdateEpisodeCounts(DBSeries aSeries)
         {
-            if (series == null) return;
+            if (aSeries == null) return;
 
-            int seriesEpsTotal = 0;
-            int seriesEpsUnWatched = 0;
-            int epsTotal = 0;
-            int epsUnWatched = 0;
+            int lSeriesEpsTotal = 0;
+            int lSeriesEpsUnWatched = 0;
+            int lEpsTotal = 0;
+            int lEpsUnWatched = 0;
 
             // Update for each season in series and add each to total series count
-            SQLCondition condition = new SQLCondition();
+            var lCondition = new SQLCondition();
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems)) {
                 //don't include hidden seasons unless the ShowHiddenItems option is set
-                condition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
+                lCondition.Add(new DBSeason(), DBSeason.cHidden, 0, SQLConditionType.Equal);
             }
             
-            List<DBSeason> Seasons = DBSeason.Get(series[DBSeries.cID], condition);         
-            foreach (DBSeason season in Seasons)
+            List<DBSeason> lSeasons = DBSeason.Get(aSeries[DBSeries.cID], lCondition);         
+            foreach (DBSeason season in lSeasons)
             {
-                epsTotal = 0;
-                epsUnWatched = 0;
+                lEpsTotal = 0;
+                lEpsUnWatched = 0;
              
-                DBEpisode.GetSeasonEpisodeCounts(series, season, out epsTotal, out epsUnWatched);
-                season[DBSeason.cEpisodeCount] = epsTotal;
-                season[DBSeason.cEpisodesUnWatched] = epsUnWatched;
-                season[DBSeason.cUnwatchedItems] = epsUnWatched > 0;
+                DBEpisode.GetSeasonEpisodeCounts(aSeries, season, out lEpsTotal, out lEpsUnWatched);
+                season[DBSeason.cEpisodeCount] = lEpsTotal;
+                season[DBSeason.cEpisodesUnWatched] = lEpsUnWatched;
+                season[DBSeason.cUnwatchedItems] = lEpsUnWatched > 0;
                 season.Commit();
 
-                seriesEpsTotal += epsTotal;
+                lSeriesEpsTotal += lEpsTotal;
                 // Count the Special (Season 0 (zero)) episodes as watched!
                 if ((season[DBSeason.cIndex] != 0) || (season[DBSeason.cIndex] == 0 && !DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
                 {
-                    seriesEpsUnWatched += epsUnWatched;
+                    lSeriesEpsUnWatched += lEpsUnWatched;
                 }
 
-                MPTVSeriesLog.Write(string.Format("Series \"{0} Season {1}\" has {2}/{3} unwatched episodes", series.ToString(), season[DBSeason.cIndex], epsUnWatched, epsTotal), MPTVSeriesLog.LogLevel.Debug);
+                MPTVSeriesLog.Write(string.Format("Series \"{0} Season {1}\" has {2}/{3} unwatched episodes", aSeries.ToString(), season[DBSeason.cIndex], lEpsUnWatched, lEpsTotal), MPTVSeriesLog.LogLevel.Debug);
             }
 
-            MPTVSeriesLog.Write(string.Format("Series \"{0}\" has {1}/{2} unwatched episodes", series.ToString(), seriesEpsUnWatched, seriesEpsTotal), MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write(string.Format("Series \"{0}\" has {1}/{2} unwatched episodes", aSeries.ToString(), lSeriesEpsUnWatched, lSeriesEpsTotal), MPTVSeriesLog.LogLevel.Debug);
          
-            series[DBOnlineSeries.cEpisodeCount] = seriesEpsTotal;
-            series[DBOnlineSeries.cEpisodesUnWatched] = seriesEpsUnWatched;
-            series[DBOnlineSeries.cUnwatchedItems] = seriesEpsUnWatched > 0;
-            series.Commit();
+            aSeries[DBOnlineSeries.cEpisodeCount] = lSeriesEpsTotal;
+            aSeries[DBOnlineSeries.cEpisodesUnWatched] = lSeriesEpsUnWatched;
+            aSeries[DBOnlineSeries.cUnwatchedItems] = lSeriesEpsUnWatched > 0;
+            aSeries.Commit();
         }
 
         public List<string> deleteSeries(TVSeriesPlugin.DeleteMenuItems type)
@@ -989,7 +989,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void HideSeries(bool hide)
         {
-            MPTVSeriesLog.Write(string.Format("{0} series {1} from view", (hide ? "Hiding" : "UnHiding"), Helper.GetCorrespondingSeries(this[DBSeries.cID])));
+            MPTVSeriesLog.Write(string.Format("{0} series {1} from view", (hide ? "Hiding" : "UnHiding"), Helper.getCorrespondingSeries(this[DBSeries.cID])));
             
             // respect 'Show Local Files Only' setting
             List<DBSeason> seasons = DBSeason.Get(this[DBSeries.cID]);

@@ -221,7 +221,7 @@ namespace WindowPlugins.GUITVSeries
 
             if (lShowDetail == null) return;
 
-            DBSeries lSeries = Helper.GetCorrespondingSeries(aSeriesID);
+            DBSeries lSeries = Helper.getCorrespondingSeries(aSeriesID);
             if (lSeries == null) return;
 
             string lSeriesName = lSeries.ToString();

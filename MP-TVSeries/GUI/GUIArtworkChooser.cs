@@ -56,7 +56,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             get
             {
                 if ( series == null )
-                    series = Helper.GetCorrespondingSeries( SeriesId );
+                    series = Helper.getCorrespondingSeries( SeriesId );
                 
                 return series;
             }

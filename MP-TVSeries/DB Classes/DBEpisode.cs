@@ -137,7 +137,7 @@ namespace WindowPlugins.GUITVSeries
 
         public const int MAX_MEDIAINFO_RETRIES = 5;
 
-        private static bool m_bUpdateEpisodeCount = false; // used to ensure StdConds are used while in Config mode
+        private static bool mUpdateEpisodeCount = false; // used to ensure StdConds are used while in Config mode
 
         static DBEpisode()
         {
@@ -1354,36 +1354,36 @@ namespace WindowPlugins.GUITVSeries
         {
             GetSeasonEpisodeCounts(null, season, out epsTotal, out epsUnWatched);
         }
-        public static void GetSeasonEpisodeCounts(DBSeries series, DBSeason season, out int epsTotal, out int epsUnWatched)
+        public static void GetSeasonEpisodeCounts(DBSeries aSeries, DBSeason aSeason, out int aEpsTotal, out int aEpsUnWatched)
         {
-            m_bUpdateEpisodeCount = true;
+            mUpdateEpisodeCount = true;
 
             // consider episode sort order when calculating episodes in season
             // some series have different number of episodes per season for different orders e.g. Futurama
-            if (series == null)
+            if (aSeries == null)
             {
-                series = Helper.GetCorrespondingSeries(int.Parse(season[DBSeason.cSeriesID]));
+                aSeries = Helper.getCorrespondingSeries(int.Parse(aSeason[DBSeason.cSeriesID]));
             }
 
-            string seasonIndex = DBOnlineEpisode.cSeasonIndex;
-            if (series != null)
+            string lSeasonIndex = DBOnlineEpisode.cSeasonIndex;
+            if (aSeries != null)
             {
-                seasonIndex = series.IsAiredOrder ? DBOnlineEpisode.cSeasonIndex : DBOnlineEpisode.cDVDSeasonNumber;
+                lSeasonIndex = aSeries.IsAiredOrder ? DBOnlineEpisode.cSeasonIndex : DBOnlineEpisode.cDVDSeasonNumber;
             }
             
             // build up a query to get episode counts for series/season
-            string selectFields = "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired";
-            string query = string.Empty;
-            string whereClause = string.Format(@"online_episodes.SeriesID = {0} AND online_episodes.{1} = {2}", season[DBSeason.cSeriesID], seasonIndex, season[DBSeason.cIndex]);
+            string lSelectFields = "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired";
+            string lQuery = string.Empty;
+            string lWhereClause = string.Format(@"online_episodes.SeriesID = {0} AND online_episodes.{1} = {2}", aSeason[DBSeason.cSeriesID], lSeasonIndex, aSeason[DBSeason.cIndex]);
 
             if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
-                whereClause += " AND online_episodes.Hidden = 0";
+                lWhereClause += " AND online_episodes.Hidden = 0";
 
             if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
-                whereClause += " AND local_episodes.EpisodeFilename != ''";
+                lWhereClause += " AND local_episodes.EpisodeFilename != ''";
 
             if (!DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
-                whereClause += string.Format(" AND online_episodes.FirstAired <= '{0}' AND online_episodes.FirstAired != ''", DateTime.Now.ToString("yyyy-MM-dd"));
+                lWhereClause += string.Format(" AND online_episodes.FirstAired <= '{0}' AND online_episodes.FirstAired != ''", DateTime.Now.ToString("yyyy-MM-dd"));
 
             if (DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
             {
@@ -1393,7 +1393,7 @@ namespace WindowPlugins.GUITVSeries
                 // one returning only the first of a single/double episode and the other
                 // returning the second of any double episodes
 
-                query = string.Format(@"
+                lQuery = string.Format(@"
                     SELECT COUNT(*), COUNT(*) - SUM(Watched)
                     FROM (
                         SELECT {0}
@@ -1408,123 +1408,126 @@ namespace WindowPlugins.GUITVSeries
                         ON local_episodes.CompositeID2 = online_episodes.CompositeID
                         WHERE {1}
                     )
-                    ", selectFields, whereClause);
+                    ", lSelectFields, lWhereClause);
             }
             else
             {
-                query = string.Format(@"
+                lQuery = string.Format(@"
                     SELECT COUNT(*), COUNT(*) - SUM(Watched)
                     FROM (
                         SELECT {0}
                         FROM online_episodes
                         WHERE {1}
                     )
-                    ", selectFields, whereClause);
+                    ", lSelectFields, lWhereClause);
             }
 
-            SQLiteResultSet results = DBTVSeries.Execute(query);
+            SQLiteResultSet lResults = DBTVSeries.Execute(lQuery);
 
-            epsTotal = 0;
-            epsUnWatched = 0;
+            aEpsTotal = 0;
+            aEpsUnWatched = 0;
 
-            if (results.Rows.Count == 1)
+            if (lResults.Rows.Count == 1)
             {
-                int.TryParse(results.Rows[0].fields[0], out epsTotal);
-                int.TryParse(results.Rows[0].fields[1], out epsUnWatched);
+                int.TryParse(lResults.Rows[0].fields[0], out aEpsTotal);
+                int.TryParse(lResults.Rows[0].fields[1], out aEpsUnWatched);
             }
         }
 
-        public static void GetSeriesEpisodeCounts(int series, out int epsTotal, out int epsUnWatched)
+        public static void GetSeriesEpisodeCounts(int aSeries, out int aEpsTotal, out int aEpsUnWatched)
         {
-            m_bUpdateEpisodeCount = true;
+            mUpdateEpisodeCount = true;
 
-            SQLCondition cond = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, series, SQLConditionType.Equal);
-            string query = stdGetSQL(cond, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired, online_episodes.SeasonIndex");
+            var lCondition = new SQLCondition(new DBOnlineEpisode(), DBOnlineEpisode.cSeriesID, aSeries, SQLConditionType.Equal);
+            string lQuery = stdGetSQL(lCondition, false, true, "online_episodes.CompositeID, online_episodes.Watched, online_episodes.FirstAired, online_episodes.SeasonIndex");
 
-            SQLiteResultSet results = DBTVSeries.Execute(query);
+            SQLiteResultSet lResults = DBTVSeries.Execute(lQuery);
 
-            epsTotal = 0;
-            int parseResult = 0;
-            int epsWatched = 0;
-            int seasonIndex = -1;
+            aEpsTotal = 0;
+            int lParseResult = 0;
+            int lEpsWatched = 0;
+            int lSeasonIndex = -1;
 
             // we either get two rows (one for normal episodes, one for double episodes), 
             // or we get no rows so we add them
-            for (int i = 0; i < results.Rows.Count; i++)
+            for (int i = 0; i < lResults.Rows.Count; i++)
             {
                 // increment watched count if episode is watched
-                if (int.TryParse(results.Rows[i].fields[1], out parseResult))
+                if (int.TryParse(lResults.Rows[i].fields[1], out lParseResult))
                 {
-                    if (int.TryParse(results.Rows[i].fields[3], out seasonIndex))
+                    if (int.TryParse(lResults.Rows[i].fields[3], out lSeasonIndex))
                     {
                         // Count the Special (Season 0 (zero)) episodes as watched!
-                        if ((seasonIndex == 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
+                        if ((lSeasonIndex == 0) && (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched)))
                         {
-                            parseResult = 1;
+                            lParseResult = 1;
                         }
                     }
-                    epsWatched += parseResult;
+                    lEpsWatched += lParseResult;
                 }
 
-                Regex r = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
-                Match match = r.Match(results.Rows[i].fields[2]);
-                DateTime firstAired;
+                var lRegEx = new Regex(@"(\d{4})-(\d{2})-(\d{2})");
+                Match match = lRegEx.Match(lResults.Rows[i].fields[2]);
+                DateTime lFirstAired;
 
                 try
                 {
                     if (match.Success)
                     {
                         // if episode airdate is in the future conditionally add to episode count
-                        firstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
-                        if (firstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
-                            epsTotal++;
+                        lFirstAired = new DateTime(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value));
+                        if (lFirstAired < DateTime.Today || DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
+                            aEpsTotal++;
                     }
                     else if (DBOption.GetOptions(DBOption.cCountEmptyAndFutureAiredEps))
                     {
                         // no airdate field set, this occurs for specials most of the time
-                        epsTotal++;
+                        aEpsTotal++;
                     }
                     else if (DBOption.GetOptions(DBOption.cCountSpecialEpisodesAsWatched))
                     {
                         // Need to increment epsTotal when the cCountSpecialEpisodesAsWatched = true. 
                         // Otherwise the epsUnWatched become wrong.
-                        epsTotal++;
+                        aEpsTotal++;
                     }
                 }
                 catch
                 {
                     // most likely invalid date in database 
-                    epsTotal++;
+                    aEpsTotal++;
                 }
         
             }
-            epsUnWatched = epsTotal - epsWatched;
+            aEpsUnWatched = aEpsTotal - lEpsWatched;
         }
 
-        static List<DBEpisode> GetFirstUnwatched(SQLCondition conditions)
+        static List<DBEpisode> GetFirstUnwatched(SQLCondition aConditions)
         {
-            SQLWhat what = new SQLWhat(new DBEpisode());
-            conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
+            var lEpisodes = new List<DBEpisode>();
 
-            string sqlQuery = "select " + what + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + conditions 
+            var lWhat = new SQLWhat(new DBEpisode());
+            aConditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cWatched, new DBValue(false), SQLConditionType.Equal);
+
+            string lSqlQuery = "select " + lWhat + " where compositeid in ( select min(local_episodes.compositeid) from local_episodes inner join online_episodes on local_episodes.compositeid = online_episodes.compositeid " + aConditions 
                 + @" and online_episodes.hidden = 0 "
                 + @"and exists (select id from local_series where id = local_episodes.seriesid and hidden = 0) " 
                 + @"and exists (select id from season where seriesid = local_episodes.seriesid and seasonindex = local_episodes.seasonindex and hidden = 0) "
                 + @"group by local_episodes.seriesID );";
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
-            List<DBEpisode> outList = new List<DBEpisode>();
-            if (results.Rows.Count > 0)
+            
+            SQLiteResultSet lResults = DBTVSeries.Execute(lSqlQuery);
+            
+            if (lResults.Rows.Count > 0)
             {
-                for (int index = 0; index < results.Rows.Count; index++)
+                for (int index = 0; index < lResults.Rows.Count; index++)
                 {
-                    DBEpisode episode = new DBEpisode();
-                    episode.Read(ref results, index);
-                    episode.m_onlineEpisode = new DBOnlineEpisode();
-                    episode.m_onlineEpisode.Read(results.Rows[index], results.ColumnIndices);
-                    outList.Add(episode);
+                    var lEpisode = new DBEpisode();
+                    lEpisode.Read(ref lResults, index);
+                    lEpisode.m_onlineEpisode = new DBOnlineEpisode();
+                    lEpisode.m_onlineEpisode.Read(lResults.Rows[index], lResults.ColumnIndices);
+                    lEpisodes.Add(lEpisode);
                 }
             }
-            return outList;
+            return lEpisodes;
         }
 
         public static SQLCondition stdConditions
@@ -1532,14 +1535,14 @@ namespace WindowPlugins.GUITVSeries
             get
             {
                 SQLCondition conditions = new SQLCondition();
-                if ((!Settings.IsConfig || m_bUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
+                if ((!Settings.IsConfig || mUpdateEpisodeCount) && DBOption.GetOptions(DBOption.cOnlyShowLocalFiles))
                     conditions.Add(new DBEpisode(), DBEpisode.cFilename, string.Empty, SQLConditionType.NotEqual);
 
                 // include hidden?
                 if (!DBOption.GetOptions(DBOption.cShowHiddenItems))
                     conditions.Add(new DBOnlineEpisode(), DBOnlineEpisode.cHidden, 0, SQLConditionType.Equal);
 
-                m_bUpdateEpisodeCount = false;
+                mUpdateEpisodeCount = false;
                 return conditions;
             }
         }
@@ -1905,7 +1908,7 @@ namespace WindowPlugins.GUITVSeries
         public override string ToString()
         {
             if (this.m_onlineEpisode != null) return m_onlineEpisode.ToString();
-            DBSeries s = Helper.GetCorrespondingSeries(this[DBEpisode.cSeriesID]);
+            DBSeries s = Helper.getCorrespondingSeries(this[DBEpisode.cSeriesID]);
             return string.Format("{0} - {1}x{2}", (s == null ? "(" + this[DBEpisode.cSeriesID] + ")" : s.ToString()), this[DBEpisode.cSeasonIndex], this[DBEpisode.cEpisodeIndex]);
         }
 
@@ -1941,7 +1944,7 @@ namespace WindowPlugins.GUITVSeries
 
         public string BuildEpisodeThumbFilename()
         {
-            DBSeries series = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+            DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
 
             string lEpisodeId = $"{m_onlineEpisode[DBOnlineEpisode.cSeasonIndex]}x{m_onlineEpisode[DBOnlineEpisode.cEpisodeIndex]}";
 
@@ -1998,7 +2001,7 @@ namespace WindowPlugins.GUITVSeries
         double getRelSortingIndexOfEp(DBEpisode ep)
         {
             // consider episode sort order when sorting
-            DBSeries series = Helper.GetCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
+            DBSeries series = Helper.getCorrespondingSeries(int.Parse(ep[DBOnlineEpisode.cSeriesID]));
             bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
             // check if we need to fallback to aired order if DVD order detail not available

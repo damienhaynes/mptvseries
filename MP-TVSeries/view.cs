@@ -330,7 +330,7 @@ namespace WindowPlugins.GUITVSeries
                         
                         // we want to query episodes using the CombinedSeason if Sort Order is "DVD"
                         // CombinedSeason gives us the DVD Season and if empty will give us the Aired Season
-                        DBSeries series = Helper.GetCorrespondingSeries(int.Parse(currentStepSelection[0]));
+                        DBSeries series = Helper.getCorrespondingSeries(int.Parse(currentStepSelection[0]));
 
                         // use sort by dvd only if not in specials
                         bool SortByDVD = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD" && currentStepSelection[1] != "0"; 

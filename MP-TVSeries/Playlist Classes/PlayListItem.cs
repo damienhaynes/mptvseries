@@ -72,7 +72,7 @@ namespace WindowPlugins.GUITVSeries
                 EpisodeID = value[DBOnlineEpisode.cID];
                 EpisodeIndex = value[DBOnlineEpisode.cEpisodeIndex];
                 SeasonIndex = value[DBOnlineEpisode.cSeasonIndex];
-                SeriesName = Helper.GetCorrespondingSeries(value[DBOnlineEpisode.cSeriesID]).ToString();
+                SeriesName = Helper.getCorrespondingSeries(value[DBOnlineEpisode.cSeriesID]).ToString();
                 Summary = value[DBOnlineEpisode.cEpisodeSummary];
                 FirstAired = value[DBOnlineEpisode.cFirstAired];
                 EpisodeThumb = ImageAllocator.GetEpisodeImage(value);
@@ -205,7 +205,7 @@ namespace WindowPlugins.GUITVSeries
                     ep.Commit();
                 }
                 // Update Episode Counts
-                DBSeries series = Helper.GetCorrespondingSeries(_episode[DBEpisode.cSeriesID]);
+                DBSeries series = Helper.getCorrespondingSeries(_episode[DBEpisode.cSeriesID]);
                 DBSeason season = Helper.getCorrespondingSeason(_episode[DBEpisode.cSeriesID], _episode[DBEpisode.cSeasonIndex]);
                 DBSeason.UpdateEpisodeCounts(series, season);           
             }

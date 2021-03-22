@@ -295,7 +295,7 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Get Corresponding Series/Season Methods
-        public static DBSeries GetCorrespondingSeries(int id)
+        public static DBSeries getCorrespondingSeries(int id)
         {
             try
             {
@@ -856,27 +856,27 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region Web Methods
-        public static bool DownloadFile(string url, string localFile)
+        public static bool DownloadFile(string aUrl, string aLocalFile)
         {
-            WebClient webClient = new WebClient();
-            webClient.Headers.Add("user-agent", Settings.UserAgent);
+            var lWebClient = new WebClient();
+            lWebClient.Headers.Add("user-agent", Settings.UserAgent);
 
             // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
             ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
 
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(localFile));
-                if (!File.Exists(localFile) || ImageAllocator.LoadImageFastFromFile(localFile) == null)
+                Directory.CreateDirectory(Path.GetDirectoryName(aLocalFile));
+                if (!File.Exists(aLocalFile) || ImageAllocator.LoadImageFastFromFile(aLocalFile) == null)
                 {
-                    MPTVSeriesLog.Write("Downloading new file from: " + url, MPTVSeriesLog.LogLevel.Debug);
-                    webClient.DownloadFile(url, localFile);
+                    MPTVSeriesLog.Write("Downloading new file from: " + aUrl, MPTVSeriesLog.LogLevel.Debug);
+                    lWebClient.DownloadFile(aUrl, aLocalFile);
                 }
                 return true;
             }
             catch (WebException)
             {
-                MPTVSeriesLog.Write("File download failed from '{0}' to '{1}'", url, localFile);
+                MPTVSeriesLog.Write("File download failed from '{0}' to '{1}'", aUrl, aLocalFile);
                 return false;
             }
         }

@@ -290,7 +290,7 @@ namespace WindowPlugins.GUITVSeries
                 String sList = this[cBannerFileNames];
 
                 // Add custom artwork by user
-                DBSeries series = Helper.GetCorrespondingSeries(this[DBSeason.cSeriesID]);
+                DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
                 if (series != null)
                 {
                     string seriesName = series.ToString();
@@ -543,7 +543,7 @@ namespace WindowPlugins.GUITVSeries
                 bool hasLocalEpisodesToDelete = episodes.Exists(e => !string.IsNullOrEmpty(e[DBEpisode.cFilename]));
                 hasLocalEpisodesToDelete &= (type == TVSeriesPlugin.DeleteMenuItems.disk || type == TVSeriesPlugin.DeleteMenuItems.diskdatabase);
 
-                DBSeries series = Helper.GetCorrespondingSeries(this[DBSeason.cSeriesID]);
+                DBSeries series = Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]);
                 string seriesName = series == null ? this[DBSeason.cSeriesID].ToString() : series.ToString();
 
                 // show progress dialog as this can be a long process esp for network drives
@@ -666,7 +666,7 @@ namespace WindowPlugins.GUITVSeries
 
         public void HideSeason(bool hide)
         {
-            MPTVSeriesLog.Write(string.Format("{0} series {1}, season {2} from view", (hide ? "Hiding" : "UnHiding"), Helper.GetCorrespondingSeries(this[DBSeason.cSeriesID]), this[DBSeason.cIndex]));
+            MPTVSeriesLog.Write(string.Format("{0} series {1}, season {2} from view", (hide ? "Hiding" : "UnHiding"), Helper.getCorrespondingSeries(this[DBSeason.cSeriesID]), this[DBSeason.cIndex]));
 
             // respect 'Show Local Files Only' setting
             List<DBEpisode> episodes = DBEpisode.Get(int.Parse(this[DBSeason.cSeriesID]), int.Parse((this[DBSeason.cIndex])));

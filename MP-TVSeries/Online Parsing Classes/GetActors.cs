@@ -1,47 +1,49 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
+using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 
 namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 {
     class GetActors
     {
+        private readonly List<DBActor> mActors = new List<DBActor>();
+
         public List<DBActor> Actors
         {
             get { return mActors; }
         }
 
-        readonly List<DBActor> mActors = new List<DBActor>();
-
-        public GetActors(int seriesID)
+        public GetActors(int aSeriesId)
         {
             // check if local
-            mActors = DBActor.GetAll(seriesID);
+            mActors = DBActor.GetAll(aSeriesId);
 
             // success
             if (mActors.Count != 0) return;
 
             // get cached actors or download
+            string lLanguage = OnlineAPI.GetSeriesLanguage(aSeriesId);
 
-            //TODO: Get TMDb Actors
+            TmdbShowDetail lShowDetail = TmdbAPI.TmdbCache.LoadSeriesFromCache(aSeriesId, lLanguage);
+            if (lShowDetail == null || lShowDetail.Credits == null) return;
 
-            //XmlNode node = OnlineAPI.GetActorsList(seriesID);
-            //if (node == null) return;
+            foreach(TmdbCast person in lShowDetail.Credits.Cast)
+            {
+                var lActor = new DBActor();
 
-            //// add actors to database
-            //foreach (XmlNode actorNode in node.SelectNodes("/Actors/Actor"))
-            //{
-            //    DBActor actor = new DBActor();
+                lActor[DBActor.cSeriesID] = aSeriesId;
+                lActor[DBActor.cName] = person.Name;
+                lActor[DBActor.cRole] = person.Character;
+                lActor[DBActor.cImage] = person.ProfilePath != null ? "original" + person.ProfilePath : string.Empty;
+                lActor[DBActor.cIndex] = person.Id;
+                lActor[DBActor.cSortOrder] = person.Order;
+                lActor[DBActor.cOriginalName] = person.OriginalName;
+                lActor[DBActor.cPopularity] = person.Popularity;
+                lActor[DBActor.cKnownForDepartment] = person.KnownForDepartment;
+                lActor[DBActor.cGender] = person.Gender ?? 0;
 
-            //    actor[DBActor.cSeriesID] = seriesID;
-
-            //    foreach (XmlNode propertyNode in actorNode)
-            //    {
-            //        actor[propertyNode.Name] = propertyNode.InnerText;
-            //    }
-            //    actor.Commit();
-            //    mActors.Add(actor);
-            //}
-
+                lActor.Commit();
+                mActors.Add(lActor);
+            }
         }
     }
 

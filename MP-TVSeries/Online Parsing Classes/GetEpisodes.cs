@@ -59,13 +59,11 @@ namespace WindowPlugins.GUITVSeries
 
                 lEpisode[DBOnlineEpisode.cID] = epsiode.Id;
                 lEpisode[DBOnlineEpisode.cDirector] = string.Join("|", epsiode.Crew.Where(c => c.Job == "Director").Select(d => d.Name));
-                lEpisode[DBOnlineEpisode.cDVDEpisodeNumber] = string.Empty;
-                lEpisode[DBOnlineEpisode.cDVDSeasonNumber] = string.Empty;
                 lEpisode[DBOnlineEpisode.cEpisodeIndex] = epsiode.EpisodeNumber;
                 lEpisode[DBOnlineEpisode.cEpisodeName] = epsiode.Name;
                 lEpisode[DBOnlineEpisode.cEpisodeSummary] = epsiode.Overview;
-                lEpisode[DBOnlineEpisode.cEpisodeThumbnailUrl] = "original" + epsiode.StillPath;
-                lEpisode[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl] = "original" + epsiode.StillPath;
+                lEpisode[DBOnlineEpisode.cEpisodeThumbnailUrl] = epsiode.StillPath != null ? "original" + epsiode.StillPath : string.Empty;
+                lEpisode[DBOnlineEpisode.cTMDbEpisodeThumbnailUrl] = epsiode.StillPath != null ? "original" + epsiode.StillPath : string.Empty;
                 lEpisode[DBOnlineEpisode.cFirstAired] = epsiode.AirDate;
                 lEpisode[DBOnlineEpisode.cGuestStars] = string.Join("|", epsiode.GuestStars.Select(g => g.Name));
                 lEpisode[DBOnlineEpisode.cProductionCode] = epsiode.ProductionCode;
@@ -81,8 +79,10 @@ namespace WindowPlugins.GUITVSeries
                 //lEpisode[DBOnlineEpisode.cAirsAfterSeason] = string.Empty;
                 //lEpisode[DBOnlineEpisode.cAirsBeforeSeason] = string.Empty;
                 //lEpisode[DBOnlineEpisode.cAirsBeforeEpisode] = string.Empty;
-                //lEpisode[DBOnlineEpisode.cCombinedEpisodeNumber] = string.Empty;
-                //lEpisode[DBOnlineEpisode.cCombinedSeason] = string.Empty;
+                lEpisode[DBOnlineEpisode.cDVDEpisodeNumber] = string.Empty;
+                lEpisode[DBOnlineEpisode.cDVDSeasonNumber] = string.Empty;
+                lEpisode[DBOnlineEpisode.cCombinedEpisodeNumber] = epsiode.EpisodeNumber; // TODO: review if we still need this, but for now keep for queries
+                lEpisode[DBOnlineEpisode.cCombinedSeason] = epsiode.SeasonNumber; // TODO: review if we still need this, but for now keep for queries
 
                 mListEpisodes.Add(lEpisode);
             }

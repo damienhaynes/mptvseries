@@ -216,7 +216,7 @@ namespace WindowPlugins.GUITVSeries
                 else
                 {
                     // check for custom image
-                    DBSeries series = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                    DBSeries series = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
                     if (series != null)
                     {
                         string seriesName = series.ToString();
@@ -235,7 +235,7 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                DBSeries lSeries = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+                DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
                 if (lSeries != null)
                 {
                     bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
@@ -288,7 +288,7 @@ namespace WindowPlugins.GUITVSeries
         /// <returns></returns>
         public override string ToString()
         {
-            DBSeries lSeries = Helper.GetCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
+            DBSeries lSeries = Helper.getCorrespondingSeries(this[DBOnlineEpisode.cSeriesID]);
             if (lSeries != null)
             {
                 bool lDvdSortOrder = lSeries[DBOnlineSeries.cEpisodeSortOrder] == "DVD";

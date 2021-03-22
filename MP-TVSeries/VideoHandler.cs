@@ -117,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
                 #region PlayBack Order
 
                 // check sort order so our check is accurate
-                var series = Helper.GetCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                var series = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
                 bool dvdSortOrder = series[DBOnlineSeries.cEpisodeSortOrder] == "DVD";
 
                 string seasonField = dvdSortOrder ? DBOnlineEpisode.cDVDSeasonNumber : DBOnlineEpisode.cSeasonIndex;
@@ -322,7 +322,7 @@ namespace WindowPlugins.GUITVSeries
             if (m_currentEpisode == null) return;
 
             DBSeries series = null;
-            if (!clear) series = Helper.GetCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            if (!clear) series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = null;
             if (!clear) season = Helper.getCorrespondingSeason(m_currentEpisode[DBEpisode.cSeriesID], m_currentEpisode[DBEpisode.cSeasonIndex]);
 
@@ -423,7 +423,7 @@ namespace WindowPlugins.GUITVSeries
                 ep.Commit(); 
             }
             // Update Episode Counts
-            DBSeries series = Helper.GetCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
+            DBSeries series = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]);
             DBSeason season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
             DBSeason.UpdateEpisodeCounts(series, season);
         }
@@ -458,7 +458,7 @@ namespace WindowPlugins.GUITVSeries
                 listenToExternalPlayerEvents = true;
 
                 #region Publish Play properties for InfoService plugin
-                string seriesName = Helper.GetCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
+                string seriesName = Helper.getCorrespondingSeries(m_currentEpisode[DBEpisode.cSeriesID]).ToString();
                 string seasonID = m_currentEpisode[DBEpisode.cSeasonIndex];
                 string episodeID = m_currentEpisode[DBEpisode.cEpisodeIndex];
                 string episodeName = m_currentEpisode[DBEpisode.cEpisodeName];

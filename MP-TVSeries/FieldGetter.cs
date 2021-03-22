@@ -96,7 +96,7 @@ namespace WindowPlugins.GUITVSeries
 
                                        if (field.Contains("<Episode.SeasonIndex>") || field.Contains("<Episode.EpisodeIndex>"))
                                        {
-                                           DBSeries s = Helper.GetCorrespondingSeries(e[DBOnlineEpisode.cSeriesID]);
+                                           DBSeries s = Helper.getCorrespondingSeries(e[DBOnlineEpisode.cSeriesID]);
                                            if (null != s && s[DBOnlineSeries.cEpisodeSortOrder] == "DVD") return true;
                                        }
                                        return false;
@@ -257,7 +257,7 @@ namespace WindowPlugins.GUITVSeries
         static string replaceSeriesTags(int seriesID, string what)
         {
             // get the series (tries cache first and then the db)
-            return replaceSeriesTags(Helper.GetCorrespondingSeries(seriesID), what);
+            return replaceSeriesTags(Helper.getCorrespondingSeries(seriesID), what);
         }
         static string replaceSeriesTags(DBSeries s, string what)
         {

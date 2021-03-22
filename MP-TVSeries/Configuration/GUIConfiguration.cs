@@ -1565,7 +1565,7 @@ namespace WindowPlugins.GUITVSeries
                         // Updated selected series if bypassed in tree view
                         if ( mSelectedEpisode[DBOnlineEpisode.cSeriesID] != mSelectedSeries[DBOnlineSeries.cID] )
                         {
-                            mSelectedSeries = Helper.GetCorrespondingSeries( mSelectedEpisode[DBOnlineEpisode.cSeriesID] );
+                            mSelectedSeries = Helper.getCorrespondingSeries( mSelectedEpisode[DBOnlineEpisode.cSeriesID] );
                         }
 
                         #region Images
@@ -1769,7 +1769,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // let configs know what was selected (for samples)
                         if (!SkinSettings.ImportFormatting) {
-                            this.formattingConfiguration1.Series = Helper.GetCorrespondingSeries(episode[DBEpisode.cSeriesID]);
+                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(episode[DBEpisode.cSeriesID]);
                             this.formattingConfiguration1.Season = Helper.getCorrespondingSeason(episode[DBEpisode.cSeriesID], episode[DBEpisode.cSeasonIndex]);
                             this.formattingConfiguration1.Episode = episode;
                         }
@@ -1791,7 +1791,7 @@ namespace WindowPlugins.GUITVSeries
                         // Updated selected series if bypassed in tree view
                         if (mSelectedSeason[DBSeason.cSeriesID] != mSelectedSeries[DBOnlineSeries.cID])
                         {
-                            mSelectedSeries = Helper.GetCorrespondingSeries( mSelectedSeason[DBSeason.cSeriesID] );
+                            mSelectedSeries = Helper.getCorrespondingSeries( mSelectedSeason[DBSeason.cSeriesID] );
                         }
 
                         #region Images
@@ -1892,7 +1892,7 @@ namespace WindowPlugins.GUITVSeries
                         }
                         // let configs now what was selected (for samples)
                         if (!SkinSettings.ImportFormatting) {
-                            this.formattingConfiguration1.Series = Helper.GetCorrespondingSeries(season[DBSeason.cSeriesID]);
+                            this.formattingConfiguration1.Series = Helper.getCorrespondingSeries(season[DBSeason.cSeriesID]);
                             this.formattingConfiguration1.Season = season;
                             this.formattingConfiguration1.Episode = null;
                         }

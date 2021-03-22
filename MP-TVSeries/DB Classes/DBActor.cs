@@ -1,11 +1,8 @@
-﻿using System;
+﻿using SQLite.NET;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
-using WindowPlugins.GUITVSeries.GUI;
+using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -21,8 +18,12 @@ namespace WindowPlugins.GUITVSeries
         public const String cIndex = "id";
         public const String cImage = "Image";
         public const String cName = "Name";
+        public const String cOriginalName = "OriginalName";
         public const String cRole = "Role";
         public const String cSortOrder = "SortOrder";
+        public const String cGender = "Gender";
+        public const String cKnownForDepartment = "KnownForDepartment";
+        public const String cPopularity = "Popularity";
         #endregion
 
         # region Local Fields
@@ -51,9 +52,13 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cSeriesID, new DBField(DBField.cTypeInt));
             AddColumn(cImage, new DBField(DBField.cTypeString));
             AddColumn(cName, new DBField(DBField.cTypeString));
+            AddColumn(cOriginalName, new DBField(DBField.cTypeString));
             AddColumn(cRole, new DBField(DBField.cTypeString));
             AddColumn(cSortOrder, new DBField(DBField.cTypeInt));
-            
+            AddColumn(cGender, new DBField(DBField.cTypeInt));
+            AddColumn(cKnownForDepartment, new DBField(DBField.cTypeString));
+            AddColumn(cPopularity, new DBField(DBField.cTypeString));
+
         }
         #endregion
 
@@ -168,10 +173,10 @@ namespace WindowPlugins.GUITVSeries
         {
             get
             {
-                string seriesName = Helper.GetCorrespondingSeries(this[cSeriesID]).ToString();
-                string seriesPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.CleanLocalPath(seriesName));
+                string lSeriesName = Helper.getCorrespondingSeries(this[cSeriesID]).ToString();
+                string lSeriesPath = Helper.PathCombine(Settings.GetPath(Settings.Path.banners), Helper.CleanLocalPath(lSeriesName));
 
-                return Helper.PathCombine(seriesPath, this[cImage]);
+                return Helper.PathCombine(lSeriesPath, this[cImage]);
             }            
         }
 
@@ -181,7 +186,8 @@ namespace WindowPlugins.GUITVSeries
             {
                 if (string.IsNullOrEmpty(this[cImage])) 
                     return string.Empty;
-                return Helper.PathCombine("http://thetvdb.com/banners/", this[cImage]);
+
+                return Helper.PathCombine(OnlineAPI.GetTMDbBasePath(), this[cImage]);
             }
         }
 
@@ -198,8 +204,7 @@ namespace WindowPlugins.GUITVSeries
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

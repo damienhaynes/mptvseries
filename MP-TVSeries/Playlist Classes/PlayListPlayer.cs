@@ -528,7 +528,7 @@ namespace WindowPlugins.GUITVSeries
             if (!clear)
             {
                 title = string.Format("{0} - {1}x{2} - {3}", item.SeriesName, item.SeasonIndex, item.EpisodeIndex, item.EpisodeName);
-                series = Helper.GetCorrespondingSeries(item.Episode[DBEpisode.cSeriesID]);
+                series = Helper.getCorrespondingSeries(item.Episode[DBEpisode.cSeriesID]);
                 season = Helper.getCorrespondingSeason(item.Episode[DBEpisode.cSeriesID], int.Parse(item.SeasonIndex));
             }
 

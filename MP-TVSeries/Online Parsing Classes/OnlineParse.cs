@@ -518,7 +518,7 @@ namespace WindowPlugins.GUITVSeries
             int i = 0;
             foreach (var seriesId in seriesIdList)
             {
-                DBSeries series = Helper.GetCorrespondingSeries(int.Parse(seriesId));
+                DBSeries series = Helper.getCorrespondingSeries(int.Parse(seriesId));
                 if (series != null)
                 {
                     MPTVSeriesLog.Write("progress received: UpdateRecentlyAdded [{0}/{1}] {2}", ++i, seriesIdList.Count, series.ToString());
@@ -890,7 +890,7 @@ namespace WindowPlugins.GUITVSeries
                         continue;
                     }
 
-                    DBSeries lDBSeries = Helper.GetCorrespondingSeries(series);
+                    DBSeries lDBSeries = Helper.getCorrespondingSeries(series);
                     MPTVSeriesLog.Write($"Cache cleared for series: { lDBSeries?.ToString() ?? series.ToString() }");
                 }
             }
@@ -1234,7 +1234,7 @@ namespace WindowPlugins.GUITVSeries
             foreach (string seriesid in lDistinctSeriesIds)
             {
                 var lEpisodes = lEpisodesInDB.Where(e => e[DBEpisode.cSeriesID] == seriesid).ToList();
-                DBSeries lSeries = Helper.GetCorrespondingSeries(int.Parse(seriesid));
+                DBSeries lSeries = Helper.getCorrespondingSeries(int.Parse(seriesid));
                 if (lSeries != null)
                 {
                     Worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, lSeries.ToString() + " [" + lEpisodes.Count.ToString() + " episodes]", ++i, lDistinctSeriesIds.Count, lSeries, null));
@@ -1496,7 +1496,7 @@ namespace WindowPlugins.GUITVSeries
             int i = 0;
             foreach (var series in mOnlineEpisodes.Keys)
             {
-                var seriesObj = Helper.GetCorrespondingSeries(int.Parse(series));
+                var seriesObj = Helper.getCorrespondingSeries(int.Parse(series));
                 string seriesName = seriesObj == null ? series : seriesObj.ToString();
 
                 Worker.ReportProgress(0, new ParsingProgress(ParsingAction.CleanupEpisodes, seriesName, ++i, mOnlineEpisodes.Keys.Count));
@@ -1624,62 +1624,62 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// Gets Actors From Online
         /// </summary>
-        /// <param name="updatesOnly">set to true when processing online updates</param>
-        /// <param name="updatedSeries">list of series that have had updates online, set to null if updatesOnly is false</param>
-        private void UpdateActors(bool updatesOnly, List<DBValue> updatedSeries)
+        /// <param name="aUpdatesOnly">set to true when processing online updates</param>
+        /// <param name="aUpdatedSeries">list of series that have had updates online, set to null if updatesOnly is false</param>
+        private void UpdateActors(bool aUpdatesOnly, List<DBValue> aUpdatedSeries)
         {
             // exit if we dont want to automatically download fanart
             if (!DBOption.GetOptions(DBOption.cAutoDownloadActors))
                 return;
 
             // get all series in database
-            SQLCondition condition = new SQLCondition();
-            condition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
-            condition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
-            condition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
-            List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
+            var lCondition = new SQLCondition();
+            lCondition.Add(new DBSeries(), DBSeries.cID, 0, SQLConditionType.GreaterThan);
+            lCondition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
+            lCondition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);
+            List<DBSeries> lSeries = DBSeries.Get(lCondition, false, false);
 
             // process updates on series we have locally
             // remove series not of interest
-            if (updatesOnly)
+            if (aUpdatesOnly)
             {
                 MPTVSeriesLog.Write(BigLogMessage("Processing Actors from Online Updates"));
-                seriesList.RemoveAll(s => !updatedSeries.Contains(s[DBSeries.cID]));
+                lSeries.RemoveAll(s => !aUpdatedSeries.Contains(s[DBSeries.cID]));
             }
 
             // updating fanart for all series
-            if (!updatesOnly)
+            if (!aUpdatesOnly)
             {
                 MPTVSeriesLog.Write(BigLogMessage("Downloading new and missing Actors for Series"));
 
-                List<int> seriesids = DBActor.GetSeriesWithActors();
-                seriesList.RemoveAll(s => seriesids.Contains(s[DBSeries.cID]));
+                List<int> lSeriesIds = DBActor.GetSeriesWithActors();
+                lSeries.RemoveAll(s => lSeriesIds.Contains(s[DBSeries.cID]));
             }
 
-            int nIndex = 0;
-            foreach (DBSeries series in seriesList)
+            int lIndex = 0;
+            foreach (DBSeries series in lSeries)
             {
-                Worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, series.ToString(), ++nIndex, seriesList.Count, series, null));
+                Worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, series.ToString(), ++lIndex, lSeries.Count, series, null));
 
                 try
                 {
                     // get available banners and add to database
-                    GetActors ga = new GetActors(series[DBSeries.cID]);
-                    foreach (DBActor a in ga.Actors)
+                    var lDBActors = new GetActors(series[DBSeries.cID]);
+                    foreach (DBActor actor in lDBActors.Actors)
                     {
-                        a.Commit();
+                        actor.Commit();
 
-                        string remoteThumb = a.ImageRemotePath;
-                        if (string.IsNullOrEmpty(remoteThumb)) continue;
+                        string lRemoteThumb = actor.ImageRemotePath;
+                        if (string.IsNullOrEmpty(lRemoteThumb)) continue;
 
-                        string localThumb = a.Image;
-                        if (string.IsNullOrEmpty(localThumb)) continue;
+                        string lLocalThumb = actor.Image;
+                        if (string.IsNullOrEmpty(lLocalThumb)) continue;
 
-                        if (Helper.DownloadFile(remoteThumb, localThumb))
+                        if (Helper.DownloadFile(lRemoteThumb, lLocalThumb))
                         {
                             // notify that thumbnail image has been downloaded
-                            a.ThumbnailImage = localThumb;
-                            a.NotifyPropertyChanged("ThumbnailImage");
+                            actor.ThumbnailImage = lLocalThumb;
+                            actor.NotifyPropertyChanged("ThumbnailImage");
                         }
                     }
                 }
@@ -1688,7 +1688,7 @@ namespace WindowPlugins.GUITVSeries
                     MPTVSeriesLog.Write("Failed to update Actor: " + ex.Message);
                 }
             }
-            Worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, seriesList.Count));
+            Worker.ReportProgress(0, new ParsingProgress(ParsingAction.GetNewActors, lSeries.Count));
         }
 
         /// <summary>
@@ -2240,7 +2240,7 @@ namespace WindowPlugins.GUITVSeries
                     Worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateUserFavourites, series[DBOnlineSeries.cPrettyName], ++nIndex, seriesList.Count, series, null));
 
                     if (userFavourites.Series.Contains(series[DBOnlineSeries.cID])) {
-                        MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.GetCorrespondingSeries((int)series[DBOnlineSeries.cID]), MPTVSeriesLog.LogLevel.Debug);
+                        MPTVSeriesLog.Write("Retrieved favourite series: " + Helper.getCorrespondingSeries((int)series[DBOnlineSeries.cID]), MPTVSeriesLog.LogLevel.Debug);
                         series[DBOnlineSeries.cViewTags] = Helper.GetSeriesViewTags(series, true, DBView.cTranslateTokenOnlineFavourite);
                         series.Commit();
                     } else {
@@ -2279,7 +2279,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode episode in lEpisodes)
                 {
                     if (lSeries == null || lSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
-                        lSeries = Helper.GetCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                        lSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
 
                     if (lSeries == null) continue;
 
@@ -2309,7 +2309,7 @@ namespace WindowPlugins.GUITVSeries
                 foreach (DBEpisode episode in lEpisodesThumbsForDownload)
                 {
                     if (lSeries == null || lSeries[DBSeries.cID] != episode[DBEpisode.cSeriesID])
-                        lSeries = Helper.GetCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
+                        lSeries = Helper.getCorrespondingSeries(episode[DBOnlineEpisode.cSeriesID]);
 
                     if (lSeries == null) continue;
 
