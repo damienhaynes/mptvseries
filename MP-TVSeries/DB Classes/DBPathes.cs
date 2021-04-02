@@ -22,11 +22,8 @@
 #endregion
 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using SQLite.NET;
-using MediaPortal.Database;
+using System;
 
 namespace WindowPlugins.GUITVSeries
 {

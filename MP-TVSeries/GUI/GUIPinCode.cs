@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MediaPortal.Dialogs;
+﻿using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
-using Action = MediaPortal.GUI.Library.Action;
-using System.ComponentModel;
 using System.Threading;
+using Action = MediaPortal.GUI.Library.Action;
 
-namespace WindowPlugins.GUITVSeries {
-	public class GUIPinCode : GUIDialogWindow {
+namespace WindowPlugins.GUITVSeries.GUI
+{
+    public class GUIPinCode : GUIDialogWindow {
 		public const int ID = 9815;
 
 		public GUIPinCode() {

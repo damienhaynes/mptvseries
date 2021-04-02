@@ -186,6 +186,7 @@
     <Compile Include="FanartTVAPI\DataStructures\FanartTvSeasonImage.cs" />
     <Compile Include="FanartTVAPI\Extensions\JsonExtensions.cs" />
     <Compile Include="FanartTVAPI\FanartTvAPI.cs" />
+    <Compile Include="FanartTVAPI\FanartTVCache.cs" />
     <Compile Include="GUI\GUIActors.cs" />
     <Compile Include="GUI\GUIArtworkChooser.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
@@ -360,8 +361,8 @@
     <Compile Include="TVSeriesPlugin.cs" />
     <Compile Include="VideoHandler.cs" />
     <Compile Include="view.cs" />
-    <Compile Include="GUIUserRating.cs" />
-    <Compile Include="GUIPinCode.cs" />
+    <Compile Include="GUI\GUIUserRating.cs" />
+    <Compile Include="GUI\GUIPinCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\About.resx">

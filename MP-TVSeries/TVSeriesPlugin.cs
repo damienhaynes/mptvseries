@@ -3591,6 +3591,7 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
+        #region GUI Skin Properties
         string getGUIProperty(guiProperty name)
         {
             return getGUIProperty(name.ToString());
@@ -3629,6 +3630,57 @@ namespace WindowPlugins.GUITVSeries
         {
             setGUIProperty(name, " "); // String.Empty doesn't work on non-initialized fields, as a result they would display as ugly #TVSeries.bla.bla
         }
+
+
+        public static void pushFieldsToSkin(DBTable item, string pre)
+        {
+            if (item == null) return;
+            List<string> fieldsRequestedForPre = null;
+
+            if (SkinSettings.SkinProperties.ContainsKey(pre))
+            {
+                fieldsRequestedForPre = SkinSettings.SkinProperties[pre];
+                for (int i = 0; i < fieldsRequestedForPre.Count; i++)
+                {
+                    pushFieldToSkin(item, pre, fieldsRequestedForPre[i]);
+                }
+            }
+        }
+
+        private static void pushFieldToSkin(DBTable item, string pre, string field)
+        {
+            string t = pre + "." + field;
+            setGUIProperty(t, FieldGetter.resolveDynString("<" + t + ">", item));
+        }
+
+        public static void clearFieldsForskin(string pre)
+        {
+            if (SkinSettings.SkinProperties.ContainsKey(pre))
+            {
+                List<string> fields = SkinSettings.SkinProperties[pre];
+                for (int i = 0; i < fields.Count; i++)
+                    clearGUIProperty(pre + "." + fields[i]);
+            }
+        }
+
+        public static void PublishViewsToSkin()
+        {
+            int i = 1;
+            var views = logicalView.getAll(false);
+
+            setGUIProperty("View.Count", views.Count.ToString(), true);
+
+            foreach (var view in views)
+            {
+                setGUIProperty(string.Format("View.Item.{0}.Name", i), view.prettyName, true);
+                setGUIProperty(string.Format("View.Item.{0}.HyperlinkParameter", i), "view:" + view.Name, true);
+                setGUIProperty(string.Format("View.Item.{0}.TaggedView", i), view.IsTaggedView.ToString(), true);
+                setGUIProperty(string.Format("View.Item.{0}.Locked", i), view.ParentalControl.ToString(), true);
+                i++;
+            }
+        }
+
+        #endregion
 
         public static bool IsResumeFromStandby
         {
@@ -3749,7 +3801,7 @@ namespace WindowPlugins.GUITVSeries
             }
 
             // Delete API Cache so we make sure we get the latest updates
-            Helper.DeleteXmlCache( lSeriesID );
+            TmdbAPI.TmdbCache.DeleteSeriesFromCache( lSeriesID );
 
             // Execute Online Parsing Actions
             if (lEpisodeIdUpdates.Count > 0)
@@ -6119,54 +6171,6 @@ namespace WindowPlugins.GUITVSeries
             m_watcherUpdater = null;
         }
 
-        public static void pushFieldsToSkin(DBTable item, string pre)
-        {
-            if (item == null) return;
-            List<string> fieldsRequestedForPre = null;
-
-            if (SkinSettings.SkinProperties.ContainsKey(pre))
-            {
-                fieldsRequestedForPre = SkinSettings.SkinProperties[pre];
-                for (int i = 0; i < fieldsRequestedForPre.Count; i++)
-                {
-                    pushFieldToSkin(item, pre, fieldsRequestedForPre[i]);
-                }
-            }
-        }
-
-        private static void pushFieldToSkin(DBTable item, string pre, string field)
-        {
-            string t = pre + "." + field;
-            setGUIProperty(t, FieldGetter.resolveDynString("<" + t + ">", item));
-        }
-
-        public static void clearFieldsForskin(string pre)
-        {
-            if (SkinSettings.SkinProperties.ContainsKey(pre))
-            {
-                List<string> fields = SkinSettings.SkinProperties[pre];
-                for (int i = 0; i < fields.Count; i++)
-                    clearGUIProperty(pre + "." + fields[i]);
-            }
-        }
-
-        public static void PublishViewsToSkin()
-        {
-            int i = 1;
-            var views = logicalView.getAll(false);
-
-            setGUIProperty("View.Count", views.Count.ToString(), true);
-
-            foreach (var view in views)
-            {
-                setGUIProperty(string.Format("View.Item.{0}.Name", i), view.prettyName, true);
-                setGUIProperty(string.Format("View.Item.{0}.HyperlinkParameter", i), "view:" + view.Name, true);
-                setGUIProperty(string.Format("View.Item.{0}.TaggedView", i), view.IsTaggedView.ToString(), true);
-                setGUIProperty(string.Format("View.Item.{0}.Locked", i), view.ParentalControl.ToString(), true);
-                i++;
-            }
-        }
-
         #region Playlist Actions
         GUITVSeriesPlayList TVSeriesPlaylist = null;
         public void ShowPlaylistWindow()
@@ -6596,6 +6600,7 @@ namespace WindowPlugins.GUITVSeries
             return result;
         }
 
+        #region GUI Dialogs
         /// <summary>
         /// Displays a menu dialog from list of items
         /// </summary>
@@ -6757,6 +6762,7 @@ namespace WindowPlugins.GUITVSeries
             }
             pDlgOk.DoModal(GUIWindowManager.ActiveWindow);
         }
+        #endregion
 
         ~TVSeriesPlugin()
         {

@@ -97,7 +97,7 @@ namespace WindowPlugins.GUITVSeries
                 filename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\{0}\ratings.xml", sSeriesID));
 
                 // check if we have user rating in cache
-                node = Helper.LoadXmlCache(filename);
+               // node = Helper.LoadXmlCache(filename);
             }
 
             // download ratings
@@ -117,7 +117,7 @@ namespace WindowPlugins.GUITVSeries
                 // save to file cache
                 if (sSeriesID != null)
                 {
-                    Helper.SaveXmlCache(filename, node);
+                    //Helper.SaveXmlCache(filename, node);
                 }
             }
 

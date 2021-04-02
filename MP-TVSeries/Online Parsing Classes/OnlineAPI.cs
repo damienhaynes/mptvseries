@@ -102,29 +102,31 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         {
             var lWebClient = new WebClient();
 
-            string lFullLocalPath = Helper.PathCombine( Settings.GetPath( aLocalPath ), aLocalFilename );
-            string lFullURL = GetTMDbBasePath() + aOnlineFilename;
+            // Widebanners come from fanart.tv, adjust online path to suit
+            string lBasePath = aLocalFilename.Contains("graphical/") ? "https://assets.fanart.tv/" : GetTMDbBasePath();
+            string lFullLocalPath = Helper.PathCombine(Settings.GetPath(aLocalPath), aLocalFilename);
+            string lFullURL = lBasePath + aOnlineFilename;
 
-            lWebClient.Headers.Add( "user-agent", Settings.UserAgent );
+            lWebClient.Headers.Add("user-agent", Settings.UserAgent);
 
             // .NET 4.0: Use TLS v1.2. Many download sources no longer support the older and now insecure TLS v1.0/1.1 and SSL v3.
-            ServicePointManager.SecurityProtocol = ( SecurityProtocolType )0xc00;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xc00;
 
             try
             {
-                Directory.CreateDirectory( Path.GetDirectoryName( lFullLocalPath ) );
+                Directory.CreateDirectory(Path.GetDirectoryName(lFullLocalPath));
                 if ( !File.Exists( lFullLocalPath ) // only if the file doesn't exist
-                    || ImageAllocator.LoadImageFastFromFile( lFullLocalPath ) == null ) // or the file is damaged
+                    || ImageAllocator.LoadImageFastFromFile(lFullLocalPath ) == null) // or the file is damaged
                 {
-                    MPTVSeriesLog.Write( "Downloading new Image from: " + lFullURL, MPTVSeriesLog.LogLevel.Debug );
-                    lWebClient.DownloadFile( lFullURL, lFullLocalPath );
+                    MPTVSeriesLog.Write("Downloading new Image from: " + lFullURL, MPTVSeriesLog.LogLevel.Debug);
+                    lWebClient.DownloadFile(lFullURL, lFullLocalPath);
                     return lFullLocalPath;
                 }
                 return string.Empty;
             }
-            catch ( WebException ex )
+            catch (WebException ex)
             {
-                MPTVSeriesLog.Write( $"Banner download failed from '{lFullURL}' to '{lFullLocalPath.Replace("/", @"\")}'. Reason='{ex.Message}'" );
+                MPTVSeriesLog.Write($"Banner download failed from '{lFullURL}' to '{lFullLocalPath.Replace("/", @"\")}'. Reason='{ex.Message}'");
                 return null;
             }
         }

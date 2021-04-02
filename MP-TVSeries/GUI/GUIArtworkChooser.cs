@@ -1,21 +1,19 @@
-﻿using MediaPortal.GUI.Library;
+﻿using Cornerstone.MP;
+using MediaPortal.GUI.Library;
 using MediaPortal.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Xml;
 using WindowPlugins.GUITVSeries.FanartTvAPI.DataStructures;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 using WindowPlugins.GUITVSeries.TmdbAPI;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
 using Action = MediaPortal.GUI.Library.Action;
-using Cornerstone.MP;
 
 namespace WindowPlugins.GUITVSeries.GUI
 {
@@ -30,8 +28,8 @@ namespace WindowPlugins.GUITVSeries.GUI
 
     public enum ArtworkDataProvider
     {
-        TVDb, /*Default*/
-        TMDb,
+        TVDb, /*Deprecated*/
+        TMDb, /*Default*/
         FanartTV
     }
 
@@ -1385,6 +1383,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lArtwork = new List<Artwork>();
             
             // first check if we have the TMDb ID for the series
+            // TODO: check for existence shouldn't be needed anymore since the primary source is now TMDb
             int lTmdbId = ArtworkParams.Series[DBOnlineSeries.cTmdbId];
             if ( lTmdbId <= 0 )
             {
@@ -1445,7 +1444,7 @@ namespace WindowPlugins.GUITVSeries.GUI
                 #endregion
 
                 case ArtworkType.EpisodeThumb:
-                    var lEpisodeImages = TmdbAPI.TmdbAPI.GetEpisodeImages(lTmdbId.ToString(), ArtworkParams.SeasonIndex, ArtworkParams.EpisodeIndex, lLanguages);
+                    TmdbEpisodeImages lEpisodeImages = TmdbAPI.TmdbAPI.GetEpisodeImages(lTmdbId.ToString(), ArtworkParams.SeasonIndex, ArtworkParams.EpisodeIndex, lLanguages);
                     GetEpisodeThumbnailsFromTMDb(lEpisodeImages?.Stills, ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Score, SortingDirections.Descending));
                     return lArtwork;
@@ -1579,12 +1578,10 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             switch ( aProvider )
             {
-                case ArtworkDataProvider.TMDb:
-                    return "themoviedb.org";
                 case ArtworkDataProvider.FanartTV:
                     return "fanart.tv";
                 default:
-                    return "thetvdb.com";
+                    return "themoviedb.org";
             }
         }
 
@@ -1592,12 +1589,10 @@ namespace WindowPlugins.GUITVSeries.GUI
         {
             switch (aName)
             {
-                case "themoviedb.org":
-                    return ArtworkDataProvider.TMDb;
                 case "fanart.tv":
                     return ArtworkDataProvider.FanartTV;
                 default:
-                    return ArtworkDataProvider.TVDb;
+                    return ArtworkDataProvider.TMDb;
             }
         }
 
@@ -1710,18 +1705,18 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 string lSelectedItemProperty;
 
-                // thetvdb.com and fanart.tv only have votes/likes
-                // themovidb.org have rating and votes
+                // fanart.tv only have votes/likes
+                // themoviedb.org have rating and votes
                 if (ArtworkParams.Provider == ArtworkDataProvider.TMDb && lArtwork.Votes != 0)
                 {
-                    lSelectedItemProperty = $"{lArtwork.Rating.ToString("#,##0.00")} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}";
+                    lSelectedItemProperty = $"{lArtwork.Rating:#,##0.00} ({lArtwork.Votes} {Translation.Votes}) | {GetLabelTwo(lArtwork)}";
                 }
                 else
                 {
                     lSelectedItemProperty = $"{lArtwork.Votes} {Translation.Votes} | {GetLabelTwo(lArtwork)}";
                 }
 
-                // only thetvdb.com and themoviedb.org have resolution
+                // only themoviedb.org have resolution
                 if (ArtworkParams.Provider != ArtworkDataProvider.FanartTV)
                 {
                     lSelectedItemProperty += " | " + lArtwork.Resolution;
@@ -1843,11 +1838,8 @@ namespace WindowPlugins.GUITVSeries.GUI
             var lDialog = ( IDialogbox )GUIWindowManager.GetWindow( ( int )GUIWindow.Window.WINDOW_DIALOG_MENU );
             lDialog.Reset();
             lDialog.SetHeading( Translation.ChangeOnlineProvider );
-            
-            var lItem = new GUIListItem( GetDataProviderNameFromEnum(ArtworkDataProvider.TVDb) );
-            if ( ArtworkParams.Provider == ArtworkDataProvider.TVDb ) lItem.Selected = true;
-            lItem.ItemId = (int)ArtworkDataProvider.TVDb;
-            lDialog.Add( lItem );
+
+            GUIListItem lItem;
        
             // themoviedb.org does not support WideBanners
             if (ArtworkParams.Type != ArtworkType.SeriesBanner)
@@ -1905,14 +1897,14 @@ namespace WindowPlugins.GUITVSeries.GUI
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)0xc00;
 
                 var lWebClient = new WebClient();
-                lWebClient.DownloadProgressChanged += DownloadProgressChanged;
-                lWebClient.DownloadFileCompleted += DownloadFileCompleted;
+                lWebClient.DownloadProgressChanged += OnDownloadProgressChanged;
+                lWebClient.DownloadFileCompleted += OnDownloadFileCompleted;
                 lWebClient.DownloadFileAsync( new Uri( lArtwork.Url ), lArtwork.LocalPath, lArtwork );
             } );
             lDownloadThread.Start( aArtwork );
         }
 
-        private void DownloadProgressChanged( object sender, DownloadProgressChangedEventArgs e )
+        private void OnDownloadProgressChanged( object sender, DownloadProgressChangedEventArgs e )
         {
             var lArtwork = e.UserState as Artwork;
 
@@ -1923,7 +1915,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             //MPTVSeriesLog.Write( $"Downloading {lArtwork.OnlinePath}, {e.ProgressPercentage}% | {e.BytesReceived} bytes out of {e.TotalBytesToReceive} bytes downloaded", MPTVSeriesLog.LogLevel.Debug );
         }
 
-        private void DownloadFileCompleted( object sender, AsyncCompletedEventArgs e )
+        private void OnDownloadFileCompleted( object sender, AsyncCompletedEventArgs e )
         {
             var lArtwork = e.UserState as Artwork;
 
@@ -2361,4 +2353,3 @@ namespace WindowPlugins.GUITVSeries.GUI
         }
     }
 }
-

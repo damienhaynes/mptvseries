@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 using WindowPlugins.GUITVSeries.TmdbAPI.Extensions;
@@ -86,5 +83,21 @@ namespace WindowPlugins.GUITVSeries.TmdbAPI
             return lSeason.FromJSON<TmdbSeasonDetail>();
         }
 
+        public static bool DeleteSeriesFromCache(int aSeriesID)
+        {
+            string lDirectory = Path.Combine(Settings.GetPath(Settings.Path.config), $"Cache\\Tmdb\\{aSeriesID}");
+            try
+            {
+                if (Directory.Exists(lDirectory))
+                {
+                    Directory.Delete(lDirectory, true);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

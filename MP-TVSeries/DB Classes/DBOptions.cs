@@ -517,7 +517,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cGetTextBanners, false);
 
             if (GetOptions(cArtworkLimitSeriesWideBanners) == null)
-                SetOptions(cArtworkLimitSeriesWideBanners, 3);
+                SetOptions(cArtworkLimitSeriesWideBanners, 1); // fanart.tv is slow
 
             if (GetOptions(cArtworkLimitSeriesPosters) == null)
                 SetOptions(cArtworkLimitSeriesPosters, 3);

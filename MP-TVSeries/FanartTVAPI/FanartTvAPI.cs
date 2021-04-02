@@ -53,78 +53,78 @@ namespace WindowPlugins.GUITVSeries.FanartTvAPI
         }
         #endregion
 
-        static string GetFromFanartTv(string address)
+        static string GetFromFanartTv(string aAddress)
         {
-            OnDataSend?.Invoke(address, null);
+            OnDataSend?.Invoke(aAddress, null);
 
-            var headerCollection = new WebHeaderCollection();
+            var lHeaderCollection = new WebHeaderCollection();
 
-            var request = WebRequest.Create(address) as HttpWebRequest;
+            var lRequest = WebRequest.Create(aAddress) as HttpWebRequest;
 
-            request.KeepAlive = true;
-            request.Method = "GET";
-            request.ContentLength = 0;
-            request.Timeout = 120000;
-            request.ContentType = "application/json";
-            request.UserAgent = UserAgent;
+            lRequest.KeepAlive = true;
+            lRequest.Method = "GET";
+            lRequest.ContentLength = 0;
+            lRequest.Timeout = 120000;
+            lRequest.ContentType = "application/json";
+            lRequest.UserAgent = UserAgent;
 
             // add required headers for authorisation
-            request.Headers.Add("api-key", ApiKey);
+            lRequest.Headers.Add("api-key", ApiKey);
 
             if (!string.IsNullOrEmpty(ClientKey))
             {
-                request.Headers.Add("client_key", ClientKey);
+                lRequest.Headers.Add("client_key", ClientKey);
             }
 
-            string strResponse = null;
+            string lResponseStr = null;
 
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                if (response == null) return null;
+                var lResponse = (HttpWebResponse)lRequest.GetResponse();
+                if (lResponse == null) return null;
 
-                Stream stream = response.GetResponseStream();
+                Stream lStream = lResponse.GetResponseStream();
 
-                StreamReader reader = new StreamReader(stream);
-                strResponse = reader.ReadToEnd();
+                var lReader = new StreamReader(lStream);
+                lResponseStr = lReader.ReadToEnd();
 
-                headerCollection = response.Headers;
+                lHeaderCollection = lResponse.Headers;
 
-                OnDataReceived?.Invoke(strResponse, response);
+                OnDataReceived?.Invoke(lResponseStr, lResponse);
 
-                stream.Close();
-                reader.Close();
-                response.Close();
+                lStream.Close();
+                lReader.Close();
+                lResponse.Close();
             }
             catch (WebException wex)
             {
-                string errorMessage = wex.Message;
+                string lErrorMessage = wex.Message;
                 if (wex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    var response = wex.Response as HttpWebResponse;
+                    var lResponse = wex.Response as HttpWebResponse;
 
-                    string headers = string.Empty;
-                    foreach (string key in response.Headers.AllKeys)
+                    string lHeaders = string.Empty;
+                    foreach (string key in lResponse.Headers.AllKeys)
                     {
-                        headers += string.Format("{0}: {1}, ", key, response.Headers[key]);
+                        lHeaders += string.Format("{0}: {1}, ", key, lResponse.Headers[key]);
                     }
-                    errorMessage = string.Format("Protocol Error, Code = '{0}', Description = '{1}', Url = '{2}', Headers = '{3}'", (int)response.StatusCode, response.StatusDescription, address, headers.TrimEnd(new char[] { ',', ' ' }));
+                    lErrorMessage = string.Format("Protocol Error, Code = '{0}', Description = '{1}', Url = '{2}', Headers = '{3}'", (int)lResponse.StatusCode, lResponse.StatusDescription, aAddress, lHeaders.TrimEnd(new char[] { ',', ' ' }));
                 }
 
-                OnDataError?.Invoke(errorMessage);
+                OnDataError?.Invoke(lErrorMessage);
 
-                strResponse = null;
+                lResponseStr = null;
             }
             catch (IOException ioe)
             {
-                string errorMessage = string.Format("Request failed due to an IO error, Description = '{0}', Url = '{1}', Method = 'GET'", ioe.Message, address);
+                string lErrorMessage = string.Format("Request failed due to an IO error, Description = '{0}', Url = '{1}', Method = 'GET'", ioe.Message, aAddress);
 
                 OnDataError?.Invoke(ioe.Message);
 
-                strResponse = null;
+                lResponseStr = null;
             }
 
-            return strResponse;
+            return lResponseStr;
         }
     }
 }

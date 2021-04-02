@@ -130,6 +130,11 @@ namespace WindowPlugins.GUITVSeries
             } );
             #endregion
 
+            #region Fanart.tv Provider
+            // https://fanart.tv/get-an-api-key/
+            FanartTvAPI.FanartTvAPI.Init(Settings.UserAgent, "4fe5df4e1a4069867074458c7f9c795e", DBOption.GetOptions(DBOption.cFanartTvClientKey));
+            #endregion
+
             // Only Advanced Users / Skin Designers need to see these.
             // Tabs are visible if import="false" TVSeries.SkinSettings.xml
             if ( SkinSettings.ImportFormatting) tabControl_Details.TabPages.Remove(tabFormattingRules);
@@ -213,7 +218,6 @@ namespace WindowPlugins.GUITVSeries
             treeView_Settings.SelectedNode = treeView_Settings.Nodes[0];
             nudWatchedAfter.Value = DBOption.GetOptions(DBOption.cWatchedAfter);
             textBox_PluginHomeName.Text = DBOption.GetOptions(DBOption.cPluginName);
-            checkBox_OnlineSearch.Checked = DBOption.GetOptions(DBOption.cOnlineParseEnabled);
             checkBox_FullSeriesRetrieval.Checked = DBOption.GetOptions(DBOption.cFullSeriesRetrieval);
             dbOptCheckBoxCleanOnlineEpisodes.Enabled = checkBox_FullSeriesRetrieval.Checked;
             dbOptCheckBoxRemoveEpZero.Enabled = checkBox_FullSeriesRetrieval.Checked;
@@ -246,8 +250,6 @@ namespace WindowPlugins.GUITVSeries
             checkBox_RandBanner.Checked = DBOption.GetOptions(DBOption.cRandomBanner);            
             this.chkAllowDeletes.Checked = (bool)DBOption.GetOptions(DBOption.cShowDeleteMenu);
             this.chkUseRegionalDateFormatString.Checked = (bool)DBOption.GetOptions(DBOption.cAltImgLoading);
-            txtUserID.Text = DBOption.GetOptions(DBOption.cOnlineUserID);
-            chkBlankBanners.Checked = DBOption.GetOptions(DBOption.cGetBlankBanners);
             checkDownloadEpisodeSnapshots.Checked = DBOption.GetOptions(DBOption.cGetEpisodeSnapshots);
             checkBox_ShowHidden.Checked = DBOption.GetOptions(DBOption.cShowHiddenItems);            
             checkbox_SortSpecials.Checked = DBOption.GetOptions(DBOption.cSortSpecials);
@@ -261,7 +263,6 @@ namespace WindowPlugins.GUITVSeries
             numericUpDownImportDelay.Value = DBOption.GetOptions(DBOption.cImportDelay);
 
             checkBox_AutoDownloadMissingArtwork.Checked = DBOption.GetOptions(DBOption.cAutoDownloadMissingArtwork);
-            checkBox_AutoUpdateEpisodeRatings.Checked = DBOption.GetOptions(DBOption.cAutoUpdateEpisodeRatings);
             checkBox_AutoUpdateAllFanart.Checked = DBOption.GetOptions(DBOption.cAutoUpdateAllFanart);
 			numericUpDownArtworkDelay.Value = DBOption.GetOptions(DBOption.cArtworkLoadingDelay);
 			numericUpDownBackdropDelay.Value = DBOption.GetOptions(DBOption.cBackdropLoadingDelay);
@@ -384,8 +385,6 @@ namespace WindowPlugins.GUITVSeries
 
             this.nudParentalControlTimeout.Value = DBOption.GetOptions(DBOption.cParentalControlResetInterval);
 
-            txtMainMirror.Text = DBOption.GetOptions(DBOption.cMainMirror);
-            
             MPTVSeriesLog.pauseAutoWriteDB = false;
 
             this.cbOnPlaySeriesOrSeasonAction.SelectedIndex = (int)DBOption.GetOptions(DBOption.cOnPlaySeriesOrSeasonAction);
@@ -2437,11 +2436,6 @@ namespace WindowPlugins.GUITVSeries
         }
         #endregion
 
-        private void checkBox_OnlineSearch_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cOnlineParseEnabled, checkBox_OnlineSearch.Checked);
-        }
-
         private void checkBox_FullSeriesRetrieval_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cFullSeriesRetrieval, checkBox_FullSeriesRetrieval.Checked);
@@ -2674,7 +2668,7 @@ namespace WindowPlugins.GUITVSeries
                 if (lEpisodeIdUpdates.Count > 0)
                 {
                     // Delete API Cache so we make sure we get the latest updates
-                    Helper.DeleteXmlCache( lSeriesID );
+                    TmdbCache.DeleteSeriesFromCache(lSeriesID);
 
                     Parsing_Start((new CParsingParameters(new List<ParsingAction> { ParsingAction.UpdateSeries,
                                                                                     ParsingAction.UpdateEpisodes, 
@@ -4055,11 +4049,6 @@ namespace WindowPlugins.GUITVSeries
             viewChanged();
         }
 
-        private void txtMainMirror_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cMainMirror, txtMainMirror.Text);
-        }
-
         private void linkExWatched_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SaveFileDialog fd = new SaveFileDialog();
@@ -4214,11 +4203,6 @@ namespace WindowPlugins.GUITVSeries
             }
         } 
 
-        private void chkBlankBanners_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cGetBlankBanners, chkBlankBanners.Checked);
-        }
-
         private void lblClearDB_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (MessageBox.Show("You are about to delete all Series, Seasons and Episodes from your database!" + Environment.NewLine + "Continue?", Translation.Confirm, MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -4328,11 +4312,6 @@ namespace WindowPlugins.GUITVSeries
             LoadViews();
         }
 
-        private void txtUserID_TextChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cOnlineUserID, txtUserID.Text);
-        }        
-
         private void btnLogoDeleteAll_Click(object sender, EventArgs e)
         {
             if (lstLogos.Items.Count > 0)
@@ -4437,11 +4416,6 @@ namespace WindowPlugins.GUITVSeries
         private void checkBox_AutoDownloadMissingArtwork_CheckedChanged(object sender, EventArgs e)
         {
             DBOption.SetOptions(DBOption.cAutoDownloadMissingArtwork, checkBox_AutoDownloadMissingArtwork.Checked);
-        }
-
-        private void checkBox_AutoUpdateEpisodeRatings_CheckedChanged(object sender, EventArgs e)
-        {
-            DBOption.SetOptions(DBOption.cAutoUpdateEpisodeRatings, checkBox_AutoUpdateEpisodeRatings.Checked);
         }
 
         private void checkBox_AutoUpdateAllFanart_CheckedChanged(object sender, EventArgs e)
@@ -5010,7 +4984,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void lnkFanartTvSeries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start($"https://fanart.tv/series/{mSelectedSeries[DBOnlineSeries.cID]}/");
+            Process.Start($"https://fanart.tv/series/{mSelectedSeries[DBOnlineSeries.cTvdbId]}/");
         }
 
         private void lnkTMDbSeries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -39,7 +39,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://www.thetvdb.com");
+            System.Diagnostics.Process.Start(@"http://themoviedb.org");
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

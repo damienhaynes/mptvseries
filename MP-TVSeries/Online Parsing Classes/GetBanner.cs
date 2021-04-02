@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WindowPlugins.GUITVSeries.FanartTvAPI.DataStructures;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 using WindowPlugins.GUITVSeries.TmdbAPI.DataStructures;
 
@@ -88,7 +89,7 @@ namespace WindowPlugins.GUITVSeries
 
     class PosterSeason : Artwork<PosterSeason>
     {
-        public String SeasonIndex = string.Empty;
+        public string SeasonIndex = string.Empty;
         public EArtworkStyles Style = EArtworkStyles.season;
     };
 
@@ -126,44 +127,33 @@ namespace WindowPlugins.GUITVSeries
             DoWork(aSeriesID);
         }
 
-        //private List<WideBannerSeries> GetWideSeriesBanners(XmlNode aNode, string aSeriesID, string aSeriesName )
-        //{
-        //    var lWideBanners = new List<WideBannerSeries>();
+        private List<WideBannerSeries> GetWideSeriesBanners(List<FanartTvImage> aImages, int aSeriesID, string aSeriesName)
+        {
+            var lWideBanners = new List<WideBannerSeries>();
 
-        //    foreach ( XmlNode banner in aNode.SelectNodes( "/Banners/Banner[BannerType='series']" ) )
-        //    {
-        //        var lSeriesWideBanner = new WideBannerSeries();
+            if (aImages == null) return lWideBanners;
 
-        //        lSeriesWideBanner.Language = banner.SelectSingleNode( "Language" ).InnerText;
-        //        lSeriesWideBanner.OnlinePath = banner.SelectSingleNode( "BannerPath" ).InnerText;
-        //        lSeriesWideBanner.OnlineThumbPath = banner.SelectSingleNode( "ThumbnailPath" ).InnerText;
-        //        lSeriesWideBanner.SeriesName = aSeriesName;
+            foreach(FanartTvImage image in aImages)
+            {
+                string lOnlineFilePath = image.Url.Replace("https://assets.fanart.tv/", "");
 
-        //        try
-        //        {
-        //            lSeriesWideBanner.Style = ( ArtworkStyles )Enum.Parse( typeof( ArtworkStyles ), banner.SelectSingleNode( "BannerType2" ).InnerText, true );
-        //        }
-        //        catch
-        //        {
-        //            // maybe a new style introduced
-        //            lSeriesWideBanner.Style = ArtworkStyles.unknown;
-        //        }
+                var lWideBanner = new WideBannerSeries
+                {
+                    Language = image.Language,
+                    OnlinePath = lOnlineFilePath,
+                    OnlineThumbPath = lOnlineFilePath.Replace("fanart/", "preview/"),
+                    Rating = image.Likes,
+                    RatingCount = image.Likes,
+                    SeriesName = aSeriesName,
+                    SeriesID = aSeriesID.ToString(),
+                    Style = EArtworkStyles.graphical
+                };
 
-        //        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "Rating" ).InnerText ) )
-        //        {
-        //            double rating = double.Parse( banner.SelectSingleNode( "Rating" ).InnerText, NumberStyles.Any, NumberFormatInfo.InvariantInfo );
-        //            lSeriesWideBanner.Rating = Math.Round( rating, 1, MidpointRounding.AwayFromZero );
-        //        }
+                lWideBanners.Add(lWideBanner);
+            }
 
-        //        if ( !string.IsNullOrEmpty( banner.SelectSingleNode( "RatingCount" ).InnerText ) )
-        //            lSeriesWideBanner.RatingCount = int.Parse( banner.SelectSingleNode( "RatingCount" ).InnerText );
-
-        //        lSeriesWideBanner.SeriesID = aSeriesID;
-        //        lWideBanners.Add( lSeriesWideBanner );
-        //    }
-
-        //    return lWideBanners;
-        //}
+            return lWideBanners;
+        }
 
         private List<PosterSeries> GetPosterSeries(List<TmdbImage> aImages, int aSeriesID, string aSeriesName)
         {
@@ -179,7 +169,7 @@ namespace WindowPlugins.GUITVSeries
                     Rating = image.Score,
                     RatingCount = image.Votes,
                     SeriesName = aSeriesName,
-                    SeriesID = aSeriesID.ToString()
+                    SeriesID = aSeriesID.ToString(),
                 };
 
                 lPosters.Add(lSeriesPoster);
@@ -226,61 +216,39 @@ namespace WindowPlugins.GUITVSeries
 
             string lSeriesName = lSeries.ToString();
 
-            var lWidebannerSeriesList = new List<WideBannerSeries>(); // no widebanners on themoviedb.org
+            var lWidebannerSeriesList = new List<WideBannerSeries>();
             var lPosterSeriesList = new List<PosterSeries>();
             var lPosterSeasonList = new List<PosterSeason>();
-            var lMap = new SeriesBannersMap();
-
-            lMap.SeriesID = aSeriesID.ToString();
+            var lMap = new SeriesBannersMap
+            {
+                SeriesID = aSeriesID.ToString()
+            };
 
             #region Series WideBanners
-            //lWidebannerSeriesList = GetWideSeriesBanners( lBanners, aSeriesID, lSeriesName );
+            // Widebanners comes from fanart.tv, lookup by thetvdb.com ID
+            // the thetvdb.com may not exist for a series from themoviedb.org
+            string lTvDbId = lSeries[DBOnlineSeries.cTvdbId];
+            if (!string.IsNullOrEmpty(lTvDbId))
+            {
+                FanartTvImages lFanartTvImages = FanartTvAPI.FanartTvAPI.GetShowImages(lTvDbId);
 
-            //// if the banner count is zero, try to get from english language
-            //if ( lWidebannerSeriesList.Count == 0 && OnlineAPI.GetSeriesLanguage(int.Parse(aSeriesID)) != "en")
-            //{
-            //    lEnglishBanners = OnlineAPI.GetBannerList( Int32.Parse( aSeriesID ), "en" );
-            //    if ( lEnglishBanners == null ) return;
+                lWidebannerSeriesList = GetWideSeriesBanners(lFanartTvImages?.TvBanners, aSeriesID, lSeriesName);
 
-            //    lWidebannerSeriesList = GetWideSeriesBanners( lEnglishBanners, aSeriesID, lSeriesName );
-            //}
+                // sort by highest rated/language
+                lWidebannerSeriesList.Sort();
 
-            //// sort by highest rated
-            //lWidebannerSeriesList.Sort();
-
-            //// remove banners of no interest
-            //if (!DBOption.GetOptions(DBOption.cGetTextBanners))
-            //{
-            //    lWidebannerSeriesList.RemoveAll(b => b.Style == ArtworkStyles.text);
-            //}
-            //if (!DBOption.GetOptions(DBOption.cGetBlankBanners))
-            //{
-            //    lWidebannerSeriesList.RemoveAll(b => b.Style == ArtworkStyles.blank);
-            //}
-
-            //// Respect User Limits, exception: if higher rated image or localised image is uploaded online
-            //int limit = DBOption.GetOptions(DBOption.cArtworkLimitSeriesWideBanners);
-            //if (limit < lWidebannerSeriesList.Count)
-            //    lWidebannerSeriesList.RemoveRange(limit, lWidebannerSeriesList.Count - limit);
-            
+                // Respect User Limits, exception: if higher rated image or localised image is uploaded online
+                int limit = DBOption.GetOptions(DBOption.cArtworkLimitSeriesWideBanners);
+                if (limit < lWidebannerSeriesList.Count)
+                    lWidebannerSeriesList.RemoveRange(limit, lWidebannerSeriesList.Count - limit);
+            }
             lMap.SeriesWideBanners = lWidebannerSeriesList;
             #endregion
 
             #region Series Posters
             lPosterSeriesList = GetPosterSeries(lShowDetail.Images?.Posters, aSeriesID, lSeriesName );
 
-            // if the poster count is zero, try to get from english language
-            //if ( lPosterSeriesList.Count == 0 && lLanguage != "en" )
-            //{
-            //    if ( lEnglishBanners == null )
-            //    {
-            //        lEnglishBanners = OnlineAPI.GetBannerList( Int32.Parse( aSeriesID ), "en" );
-            //        if ( lEnglishBanners == null ) return;
-            //    }
-
-            //    lPosterSeriesList = GetPosterSeries( lEnglishBanners, aSeriesID, lSeriesName );
-            //}
-
+            // sort by highest rated/language
             lPosterSeriesList.Sort();
 
             int lImageLimit = DBOption.GetOptions(DBOption.cArtworkLimitSeriesPosters);
@@ -374,13 +342,13 @@ namespace WindowPlugins.GUITVSeries
                     }
 
                     // mark the filename with the language
-                    string lPath = "graphical/" + Path.GetFileName( seriesWideBanner.OnlinePath );
+                    string lPath = "graphical/" + Path.GetFileName(seriesWideBanner.OnlinePath);
                     seriesWideBanner.FileName = Helper.CleanLocalPath(seriesWideBanner.SeriesName) + @"\-lang" + seriesWideBanner.Language + "-" + lPath;
                         
-                    string file = OnlineAPI.DownloadBanner(seriesWideBanner.OnlinePath, Settings.Path.banners, seriesWideBanner.FileName);
-                    if (file != null && BannerDownloadDone != null)
+                    string lFile = OnlineAPI.DownloadBanner(seriesWideBanner.OnlinePath, Settings.Path.banners, seriesWideBanner.FileName);
+                    if (lFile != null && BannerDownloadDone != null)
                     {
-                        BannerDownloadDone(file);
+                        BannerDownloadDone(lFile);
                         lSeriesWideBannersToKeep.Add(seriesWideBanner);
                         lConsecutiveDownloadErrors = 0;
                     } 
