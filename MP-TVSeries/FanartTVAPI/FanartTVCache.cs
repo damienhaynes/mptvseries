@@ -7,42 +7,47 @@ namespace WindowPlugins.GUITVSeries.FanartTvAPI
 {
     public static class FanartTvCache
     {
-        //public static bool SaveSeriesToCache(TmdbShowDetail aSeries, string aLanguage = "en")
-        //{
-        //    if (aSeries == null) return false;
+        const string cImageFilePath = @"Cache\FanartTV\{0}\images.json";
+        public static bool SaveSeriesToCache(FanartTvImages aImages, string aSeriesId)
+        {
+            if (aImages == null) return false;
 
-        //    MPTVSeriesLog.Write($"Saving {aSeries.Name} to file cache", MPTVSeriesLog.LogLevel.Debug);
+            MPTVSeriesLog.Write($"Saving fanart.tv images to file cache. TVDb ID={aSeriesId}", MPTVSeriesLog.LogLevel.Debug);
 
-        //    string lFilename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\Tmdb\{0}\{1}\series.json", aSeries.Id, aLanguage));
+            string lFilename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(cImageFilePath, aSeriesId));
 
-        //    try
-        //    {
-        //        if (!Directory.Exists(Path.GetDirectoryName(lFilename)))
-        //            Directory.CreateDirectory(Path.GetDirectoryName(lFilename));
+            try
+            {
+                if (!Directory.Exists(Path.GetDirectoryName(lFilename)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(lFilename));
 
-        //        // serialise the object to json and save
-        //        File.WriteAllText(lFilename, aSeries.ToJSON());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MPTVSeriesLog.Write($"Failed to save '{lFilename}' to cache: {ex.Message}");
-        //        return false;
-        //    }
+                // serialise the object to json and save
+                File.WriteAllText(lFilename, aImages.ToJSON());
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write($"Failed to save '{lFilename}' to cache: {ex.Message}");
+                return false;
+            }
 
-        //    return true;
-        //}
+            return true;
+        }
 
-        //public static TmdbShowDetail LoadSeriesFromCache(int aSeriesID, string aLanguage = "en")
-        //{
-        //    MPTVSeriesLog.Write($"Loading series '{aSeriesID}' from file cache", MPTVSeriesLog.LogLevel.Debug);
+        public static FanartTvImages LoadSeriesFromCache(string aSeriesId)
+        {
+            MPTVSeriesLog.Write($"Loading fanart.tv images from file cache. TVDb ID={aSeriesId}", MPTVSeriesLog.LogLevel.Debug);
 
-        //    string lFilename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(@"Cache\Tmdb\{0}\{1}\series.json", aSeriesID, aLanguage));
+            string lFilename = Path.Combine(Settings.GetPath(Settings.Path.config), string.Format(cImageFilePath, aSeriesId));
 
-        //    if (!File.Exists(lFilename)) return null;
+            if (!File.Exists(lFilename)) return null;
 
-        //    string lSeries = File.ReadAllText(lFilename);
+            // if the cache is older than 1 day, download again
+            if (File.GetLastWriteTime(lFilename) < DateTime.Now.Subtract(new TimeSpan(24, 0, 0)))
+                return null;
 
-        //    return lSeries.FromJSON<TmdbShowDetail>();
-        //}
+            string lSeries = File.ReadAllText(lFilename);
+
+            return lSeries.FromJSON<FanartTvImages>();
+        }
     }
 }

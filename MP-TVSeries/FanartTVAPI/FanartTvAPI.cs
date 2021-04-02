@@ -48,8 +48,17 @@ namespace WindowPlugins.GUITVSeries.FanartTvAPI
         #region Images
         public static FanartTvImages GetShowImages(string aId)
         {
-            string lResponse = GetFromFanartTv(string.Format(ApiUrl, aId));
-            return lResponse.FromJSON<FanartTvImages>();
+            FanartTvImages lImages = FanartTvCache.LoadSeriesFromCache(aId);
+
+            if (lImages == null)
+            {
+                string lResponse = GetFromFanartTv(string.Format(ApiUrl, aId));
+                
+                lImages = lResponse.FromJSON<FanartTvImages>();
+                FanartTvCache.SaveSeriesToCache(lImages, aId);
+            }
+
+            return lImages;
         }
         #endregion
 

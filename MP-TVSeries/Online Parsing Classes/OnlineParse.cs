@@ -876,7 +876,7 @@ namespace WindowPlugins.GUITVSeries
                 // check if updated series exists in cache
                 foreach (int series in lUpdates.UpdatedSeries.Where(s => lSeriesDirs.Contains(s.ToString())))
                 {
-                    MPTVSeriesLog.Write($"Deleting cache directory for series with ID: {series}");
+                    MPTVSeriesLog.Write($"Deleting cache directory for series with ID: {series}", MPTVSeriesLog.LogLevel.Debug);
 
                     string lDirectory = Path.Combine(lCacheDir, series.ToString());
 

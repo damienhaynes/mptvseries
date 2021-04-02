@@ -4877,7 +4877,7 @@ namespace WindowPlugins.GUITVSeries
 
         private void lnkOpenAPICacheDir_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
-            string lCacheFolder = Settings.GetPath( Settings.Path.config ) + "\\Cache\\";
+            string lCacheFolder = Settings.GetPath( Settings.Path.config ) + "\\Cache\\TMDB\\";
             lCacheFolder += mSelectedSeries[DBOnlineSeries.cID];
 
             // Open Directory
