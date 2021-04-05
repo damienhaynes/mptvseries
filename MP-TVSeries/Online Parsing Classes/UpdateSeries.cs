@@ -121,7 +121,9 @@ namespace WindowPlugins.GUITVSeries
 
                     lSeries[DBOnlineSeries.cID] = lShowDetail.Id;
                     lSeries[DBOnlineSeries.cTmdbId] = lShowDetail.Id;
-                    
+                    lSeries[DBOnlineSeries.cIMDBID] = lShowDetail.ExternalIds?.ImdbId;
+                    lSeries[DBOnlineSeries.cTvdbId] = lShowDetail.ExternalIds?.TvdbId; // required for fanart.tv wide banners
+
                     lSeries[DBOnlineSeries.cActors] = string.Join("|", lShowDetail.Credits?.Cast?.Select(c => c.Name));
                     //lSeries[DBOnlineSeries.cAirsDay] = string.Empty;
                     //lSeries[DBOnlineSeries.cAirsTime] = string.Empty;
@@ -130,10 +132,8 @@ namespace WindowPlugins.GUITVSeries
                     lSeries[DBOnlineSeries.cCountry] = lShowDetail.OriginCountries.FirstOrDefault(); // create a split field
                     lSeries[DBOnlineSeries.cEpisodeOrders] = "Aired|"; // will need need review of API
                     //lSeries[DBOnlineSeries.cEpisodeSortOrder] = string.Empty;
-                    lSeries[DBOnlineSeries.cFanart] = lShowDetail.BackdropPath; // useless
                     lSeries[DBOnlineSeries.cFirstAired] = lShowDetail.FirstAirDate;
                     lSeries[DBOnlineSeries.cGenre] = string.Join("|", lShowDetail.Genres?.Select(g => g.Name));
-                    lSeries[DBOnlineSeries.cIMDBID] = lShowDetail.ExternalIds?.ImdbId;
                     //lSeries[DBOnlineSeries.cIsOnlineFavourite] = string.Empty; // could append 'account_states' endpoint
                     lSeries[DBOnlineSeries.cLanguage] = lShowDetail.Languages.FirstOrDefault(); // create a split field
                     lSeries[DBOnlineSeries.cLastEpisodeAirDate] = lShowDetail.LastEpisodeToAir?.AirDate;
@@ -141,11 +141,9 @@ namespace WindowPlugins.GUITVSeries
                     lSeries[DBOnlineSeries.cNetwork] = lShowDetail.Networks.FirstOrDefault()?.Name; // create a split field 
                     lSeries[DBOnlineSeries.cNetworkID] = lShowDetail.Networks.FirstOrDefault()?.Id; // could be removed or create new table
                     lSeries[DBOnlineSeries.cOriginalName] = lShowDetail.OriginalName;
-                    lSeries[DBOnlineSeries.cPoster] = lShowDetail.PosterPath; // useless
                     lSeries[DBOnlineSeries.cPrettyName] = lShowDetail.Name;
                     lSeries[DBOnlineSeries.cRating] = lShowDetail.Score;
                     lSeries[DBOnlineSeries.cRatingCount] = lShowDetail.Votes;
-                    lSeries[DBOnlineSeries.cSeriesID] = lShowDetail.Id; // redundant
                     lSeries[DBOnlineSeries.cStatus] = lShowDetail.Status; // "Returning Series" == "Continuing"
                     lSeries[DBOnlineSeries.cSummary] = lShowDetail.Overview;
                     lSeries[DBOnlineSeries.cRuntime] = lShowDetail.EpisodeRuntimes.FirstOrDefault(); // could create a split field
@@ -158,7 +156,6 @@ namespace WindowPlugins.GUITVSeries
                     lSeries[DBOnlineSeries.cSpokenLanguages] = string.Join("|", lShowDetail.SpokenLanaguages?.Select(l => l.EnglishName));
                     lSeries[DBOnlineSeries.cOnlineSeasonCount] = lShowDetail.SeasonCount;
                     lSeries[DBOnlineSeries.cOnlineEpisodeCount] = lShowDetail.EpisodeCount;
-                    lSeries[DBOnlineSeries.cTvdbId] = lShowDetail.ExternalIds?.TvdbId;
                     lSeries[DBOnlineSeries.cOnlineSeasonsAvailable] = string.Join(",", lShowDetail.Seasons?.Select(s => s.SeasonNumber)); // for query of season details so we can get every episode for series
 
                     mSeriesList.Add(lSeries);

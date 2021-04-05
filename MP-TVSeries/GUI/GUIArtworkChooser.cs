@@ -41,6 +41,8 @@ namespace WindowPlugins.GUITVSeries.GUI
     {
         public int SeriesId { get; set; }
 
+        public int SeriesTvdbId { get; set; }
+
         public int SeasonIndex { get; set; }
 
         public int EpisodeIndex { get; set; }
@@ -754,7 +756,22 @@ namespace WindowPlugins.GUITVSeries.GUI
             ArtworkParams = _loadParameter.FromJSON<ArtworkLoadingParameters>();
             if ( ArtworkParams == null ) return false;
 
+            // TVDb no longer applicable
+            if (ArtworkParams.Provider == ArtworkDataProvider.TVDb)
+            {
+                // only fanart.tv supports wide banners
+                if (ArtworkParams.Type == ArtworkType.SeriesBanner)
+                {
+                    ArtworkParams.Provider = ArtworkDataProvider.FanartTV;
+                }
+                else
+                {
+                    ArtworkParams.Provider = ArtworkDataProvider.TMDb;
+                }
+            }
+
             SetProperty( "SeriesID", ArtworkParams.SeriesId.ToString(), true );
+            SetProperty( "SeriesTVDbID", ArtworkParams.SeriesTvdbId.ToString(), true);
             SetProperty( "SeriesName", ArtworkParams.Series.ToString(), true );
             SetProperty( "Type", ArtworkParams.Type.ToString(), true );
             SetProperty( "LocalisedType", GetArtworkTypeName(ArtworkParams.Type), true );
@@ -1381,29 +1398,9 @@ namespace WindowPlugins.GUITVSeries.GUI
         private List<Artwork> GetArtworkThumbsFromTMDb()
         {
             var lArtwork = new List<Artwork>();
-            
-            // first check if we have the TMDb ID for the series
-            // TODO: check for existence shouldn't be needed anymore since the primary source is now TMDb
+                        
             int lTmdbId = ArtworkParams.Series[DBOnlineSeries.cTmdbId];
-            if ( lTmdbId <= 0 )
-            {
-                // we don't have it, let's search for it and save it for next time
-                // there should only be one result for a tvdb ID.
-                TmdbFindResult lResults = TmdbAPI.TmdbAPI.TmdbFind(ArtworkParams.Series[DBOnlineSeries.cID], ExternalSource.tvdb_id);
-                if ( lResults == null || lResults.Shows == null || lResults.Shows.Count == 0 )
-                {
-                    // report to facade nothing to do
-                    return null;
-                }
-                
-                lTmdbId = lResults.Shows.FirstOrDefault().Id;
-                MPTVSeriesLog.Write( $"Found TMDb ID '{lTmdbId}' for tv show '{ArtworkParams.Series[DBOnlineSeries.cPrettyName]}' with TVDb Id '{ArtworkParams.SeriesId}'" );
-
-                // save it for next time
-                ArtworkParams.Series[DBOnlineSeries.cTmdbId] = lTmdbId;
-                ArtworkParams.Series.Commit();
-            }
-
+            
             string lLanguages = "en,null";
             string lSeriesLanguage = OnlineAPI.GetSeriesLanguage( ArtworkParams.SeriesId );
             if ( lSeriesLanguage != "en" )
@@ -1462,7 +1459,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             {
                 #region Series Fanart
                 case ArtworkType.SeriesFanart:
-                    var lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
+                    var lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesTvdbId.ToString());
 
                     // get fanart from database table
                     DBFanart.ClearSeriesFromCache(ArtworkParams.SeriesId);
@@ -1476,7 +1473,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 #region Series Posters
                 case ArtworkType.SeriesPoster:
-                    lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
+                    lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesTvdbId.ToString());
                     GetSeriesPostersFromFanartTv(lShowImages?.TvPosters, ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
@@ -1484,7 +1481,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 #region Series Widebanners
                 case ArtworkType.SeriesBanner:
-                    lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
+                    lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesTvdbId.ToString());
                     GetSeriesWideBannersFromFanartTv(lShowImages?.TvBanners, ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
@@ -1492,7 +1489,7 @@ namespace WindowPlugins.GUITVSeries.GUI
 
                 #region Season Posters
                 case ArtworkType.SeasonPoster:
-                    lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesId.ToString());
+                    lShowImages = FanartTvAPI.FanartTvAPI.GetShowImages(ArtworkParams.SeriesTvdbId.ToString());
                     GetSeasonPostersFromFanartTv(lShowImages?.TvSeasonPosters?.Where(i => i.Season == ArtworkParams.SeasonIndex.ToString())?.ToList(), ref lArtwork);
                     lArtwork.Sort(new GUIListItemSorter(SortingFields.Votes, SortingDirections.Descending));
                     return lArtwork;
@@ -1514,7 +1511,7 @@ namespace WindowPlugins.GUITVSeries.GUI
             // notify user if no thumbs to display, let them choose a different data provider
             if ( aArtwork == null || aArtwork.Count == 0 )
             {
-                MPTVSeriesLog.Write( $"No '{ArtworkParams.Type}' artwork available for '{ArtworkParams.Series[DBOnlineSeries.cSeriesID]}' from provider '{ArtworkParams.Provider}'" );
+                MPTVSeriesLog.Write( $"No '{ArtworkParams.Type}' artwork available for '{ArtworkParams.Series[DBOnlineSeries.cID]}' from provider '{ArtworkParams.Provider}'" );
 
                 var lNoItem = new GUIListItem( string.Format(Translation.NoArtworkAvailable, GetArtworkTypeName(ArtworkParams.Type), GetDataProviderNameFromEnum( ArtworkParams.Provider) ) );
                 lNoItem.IconImage = GetDefaultImage();

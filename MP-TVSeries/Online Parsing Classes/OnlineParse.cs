@@ -906,7 +906,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // now retrieve the info about the series
             var lCondition = new SQLCondition();
-            // all series that have an onlineID ( != 0)
+            // all series that have an onlineID ( > 0)
             lCondition.Add(new DBOnlineSeries(), DBOnlineSeries.cID, 0, SQLConditionType.GreaterThan);
             lCondition.Add(new DBSeries(), DBSeries.cScanIgnore, 0, SQLConditionType.Equal);
             lCondition.Add(new DBSeries(), DBSeries.cDuplicateLocalName, 0, SQLConditionType.Equal);

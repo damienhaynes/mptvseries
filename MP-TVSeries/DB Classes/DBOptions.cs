@@ -403,7 +403,7 @@ namespace WindowPlugins.GUITVSeries
                 SetOptions(cAutoDownloadFanartCount, 3);
 
             if (GetOptions(cAutoDownloadFanartResolution) == null)
-                SetOptions(cAutoDownloadFanartResolution, 0); //0=Both,1=1280x720,2=1920x1080
+                SetOptions(cAutoDownloadFanartResolution, 0); //0=All,1=1280x720,2=1920x1080,3=3840x2160
 
             if (GetOptions(cFanartThumbnailResolutionFilter) == null)
                 SetOptions(cFanartThumbnailResolutionFilter, 0);

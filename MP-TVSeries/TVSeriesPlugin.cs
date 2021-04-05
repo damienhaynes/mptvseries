@@ -1995,7 +1995,8 @@ namespace WindowPlugins.GUITVSeries
                 Poster = m_SelectedSeries.Poster,
                 Plot = m_SelectedSeries[DBOnlineSeries.cSummary],
                 Title = m_SelectedSeries[DBOnlineSeries.cOriginalName],
-                TVDb = m_SelectedSeries[DBOnlineSeries.cID]                
+                TVDb = m_SelectedSeries[DBOnlineSeries.cTvdbId],
+                TMDb = m_SelectedSeries[DBOnlineSeries.cTmdbId]
             };
 
             int year = 0;
@@ -2035,7 +2036,7 @@ namespace WindowPlugins.GUITVSeries
         {
             string title = m_SelectedSeries.ToString();
             string year = m_SelectedSeries.Year;
-            string tvdbid = m_SelectedSeries[DBOnlineSeries.cID];
+            string tvdbid = m_SelectedSeries[DBOnlineSeries.cTvdbId];
             string imdbid = m_SelectedSeries[DBOnlineSeries.cIMDBID];
             string fanart = GUIPropertyManager.GetProperty("#TVSeries.Current.Fanart").Trim();
 
@@ -4003,6 +4004,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            SeriesTvdbId = m_SelectedSeries[DBOnlineSeries.cTvdbId],
                             Provider = (ArtworkDataProvider)((int)m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider]),
                             Type = ArtworkType.SeriesFanart
                         };
@@ -4012,6 +4014,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            SeriesTvdbId = m_SelectedSeries[DBOnlineSeries.cTvdbId],
                             Provider = ( ArtworkDataProvider )( ( int )m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider] ),
                             Type = ArtworkType.SeriesPoster
                         };
@@ -4020,13 +4023,14 @@ namespace WindowPlugins.GUITVSeries
                     case ( int )eContextItems.artworkChoiceSeriesWideBanner:
                         // tmdb does not have widebanners
                         var lProvider = (ArtworkDataProvider)((int)m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider]);
-                        if (lProvider == ArtworkDataProvider.TMDb)
+                        if (lProvider != ArtworkDataProvider.FanartTV)
                         {
-                            lProvider = ArtworkDataProvider.TVDb;
+                            lProvider = ArtworkDataProvider.FanartTV;
                         }
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            SeriesTvdbId = m_SelectedSeries[DBOnlineSeries.cTvdbId],
                             Provider = lProvider,
                             Type = ArtworkType.SeriesBanner
                         };
@@ -4036,6 +4040,7 @@ namespace WindowPlugins.GUITVSeries
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedSeries[DBOnlineSeries.cID],
+                            SeriesTvdbId = m_SelectedSeries[DBOnlineSeries.cTvdbId],
                             Provider = ( ArtworkDataProvider )( ( int )m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider] ), /* we could configure per season */
                             Type = ArtworkType.SeasonPoster,
                             SeasonIndex = m_SelectedSeason[DBSeason.cIndex]
@@ -4043,15 +4048,16 @@ namespace WindowPlugins.GUITVSeries
                         break;
 
                     case ( int )eContextItems.artworkChoiceEpisodeThumb:
-                        // only themoviedb.org and thetvdb.com have support for episode thumbs
+                        // only themoviedb.org has support for episode thumbs
                         lProvider = (ArtworkDataProvider)((int)m_SelectedSeries[DBOnlineSeries.cArtworkChooserProvider]);
-                        if (lProvider == ArtworkDataProvider.FanartTV)
+                        if (lProvider != ArtworkDataProvider.TMDb)
                         {
-                            lProvider = ArtworkDataProvider.TVDb;
+                            lProvider = ArtworkDataProvider.TMDb;
                         }
                         lArtworkParameters = new ArtworkLoadingParameters
                         {
                             SeriesId = m_SelectedEpisode[DBOnlineEpisode.cSeriesID],
+                            SeriesTvdbId = m_SelectedSeries[DBOnlineSeries.cTvdbId],
                             Provider = lProvider,
                             Type = ArtworkType.EpisodeThumb,
                             SeasonIndex = m_SelectedEpisode[DBOnlineEpisode.cSeasonIndex],

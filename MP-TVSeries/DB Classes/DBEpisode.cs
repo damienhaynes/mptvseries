@@ -1950,6 +1950,7 @@ namespace WindowPlugins.GUITVSeries
 
             string lSeriesFolder = Helper.CleanLocalPath(series.ToString());
 
+            // TODO: check if we need this anymore
             int lThumbSource = this[DBOnlineEpisode.cEpisodeThumbnailSource];
             if (lThumbSource == 0 /* tvdb */)
             {

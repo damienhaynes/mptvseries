@@ -1667,17 +1667,18 @@ namespace WindowPlugins.GUITVSeries
                                 case DBOnlineEpisode.cAirsBeforeEpisode:
                                 case DBOnlineEpisode.cAirsBeforeSeason:
                                 case DBOnlineEpisode.cTMDbEpisodeThumbnailUrl:
+                                case DBOnlineEpisode.cDVDEpisodeNumber:
                                     // hide these fields as we are not so interested in, 
                                     // possibly add a toggle option to display all fields later
                                     break;
 
                                 // Show DVD number if applicable
-                                case DBOnlineEpisode.cDVDEpisodeNumber:
-                                    if ( episode[DBOnlineEpisode.cDVDEpisodeNumber] !=0 && mSelectedSeries[DBOnlineSeries.cEpisodeSortOrder] != "DVD" )
-                                    {
-                                        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, $"{episode[DBOnlineEpisode.cDVDSeasonNumber]}x{episode[DBOnlineEpisode.cDVDEpisodeNumber]}", false );
-                                    }
-                                    break;
+                                //case DBOnlineEpisode.cDVDEpisodeNumber:
+                                //    if ( episode[DBOnlineEpisode.cDVDEpisodeNumber] !=0 && mSelectedSeries[DBOnlineSeries.cEpisodeSortOrder] != "DVD" )
+                                //    {
+                                //        AddPropertyBindingSource( DBEpisode.PrettyFieldName( key ), key, $"{episode[DBOnlineEpisode.cDVDSeasonNumber]}x{episode[DBOnlineEpisode.cDVDEpisodeNumber]}", false );
+                                //    }
+                                //    break;
 
                                 // Show Aired number if applicable
                                 case DBOnlineEpisode.cEpisodeIndex:
@@ -2025,6 +2026,12 @@ namespace WindowPlugins.GUITVSeries
                                 case DBSeries.cParsedName:
                                 case DBOnlineSeries.cTmdbId:
                                 case DBOnlineSeries.cArtworkChooserProvider:
+                                case DBOnlineSeries.cTvdbId:
+                                case DBOnlineSeries.cOnlineSeasonsAvailable:
+                                case DBOnlineSeries.cOnlineSeasonCount:
+                                case DBOnlineSeries.cOnlineEpisodeCount:
+                                case DBOnlineSeries.cAirsDay:
+                                case DBOnlineSeries.cAirsTime:
                                     // hide these fields as we are not so interested in,   
                                     // possibly add a toggle option to display all fields later
                                     break;
@@ -4878,7 +4885,7 @@ namespace WindowPlugins.GUITVSeries
         private void lnkOpenAPICacheDir_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             string lCacheFolder = Settings.GetPath( Settings.Path.config ) + "\\Cache\\TMDB\\";
-            lCacheFolder += mSelectedSeries[DBOnlineSeries.cID];
+            lCacheFolder += mSelectedSeries[DBOnlineSeries.cTmdbId];
 
             // Open Directory
             Process.Start( "explorer.exe", lCacheFolder );

@@ -21,14 +21,10 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
-using System;
-using System.Collections.Generic;
 
 namespace WindowPlugins.GUITVSeries
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
     /// Interface needed to be Implemented by a class in order to be cachable
@@ -44,7 +40,7 @@ namespace WindowPlugins.GUITVSeries
     }
 
     /// <summary>
-    /// Is used to keep objects in memory to avoid havint to do some SQL queries
+    /// Is used to keep objects in memory to avoid having to do some SQL queries
     /// particularly when hierarchical information would need to be loaded additionally
     /// after the main query (logos/flat views, etc)
     /// </summary>

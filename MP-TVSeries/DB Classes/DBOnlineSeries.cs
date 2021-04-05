@@ -131,7 +131,6 @@ namespace WindowPlugins.GUITVSeries
         static DBOnlineSeries() {
             ///////////////////////////////////////////////////
             #region Pretty Names displayed in Configuration Details Tab
-            s_FieldToDisplayNameMap.Add( cID, "Online Series ID" );
             s_FieldToDisplayNameMap.Add( cPrettyName, "Title" );
             s_FieldToDisplayNameMap.Add( cStatus, "Show Status" );
             s_FieldToDisplayNameMap.Add( cGenre, "Genre" );
@@ -140,8 +139,6 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add( cAirsTime, "Aired Time" );
             s_FieldToDisplayNameMap.Add( cSortName, "Sort By" );
             s_FieldToDisplayNameMap.Add( cLanguage, "Language (Override)" );
-            s_FieldToDisplayNameMap.Add( cIMDBID, "IMDb ID" );
-            s_FieldToDisplayNameMap.Add( cTraktID, "Trakt ID" );
             s_FieldToDisplayNameMap.Add( cEpisodeOrders, "Episode Orders" );
             s_FieldToDisplayNameMap.Add( cChosenEpisodeOrder, "Episode Order" );
             s_FieldToDisplayNameMap.Add( cContentRating, "Content Rating" );
@@ -152,6 +149,9 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add( cLastEpisodeAirDate, "Last Aired" );
             s_FieldToDisplayNameMap.Add( cLastUpdated, "Last Updated (UTC)" );
             s_FieldToDisplayNameMap.Add( cOriginalName, "English Name" );
+            s_FieldToDisplayNameMap.Add( cSpokenLanguages, "Spoken Languages");
+            s_FieldToDisplayNameMap.Add( cProductionCompanies, "Production Companies");
+            s_FieldToDisplayNameMap.Add( cProductionCountries, "Production Countries");
             #endregion
             ///////////////////////////////////////////////////
 

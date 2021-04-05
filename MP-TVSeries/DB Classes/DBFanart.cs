@@ -54,8 +54,11 @@ namespace WindowPlugins.GUITVSeries
         {
             BOTH,
             HD,
-            FULLHD
+            FULLHD,
+            FOURK
         }
+
+        readonly List<DBFanart> mFanartsToDownload = new List<DBFanart>();
 
         public DBFanart()
             : base(cTableName)
@@ -82,7 +85,6 @@ namespace WindowPlugins.GUITVSeries
             AddColumn(cLocalPath, new DBField(DBField.cTypeString));
             AddColumn(cBannerPath, new DBField(DBField.cTypeString));
             AddColumn(cThumbnailPath, new DBField(DBField.cTypeString));
-            AddColumn(cColors, new DBField(DBField.cTypeString));
             AddColumn(cDisabled, new DBField(DBField.cTypeString));
             AddColumn(cSeriesName, new DBField(DBField.cTypeString));
         }
@@ -208,60 +210,63 @@ namespace WindowPlugins.GUITVSeries
             }
         }
 
-        public List<DBFanart> FanartsToDownload(int SeriesID)
+        public List<DBFanart> FanartsToDownload(int aSeriesID)
         {       
             // Only get a list of fanart that is available for download
-            String sqlQuery = "select * from " + cTableName;
-            sqlQuery += " where " + cSeriesID + " = " + SeriesID.ToString();
+            string lSqlQuery = "SELECT * FROM " + cTableName;
+            lSqlQuery += " WHERE " + cSeriesID + " = " + aSeriesID.ToString();
     
             // Get Preferred Resolution
-            int res = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);
-            bool getSeriesNameFanart = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
+            int lResolution = DBOption.GetOptions(DBOption.cAutoDownloadFanartResolution);
+            bool lGetSeriesNameFanart = DBOption.GetOptions(DBOption.cAutoDownloadFanartSeriesNames);
 
-            if (res == (int)FanartResolution.HD)
-                sqlQuery += " and " + cResolution + " = " + "\"1280x720\"";
-            if (res == (int)FanartResolution.FULLHD)
-                sqlQuery += " and " + cResolution + " = " + "\"1920x1080\"";
-            if (!getSeriesNameFanart)
-                sqlQuery += " and " + cSeriesName + " != " + "\"true\"";
+            if (lResolution == (int)FanartResolution.HD)
+                lSqlQuery += " and " + cResolution + " = " + "\"1280x720\"";
+            if (lResolution == (int)FanartResolution.FULLHD)
+                lSqlQuery += " and " + cResolution + " = " + "\"1920x1080\"";
+            if (lResolution == (int)FanartResolution.FOURK)
+                lSqlQuery += " and " + cResolution + " = " + "\"3840x2160\"";
+            if (!lGetSeriesNameFanart)
+                lSqlQuery += " and " + cSeriesName + " != " + "\"true\"";
             
-            SQLiteResultSet results = DBTVSeries.Execute(sqlQuery);
+            SQLiteResultSet lResults = DBTVSeries.Execute(lSqlQuery);
 
-            if (results.Rows.Count > 0)
+            if (lResults.Rows.Count > 0)
             {                              
-                int iFanartCount = 0;
-                List<DBFanart> AvailableFanarts = new List<DBFanart>(results.Rows.Count);
-                for (int index = 0; index < results.Rows.Count; index++)
+                int lFanartCount = 0;
+                var lAvailableFanarts = new List<DBFanart>(lResults.Rows.Count);
+                for (int index = 0; index < lResults.Rows.Count; index++)
                 {
-                    if (results.GetField(index, (int)results.ColumnIndices[cLocalPath]).Length > 0)
-                        iFanartCount++;
+                    if (lResults.GetField(index, (int)lResults.ColumnIndices[cLocalPath]).Length > 0)
+                        lFanartCount++;
                     else
                     {
                         // Add 'Available to Download' fanart to list
-                        AvailableFanarts.Add(new DBFanart());
-                        AvailableFanarts[AvailableFanarts.Count-1].Read(ref results, index);                       
+                        lAvailableFanarts.Add(new DBFanart());
+                        lAvailableFanarts[lAvailableFanarts.Count-1].Read(ref lResults, index);                       
                     }
                 }
                 
                 // sort by highest rated
-                AvailableFanarts.Sort();
+                lAvailableFanarts.Sort();
 
                 // Only return the fanarts that we want to download
-                int AutoDownloadCount = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
+                int lAutoDownloadCount = DBOption.GetOptions(DBOption.cAutoDownloadFanartCount);
 
-                for (int i = 0; i < AvailableFanarts.Count; i++)
+                for (int i = 0; i < lAvailableFanarts.Count; i++)
                 {
                     // Dont get more than the user wants
-                    if (iFanartCount >= AutoDownloadCount)
+                    if (lFanartCount >= lAutoDownloadCount)
                         break;
-                    _FanartsToDownload.Add(AvailableFanarts[i]);
-                    iFanartCount++;
+                    mFanartsToDownload.Add(lAvailableFanarts[i]);
+                    lFanartCount++;
                 }
             }
-            return _FanartsToDownload;
+            return mFanartsToDownload;
           
-        } List<DBFanart> _FanartsToDownload = new List<DBFanart>();
+        }
 
+        
         /// <summary>
         /// Checks if a Series Fanart contains a Series Name
         /// </summary>

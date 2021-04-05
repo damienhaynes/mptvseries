@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WindowPlugins.GUITVSeries.Configuration;
 using WindowPlugins.GUITVSeries.Extensions;
 
 namespace WindowPlugins.GUITVSeries
@@ -46,7 +47,7 @@ namespace WindowPlugins.GUITVSeries
         public const String cHidden = "Hidden";
         #endregion
 
-        public const int cDBVersion = 16;
+        public const int cDBVersion = 17;
 
         private DBOnlineSeries m_onlineSeries = null;
 		new public static List<string> FieldsRequiringSplit = new List<string>(new string[] { "Genre", "Actors", "Network", "ViewTags", "Creators", "ProductionCompanies", "ProductionCountries", "SpokenLanguages" });
@@ -223,6 +224,167 @@ namespace WindowPlugins.GUITVSeries
 
                         nUpgradeDBVersion++;
                         break;
+                    case 16:
+                        // major upgrade from thetvdb.com to themoviedb.org API
+                        UpgradeDialog lUpgradeDlg = null;
+                        if (Settings.IsConfig)
+                        {
+                            lUpgradeDlg = new UpgradeDialog();
+                            lUpgradeDlg.Show();
+                            lUpgradeDlg.Refresh();
+                        }
+
+                        var lSeriesToRemove = new List<int>();
+                        
+                        // migrate existing TVDb IDs to new field
+                        var lAllSeries = DBOnlineSeries.getAllSeries();
+                        foreach (DBOnlineSeries series in lAllSeries)
+                        {
+                            series[DBOnlineSeries.cTvdbId] = series[DBOnlineSeries.cID];
+                            series.Commit();
+                        }
+
+                        // for series that do not have TMDb ID's and update them                        
+                        foreach(DBOnlineSeries series in lAllSeries.Where(s => s[DBOnlineSeries.cTmdbId] == 0 || string.IsNullOrEmpty(s[DBOnlineSeries.cTmdbId])))
+                        {
+                            // search for TMDb ID using existing TVDb ID
+                            int lTvdbId = series[DBOnlineSeries.cID];
+                            MPTVSeriesLog.Write($"Searching for series TMDb ID. TVDb ID = {lTvdbId}");
+
+                            TmdbAPI.DataStructures.TmdbFindResult lResults = TmdbAPI.TmdbAPI.TmdbFind(lTvdbId.ToString(), TmdbAPI.ExternalSource.tvdb_id);
+                            if (lResults == null || lResults.Shows == null || lResults.Shows.Count == 0)
+                            {
+                                // if none found, then we will remove this series from database
+                                MPTVSeriesLog.Write($"Unable to find TMDb ID for series with TVDb ID = {lTvdbId}. Series will be removed from database");
+                                lSeriesToRemove.Add(lTvdbId);
+                                continue;
+                            }
+
+                            series[DBOnlineSeries.cTmdbId] = lResults.Shows.FirstOrDefault().Id;
+                            series.Commit();
+                        }
+
+                        // delete series from database we can't do anything about
+                        // users can alway re-import when details are online
+                        foreach(int seriesId in lSeriesToRemove)
+                        {
+                            MPTVSeriesLog.Write($"Delete series with TVDb ID = {seriesId}");
+
+                            // delete from online_series table
+                            string lSqlQuery = $"DELETE FROM online_series WHERE ID = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // delete from local_series table
+                            lSqlQuery = $"DELETE FROM local_series WHERE ID = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // delete from season table
+                            lSqlQuery = $"DELETE FROM season WHERE SeriesID = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // delete from online_episode table
+                            lSqlQuery = $"DELETE FROM online_episodes WHERE SeriesID = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // delete from local_episode table
+                            lSqlQuery = $"DELETE FROM local_episodes WHERE SeriesID = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // delete from fanart table
+                            lSqlQuery = $"DELETE FROM Fanart WHERE seriesID = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // delete from actors table
+                            lSqlQuery = $"DELETE FROM Actors WHERE SeriesId = {seriesId}";
+                            DBTVSeries.Execute(lSqlQuery);
+                        }
+
+                        // create a map of tvdb/tmdb pairs
+                        var lIDs = DBOnlineSeries.getAllSeries().ToDictionary(kp => (int)kp[DBOnlineSeries.cTvdbId], kp => (int)kp[DBOnlineSeries.cTmdbId]);
+
+                        foreach(KeyValuePair<int,int> id in lIDs)
+                        {
+                            // TODO: check for conflicting ID i.e. TMDBID == Existing TVDBID
+
+                            // update online_series table Series ID field basis it's corresponding TMDb ID field
+                            string lSqlQuery = $"UPDATE online_series SET ID = {id.Value} WHERE TmdbID = {id.Value}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // update local_series table Series ID field basis corresponding TMDb ID
+                            lSqlQuery = $"UPDATE local_series SET ID = {id.Value} WHERE ID = {id.Key}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // update season table Series ID field basis corresponding TMDb ID
+                            lSqlQuery = $"UPDATE season " +
+                                        $"SET ID = REPLACE(ID, {id.Key}, {id.Value}), " +
+                                            $"SeriesID = {id.Value} " +
+                                        $"WHERE SeriesID = {id.Key}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // update online_episode table Composite ID field basis corresponding TMDb ID
+                            lSqlQuery = $"UPDATE online_episodes " +
+                                        $"SET CompositeID = REPLACE(CompositeID, {id.Key}, {id.Value}), " +
+                                            $"SeriesID = {id.Value} " +
+                                        $"WHERE SeriesID = {id.Key}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // update local_episode table fields basis corresponding TMDb ID
+                            lSqlQuery = $"UPDATE local_episodes " +
+                                        $"SET OriginalComposite = REPLACE(OriginalComposite, {id.Key}, {id.Value}), " +
+                                            $"CompositeID = REPLACE(CompositeID, {id.Key}, {id.Value}), " +
+                                            $"OriginalComposite2 = REPLACE(OriginalComposite2, {id.Key}, {id.Value}), " +
+                                            $"CompositeID2 = REPLACE(CompositeID2, {id.Key}, {id.Value}), " +
+                                            $"SeriesID = {id.Value} " +
+                                        $"WHERE SeriesID = {id.Key}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // update fanart table fields basis corresponding TMDb ID
+                            // only the LocalPath is important here as the rest of the paths are online which are no longer applicable
+                            lSqlQuery = $"UPDATE Fanart " +
+                                        $"SET seriesID = {id.Value}, " +
+                                            $"LocalPath = REPLACE(LocalPath, '\\{id.Key}', '\\{id.Value}'), " +
+                                            $"BannerPath = REPLACE(BannerPath, '/{id.Key}', '/{id.Value}'), " +
+                                            $"ThumbnailPath = REPLACE(ThumbnailPath, '/{id.Key}', '/{id.Value}') " +
+                                        $"WHERE seriesID = {id.Key}";
+                            DBTVSeries.Execute(lSqlQuery);
+
+                            // update actors table Series ID field basis corresponding TMDb ID
+                            lSqlQuery = $"UPDATE Actors SET SeriesID = {id.Value} WHERE SeriesID = {id.Key}";
+                            DBTVSeries.Execute(lSqlQuery);
+                        }
+
+                        // fix drop-in fanart naming
+                        try
+                        {
+                            string lDBFanartCachePath = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), "_cache");
+                            string lDBFanartPath = Helper.PathCombine(Settings.GetPath(Settings.Path.fanart), "fanart\\original");
+
+                            // delete cache folder
+                            MPTVSeriesLog.Write("Deleting fanart cache directory");
+                            if (Directory.Exists(lDBFanartCachePath)) Directory.Delete(lDBFanartCachePath, true);
+
+                            MPTVSeriesLog.Write("Renaming old fanart files");
+                            foreach (KeyValuePair<int, int> id in lIDs)
+                            {
+                                // update any locally dropped in fanart (or ones with db reference) to new ID name
+                                string[] lFiles = Directory.GetFiles(lDBFanartPath, $"{id.Key}-*.jpg");
+                                foreach (string sourceFile in lFiles)
+                                {
+                                    string lDestinationFilename = Path.GetFileName(sourceFile).Replace($"{id.Key}", $"{id.Value}");
+                                    File.Move(sourceFile, Path.Combine(lDBFanartPath, lDestinationFilename));
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MPTVSeriesLog.Write($"Error upgrading fanart. Exception={ex.Message}");
+                        }
+
+                        if (lUpgradeDlg != null) lUpgradeDlg.Close();
+
+                        nUpgradeDBVersion++;
+                        break;
+
                     default:
                         // new DB, nothing special to do
                         nUpgradeDBVersion = nCurrentDBVersion;
