@@ -1090,9 +1090,15 @@ namespace WindowPlugins.GUITVSeries
                                 
                 if (aFullSeriesRetrieval || episodesList.Count > 0) 
                 {
-                    string[] lSeasons = series[DBOnlineSeries.cOnlineSeasonsAvailable].ToString().Split(',');
+                    int[] lSeasons = null;
+                    string lSeasonsAvailable = series[DBOnlineSeries.cOnlineSeasonsAvailable].ToString();
+                    
+                    if (!String.IsNullOrEmpty(lSeasonsAvailable))
+                    {
+                        lSeasons = Array.ConvertAll(lSeasonsAvailable.Split(','), s => int.Parse(s));
+                    }
 
-                    var lEpisodesParser = new GetEpisodes((string)series[DBSeries.cID], Array.ConvertAll(lSeasons, s => int.Parse(s)));
+                    var lEpisodesParser = new GetEpisodes((string)series[DBSeries.cID], lSeasons);
 
                     Worker.ReportProgress(0, new ParsingProgress(ParsingAction.IdentifyNewEpisodes, series[DBOnlineSeries.cPrettyName], ++nIndex, lSeries.Count, series, null));
                     if (lEpisodesParser.Results.Count > 0) 
@@ -1239,9 +1245,15 @@ namespace WindowPlugins.GUITVSeries
                 {
                     Worker.ReportProgress(0, new ParsingProgress(ParsingAction.UpdateEpisodes, lSeries.ToString() + " [" + lEpisodes.Count.ToString() + " episodes]", ++i, lDistinctSeriesIds.Count, lSeries, null));
 
-                    string[] lSeasons = lSeries[DBOnlineSeries.cOnlineSeasonsAvailable].ToString().Split(',');
+                    int[] lSeasons = null;
+                    string lSeasonsAvailable = lSeries[DBOnlineSeries.cOnlineSeasonsAvailable].ToString();
 
-                    MatchOnlineToLocalEpisodes(lSeries, lEpisodes, new GetEpisodes(seriesid, Array.ConvertAll(lSeasons, s => int.Parse(s))));
+                    if (!String.IsNullOrEmpty(lSeasonsAvailable))
+                    {
+                        lSeasons = Array.ConvertAll(lSeasonsAvailable.Split(','), s => int.Parse(s));
+                    }
+
+                    MatchOnlineToLocalEpisodes(lSeries, lEpisodes, new GetEpisodes(seriesid, lSeasons));
                 }
             }
             

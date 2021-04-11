@@ -41,6 +41,11 @@ namespace WindowPlugins.GUITVSeries
         {
             if (Int32.TryParse(aSeriesID, out int lSeriesId) && lSeriesId > 0)
             {
+                if (aSeasons == null)
+                {
+                    aSeasons = DBSeason.Get(lSeriesId).Select(s => (int)s[DBSeason.cIndex]).ToArray();
+                }
+
                 foreach (int season in aSeasons)
                 {
                     DoWork(lSeriesId, season);
@@ -52,6 +57,7 @@ namespace WindowPlugins.GUITVSeries
         {
             // we can only query for episodes per season at TMDb
             TmdbSeasonDetail lSeason = TmdbAPI.TmdbAPI.GetSeasonDetail(aSeriesID, aSeason);
+            if (lSeason == null) return;
 
             foreach (TmdbEpisodeDetail epsiode in lSeason.Episodes)
             {
