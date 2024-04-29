@@ -164,6 +164,7 @@ jobs:
       - name: Add Badges to Release Version Description
         if: ${{ success() && needs.changes.outputs.changes == 'true' }}
         run: |
+          ECHO. >> description.txt
           ECHO [![Downloads](https://img.shields.io/github/downloads/Mediaportal-Plugin-Team/mptvseries/v${{steps.version.outputs.version}}/total)](https://github.com/Mediaportal-Plugin-Team/mptvseries/releases/tag/v${{steps.version.outputs.version}}) [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md) >> description.txt
         working-directory: ${{ github.workspace }}\MPEI
         shell: cmd
