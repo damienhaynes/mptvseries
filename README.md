@@ -1,5 +1,12 @@
 # What is MP-TVSeries #
 
+[![MP AnyCPU](https://img.shields.io/badge/MP-AnyCPU-blue?logo=windows&logoColor=white)](https://github.com/Mediaportal-Plugin-Team/mptvseries/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Mediaportal-Plugin-Team/mptvseries/build.yml?logo=github)](https://github.com/Mediaportal-Plugin-Team/mptvseries/actions)
+[![GitHub](https://img.shields.io/github/license/Mediaportal-Plugin-Team/mptvseries?color=blue)](https://github.com/Mediaportal-Plugin-Team/mptvseries/blob/master/LICENSE)
+[![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/Mediaportal-Plugin-Team/mptvseries?include_prereleases)](https://github.com/Mediaportal-Plugin-Team/mptvseries/releases)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/downloads-pre/Mediaportal-Plugin-Team/mptvseries/latest/total?label=release@downloads)](https://github.com/Mediaportal-Plugin-Team/mptvseries/releases)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+
 MP-TVSeries is a popular TV Series plug-in for MediaPortal, an open-source media center application. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online to thetvdb.com and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.
