@@ -60,3 +60,4 @@
 /ConfigLauncher/bin/Debug/Utils.dll
 /ConfigLauncher/obj/Release/*.CopyComplete
 /ConfigLauncher/obj/Debug/*.CopyComplete
+/ConfigLauncher/obj/

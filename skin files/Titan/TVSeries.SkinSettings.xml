@@ -60,7 +60,19 @@
 	<videoplayimages import="true">
 		<property>
 			<name>TVSeries.Play.ClearArt</name>
-			<value><![CDATA[thumbs\ClearArt\<Series.ID>.png]]></value>
+			<value><![CDATA[thumbs\ClearArt\Series\<Series.ID>.png]]></value>
+		</property>
+		<property>
+			<name>TVSeries.Play.ClearLogo</name>
+			<value><![CDATA[thumbs\ClearLogo\Series\<Series.ID>.png]]></value>
+		</property>
+		<property>
+			<name>TVSeries.Play.CD</name>
+			<value><![CDATA[thumbs\CDArt\Series\<Series.ID>.png]]></value>
+		</property>
+		<property>
+			<name>TVSeries.Play.CDSeason</name>
+			<value><![CDATA[thumbs\CDArt\Seasons\<Series.ID>_s<Season.SeasonIndex>.png]]></value>
 		</property>
 		<!-- You can define multiple properties -->
 	</videoplayimages>
@@ -98,6 +110,7 @@
 <Enabled>1<Format><Episode.InfoPanelLine1Value><FormatAs>Eval(Round(<Episode.Rating>*10)/10)
 <Enabled>1<Format><Episode.InfoPanelLine7Value><FormatAs>Rated<Episode.myRating>.png
 <Enabled>1<Format><Episode.InfoPanelLine8Value><FormatAs>(Eval(FormatThousands(<Episode.RatingCount>)) Trans(Votes))
+<Enabled>1<Format><Episode.InfoPanelRatingThumb><FormatAs>RatingEval(Round(<Episode.Rating>)).png
 <Enabled>1<Format><Episode.InfoPanelLine2Key><FormatAs>FILE SIZE
 <Enabled>1<Format><Episode.InfoPanelLine2Value><FormatAs><Episode.FileSize>
 <Enabled>1<Format><Episode.InfoPanelLine3Key><FormatAs>video INFO
@@ -169,20 +182,20 @@ skin\Titan\Media\Logos\resolution\540.png;-;<Episode.videoWidth>;-;=;-;960;-;AND
 skin\Titan\Media\Logos\resolution\720p.png;-;<Episode.videoWidth>;-;=;-;1280;-;OR;-;<Episode.videoHeight>;-;=;-;720;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\resolution\1080p.png;-;<Episode.videoWidth>;-;=;-;1920;-;OR;-;<Episode.videoHeight>;-;=;-;1080;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\resolution\4K.png;-;<Episode.videoWidth>;-;=;-;3840;-;OR;-;<Episode.videoHeight>;-;=;-;2160;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Titan\Media\Logos\resolution\widescreen.png;-;<Episode.VideoAspectRatio>;-;<;-;1.9;-;AND;-;<Episode.VideoAspectRatio>;-;>=;-;1.5;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Titan\Media\Logos\resolution\fullscreen.png;-;<Episode.VideoAspectRatio>;-;<;-;1.5;-;AND;-;<Episode.VideoAspectRatio>;-;>;-;1.2;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Titan\Media\Logos\aspectratio\widescreen.png;-;<Episode.VideoAspectRatio>;-;<;-;1.9;-;AND;-;<Episode.VideoAspectRatio>;-;>=;-;1.5;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Titan\Media\Logos\aspectratio\fullscreen.png;-;<Episode.VideoAspectRatio>;-;<;-;1.5;-;AND;-;<Episode.VideoAspectRatio>;-;>;-;1.2;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\h264.png;-;<Episode.VideoFormat>;-;=;-;AVC;-;OR;-;<Episode.VideoCodec>;-;=;-;H264;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\h265.png;-;<Episode.VideoFormat>;-;=;-;HEVC;-;OR;-;<Episode.VideoCodec>;-;=;-;H265;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\mpeg2.png;-;<Episode.VideoFormat>;-;=;-;MPEG Video;-;AND;-;<Episode.VideoFormatProfile>;-;contains;-;Main;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\divx.png;-;<Episode.VideoCodec>;-;contains;-;DIVX;-;OR;-;<Episode.VideoCodec>;-;contains;-;DX50;-;OR;-;<Episode.VideoCodec>;-;contains;-;DIV3;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\xvid.png;-;<Episode.VideoCodec>;-;contains;-;XVID;-;OR;-;<Episode.VideoCodec>;-;contains;-;MPG4;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Titan\Media\Logos\video\vc-1.png;-;<Episode.VideoFormat>;-;contains;-;VC-1;-;OR;-;<Episode.VideoCodec>;-;contains;-;VC1;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Titan\Media\Logos\video\vc-1.png;-;<Episode.VideoCodec>;-;!=;-;H264;-;AND;-;<Episode.VideoFormat>;-;contains;-;VC-1;-;OR;-;<Episode.VideoCodec>;-;contains;-;VC1;<Restrict:Episode>
 skin\Titan\Media\Logos\video\wmv.png;-;<Episode.VideoCodec>;-;contains;-;WMV;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\vp6f.png;-;<Episode.VideoFormat>;-;=;-;VP6;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\video\real.png;-;<Episode.VideoCodec>;-;contains;-;REAL;-;AND;-;;-;=;-;;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\ac-3.png;-;<Episode.AudioFormat>;-;=;-;AC-3;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\e-ac-3.png;-;<Episode.AudioFormat>;-;=;-;E-AC-3;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Titan\Media\Logos\audio\eac3 atmos.png;-;<Episode.AudioFormat>;-;=;-;eac3 atmos;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Titan\Media\Logos\audio\eac3atmos.png;-;<Episode.AudioFormat>;-;=;-;eac3 atmos;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\dts.png;-;<Episode.AudioFormat>;-;=;-;DTS;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\dtshd_ma.png;-;<Episode.AudioFormat>;-;=;-;DTS;-;AND;-;<Episode.AudioFormatProfile>;-;=;-;MA;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\dtshd_hra.png;-;<Episode.AudioFormat>;-;=;-;DTS;-;AND;-;<Episode.AudioFormatProfile>;-;=;-;HRA;-;AND;-;;-;=;-;;-;<Restrict:Episode>
@@ -192,11 +205,11 @@ skin\Titan\Media\Logos\audio\flac.png;-;<Episode.AudioFormat>;-;contains;-;FLAC;
 skin\Titan\Media\Logos\audio\aac.png;-;<Episode.AudioFormat>;-;=;-;AAC;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\vorbis.png;-;<Episode.AudioFormat>;-;=;-;VORBIS;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\wma.png;-;<Episode.AudioFormat>;-;=;-;WMA;-;AND;-;;-;=;-;;-;<Restrict:Episode>
+skin\Titan\Media\Logos\audio\RA.png;-;<Episode.AudioFormat>;-;contains;-;REAL;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\2.0.png;-;<Episode.AudioChannels>;-;=;-;2;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\5.1.png;-;<Episode.AudioChannels>;-;=;-;6;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\6.1.png;-;<Episode.AudioChannels>;-;=;-;7;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\audio\7.1.png;-;<Episode.AudioChannels>;-;=;-;8;-;AND;-;;-;=;-;;-;<Restrict:Episode>
-skin\Titan\Media\Logos\audio\RA.png;-;<Episode.AudioFormat>;-;contains;-;REAL;-;AND;-;;-;=;-;;-;<Restrict:Episode>
 skin\Titan\Media\Logos\subtitles.png;-;<Episode.AvailableSubtitles>;-;=;-;1;-;OR;-;<Episode.EpisodeFilename>;-;contains;-;subbed.;-;AND;-;;-;=;-;;-;
 skin\Titan\Media\Logos\nosubtitles.png;-;<Episode.AvailableSubtitles>;-;=;-;0;-;AND;-;;-;=;-;;-;
 ]]></logos>

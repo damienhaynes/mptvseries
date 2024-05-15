@@ -2,6 +2,100 @@
 <window>
   <controls>    
   	
+	<!-- ClearArt -->
+   	<control>
+   		<description>ClearArt</description>
+   		<type>image</type>
+   		<id>159357</id>
+   		<posX>1550</posX>
+   		<posY>150</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<texture>#fanarthandler.tvseries.clearart.selected</texture>
+   		<visible>![facadeview.filmstrip|facadeview.coverflow]</visible>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+   	<control>
+   		<description>ClearArt</description>
+   		<type>image</type>
+   		<id>159358</id>
+   		<posX>1550</posX>
+   		<posY>440</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<visible>[facadeview.filmstrip|facadeview.coverflow]</visible>
+		<texture>#fanarthandler.tvseries.clearart.selected</texture>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+	<!-- ClearLogo -->
+   	<control>
+   		<description>ClearLogo</description>
+   		<type>image</type>
+   		<id>0</id>
+   		<posX>1550</posX>
+   		<posY>150</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<texture>#fanarthandler.tvseries.clearlogo.selected</texture>
+   		<visible>![facadeview.filmstrip|facadeview.coverflow|control.hasthumb(159357)]</visible>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+   	<control>
+   		<description>ClearLogo</description>
+   		<type>image</type>
+   		<id>0</id>
+   		<posX>1550</posX>
+   		<posY>440</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<texture>#fanarthandler.tvseries.clearlogo.selected</texture>
+   		<visible>[facadeview.filmstrip|facadeview.coverflow]+!control.hasthumb(159358)</visible>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+	<!-- Network -->
+    <control Style="smallTitle">
+		<type>label</type>
+		<description>Network</description>
+		<id>0</id>
+		<posX>-555</posX>
+		<posY>-555</posY>
+		<label>#TVSeries.Series.Network</label>
+    </control>
+
+    <control>
+  	  <description>Network Logo</description>
+      <type>image</type>
+      <id>0</id>
+   	  <posX>265</posX>
+      <posY>920</posY>
+      <width>99</width>
+      <height>65</height>
+      <texture>#fanarthandler.movie.studios.selected.all</texture>
+      <keepaspectratio>yes</keepaspectratio>
+	  <visible>![facadeview.filmstrip|facadeview.coverflow]</visible>
+    </control>
+
+    <control>
+  	  <description>Network Logo</description>
+      <type>image</type>
+      <id>0</id>
+   	  <posX>910</posX>
+      <posY>30</posY>
+      <width>99</width>
+      <height>65</height>
+      <texture>#fanarthandler.movie.studios.selected.all</texture>
+      <keepaspectratio>yes</keepaspectratio>
+	  <visible>[facadeview.filmstrip|facadeview.coverflow]</visible>
+    </control>
+
 	<!-- 			:: DVD COVER (SEASON/EPISODE) :: -->
     
 	<!--            :: LISTVIEW ::            -->
@@ -30,6 +124,7 @@
 		<height>563</height>
 		<texture>#TVSeries.SeriesPoster</texture>
 		<visible>[control.isvisible(1237)+control.isvisible(1242)]+[facadeview.list|facadeview.largeicons]</visible>
+		<animation effect="fade" time="1000">VisibleChange</animation>
 		<animation effect="fade" time="250">WindowOpen</animation>
 		<animation effect="fade" time="250">WindowClose</animation>
 	</control>
@@ -44,6 +139,7 @@
 		<height>563</height>
 		<texture>#TVSeries.SeasonPoster</texture>
 		<visible>control.isvisible(1238)+facadeview.list</visible>
+		<animation effect="fade" time="1000">VisibleChange</animation>
 		<animation effect="fade" time="250">WindowOpen</animation>
 		<animation effect="fade" time="250">WindowClose</animation>
 	</control>
@@ -190,7 +286,7 @@
 
 	<control Style="InfoValueSmall">
 		<description>FirstAired Value (Series)</description>
-		<type>label</type>
+		<type>fadelabel</type>
 		<label>#TVSeries.Series.InfoPanelLine2Value</label>
 		<id>0</id>
 		<posX>798</posX>
@@ -730,6 +826,7 @@
 		<height>563</height>
 		<texture>#TVSeries.SeasonPoster</texture>
 		<visible>facadeview.list+Control.IsVisible(1239)+Control.HasThumb(68)</visible>
+		<animation effect="fade" time="1000">VisibleChange</animation>
 		<animation effect="fade" time="250">WindowOpen</animation>
 		<animation effect="fade" time="250">WindowClose</animation>
 	</control>
@@ -758,6 +855,7 @@
 		<height>213</height>
 		<texture>#TVSeries.EpisodeImage</texture>
 		<visible>facadeview.list+Control.IsVisible(1239)</visible>
+		<animation effect="fade" time="1000">VisibleChange</animation>
 	  <animation effect="fade" time="250">WindowOpen</animation>
 	  <animation effect="fade" time="250">WindowClose</animation>
 	</control>

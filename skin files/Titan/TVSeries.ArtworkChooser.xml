@@ -5,7 +5,7 @@
 	<allowoverlay>yes</allowoverlay>
   <define>#header.label:#TVSeries.Translation.Artwork.Label</define>
 	<controls>
-    
+
     <control>
       <description>DEFAULT BACKGROUND</description>
       <type>image</type>
@@ -143,6 +143,64 @@
 		  <animation effect="fade" time="250">WindowClose</animation>
     </control>
 
+	<!-- ClearArt -->
+   	<control>
+   		<description>ClearArt</description>
+   		<type>image</type>
+   		<id>159357</id>
+   		<posX>1550</posX>
+   		<posY>150</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<texture>#fanarthandler.tvseries.clearart.selected</texture>
+   		<visible>![facadeview.filmstrip|facadeview.coverflow]</visible>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+   	<control>
+   		<description>ClearArt</description>
+   		<type>image</type>
+   		<id>159358</id>
+   		<posX>1550</posX>
+   		<posY>440</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<visible>[facadeview.filmstrip|facadeview.coverflow]</visible>
+		<texture>#fanarthandler.tvseries.clearart.selected</texture>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+	<!-- ClearLogo -->
+   	<control>
+   		<description>ClearLogo</description>
+   		<type>image</type>
+   		<id>0</id>
+   		<posX>1550</posX>
+   		<posY>150</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<texture>#fanarthandler.tvseries.clearlogo.selected</texture>
+   		<visible>![facadeview.filmstrip|facadeview.coverflow|control.hasthumb(159357)]</visible>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
+   	<control>
+   		<description>ClearLogo</description>
+   		<type>image</type>
+   		<id>0</id>
+   		<posX>1550</posX>
+   		<posY>440</posY>
+   		<width>250</width>
+   		<height>140</height>
+   		<texture>#fanarthandler.tvseries.clearlogo.selected</texture>
+   		<visible>[facadeview.filmstrip|facadeview.coverflow]+!control.hasthumb(159358)</visible>
+		<animation effect="fade" time="500">WindowOpen</animation>
+		<animation effect="fade" time="250">WindowClose</animation>
+   	</control>  
+
   	<control>
   		<type>actiongroup</type>
   		<description>action menu</description>
@@ -252,7 +310,7 @@
 
 		<!-- Facade -->
 		<include condition="#(or(eq(#TVSeries.Artwork.Type,'SeriesPoster'),eq(#TVSeries.Artwork.Type,'SeasonPoster')))">TVSeries.ArtworkChooser.Posters.xml</include>
-		<include condition="#(or(eq(#TVSeries.Artwork.Type,'SeriesFanart'),eq(#TVSeries.Artwork.Type,'EpisodeThumb')))">TVSeries.ArtworkChooser.Panels.xml</include>
+		<include condition="#(eq(#TVSeries.Artwork.Type,'SeriesFanart'))">TVSeries.ArtworkChooser.Panels.xml</include>
 		<include condition="#(eq(#TVSeries.Artwork.Type,'SeriesBanner'))">TVSeries.ArtworkChooser.Banners.xml</include>
 
 		<import>common.overlay.xml</import>

@@ -3,8 +3,10 @@
   <id>9811</id>
   <defaultcontrol>50</defaultcontrol>
   <allowoverlay>yes</allowoverlay>
+  <define>#useSelectedFanart:Yes</define>
   <define>#header.label:#TVSeries.Translation.Series_Plural.Label</define>
   <controls>
+  <!-- #TVSeries.Series.ID -->
     <!-- Import Dummy Controls to handle visibility -->
     <import>TVSeries.dummy.xml</import>
     <!-- ********************** BACKGROUNDS************************************** -->

@@ -76,7 +76,7 @@
 		<type>label</type>
     <label>#(L(97))#TVSeries.Translation.Season.Label</label>
     <id>0</id>
-		<posX>144</posX>
+		<posX>72</posX>
     <posY>94</posY>
     <align>left</align>
     <textcolor>FFFFFFFF</textcolor>
