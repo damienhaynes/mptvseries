@@ -44,5 +44,5 @@ using System.Runtime.InteropServices;
 // 1st/2nd Digit reprsents the Major Version, this should increment whenever any new enhancements have been made. 3rd Number should be reset.
 // 3rd Digit represents the Maintenance Number (Hot Fix), this should increment by one each update release
 // 4th Digit represents the build/patch revision
-[assembly: AssemblyVersion( "4.5.0.999" )]
-[assembly: AssemblyFileVersion( "4.5.0.999" )]
+[assembly: AssemblyVersion("4.5.0.999")]
+[assembly: AssemblyFileVersion("4.5.0.999")]

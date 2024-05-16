@@ -3100,7 +3100,7 @@ public class Script
     <Author>ltfearme</Author>
     <HomePage>https://github.com/damienhaynes/mptvseries</HomePage>
     <ForumPage>https://forum.team-mediaportal.com/forums/my-tvseries.162/</ForumPage>
-    <UpdateUrl>https://raw.githubusercontent.com/Mediaportal-Plugin-Team/moving-pictures/master/Setup/update.xml</UpdateUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/Mediaportal-Plugin-Team/mptvseries/master/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>4</Major>
       <Minor>5</Minor>
