@@ -3115,7 +3115,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
     <VersionDescription>* Titan Skin update</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/Mediaportal-Plugin-Team/mptvseries/releases/download/v[Version]/MP-TVSeries-[Version].mpe1</OnlineLocation>
-    <ReleaseDate>2024-05-16T20:20:20</ReleaseDate>
+    <ReleaseDate>2024-05-16T23:23:23</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <PlatformCompatibility>AnyCPU</PlatformCompatibility>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
