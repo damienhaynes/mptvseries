@@ -341,5 +341,173 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       </ProjectSettings>
       <IsSkin>false</IsSkin>
     </PackageClass>
+    <PackageClass>
+      <Version>2.0</Version>
+      <Groups>
+        <Items>
+          <GroupItem Name="Main">
+            <DisplayName>Main</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Main</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TraktPlugin">
+            <DisplayName>TraktPlugin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TraktPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ExtensionsPlugin">
+            <DisplayName>ExtensionsPlugin</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>ExtensionsPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="Language">
+            <DisplayName>Language</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>Language</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="LaunchConfig">
+            <DisplayName>LaunchConfig</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>LaunchConfig</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="ShortcutUrls">
+            <DisplayName>ShortcutUrls</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>ShortcutUrls</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TrailersPlugin">
+            <DisplayName>TrailersPlugin</DisplayName>
+            <DefaulChecked>false</DefaulChecked>
+            <Description>TrailersPlugin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="TitanSkin">
+            <DisplayName>TitanSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>TitanSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+          <GroupItem Name="StreamedMPSkin">
+            <DisplayName>StreamedMPSkin</DisplayName>
+            <DefaulChecked>true</DefaulChecked>
+            <Description>StreamedMPSkin</Description>
+            <Files>
+              <Items />
+            </Files>
+          </GroupItem>
+        </Items>
+      </Groups>
+      <Sections>
+        <Items />
+      </Sections>
+      <Dependencies>
+        <Items>
+          <DependencyItem>
+            <Type>MediaPortal</Type>
+            <Id />
+            <MinVersion>
+              <Major>1</Major>
+              <Minor>32</Minor>
+              <Build>100</Build>
+              <Revision>0</Revision>
+            </MinVersion>
+            <MaxVersion>
+              <Major>*</Major>
+              <Minor>*</Minor>
+              <Build>*</Build>
+              <Revision>*</Revision>
+            </MaxVersion>
+            <WarnOnly>false</WarnOnly>
+            <Message>Requires MediaPortal 1.32.100.0 or higher!</Message>
+            <Name>MediaPortal</Name>
+            <Condition>None</Condition>
+          </DependencyItem>
+        </Items>
+      </Dependencies>
+      <PluginDependencies>
+        <Items />
+      </PluginDependencies>
+      <GeneralInfo>
+        <Name>MP-TVSeries</Name>
+        <Id>5e2777c3-966c-407f-b5a9-e51205b70b3e</Id>
+        <Author>ltfearme</Author>
+        <HomePage>https://github.com/damienhaynes/mptvseries</HomePage>
+        <ForumPage>https://forum.team-mediaportal.com/forums/my-tvseries.162/</ForumPage>
+        <UpdateUrl>https://raw.githubusercontent.com/Mediaportal-Plugin-Team/mptvseries/master/MPEI/update.xml</UpdateUrl>
+        <Version>
+          <Major>4</Major>
+          <Minor>5</Minor>
+          <Build>0</Build>
+          <Revision>1688</Revision>
+        </Version>
+        <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
+
+
+
+The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
+        <VersionDescription>* Titan Skin update</VersionDescription>
+        <DevelopmentStatus>Stable</DevelopmentStatus>
+        <OnlineLocation>https://github.com/Mediaportal-Plugin-Team/mptvseries/releases/download/v4.5.0.1688/MP-TVSeries-4.5.0.1688.mpe1</OnlineLocation>
+        <ReleaseDate>2024-05-16T20:41:36.17074+00:00</ReleaseDate>
+        <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
+        <PlatformCompatibility>AnyCPU</PlatformCompatibility>
+        <Location>.\Release\[Name]-[Version].mpe1</Location>
+        <Params>
+          <Items>
+            <SectionParam Name="Online Icon">
+              <Value>https://raw.githubusercontent.com/damienhaynes/mptvseries/master/MP-TVSeries/Resources/Images/icon.png</Value>
+              <ValueType>String</ValueType>
+              <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+            </SectionParam>
+            <SectionParam Name="Configuration file">
+              <Value>%Base%\MP-TVSeries-Configuration.exe</Value>
+              <ValueType>Template</ValueType>
+              <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+            </SectionParam>
+            <SectionParam Name="Online Screenshots">
+              <Value>https://www.team-mediaportal.com/media/com_mtree/images/listings/o/148.jpg;https://www.team-mediaportal.com/media/com_mtree/images/listings/o/149.jpg</Value>
+              <ValueType>String</ValueType>
+              <Description>Online stored screenshot urls separated by ; </Description>
+            </SectionParam>
+            <SectionParam Name="Force to uninstall on update">
+              <Value>YES</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+      </GeneralInfo>
+      <UniqueFileList>
+        <Items />
+      </UniqueFileList>
+      <ProjectSettings>
+        <FolderGroups />
+      </ProjectSettings>
+      <IsSkin>false</IsSkin>
+    </PackageClass>
   </Items>
 </ExtensionCollection>
