@@ -17,10 +17,10 @@
               <ZipFileName>Installer{CopyFile}\{0bc8f04c-4da4-4299-bad4-aa3444d3aa57}-MP-TVSeries.dll</ZipFileName>
               <DestinationFilename>%Plugins%\Windows\MP-TVSeries.dll</DestinationFilename>
             </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="PlatformTarget_x86">
               <Param1 />
               <UpdateOption>OverwriteIfOlder</UpdateOption>
-              <LocalFileName>..\ConfigLauncher\bin\Release\MP-TVSeries-Configuration.exe</LocalFileName>
+              <LocalFileName>..\ConfigLauncher\bin\x86\Release\MP-TVSeries-Configuration.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{193d9414-f8cc-41c9-9a42-445266c8c03f}-MP-TVSeries-Configuration.exe</ZipFileName>
               <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
             </FileItem>
@@ -30,6 +30,13 @@
               <LocalFileName>..\MP-TVSeries\bin\Release\MP-TVSeries.pdb</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{00598103-ca29-49b2-8b5e-ae9be724c51f}-MP-TVSeries.pdb</ZipFileName>
               <DestinationFilename>%Plugins%\Windows\MP-TVSeries.pdb</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="PlatformTarget_x64">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\ConfigLauncher\bin\x64\Release\MP-TVSeries-Configuration.exe</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4b9c98f4-6610-467d-bca2-bb31cf21f974}-MP-TVSeries-Configuration.exe</ZipFileName>
+              <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -3066,10 +3073,10 @@ public class Script
         <Type>MediaPortal</Type>
         <Id />
         <MinVersion>
-          <Major>*</Major>
-          <Minor>*</Minor>
-          <Build>*</Build>
-          <Revision>*</Revision>
+          <Major>1</Major>
+          <Minor>32</Minor>
+          <Build>100</Build>
+          <Revision>0</Revision>
         </MinVersion>
         <MaxVersion>
           <Major>*</Major>
@@ -3078,7 +3085,7 @@ public class Script
           <Revision>*</Revision>
         </MaxVersion>
         <WarnOnly>false</WarnOnly>
-        <Message />
+        <Message>Requires MediaPortal 1.32.100.0 or higher!</Message>
         <Name>MediaPortal</Name>
         <Condition>None</Condition>
       </DependencyItem>
@@ -3096,8 +3103,8 @@ public class Script
     <UpdateUrl>https://raw.githubusercontent.com/damienhaynes/mptvseries/master/MPEI/update.xml</UpdateUrl>
     <Version>
       <Major>4</Major>
-      <Minor>3</Minor>
-      <Build>6</Build>
+      <Minor>5</Minor>
+      <Build>0</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
@@ -3105,14 +3112,10 @@ public class Script
 
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed regression when loading recently added view containing episodes that have no online series matched from import;
-
-* Fixed MediaInfo not scanned during import on clean databases;
-
-* Escape series names during search using an improved method, this should provide better online matches during import.</VersionDescription>
+    <VersionDescription>* Titan Skin update</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/Mediaportal-Plugin-Team/mptvseries/releases/download/v[Version]/MP-TVSeries-[Version].mpe1</OnlineLocation>
-    <ReleaseDate>2024-04-29T15:25:06</ReleaseDate>
+    <ReleaseDate>2024-05-16T15:25:06</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <PlatformCompatibility>AnyCPU</PlatformCompatibility>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
@@ -3160,7 +3163,7 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
-        <LocalFileName>..\ConfigLauncher\bin\Release\MP-TVSeries-Configuration.exe</LocalFileName>
+        <LocalFileName>..\ConfigLauncher\bin\x86\Release\MP-TVSeries-Configuration.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{193d9414-f8cc-41c9-9a42-445266c8c03f}-MP-TVSeries-Configuration.exe</ZipFileName>
         <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
       </FileItem>
@@ -3170,6 +3173,13 @@ The MP-TVSeries plugin will scan your hard drive (including network and removabl
         <LocalFileName>..\MP-TVSeries\bin\Release\MP-TVSeries.pdb</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{00598103-ca29-49b2-8b5e-ae9be724c51f}-MP-TVSeries.pdb</ZipFileName>
         <DestinationFilename>%Plugins%\Windows\MP-TVSeries.pdb</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true" Condition="None">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\ConfigLauncher\bin\x64\Release\MP-TVSeries-Configuration.exe</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4b9c98f4-6610-467d-bca2-bb31cf21f974}-MP-TVSeries-Configuration.exe</ZipFileName>
+        <DestinationFilename>%Base%\MP-TVSeries-Configuration.exe</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="false" Condition="None">
         <Param1 />
