@@ -23,6 +23,7 @@ IF NOT EXIST "%MSBUILD_PATH%" SET MSBUILD_PATH=%progpath%\Microsoft Visual Studi
 :: Prepare version
 for /f "tokens=*" %%a in ('git rev-list HEAD --count') do set REVISION=%%a 
 set REVISION=%REVISION: =%
+set /A REVISION=REVISION-1000
 "Tools\Tools\sed.exe" -i -r "s/(Assembly(File)?Version\(.[0-9]+\.[0-9]+\.[0-9]+\.)[0-9]+(.\))/\1%REVISION%\3/g" "MP-TVSeries\Properties\AssemblyInfo.cs"
 
 :: Build
