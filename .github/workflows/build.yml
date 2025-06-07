@@ -24,9 +24,9 @@ on:
 jobs:
   build:
     name: MP-TVSeries Plugin / Build
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
-      - name: Setup Visual Studio 2019
+      - name: Setup Visual Studio 2022
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: 16.11
@@ -97,7 +97,7 @@ jobs:
 
   mpe:
     name: MP-TVSeries Plugin / MPE
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs:
       - build
       - changes
