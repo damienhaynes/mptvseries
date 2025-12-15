@@ -55,7 +55,7 @@ jobs:
         shell: cmd
 
       - name: Upload Artifact / Plugin
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ success() }}
         with:
           name: MP-TVSeries
@@ -147,7 +147,7 @@ jobs:
         shell: cmd
 
       - name: Upload Artifact / MPE1
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ success() }}
         with:
           name: MP-TVSeries MPE1
@@ -157,7 +157,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload Artifact / MPE XML
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ success() && needs.changes.outputs.changes == 'true' }}
         with:
           name: MP-TVSeries XML
@@ -189,7 +189,7 @@ jobs:
         shell: cmd
 
       - name: Upload Artifact / Version Description
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: ${{ success() && needs.changes.outputs.changes == 'true' }}
         with:
           name: MP-TVSeries Version Description
