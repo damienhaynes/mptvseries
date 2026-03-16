@@ -227,7 +227,7 @@ jobs:
           add: '${{ github.workspace }}/MPEI/update.xml'
 
       - name: Delete XML Artifact
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: MP-TVSeries XML
           failOnError: false
@@ -274,13 +274,13 @@ jobs:
             release-files/*.mpe1
 
       - name: Delete MPE1 Artifact
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: MP-TVSeries MPE1
           failOnError: false
 
       - name: Delete Version Description Artifact
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: MP-TVSeries Version Description
           failOnError: false
