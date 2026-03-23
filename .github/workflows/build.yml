@@ -221,7 +221,7 @@ jobs:
           path: ${{ github.workspace }}/MPEI/
 
       - name: Update / MPE1 XML
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           message: 'MP-TVSeries ${{needs.mpe.outputs.version}} / Release'
           add: '${{ github.workspace }}/MPEI/update.xml'
