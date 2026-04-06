@@ -22,18 +22,16 @@
 #endregion
 
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SQLite.NET;
-using MediaPortal.Database;
 
 namespace WindowPlugins.GUITVSeries
 {
     public class DBReplacements : DBTable
     {
         public const String cTableName = "replacements";
-        public const int cDBVersion = 6;
+        public const int cDBVersion = 7;
 
         public const String cIndex = "ID";
         public const String cEnabled = "enabled";
@@ -53,8 +51,6 @@ namespace WindowPlugins.GUITVSeries
             s_FieldToDisplayNameMap.Add(cToReplace, "Replace this..");
             s_FieldToDisplayNameMap.Add(cWith, "With this");
             s_FieldToDisplayNameMap.Add(cIsRegex, "Is Regex");
-
-            DBReplacements dummy = new DBReplacements();
 
             int nCurrentDBVersion = cDBVersion;
             int nUpgradeDBVersion = DBOption.GetOptions(DBOption.cDBReplacementsVersion);
@@ -235,12 +231,26 @@ namespace WindowPlugins.GUITVSeries
 
                         nUpgradeDBVersion++;
                         break;
+                    case 6:
+                      newIndex = DBReplacements.GetAll().Length;
+
+                      replacement[ DBReplacements.cIndex ] = newIndex++;
+                      replacement[ DBReplacements.cEnabled ] = 1;
+                      replacement[ DBReplacements.cBefore ] = 1;
+                      replacement[ DBReplacements.cTagEnabled ] = 1;
+                      replacement[ DBReplacements.cToReplace ] = "x265";
+                      replacement[ DBReplacements.cWith ] = @"<empty>";
+                      replacement[ DBReplacements.cIsRegex ] = false;
+                      replacement.Commit();
+
+                      nUpgradeDBVersion++;
+                      break;    
                     default:
                         {
                             // no replacements in the db => put the default ones
                             AddDefaults();
 
-                            nUpgradeDBVersion=6;
+                            nUpgradeDBVersion = cDBVersion;
                         }
                         break;
                 }
@@ -309,8 +319,16 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cToReplace] = "x264";
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
-            
-            replacement[DBReplacements.cIndex] = "7";
+
+            replacement[ DBReplacements.cIndex ] = "7";
+            replacement[ DBReplacements.cEnabled ] = "1";
+            replacement[ DBReplacements.cBefore ] = "1";
+            replacement[ DBReplacements.cTagEnabled ] = "1";
+            replacement[ DBReplacements.cToReplace ] = "x265";
+            replacement[ DBReplacements.cWith ] = @"<empty>";
+            replacement.Commit();
+
+            replacement[DBReplacements.cIndex] = "8";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -318,7 +336,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "8";
+            replacement[DBReplacements.cIndex] = "9";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -326,14 +344,14 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "9";
+            replacement[DBReplacements.cIndex] = "10";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
             replacement[DBReplacements.cToReplace] = "HR.HDTV";
             replacement.Commit();
 
-            replacement[DBReplacements.cIndex] = "10";
+            replacement[DBReplacements.cIndex] = "11";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -341,7 +359,7 @@ namespace WindowPlugins.GUITVSeries
             replacement[DBReplacements.cWith] = @"<empty>";
             replacement.Commit();
             
-            replacement[DBReplacements.cIndex] = "11";
+            replacement[DBReplacements.cIndex] = "12";
             replacement[DBReplacements.cEnabled] = "1";
             replacement[DBReplacements.cTagEnabled] = "1";
             replacement[DBReplacements.cBefore] = "0";
@@ -353,7 +371,7 @@ namespace WindowPlugins.GUITVSeries
 
             // low roman numerals preceded by Part or pt (for eg. Part 4 => 1x04)
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 12;
+            replacement[DBReplacements.cIndex] = 13;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -368,7 +386,7 @@ namespace WindowPlugins.GUITVSeries
 
             // Part n or Part n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 13;
+            replacement[DBReplacements.cIndex] = 14;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -383,7 +401,7 @@ namespace WindowPlugins.GUITVSeries
 
             // n of m - not preceded by 1x01 or s1e01
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 14;
+            replacement[DBReplacements.cIndex] = 15;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -397,7 +415,7 @@ namespace WindowPlugins.GUITVSeries
             catch (Exception) { }
 
             replacement = new DBReplacements();
-            replacement[DBReplacements.cIndex] = 15;
+            replacement[DBReplacements.cIndex] = 16;
             replacement[DBReplacements.cEnabled] = 1;
             replacement[DBReplacements.cTagEnabled] = 0;
             replacement[DBReplacements.cBefore] = "1";
@@ -409,7 +427,6 @@ namespace WindowPlugins.GUITVSeries
                 replacement.Commit();
             }
             catch (Exception) { }
-
         }
 
         public static String PrettyFieldName(String sFieldName)
