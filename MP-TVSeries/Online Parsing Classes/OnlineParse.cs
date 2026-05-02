@@ -1920,22 +1920,25 @@ namespace WindowPlugins.GUITVSeries
             // get list of updated shows from trakt
             DateTime dteLastUpdated = DateTime.MinValue;
             string strLastUpdated = DBOption.GetOptions(DBOption.cTraktLastDateUpdated);
-            HashSet<string> recentSeries = new HashSet<string>();
+            var recentSeries = new HashSet<string>();
             IEnumerable<TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
 
             // ensure we set the TraktAPI client ID if we are using the configuration tool
             // dont't need to worry about this when running inside MP as it will be initialised by
             // the trakt plugin - we could register an ID for the tvseries plugin
-            if (Settings.isConfig)
+            if ( Settings.isConfig )
             {
-                TraktAPI.TraktAPI.ClientId = "49e6907e6221d3c7e866f9d4d890c6755590cf4aa92163e8490a17753b905e57";
-                using (MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings())
-                {
-                    // this should not be required but for some reason trakt is complaining.
-                    TraktAPI.TraktAPI.UserAccessToken = xmlreader.GetValueAsString("Trakt", "UserAccessToken", "");
-                }
+              TraktAPI.TraktAPI.ClientId = "";
+              using ( MediaPortal.Profile.Settings xmlreader = new MediaPortal.Profile.MPSettings() )
+              {
+                // this should not be required but for some reason trakt is complaining.
+                TraktAPI.TraktAPI.UserAccessToken = xmlreader.GetValueAsString( "Trakt", "UserAccessToken", "" );
+              }
+              // TODO: determine best way to handle this for the configuration tool
+              // the trakt plugin client id is currently "internal" so needs to change that or we need to register a client id for the tvseries plugin
+              return;
             }
- 
+
             #region Recently Updated Shows
             if (!string.IsNullOrEmpty(strLastUpdated) && !forceUpdate)
             {
@@ -1982,6 +1985,8 @@ namespace WindowPlugins.GUITVSeries
                 string tvdbId = series[DBSeries.cID];
                 string traktid = series[DBOnlineSeries.cTraktID];
                 string seriesName = series[DBOnlineSeries.cPrettyName];
+                
+                bool hasRating = !string.IsNullOrEmpty(series[DBOnlineSeries.cRating].ToString()) && series[DBOnlineSeries.cRating] != "0";
 
                 #region Trakt ID Lookup
                 if (string.IsNullOrEmpty(traktid))
@@ -2018,36 +2023,36 @@ namespace WindowPlugins.GUITVSeries
                     series.Commit();
                 }
                 #endregion
-                
+
                 #region Series Community Ratings
 
                 #region Update Check
                 // only update ratings for series if it is a series that has recently been updated on trakt.
                 // we don't want to update every series and underlying episode every sync!!!
                 // skip update check on a series if it was recently added
-                if (updatedShows != null && !recentSeries.Contains(tvdbId))
+                if ( updatedShows != null && !recentSeries.Contains( tvdbId ) )
                 {
-                    // if the series hasn't been updated recently continue on to next
-                    var updatedShow = updatedShows.FirstOrDefault(u => u.Show.Ids.Trakt.ToString() == traktid);
+                  // if the series hasn't been updated recently continue on to next
+                  // only if we already have a rating stored in the DB
+                  var updatedShow = updatedShows.FirstOrDefault( u => u.Show.Ids.Trakt.ToString() == traktid );
 
-                    if (updatedShow == null)
+                  if ( updatedShow == null && hasRating )
+                  {
+                    MPTVSeriesLog.Write( string.Format( "Skipping community ratings update for series, the series has not been found in the update list. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid ), MPTVSeriesLog.LogLevel.Debug );
+                    continue;
+                  }
+                  else if ( hasRating )
+                  {
+                    // check that the show updated_at is newer than last time we did an update
+                    if ( DateTime.TryParse( updatedShow?.UpdatedAt, out DateTime dteShowUpdated ) )
                     {
-                        MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been found in the update list. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}'", seriesName, tvdbId, traktid), MPTVSeriesLog.LogLevel.Debug);
+                      if ( dteShowUpdated.ToUniversalTime() < dteLastUpdated.ToUniversalTime() )
+                      {
+                        MPTVSeriesLog.Write( string.Format( "Skipping community ratings update for series, the series has not been updated recently. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}', Local Update Time = '{3}', Online Update Time = '{4}'", seriesName, tvdbId, traktid, dteLastUpdated, dteShowUpdated ), MPTVSeriesLog.LogLevel.Debug );
                         continue;
+                      }
                     }
-                    else
-                    {
-                        // check that the show updated_at is newer than last time we did an update
-                        DateTime dteShowUpdated;
-                        if (DateTime.TryParse(updatedShow.UpdatedAt, out dteShowUpdated))
-                        {
-                            if (dteShowUpdated.ToUniversalTime() < dteLastUpdated.ToUniversalTime())
-                            {
-                                MPTVSeriesLog.Write(string.Format("Skipping community ratings update for series, the series has not been updated recently. Title = '{0}', TVDb ID = '{1}', Trakt ID = '{2}', Local Update Time = '{3}', Online Update Time = '{4}'", seriesName, tvdbId, traktid, dteLastUpdated, DateTime.Parse(updatedShow.UpdatedAt)), MPTVSeriesLog.LogLevel.Debug);
-                                continue;
-                            }
-                        }
-                    }
+                  }
                 }
                 #endregion
 
