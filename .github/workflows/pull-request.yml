@@ -22,7 +22,7 @@ jobs:
           vs-version: 16.11
 
       - name: Git Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
