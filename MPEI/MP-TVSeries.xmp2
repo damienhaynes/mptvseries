@@ -1584,9 +1584,9 @@ public class Script
 {
     public static void Main(PackageClass packageClass, ActionItem actionItem)
     {
-        string dbPath = Path.Combine(MpeInstaller.TransformInRealPath("%Database%"), "TVSeriesDatabase4.db3");
+        string dbPath = Path.Combine(MpeCore.MpeInstaller.TransformInRealPath("%Database%"), "TVSeriesDatabase4.db3");
         if (!File.Exists(dbPath)) return;
-        string backupPath = Path.Combine(MpeInstaller.TransformInRealPath("%Database%"), "MP-TVSeries_Backup");
+        string backupPath = Path.Combine(MpeCore.MpeInstaller.TransformInRealPath("%Database%"), "MP-TVSeries_Backup");
         backupPath = Path.Combine(backupPath, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         string backupFile = Path.Combine(backupPath, "TVSeriesDatabase4.db3");
         try
@@ -1754,8 +1754,9 @@ public class Script
 
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Always fetch trakt community ratings if missing locally
-</VersionDescription>
+    <VersionDescription>* Ready for 1.39 Release
+
+* Always fetch trakt community ratings if missing locally</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/Mediaportal-Plugin-Team/mptvseries/releases/download/v[Version]/MP-TVSeries-[Version].mpe1</OnlineLocation>
     <ReleaseDate>2026-05-02T15:15:15</ReleaseDate>
