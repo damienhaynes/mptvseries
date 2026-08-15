@@ -326,7 +326,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
         private void FireOffSearch(IGrouping<string, parseResult> newSeries, DataGridViewRow row, string customString)
         {
             string toSearch = string.IsNullOrEmpty(customString) ? newSeries.Key : customString;
-            if(lastSearch.ContainsKey(row.Index))
+            int tvdbID = newSeries.FirstOrDefault()?.SeriesTVDBID ?? -1;
+            
+            if (lastSearch.ContainsKey(row.Index))
                 lastSearch[row.Index] = toSearch;
             else lastSearch.Add(row.Index, toSearch);
                         
@@ -341,9 +343,9 @@ namespace WindowPlugins.GUITVSeries.Configuration
                 {
                     // tell user we are now searching
                     SearchProgress(cSearching, null, row);
-                    GetSeries gs = new GetSeries(toSearch);
+                    var getSeriesParser = new GetSeries( toSearch, tvdbID );
                     // and give the results
-                    SearchProgress(toSearch, gs, row);
+                    SearchProgress(toSearch, getSeriesParser, row);
                 });
             
         }

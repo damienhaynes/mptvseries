@@ -109,15 +109,43 @@ namespace WindowPlugins.GUITVSeries
             return null;
         }
 
-        public GetSeries(String aSeriesName)
+        public GetSeries( String aSeriesName, int aTVDBId = -1 )
         {
+            XmlNode lNode;
+
+            // if we have already have a TVDBId, then we can just get the series directly
+            if ( aTVDBId > 0 )
+            {
+              lNode = Online_Parsing_Classes.OnlineAPI.UpdateSeries( aTVDBId.ToString() );
+              if ( lNode == null )
+                return;
+
+              var lSeries = new DBOnlineSeries();
+              foreach ( XmlNode propertyNode in lNode.SelectSingleNode( "Series" ).ChildNodes )
+              {
+                if ( DBOnlineSeries.s_OnlineToFieldMap.ContainsKey( propertyNode.Name ) )
+                {
+                  lSeries[ DBOnlineSeries.s_OnlineToFieldMap[ propertyNode.Name ] ] = propertyNode.InnerText;
+                }
+                else
+                {
+                  // we don't know that field, add it to the series table
+                  lSeries.AddColumn( propertyNode.Name, new DBField( DBField.cTypeString ) );
+                  lSeries[ propertyNode.Name ] = propertyNode.InnerText;
+                }
+              }
+              mListSeries.Add( lSeries );
+              PerfectMatch = lSeries;
+              return;
+            }
+
             string lUserLanguage = DBOption.GetOptions( DBOption.cOnlineLanguage );
 
             if (DBOption.GetOptions(DBOption.cOverrideSearchLanguageToEnglish))
                 lUserLanguage = "en";
 
             // search for series basis the user's language
-            XmlNode lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, lUserLanguage );
+            lNode = Online_Parsing_Classes.OnlineAPI.GetSeries( aSeriesName, lUserLanguage );
             if ( lNode == null ) return;
 
             // if we have no results from the user's language try English

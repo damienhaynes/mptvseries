@@ -815,6 +815,7 @@ namespace WindowPlugins.GUITVSeries
 
             int nIndex = 0;
             List<DBSeries> seriesList = DBSeries.Get(condition, false, false);
+        
             if (seriesList.Count > 0)            
             {
                 // Run Online update when needed
@@ -824,10 +825,11 @@ namespace WindowPlugins.GUITVSeries
             else
                 MPTVSeriesLog.Write("All Series are already identified", MPTVSeriesLog.LogLevel.Debug);
 
-            foreach (DBSeries series in seriesList) {
+            foreach (DBSeries series in seriesList)
+            {
                 if (worker.CancellationPending)
                     return;
-                
+
                 String sSeriesNameToSearch = series[DBSeries.cParsedName];                
                 DBOnlineSeries UserChosenSeries = null;
                 UserInputResultSeriesActionPair sap = null;
@@ -837,7 +839,44 @@ namespace WindowPlugins.GUITVSeries
 
                 if (preChosenSeriesPairs == null)
                 {
-                    UserChosenSeries = SearchForSeries(sSeriesNameToSearch, bNoExactMatch, mFeedback);
+                  int tvdbID = -1;
+
+                  // check if we have a series ID on disk that can be used to identify the series,
+                  // this is a local database ID that is stored in a .tvdb file
+                  List<DBEpisode> episodes = DBEpisode.Get( int.Parse( seriesList[ 0 ][ DBSeries.cID ] ) );
+
+                  // search for .tvdb file in the series episode folder
+                  // use the first episode to find the series folder and look for a .tvdb file
+                  if ( episodes.Count > 0 )
+                  {
+                    string filePath = episodes[ 0 ][ DBEpisode.cFilename ].ToString();
+                    string directory = Path.GetDirectoryName( filePath );
+
+                    string[] tvdbFiles = Directory.GetFiles( directory, "*.tvdb" );
+
+                    // If no .tvdb file was found in the episode folder, check the parent
+                    // (e.g. Series/Season 01 -> Series).
+                    if ( tvdbFiles.Length == 0 )
+                    {
+                      string parentDirectory = Directory.GetParent( directory )?.FullName;
+
+                      if ( !string.IsNullOrEmpty( parentDirectory ) )
+                        tvdbFiles = Directory.GetFiles( parentDirectory, "*.tvdb" );
+                    }
+
+                    if ( tvdbFiles.Length > 0 )
+                    {
+                      string tvdbFile = tvdbFiles[ 0 ];
+
+                      // skip online search if the .tvdb file is found, and use the series ID from the .tvdb filename to identify the series
+                      string tvdbFileName = Path.GetFileNameWithoutExtension( tvdbFile );
+                      MPTVSeriesLog.Write( $"Found {tvdbFile} file for {series[ DBSeries.cParsedName ]}", MPTVSeriesLog.LogLevel.Normal );
+
+                      int.TryParse( tvdbFileName, out tvdbID );
+                    }
+                  }
+
+                  UserChosenSeries = SearchForSeries( sSeriesNameToSearch, tvdbID, bNoExactMatch, mFeedback );
                 }
                 else if (sap != null && sap.RequestedAction == UserInputResults.SeriesAction.Approve)
                 {
@@ -2543,24 +2582,24 @@ namespace WindowPlugins.GUITVSeries
         #endregion
 
         #region SeriesHelpers
-        public static DBOnlineSeries SearchForSeries(string seriesName, bool bNoExactMatch, IFeedback feedback)
+        public static DBOnlineSeries SearchForSeries( string aSeriesName, int aTvdbID, bool aIsNoExactMatch, IFeedback aFeedback )
         {
-            string SelLang = string.Empty;
-            string nameToSearch = seriesName;
+            string selLang = string.Empty;
+            string nameToSearch = aSeriesName;
 
             while (true) 
             {
                 // query online db for possible matches
-                GetSeries GetSeriesParser = new GetSeries(nameToSearch);
+                var getSeriesParser = new GetSeries( nameToSearch, aTvdbID );
 
                 // try to find an exact match in our results, if found, return               
-                if (GetSeriesParser.PerfectMatch != null && !bNoExactMatch)
+                if (getSeriesParser.PerfectMatch != null && !aIsNoExactMatch)
                 {
-                    MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, GetSeriesParser.PerfectMatch.ToString(), GetSeriesParser.PerfectMatch[DBOnlineSeries.cID], GetSeriesParser.Results.Count));
-                    return GetSeriesParser.PerfectMatch;
+                    MPTVSeriesLog.Write(string.Format("\"{0}\" was automatically matched to \"{1}\" (SeriesID: {2}), there were a total of {3} matches returned from the Online Database", nameToSearch, getSeriesParser.PerfectMatch.ToString(), getSeriesParser.PerfectMatch[DBOnlineSeries.cID], getSeriesParser.Results.Count));
+                    return getSeriesParser.PerfectMatch;
                 }
 
-                MPTVSeriesLog.Write(string.Format("Found {0} possible matches for \"{1}\"", GetSeriesParser.Results.Count, nameToSearch));
+                MPTVSeriesLog.Write(string.Format("Found {0} possible matches for \"{1}\"", getSeriesParser.Results.Count, nameToSearch));
 
                 // User has four choices:
                 // 1) Pick a series from the list
@@ -2570,22 +2609,22 @@ namespace WindowPlugins.GUITVSeries
 
                 List<CItem> Choices = new List<CItem>();
                 Dictionary<int, DBOnlineSeries> uniqueSeriesIds = new Dictionary<int, DBOnlineSeries>();
-                foreach (DBOnlineSeries onlineSeries in GetSeriesParser.Results) // make them unique (each seriesID) - if possible in users lang
+                foreach (DBOnlineSeries onlineSeries in getSeriesParser.Results) // make them unique (each seriesID) - if possible in users lang
                 {
                     // Other language for the Series?
                     if (DBOption.GetOptions(DBOption.cOverrideLanguage))
                     {
                         //Get the prefered language for the Series.
-                        SelLang = Online_Parsing_Classes.OnlineAPI.GetLanguageOverride(onlineSeries[DBOnlineSeries.cID]);
+                        selLang = Online_Parsing_Classes.OnlineAPI.GetLanguageOverride(onlineSeries[DBOnlineSeries.cID]);
                     }
                     else
                     {
-                        SelLang = Online_Parsing_Classes.OnlineAPI.SelLanguageAsString;
+                        selLang = Online_Parsing_Classes.OnlineAPI.SelLanguageAsString;
                     }
 
                     if (!uniqueSeriesIds.ContainsKey(onlineSeries[DBOnlineSeries.cID]))
                         uniqueSeriesIds.Add(onlineSeries[DBOnlineSeries.cID], onlineSeries);
-                    else if (onlineSeries["language"] == SelLang)
+                    else if (onlineSeries["language"] == selLang)
                         uniqueSeriesIds[onlineSeries[DBOnlineSeries.cID]] = onlineSeries;
                 }
                 foreach (KeyValuePair<int, DBOnlineSeries> onlineSeries in uniqueSeriesIds)
@@ -2607,7 +2646,7 @@ namespace WindowPlugins.GUITVSeries
                 bool bKeepTrying = true;
                 while (bKeepTrying) {
                     CItem Selected = null;
-                    ReturnCode result = feedback.ChooseFromSelection(descriptor, out Selected);
+                    ReturnCode result = aFeedback.ChooseFromSelection(descriptor, out Selected);
                     switch (result) {
                         case ReturnCode.Cancel:
                             MPTVSeriesLog.Write("User cancelled Series Selection");
@@ -2616,7 +2655,7 @@ namespace WindowPlugins.GUITVSeries
                         case ReturnCode.Ignore:
                             MPTVSeriesLog.Write("User chose to Ignore \"" + nameToSearch + "\" in the future, setting Hidden=True and ScanIgnore=True");
                             nameToSearch = null;
-                            DBSeries series = new DBSeries(seriesName);
+                            DBSeries series = new DBSeries(aSeriesName);
                             series[DBSeries.cScanIgnore] = 1; // means it will be skipped in the future
                             series[DBSeries.cHidden] = true;
                             series.Commit();
@@ -2631,7 +2670,7 @@ namespace WindowPlugins.GUITVSeries
                                 GetStringFromUserDescriptor Keyboard = new GetStringFromUserDescriptor();
                                 Keyboard.Text = nameToSearch;
 
-                                if (feedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK)
+                                if (aFeedback.GetStringFromUser(Keyboard, out nameToSearch) == ReturnCode.OK)
                                 {
                                     // Search again using manually entered name
                                     bKeepTrying = false;

@@ -25,8 +25,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace WindowPlugins.GUITVSeries
@@ -39,6 +40,8 @@ namespace WindowPlugins.GUITVSeries
         public delegate void LocalParseCompletedHandler(IList<parseResult> results);
         public event LocalParseProgressHandler LocalParseProgress;
         public event LocalParseCompletedHandler LocalParseCompleted;
+
+        private static Dictionary<string, int> mSeriesIdLookupByDirectory = new Dictionary<string, int>();
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -113,6 +116,7 @@ namespace WindowPlugins.GUITVSeries
             FilenameParser parser = null;
             ListViewItem item = null;
             paths = null;
+                  
             foreach (PathPair file in files)
             {
                 parser = new FilenameParser(file);
@@ -184,8 +188,13 @@ namespace WindowPlugins.GUITVSeries
                 progressReporter.full_filename = file.m_sFull_FileName;
                 progressReporter.parser = parser;
                 progressReporter.PathPair = file;
+
                 if(includeFailed || progressReporter.success)
-                    results.Add(progressReporter);
+                {
+                  // see if we can find a TVDB ID for the series
+                  FindSeriesTVDBID(progressReporter);
+                  results.Add( progressReporter );
+                }                    
             }
             MPTVSeriesLog.Write("Finished Local Filename Parsing");
             return results;
@@ -217,6 +226,48 @@ namespace WindowPlugins.GUITVSeries
             if (LocalParseProgress != null)
                 LocalParseProgress.Invoke(e.ProgressPercentage, results);
         }
+
+        static void FindSeriesTVDBID( parseResult result )
+        {
+          string filePath = result.full_filename;
+          string directory = Path.GetDirectoryName( filePath );
+
+          if ( mSeriesIdLookupByDirectory.ContainsKey( directory ) )
+          {
+            result.SeriesTVDBID = mSeriesIdLookupByDirectory[ directory ];
+            return;
+          }
+
+          string[] tvdbFiles = Directory.GetFiles( directory, "*.tvdb" );
+
+          // If no .tvdb file was found in the episode folder, check the parent
+          // (e.g. Series/Season 01 -> Series).
+          if ( tvdbFiles.Length == 0 )
+          {
+            string parentDirectory = Directory.GetParent( directory )?.FullName;
+
+            if ( !string.IsNullOrEmpty( parentDirectory ) )
+              tvdbFiles = Directory.GetFiles( parentDirectory, "*.tvdb" );
+          }
+
+          // if no .tvdb file was found in the episode folder or the parent, give up
+          if ( tvdbFiles.Length == 0 )
+          {
+            result.SeriesTVDBID = -1;
+            mSeriesIdLookupByDirectory.Add( directory, -1 );
+            return;
+          }
+
+          // get id from the first .tvdb file found in the directory (or parent)
+          string tvdbFile = tvdbFiles[ 0 ];
+          string tvdbFileName = Path.GetFileNameWithoutExtension( tvdbFile );
+
+          int.TryParse( tvdbFileName, out int tvdbID );
+          result.SeriesTVDBID = tvdbID;
+          mSeriesIdLookupByDirectory.Add( directory, tvdbID );
+
+          return;
+        }
     }
 
     public class parseResult : IComparable<parseResult>
@@ -230,6 +281,8 @@ namespace WindowPlugins.GUITVSeries
         public string match_filename;
         public string full_filename;
         public PathPair PathPair;
+        
+        public int SeriesTVDBID = -1;
 
         private static parseResultComparer comparer = new parseResultComparer();
         public static parseResultComparer Comparer { get { return comparer;}}
