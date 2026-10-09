@@ -1960,7 +1960,7 @@ namespace WindowPlugins.GUITVSeries
             DateTime dteLastUpdated = DateTime.MinValue;
             string strLastUpdated = DBOption.GetOptions(DBOption.cTraktLastDateUpdated);
             var recentSeries = new HashSet<string>();
-            IEnumerable<TraktAPI.DataStructures.TraktShowUpdate> updatedShows = null;
+            IEnumerable<TraktAPI.DataModels.TraktShowUpdate> updatedShows = null;
 
             // ensure we set the TraktAPI client ID if we are using the configuration tool
             // dont't need to worry about this when running inside MP as it will be initialised by
