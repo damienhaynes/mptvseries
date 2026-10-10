@@ -113,29 +113,16 @@ namespace WindowPlugins.GUITVSeries
         {
             XmlNode lNode;
 
-            // if we have already have a TVDBId, then we can just get the series directly
+            // if we already have a TVDBId, fetch the series via the existing UpdateSeries parser
+            // (avoids fragile XML handling / races in the parallel Configuration import searches)
             if ( aTVDBId > 0 )
             {
-              lNode = Online_Parsing_Classes.OnlineAPI.UpdateSeries( aTVDBId.ToString() );
-              if ( lNode == null )
-                return;
-
-              var lSeries = new DBOnlineSeries();
-              foreach ( XmlNode propertyNode in lNode.SelectSingleNode( "Series" ).ChildNodes )
+              var updateSeries = new UpdateSeries( aTVDBId.ToString() );
+              if ( updateSeries.Results.Count > 0 )
               {
-                if ( DBOnlineSeries.s_OnlineToFieldMap.ContainsKey( propertyNode.Name ) )
-                {
-                  lSeries[ DBOnlineSeries.s_OnlineToFieldMap[ propertyNode.Name ] ] = propertyNode.InnerText;
-                }
-                else
-                {
-                  // we don't know that field, add it to the series table
-                  lSeries.AddColumn( propertyNode.Name, new DBField( DBField.cTypeString ) );
-                  lSeries[ propertyNode.Name ] = propertyNode.InnerText;
-                }
+                mListSeries.Add( updateSeries.Results[ 0 ] );
+                PerfectMatch = updateSeries.Results[ 0 ];
               }
-              mListSeries.Add( lSeries );
-              PerfectMatch = lSeries;
               return;
             }
 
