@@ -1766,10 +1766,13 @@ public class Script
     <ExtensionDescription>MP-TVSeries is a popular TV Series plug-in for MediaPortal. It focuses on managing the user's TV Series library with minimal user interaction, allowing for a more user friendly and ease of use experience.
 
 The MP-TVSeries plugin will scan your hard drive (including network and removable drives) for video files, it then analyzes them by their path structures to determine if they are TV Shows. If the file(s) are recognized then the plugin will go online and retrieve information about them. You can then browse, manage and play your episodes from inside MediaPortal in a nice graphical layout.</ExtensionDescription>
-    <VersionDescription>* Fixed compatibility with latest Trakt Plugin. This resolves Trakt Community Ratings not being imported into the database.</VersionDescription>
+    <VersionDescription>* Fixed import of multiple series when within MediaPortal GUI;
+* Fixed a crash that can occur within the Configuration Tool during import.
+
+Thanks ponchick for fixes.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>https://github.com/Mediaportal-Plugin-Team/mptvseries/releases/download/v[Version]/MP-TVSeries-[Version].mpe1</OnlineLocation>
-    <ReleaseDate>2026-10-09T15:15:15</ReleaseDate>
+    <ReleaseDate>2026-10-12T15:15:15</ReleaseDate>
     <Tags>tvseries,tv,mp-tvseries,videos,thetvdb</Tags>
     <PlatformCompatibility>AnyCPU</PlatformCompatibility>
     <Location>.\Release\[Name]-[Version].mpe1</Location>
