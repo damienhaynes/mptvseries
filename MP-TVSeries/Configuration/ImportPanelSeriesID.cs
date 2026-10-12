@@ -341,11 +341,24 @@ namespace WindowPlugins.GUITVSeries.Configuration
 
             System.Threading.ThreadPool.QueueUserWorkItem((o) =>
                 {
-                    // tell user we are now searching
-                    SearchProgress(cSearching, null, row);
-                    var getSeriesParser = new GetSeries( toSearch, tvdbID );
-                    // and give the results
-                    SearchProgress(toSearch, getSeriesParser, row);
+                    try
+                    {
+                        // tell user we are now searching
+                        SearchProgress(cSearching, null, row);
+                        var getSeriesParser = new GetSeries( toSearch, tvdbID );
+                        // and give the results
+                        SearchProgress(toSearch, getSeriesParser, row);
+                    }
+                    catch ( Exception ex )
+                    {
+                        // Unhandled ThreadPool exceptions terminate the Configuration process
+                        MPTVSeriesLog.Write( $"Series search failed for \"{toSearch}\" (tvdbID={tvdbID}): {ex}" );
+                        System.Threading.Interlocked.Decrement( ref activeSearches );
+                        if ( dataGridViewIdentifySeries.InvokeRequired )
+                            dataGridViewIdentifySeries.Invoke( new Action( setSearchStatus ) );
+                        else
+                            setSearchStatus();
+                    }
                 });
             
         }
