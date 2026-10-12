@@ -21,12 +21,11 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endregion
 
+using SQLite.NET;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using SQLite.NET;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -46,6 +45,7 @@ namespace WindowPlugins.GUITVSeries
         public static event dbUpdateOccuredDelegate dbUpdateOccured;
 
         protected static Dictionary<string, Dictionary<string, DBFieldType>> fields = new Dictionary<string, Dictionary<string, DBFieldType>>();
+        private static readonly object mFieldsLock = new object();
 
         public DBTable(string tableName)
         {
@@ -55,15 +55,21 @@ namespace WindowPlugins.GUITVSeries
 
             Dictionary<string, DBFieldType> cachedForTable;
             m_tableName = tableName;
-            //m_fields = new Dictionary<string, DBField>();
-            if (fields.TryGetValue(tableName, out cachedForTable)) // good, cached, this happens 99% of the time
+            
+            lock ( mFieldsLock )
             {
-                foreach (KeyValuePair<string, DBFieldType> entry in cachedForTable)
-                    if (!m_fields.ContainsKey(entry.Key))
-                        m_fields.Add(entry.Key, new DBField(entry.Value));
-
+              if ( fields.TryGetValue( tableName, out cachedForTable ) ) // cached, this happens 99% of the time
+              {
+                foreach ( KeyValuePair<string, DBFieldType> entry in cachedForTable )
+                {
+                  if ( !m_fields.ContainsKey( entry.Key ) )
+                    m_fields.Add( entry.Key, new DBField( entry.Value ) );
+                }
+                return;
+              }
             }
-            else // we have to get it, happens when the first object is created or after an alter table
+            
+            // we have to get it, happens when the first object is created or after an alter table
             {
                 cachedForTable = new Dictionary<string, DBFieldType>();
                 // load up fields from the table
@@ -108,9 +114,12 @@ namespace WindowPlugins.GUITVSeries
 
                             cachedForTable.Add(sName, cachedInfo);
                         }
-                        lock (fields)
-                            fields.Add(tableName, cachedForTable);
 
+                        lock (mFieldsLock)
+                        {
+                          if ( !fields.ContainsKey( m_tableName ) )
+                            fields.Add( tableName, cachedForTable );
+                        }
                     }
                     else
                     {
