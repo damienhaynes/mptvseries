@@ -843,7 +843,7 @@ namespace WindowPlugins.GUITVSeries
 
                   // check if we have a series ID on disk that can be used to identify the series,
                   // this is a local database ID that is stored in a .tvdb file
-                  List<DBEpisode> episodes = DBEpisode.Get( int.Parse( seriesList[ 0 ][ DBSeries.cID ] ) );
+                  List<DBEpisode> episodes = DBEpisode.Get( int.Parse( series[ DBSeries.cID ] ) );
 
                   // search for .tvdb file in the series episode folder
                   // use the first episode to find the series folder and look for a .tvdb file
