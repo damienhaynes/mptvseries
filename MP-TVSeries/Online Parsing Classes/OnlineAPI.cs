@@ -132,7 +132,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
         static public XmlNode GetUserRatings( String sSeriesID, String sAccountID )
         {
-            string url = String.Format( apiURIs.GetRatingsForUser, DBOnlineMirror.cApiKey, sAccountID, sSeriesID );
+            string url = String.Format( apiURIs.GetRatingsForUser, DBOnlineMirror.LegacyAPIKey, sAccountID, sSeriesID );
             return Generic( url, true, false, Format.NoExtension );
         }
 
