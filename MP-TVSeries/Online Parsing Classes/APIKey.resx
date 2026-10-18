@@ -117,8 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Key" xml:space="preserve">
-    <value>0023593574450A60</value>
-    <comment>Do NOT submitt this file with a working APIKey, developers need to get their own</comment>
+  <data name="APIKey" xml:space="preserve">
+    <value>xxxx</value>
+    <comment>Do NOT submit this file with a working APIKey, developers need to get their own</comment>
+  </data>
+  <data name="LegacyAPIKey" xml:space="preserve">
+    <value>xxxx</value>
+    <comment>Do NOT submit this file with a working APIKey, developers need to get their own</comment>
   </data>
 </root>

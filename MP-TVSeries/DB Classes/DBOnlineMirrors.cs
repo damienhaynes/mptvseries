@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             mOnlineToFieldMap.Add("banners", cBanners);
             mOnlineToFieldMap.Add("typemask", cTypeMask);
 
-            cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("Key");
+            cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("LegacyAPIKey");
         }
 
         private DBOnlineMirror()
