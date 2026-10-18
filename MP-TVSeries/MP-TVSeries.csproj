@@ -180,6 +180,7 @@
     <Compile Include="GUI\GUIArtworkChooser.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
+    <Compile Include="Online Parsing Classes\TheTvdbV4Client.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>

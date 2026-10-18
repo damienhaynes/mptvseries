@@ -19,7 +19,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class APIKey {
@@ -61,11 +61,20 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0023593574450A60.
+        ///   Looks up a localized string similar to xxxx.
         /// </summary>
-        internal static string Key {
+        internal static string APIKeyValue {
             get {
-                return ResourceManager.GetString("Key", resourceCulture);
+                return ResourceManager.GetString("APIKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to xxxx.
+        /// </summary>
+        internal static string LegacyAPIKey {
+            get {
+                return ResourceManager.GetString("LegacyAPIKey", resourceCulture);
             }
         }
     }
