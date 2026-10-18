@@ -38,7 +38,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
         }
       }
 
-      if ( string.IsNullOrEmpty( apiKey ) )
+      if ( string.IsNullOrEmpty( apiKey ) || apiKey.Equals( "SECRET_PLACEHOLDER_TVDB_API_KEY" ) )
       {
         OnDataError?.Invoke( "No API key available for tvdb v4 login. Check Credentials.cs and add your registered API key" );
         return null;
