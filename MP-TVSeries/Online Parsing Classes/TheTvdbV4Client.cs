@@ -30,7 +30,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
       {
         try
         {
-          apiKey = new System.Resources.ResourceManager( "WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof( TheTvdbV4Client ).Assembly ).GetString( "APIKey" );
+          apiKey = Credentials.APIKey;
         }
         catch ( Exception )
         {
@@ -40,7 +40,7 @@ namespace WindowPlugins.GUITVSeries.Online_Parsing_Classes
 
       if ( string.IsNullOrEmpty( apiKey ) )
       {
-        OnDataError?.Invoke( "No API key available for tvdb v4 login" );
+        OnDataError?.Invoke( "No API key available for tvdb v4 login. Check Credentials.cs and add your registered API key" );
         return null;
       }
 

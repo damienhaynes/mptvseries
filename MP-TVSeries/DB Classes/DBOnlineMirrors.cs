@@ -56,7 +56,7 @@ namespace WindowPlugins.GUITVSeries
         /// <summary>
         /// if you compile yourself get you're own key or it will have to be disabled!
         /// </summary>
-        public static string cApiKey = string.Empty;
+        public static string LegacyAPIKey = string.Empty;
         private static bool mMirrorsAvailable = false;
 
         static DBOnlineMirror()
@@ -66,7 +66,7 @@ namespace WindowPlugins.GUITVSeries
             mOnlineToFieldMap.Add("banners", cBanners);
             mOnlineToFieldMap.Add("typemask", cTypeMask);
 
-            cApiKey = new System.Resources.ResourceManager("WindowPlugins.GUITVSeries.Online_Parsing_Classes.APIKey", typeof(DBOnlineMirror).Assembly).GetString("LegacyAPIKey");
+            LegacyAPIKey = Credentials.LegacyAPIKey;
         }
 
         private DBOnlineMirror()
@@ -125,9 +125,9 @@ namespace WindowPlugins.GUITVSeries
                 DBTVSeries.Execute(sqlDel);
             }
 
-            if (String.IsNullOrEmpty(cApiKey))
+            if (String.IsNullOrEmpty(LegacyAPIKey))
             {
-                MPTVSeriesLog.Write("No APIKey...if you compile yourself you need to register an APIKey at theTVDB.com and add it to the resourceFile, nothing will be downloaded!");
+                MPTVSeriesLog.Write("No APIKey...if you compile yourself you need to register an APIKey at theTVDB.com and add it to the Credentials.cs, nothing will be downloaded!");
                 return;
             }
 
@@ -221,7 +221,7 @@ namespace WindowPlugins.GUITVSeries
 
         static string AppendAPI(string path, bool appendKey)
         {
-            return string.Format("{0}api/{1}", (path.EndsWith("/") ? path : (path + "/")), (appendKey ? (cApiKey + "/") : string.Empty));
+            return string.Format("{0}api/{1}", (path.EndsWith("/") ? path : (path + "/")), (appendKey ? (LegacyAPIKey + "/") : string.Empty));
         }
 
 
