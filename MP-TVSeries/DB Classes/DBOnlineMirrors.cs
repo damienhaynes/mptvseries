@@ -125,9 +125,9 @@ namespace WindowPlugins.GUITVSeries
                 DBTVSeries.Execute(sqlDel);
             }
 
-            if (String.IsNullOrEmpty(LegacyAPIKey))
+            if (String.IsNullOrEmpty(LegacyAPIKey) || LegacyAPIKey.Equals( "SECRET_PLACEHOLDER_TVDB_LEGACY_API_KEY" ) )
             {
-                MPTVSeriesLog.Write("No APIKey...if you compile yourself you need to register an APIKey at theTVDB.com and add it to the Credentials.cs, nothing will be downloaded!");
+                MPTVSeriesLog.Write("No Legacy API Key...if you compile yourself you need to register an APIKey at theTVDB.com and add it to the Credentials.cs, nothing will be downloaded!");
                 return;
             }
 

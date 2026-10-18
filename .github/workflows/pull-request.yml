@@ -31,6 +31,9 @@ jobs:
           build.cmd < nul
         working-directory: ${{ github.workspace }}\build
         shell: cmd
+        env:
+          TVDB_API_KEY: ${{ secrets.TVDB_API_KEY }}
+          TVDB_LEGACY_API_KEY: ${{ secrets.TVDB_LEGACY_API_KEY }}
 
       - name: Upload Artifact / Plugin
         uses: actions/upload-artifact@v7
