@@ -180,6 +180,8 @@
     <Compile Include="GUI\GUIArtworkChooser.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
+    <Compile Include="Online Parsing Classes\TheTvdbV4Client.cs" />
+    <Compile Include="Online Parsing Classes\Credentials.cs" />
     <Compile Include="SkinSettings.cs" />
     <Compile Include="Configuration\About.cs">
       <SubType>UserControl</SubType>
@@ -284,11 +286,6 @@
     <Compile Include="Local Parsing Classes\ParserFilename.cs" />
     <Compile Include="MathParser.cs" />
     <Compile Include="MediaInfoDLL.cs" />
-    <Compile Include="Online Parsing Classes\APIKey.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>APIKey.resx</DependentUpon>
-    </Compile>
     <Compile Include="Online Parsing Classes\GetBanner.cs" />
     <Compile Include="Online Parsing Classes\GetEpisodes.cs" />
     <Compile Include="Online Parsing Classes\GetLanguages.cs" />
@@ -426,11 +423,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration\PlaylistSettings.resx">
       <DependentUpon>PlaylistSettings.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Online Parsing Classes\APIKey.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>APIKey.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

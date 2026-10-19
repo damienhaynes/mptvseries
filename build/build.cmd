@@ -30,11 +30,24 @@ set REVISION=%REVISION: =%
 set /A REVISION=REVISION-1000
 "Tools\Tools\sed.exe" -i -r "s/(Assembly(File)?Version\(.[0-9]+\.[0-9]+\.[0-9]+\.)[0-9]+(.\))/\1%REVISION%\3/g" "MP-TVSeries\Properties\AssemblyInfo.cs"
 
+REM Prepare TVDB Legacy API Key
+IF DEFINED TVDB_LEGACY_API_KEY (
+  ECHO [INFO] TVDB LEGACY API Key found...
+  "Tools\Tools\sed.exe" -i -r "s/SECRET_PLACEHOLDER_TVDB_LEGACY_API_KEY/%TVDB_LEGACY_API_KEY%/g" "MP-TVSeries\Online Parsing Classes\Credentials.cs"
+)
+
+REM TVDB API Key
+IF DEFINED TVDB_API_KEY (
+  ECHO [INFO] TVDB API Key found...
+  "Tools\Tools\sed.exe" -i -r "s/SECRET_PLACEHOLDER_TVDB_API_KEY/%TVDB_API_KEY%/g" "MP-TVSeries\Online Parsing Classes\Credentials.cs"
+)
+
 :: Build
 "%MSBUILD_PATH%" /target:Rebuild /property:Configuration=RELEASE /property:Platform=%ARCH% /fl /flp:logfile=MP-TVSeries.log;verbosity=diagnostic MP-TVSeries.sln
 
 :: Revert version
 git checkout "MP-TVSeries\Properties\AssemblyInfo.cs"
+git checkout "MP-TVSeries\Online Parsing Classes\Credentials.cs"
 
 CD build
 

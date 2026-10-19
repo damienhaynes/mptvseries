@@ -238,6 +238,7 @@ namespace WindowPlugins.GUITVSeries
             return;
           }
 
+          MPTVSeriesLog.Write( $"Searching for .tvdb file in {directory}", MPTVSeriesLog.LogLevel.Debug );
           string[] tvdbFiles = Directory.GetFiles( directory, "*.tvdb" );
 
           // If no .tvdb file was found in the episode folder, check the parent
@@ -245,19 +246,25 @@ namespace WindowPlugins.GUITVSeries
           if ( tvdbFiles.Length == 0 )
           {
             string parentDirectory = Directory.GetParent( directory )?.FullName;
+            MPTVSeriesLog.Write( $"Searching for .tvdb file in {parentDirectory}", MPTVSeriesLog.LogLevel.Debug );
 
-            if ( !string.IsNullOrEmpty( parentDirectory ) )
+          if ( !string.IsNullOrEmpty( parentDirectory ) )
               tvdbFiles = Directory.GetFiles( parentDirectory, "*.tvdb" );
           }
 
           // if no .tvdb file was found in the episode folder or the parent, give up
           if ( tvdbFiles.Length == 0 )
           {
+            MPTVSeriesLog.Write( $"No .tvdb file found for {directory}", MPTVSeriesLog.LogLevel.Debug );
             result.SeriesTVDBID = -1;
             mSeriesIdLookupByDirectory.Add( directory, -1 );
             return;
           }
-
+          else
+          {
+            MPTVSeriesLog.Write( $"Found .tvdb file: {tvdbFiles[ 0 ]}", MPTVSeriesLog.LogLevel.Debug );
+          }
+          
           // get id from the first .tvdb file found in the directory (or parent)
           string tvdbFile = tvdbFiles[ 0 ];
           string tvdbFileName = Path.GetFileNameWithoutExtension( tvdbFile );

@@ -117,6 +117,39 @@ namespace WindowPlugins.GUITVSeries
                 MPTVSeriesLog.Write( propertyName + " = " + propertyValue, MPTVSeriesLog.LogLevel.Debug );
             }
 
+            // Ensure we have a valid TVDB v4 token in configuration mode as well
+            try
+            {
+                string existingToken = DBOption.GetOptions(DBOption.cTVDBv4Token);
+                string expiryStr = DBOption.GetOptions(DBOption.cTVDBv4TokenExpiry);
+                DateTime expiry;
+                bool needLogin = string.IsNullOrEmpty(existingToken) || string.IsNullOrEmpty(expiryStr) || !DateTime.TryParse(expiryStr, out expiry) || expiry <= DateTime.UtcNow;
+                if (needLogin)
+                {
+                    // run login in background to avoid blocking the UI
+                    Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            MPTVSeriesLog.Write("TVDB v4 token missing or expired (config), requesting new token (background)");
+                            string newToken = WindowPlugins.GUITVSeries.Online_Parsing_Classes.TheTvdbV4Client.Login();
+                            if (!string.IsNullOrEmpty(newToken))
+                                MPTVSeriesLog.Write("TVDB v4 login succeeded (config)");
+                            else
+                                MPTVSeriesLog.Write("TVDB v4 login failed (config)");
+                        }
+                        catch (Exception ex)
+                        {
+                            MPTVSeriesLog.Write("TVDB v4 login background task failed (config): " + ex.Message);
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("TVDB v4 token check failed (config): " + ex.Message);
+            }
+
             DBOption.LogOptions();
 
             #region TMDb Provider

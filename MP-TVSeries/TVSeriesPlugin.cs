@@ -40,6 +40,7 @@ using Trailers.Providers;
 using WindowPlugins.GUITVSeries.Extensions;
 using WindowPlugins.GUITVSeries.Feedback;
 using WindowPlugins.GUITVSeries.GUI;
+using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
 using Action = MediaPortal.GUI.Library.Action;
 
 namespace WindowPlugins.GUITVSeries
@@ -400,6 +401,39 @@ namespace WindowPlugins.GUITVSeries
 
             MPTVSeriesLog.Write("Plugin started in MediaPortal");
             DBOption.LogOptions();
+
+            // Ensure we have a valid TVDB v4 token on startup (stored in DBOption)
+            try
+            {
+                string existingToken = DBOption.GetOptions(DBOption.cTVDBv4Token);
+                string expiryStr = DBOption.GetOptions(DBOption.cTVDBv4TokenExpiry);
+                DateTime expiry;
+                bool needLogin = string.IsNullOrEmpty(existingToken) || string.IsNullOrEmpty(expiryStr) || !DateTime.TryParse(expiryStr, out expiry) || expiry <= DateTime.UtcNow;
+                if (needLogin)
+                {
+                    // run login in background to avoid blocking MediaPortal startup
+                    Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            MPTVSeriesLog.Write("TVDB v4 token missing or expired, requesting new token (background)");
+                            string newToken = TheTvdbV4Client.Login();
+                            if (!string.IsNullOrEmpty(newToken))
+                                MPTVSeriesLog.Write("TVDB v4 login succeeded (background)");
+                            else
+                                MPTVSeriesLog.Write("TVDB v4 login failed (background)");
+                        }
+                        catch (Exception ex)
+                        {
+                            MPTVSeriesLog.Write("TVDB v4 login background task failed: " + ex.Message);
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                MPTVSeriesLog.Write("TVDB v4 token check failed: " + ex.Message);
+            }
 
             #region Translations
             Translation.Init();

@@ -255,7 +255,7 @@ namespace WindowPlugins.GUITVSeries
                 if (m_LogStream != null)
                 {
                     #region Hide Personal Info
-                    entry = entry.Replace( DBOnlineMirror.cApiKey, "<apikey>" );
+                    entry = entry.Replace( DBOnlineMirror.LegacyAPIKey, "<apikey>" );
                     entry = entry.Replace( TmdbURIs.ApiKey, "<apiKey>" );
                     #endregion
 

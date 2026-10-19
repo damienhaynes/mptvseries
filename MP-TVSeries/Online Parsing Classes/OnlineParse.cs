@@ -834,8 +834,7 @@ namespace WindowPlugins.GUITVSeries
                 DBOnlineSeries UserChosenSeries = null;
                 UserInputResultSeriesActionPair sap = null;
 
-                if (preChosenSeriesPairs != null)
-                    preChosenSeriesPairs.TryGetValue(sSeriesNameToSearch, out sap);
+                preChosenSeriesPairs?.TryGetValue(sSeriesNameToSearch, out sap);
 
                 if (preChosenSeriesPairs == null)
                 {
@@ -852,6 +851,7 @@ namespace WindowPlugins.GUITVSeries
                     string filePath = episodes[ 0 ][ DBEpisode.cFilename ].ToString();
                     string directory = Path.GetDirectoryName( filePath );
 
+                    MPTVSeriesLog.Write( $"Searching for {sSeriesNameToSearch} .tvdb file in {directory}", MPTVSeriesLog.LogLevel.Debug );
                     string[] tvdbFiles = Directory.GetFiles( directory, "*.tvdb" );
 
                     // If no .tvdb file was found in the episode folder, check the parent
@@ -859,6 +859,7 @@ namespace WindowPlugins.GUITVSeries
                     if ( tvdbFiles.Length == 0 )
                     {
                       string parentDirectory = Directory.GetParent( directory )?.FullName;
+                      MPTVSeriesLog.Write( $"Searching for {sSeriesNameToSearch} .tvdb file in {parentDirectory}", MPTVSeriesLog.LogLevel.Debug );
 
                       if ( !string.IsNullOrEmpty( parentDirectory ) )
                         tvdbFiles = Directory.GetFiles( parentDirectory, "*.tvdb" );
@@ -873,6 +874,10 @@ namespace WindowPlugins.GUITVSeries
                       MPTVSeriesLog.Write( $"Found {tvdbFile} file for {series[ DBSeries.cParsedName ]}", MPTVSeriesLog.LogLevel.Normal );
 
                       int.TryParse( tvdbFileName, out tvdbID );
+                    }
+                    else
+                    {
+                      MPTVSeriesLog.Write( $"No .tvdb file found for {series[ DBSeries.cParsedName ]}", MPTVSeriesLog.LogLevel.Normal );
                     }
                   }
 

@@ -186,6 +186,8 @@ namespace WindowPlugins.GUITVSeries
         public const string cTmdbConfiguration = "TmdbConfiguration";
         public const string cFanartTvClientKey = "FanartTvClientKey";
         public const string cOverrideSearchLanguageToEnglish = "OverrideSearchLanguageToEnglish";
+        public const string cTVDBv4Token = "TVDB_v4_Token";
+        public const string cTVDBv4TokenExpiry = "TVDB_v4_TokenExpiry";
         #endregion
 
         private static readonly Object thisLock = new Object();
@@ -681,10 +683,10 @@ namespace WindowPlugins.GUITVSeries
                 foreach (string key in optionsCache.Keys)
                 {
                     // dont log private options
-                    if (!key.Equals(DBOption.cOnlineUserID))
-                    {
-                        MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
-                    }
+                    if (key.Equals(DBOption.cOnlineUserID) || key.Equals(DBOption.cTVDBv4Token))
+                        continue;
+
+                    MPTVSeriesLog.Write(string.Format("Option {0}: {1}", key, optionsCache[key].ToString()), MPTVSeriesLog.LogLevel.Debug);
                 }
             }
         }
