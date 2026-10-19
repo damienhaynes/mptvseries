@@ -179,6 +179,12 @@
     <Compile Include="GUI\GUIActors.cs" />
     <Compile Include="GUI\GUIArtworkChooser.cs" />
     <Compile Include="GUI\GUIConnector.cs" />
+    <Compile Include="Online Parsing Classes\DTO\TvdbRemoteId.cs" />
+    <Compile Include="Online Parsing Classes\DTO\TvdbSeries.cs" />
+    <Compile Include="Online Parsing Classes\DTO\TvdbSearchResponse.cs" />
+    <Compile Include="Online Parsing Classes\DTO\TvdbLoginData.cs" />
+    <Compile Include="Online Parsing Classes\DTO\TvdbLoginResponse.cs" />
+    <Compile Include="Online Parsing Classes\DTO\TvdbResponseBase.cs" />
     <Compile Include="Online Parsing Classes\GetActors.cs" />
     <Compile Include="Online Parsing Classes\TheTvdbV4Client.cs" />
     <Compile Include="Online Parsing Classes\Credentials.cs" />
