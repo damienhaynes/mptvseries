@@ -24,8 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using WindowPlugins.GUITVSeries.Online_Parsing_Classes;
+using WindowPlugins.GUITVSeries.Online_Parsing_Classes.DTO;
 
 namespace WindowPlugins.GUITVSeries
 {
@@ -143,7 +143,7 @@ namespace WindowPlugins.GUITVSeries
           bearer = TheTvdbV4Client.Login();
         }
 
-        List<TheTvdbV4Client.TvdbSeries> tvResults = TheTvdbV4Client.SearchSeries( bearer, aSeriesName );
+        List<TvdbSeries> tvResults = TheTvdbV4Client.SearchSeries( bearer, aSeriesName );
         if ( tvResults == null || tvResults.Count == 0 )
         {
           // nothing found
@@ -151,7 +151,7 @@ namespace WindowPlugins.GUITVSeries
         }
 
         // map v4 results into DBOnlineSeries instances
-        foreach ( TheTvdbV4Client.TvdbSeries tv in tvResults )
+        foreach ( TvdbSeries tv in tvResults )
         {
           var lSeries = new DBOnlineSeries();
 
@@ -208,7 +208,7 @@ namespace WindowPlugins.GUITVSeries
           // remote ids mapping (e.g. imdb, tmdb)
           if ( tv.RemoteIds != null )
           {
-            foreach ( TheTvdbV4Client.TvdbRemoteId rid in tv.RemoteIds )
+            foreach ( TvdbRemoteId rid in tv.RemoteIds )
             {
               if ( rid == null || string.IsNullOrEmpty( rid.SourceName ) || string.IsNullOrEmpty( rid.Id ) )
                 continue;
